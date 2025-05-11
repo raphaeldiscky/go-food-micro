@@ -1,0 +1,27 @@
+package projections
+
+import (
+	"context"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/projection"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
+)
+
+type elasticOrderProjection struct {
+	elasticOrderReadRepository repositories.OrderElasticRepository
+}
+
+func NewElasticOrderProjection(
+	elasticOrderReadRepository repositories.OrderElasticRepository,
+) projection.IProjection {
+	return &elasticOrderProjection{elasticOrderReadRepository: elasticOrderReadRepository}
+}
+
+func (e elasticOrderProjection) ProcessEvent(
+	ctx context.Context,
+	streamEvent *models.StreamEvent,
+) error {
+	// TODO: Handling and projecting event to elastic read model
+	return nil
+}
