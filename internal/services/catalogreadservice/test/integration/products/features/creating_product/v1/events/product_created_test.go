@@ -7,16 +7,14 @@ package events
 
 import (
 	"context"
-	"go-food-micro/internal/pkg/core/messaging"
-	"go-food-micro/internal/pkg/core/types"
-	"go-food-micro/internal/services/catalogreadservice/test/integration/shared"
-	"go-food-micro/internal/services/catalogreadservice/test/integration/shared/fixtures"
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/types"
 	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/test/integration/shared"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/test/integration/shared/fixtures"
 
 	"github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
