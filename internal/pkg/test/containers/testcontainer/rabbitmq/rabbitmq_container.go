@@ -213,7 +213,6 @@ func IsConnectable(
 		options.Password,
 	)
 	_, err = rmqc.ListExchanges()
-
 	if err != nil {
 		logger.Errorf(
 			"Error in creating rabbitmq connection with http host: %s",

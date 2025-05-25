@@ -31,7 +31,7 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_No_Error_
 	description := gofakeit.EmojiDescription()
 	price := gofakeit.Price(150, 6000)
 
-	updateProduct, err := v1.NewUpdateProduct(id, name, description, price)
+	updateProduct, err := v1.NewUpdateProductWithValidation(id, name, description, price)
 
 	c.Assert().NotNil(updateProduct)
 	c.Assert().Equal(id, updateProduct.ProductID)
@@ -42,7 +42,7 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_No_Error_
 }
 
 func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Invalid_Price() {
-	command, err := v1.NewUpdateProduct(
+	command, err := v1.NewUpdateProductWithValidation(
 		uuid.NewV4(),
 		gofakeit.Name(),
 		gofakeit.EmojiDescription(),
@@ -50,19 +50,22 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For
 	)
 
 	c.Require().Error(err)
-	c.Assert().Nil(command)
+	c.NotNil(command)
+	c.Equal(0.0, command.Price)
 }
 
 func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Empty_Name() {
-	command, err := v1.NewUpdateProduct(uuid.NewV4(), "", gofakeit.EmojiDescription(), 120)
+	command, err := v1.NewUpdateProductWithValidation(uuid.NewV4(), "", gofakeit.EmojiDescription(), 120)
 
 	c.Require().Error(err)
-	c.Assert().Nil(command)
+	c.NotNil(command)
+	c.Empty(command.Name)
 }
 
 func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Empty_Description() {
-	command, err := v1.NewUpdateProduct(uuid.NewV4(), gofakeit.Name(), "", 120)
+	command, err := v1.NewUpdateProductWithValidation(uuid.NewV4(), gofakeit.Name(), "", 120)
 
 	c.Require().Error(err)
-	c.Assert().Nil(command)
+	c.NotNil(command)
+	c.Empty(command.Description)
 }

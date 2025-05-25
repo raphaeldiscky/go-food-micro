@@ -18,7 +18,9 @@ func NewDefaultEventJsonSerializer(serializer serializer.Serializer) serializer.
 	return &DefaultEventJsonSerializer{serializer: serializer}
 }
 
-func (s *DefaultEventJsonSerializer) Serialize(event domain.IDomainEvent) (*serializer.EventSerializationResult, error) {
+func (s *DefaultEventJsonSerializer) Serialize(
+	event domain.IDomainEvent,
+) (*serializer.EventSerializationResult, error) {
 	return s.SerializeObject(event)
 }
 
