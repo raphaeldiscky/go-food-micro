@@ -15,6 +15,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
+	"go.uber.org/fx"
 
 	"emperror.dev/errors"
 	"github.com/brianvoe/gofakeit/v6"
@@ -244,4 +245,20 @@ func cleanupCollections(
 		}
 	}
 	return nil
+}
+
+// In the application's shutdown hooks
+func registerShutdownHooks(lc fx.Lifecycle, shutdownCh chan struct{}) {
+	lc.Append(fx.Hook{
+		OnStop: func(ctx context.Context) error {
+			// Wait for shutdown signal
+			<-shutdownCh
+
+			// Perform graceful shutdown
+			// Close connections
+			// Wait for operations to complete
+
+			return nil
+		},
+	})
 }

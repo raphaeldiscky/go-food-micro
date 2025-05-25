@@ -41,7 +41,12 @@ func TestProductUpdatedConsumer(t *testing.T) {
 			hypothesis := messaging.ShouldConsume[*externalEvents.ProductUpdatedV1](
 				ctx,
 				integrationTestSharedFixture.Bus,
-				nil,
+				func(msg *externalEvents.ProductUpdatedV1) bool {
+					return msg.ProductId == fakeUpdateProduct.ProductId &&
+						msg.Name == fakeUpdateProduct.Name &&
+						msg.Price == fakeUpdateProduct.Price &&
+						msg.Description == fakeUpdateProduct.Description
+				},
 			)
 
 			fakeUpdateProduct := &externalEvents.ProductUpdatedV1{
@@ -125,10 +130,15 @@ func TestProductUpdatedConsumer(t *testing.T) {
 									ctx,
 									integrationTestSharedFixture.Items[0].ProductId,
 								)
+								if err != nil {
+									return false
+								}
 
 								return product != nil &&
-									product.Name == productUpdated.Name
-							})
+									product.Name == productUpdated.Name &&
+									product.Description == productUpdated.Description &&
+									product.Price == productUpdated.Price
+							}, 60*time.Second)
 
 							So(err, ShouldBeNil)
 							So(product, ShouldNotBeNil)
