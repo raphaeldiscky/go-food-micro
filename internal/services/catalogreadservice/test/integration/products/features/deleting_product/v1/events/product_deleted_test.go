@@ -68,7 +68,7 @@ func TestProductDeleted(t *testing.T) {
 					if publishErr == nil {
 						break
 					}
-					integrationTestSharedFixture.Log.Warnw(
+					integrationTestSharedFixture.Log.Warn(
 						"Failed to publish message, retrying...",
 						logger.Fields{
 							"attempt": i + 1,
