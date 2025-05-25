@@ -15,7 +15,7 @@ This application is primarily intended for exploring technical concepts. My goal
   - `PostgreSQL` for write operations
   - `MongoDB` and `ElasticSearch` for read operations
   - `Redis` for caching
-  - `EventStoreDB` for event sourcing
+  - `KurrentDB/EventStoreDB` for event sourcing
 - ✅ `Unit Test` for testing small units with mocking dependent classes and using [Mockery](https://github.com/vektra/mockery) for mocking dependencies
 - ✅ Using `End2End Test` and `Integration Test` for testing features with all of their real dependencies using docker containers (cleanup tests) and [testcontainers-go](https://github.com/testcontainers/testcontainers-go) library
 - ✅ Using `Zap` and structured logging

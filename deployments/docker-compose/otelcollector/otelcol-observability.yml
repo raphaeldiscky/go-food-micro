@@ -1,7 +1,6 @@
 # Copyright The OpenTelemetry Authors
 # SPDX-License-Identifier: Apache-2.0
 
-
 exporters:
   otlp:
     endpoint: "jaeger:4317"
@@ -28,17 +27,11 @@ exporters:
   #      # Copy your project DSN here
   #      uptrace-dsn: 'https://<token>@uptrace.dev/<project_id>
 
-
   logging:
 
   zipkin:
     endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
     format: proto
-
-  otlp:
-    endpoint: "jaeger-all-in-one:4317"
-    tls:
-      insecure: true
 
 service:
   pipelines:
@@ -46,4 +39,3 @@ service:
       exporters: [otlp, logging, spanmetrics]
     metrics:
       exporters: [prometheus, logging]
-

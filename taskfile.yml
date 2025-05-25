@@ -5,8 +5,8 @@ version: "3"
 vars:
   GOOS: "{{default OS .GOOS}}"
   DC_DIR: "deployments/docker-compose"
-  INFRA_DC_FILE: "{{.DC_DIR}}/docker-compose.infra.yaml"
-  MONITORING_DC_FILE: "{{.DC_DIR}}/docker-compose.monitoring.yaml"
+  INFRA_DC_FILE: "{{.DC_DIR}}/infra.yaml"
+  MONITORING_DC_FILE: "{{.DC_DIR}}/monitoring.yaml"
   SLEEP_CMD: '{{if eq .GOOS "windows"}}timeout{{else}}sleep{{end}}'
 
 tasks:
@@ -56,24 +56,24 @@ tasks:
   start_infra:
     desc: Start infrastructure using docker-compose
     cmds:
-      - docker-compose -f {{.INFRA_DC_FILE}} up --build -d
+      - docker compose -f {{.INFRA_DC_FILE}} up -d
 
   start_monitoring:
     desc: Start monitoring using docker-compose
     cmds:
-      - docker-compose -f {{.MONITORING_DC_FILE}} up --build -d
+      - docker compose -f {{.MONITORING_DC_FILE}} up -d
 
   stop_infra:
     desc: Stop infrastructure using docker-compose
     cmds:
-      - docker-compose -f {{.INFRA_DC_FILE}} stop
-      - docker-compose -f {{.INFRA_DC_FILE}} rm -f
+      - docker compose -f {{.INFRA_DC_FILE}} stop
+      - docker compose -f {{.INFRA_DC_FILE}} rm -f
 
   stop_monitoring:
     desc: Stop monitoring using docker-compose
     cmds:
-      - docker-compose -f {{.MONITORING_DC_FILE}} stop
-      - docker-compose -f {{.MONITORING_DC_FILE}} rm -f
+      - docker compose -f {{.MONITORING_DC_FILE}} stop
+      - docker compose -f {{.MONITORING_DC_FILE}} rm -f
 
   restart_infra:
     desc: Restart infrastructure using docker-compose
