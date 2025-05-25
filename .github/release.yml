@@ -7,57 +7,59 @@
 changelog:
   exclude:
     labels:
-    - ignore-for-release
+      - ignore-for-release
   categories:
-  - title: 🚀 Features
-    labels:
-    - feature
-    - feat
-  - title: ♻️ Enhancement
-    labels:
-    - enhancement
-    - refactor
-  - title: 🐛 Bug Fixes
-    labels:
-    - fix
-    - bug
-  - title: 👷 CI
-    labels:
-    - ci
-    - ci-cd
-    - devops
-  - title: ⚠️ Breaking Changes
-    labels:
-    - breaking-changes
-    - major
-  - title: ⛔️ Deprecated
-    labels:
-    - deprecated
-  - title: 🗑 Removed
-    labels:
-    - removed
-  - title: 🔐 Security
-    labels:
-    - security
-  - title: 🎨 Style & Formatting
-    labels:
-    - style
-  - title: 🧪 Test
-    labels:
-    - test
-  - title: 📄 Documentation
-    labels:
-    - docs
-    - documentation
-  - title: 🧩 Dependency Updates
-    labels:
-    - deps
-    - build
-    - dependencies
-  - title: 🧰 Maintenance
-    label: 'chore'
-  - title: 🧺 Miscellaneous #Everything except ABAP
-    label: misc
-  - title: Other Changes
-    labels:
-    - "*"
+    - title: 🚀 Features
+      labels:
+        - feature
+        - feat
+    - title: ♻️ Enhancement
+      labels:
+        - enhancement
+        - refactor
+    - title: 🐛 Bug Fixes
+      labels:
+        - fix
+        - bug
+    - title: 👷 CI
+      labels:
+        - ci
+        - ci-cd
+        - devops
+    - title: ⚠️ Breaking Changes
+      labels:
+        - breaking-changes
+        - major
+    - title: ⛔️ Deprecated
+      labels:
+        - deprecated
+    - title: 🗑 Removed
+      labels:
+        - removed
+    - title: 🔐 Security
+      labels:
+        - security
+    - title: 🎨 Style & Formatting
+      labels:
+        - style
+    - title: 🧪 Test
+      labels:
+        - test
+    - title: 📄 Documentation
+      labels:
+        - docs
+        - documentation
+    - title: 🧩 Dependency Updates
+      labels:
+        - deps
+        - build
+        - dependencies
+    - title: 🧰 Maintenance
+      labels:
+        - chore
+    - title: 🧺 Miscellaneous #Everything except ABAP
+      labels:
+        - misc
+    - title: Other Changes
+      labels:
+        - "*"

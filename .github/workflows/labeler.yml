@@ -29,18 +29,18 @@ jobs:
           config-name: release-drafter.yml
           disable-releaser: true # releaser mode is disabled.
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
 
       # - uses: fuxingloh/multi-labeler@v1
       #   name: conventional-commits-pull-request-labeler
       #   with:
-      #     github-token: ${{secrets.GITHUB_TOKEN}} # optional, default to '${{ github.token }}'
+      #     github-token: ${{secrets.REPO_TOKEN}} # optional, default to '${{ github.token }}'
       #     config-path: .github/multi-labeler.yml # optional, default to '.github/labeler.yml'
 
       # # https://github.com/actions/labeler
       # - uses: actions/labeler@v5
       #   with:
-      #     repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      #     repo-token: "${{ secrets.REPO_TOKEN }}"
       #     sync-labels: true
 
       # https://docs.github.com/en/actions/using-workflows/about-workflows#creating-dependent-jobs
@@ -50,4 +50,4 @@ jobs:
         if: success()
         with:
           any_of: feature,bug,enhancement,refactor,deprecated,security,documentation,build,ci/cd,devops,chore,performance,formatting,dependencies,test,major,minor,patch
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ secrets.REPO_TOKEN }}

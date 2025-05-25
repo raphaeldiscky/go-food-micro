@@ -1,6 +1,6 @@
 module github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice
 
-go 1.22
+go 1.23
 
 // https://go.dev/doc/tutorial/call-module-code
 replace github.com/raphaeldiscky/go-food-micro/internal/pkg => ../../pkg/
