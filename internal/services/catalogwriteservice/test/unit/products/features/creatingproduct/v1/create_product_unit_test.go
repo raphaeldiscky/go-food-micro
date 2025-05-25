@@ -59,7 +59,8 @@ func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For
 	)
 
 	c.Require().Error(err)
-	c.Assert().Nil(command)
+	c.NotNil(command)
+	c.Equal(0.0, command.Price)
 }
 
 func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For_Empty_Name() {
@@ -70,7 +71,8 @@ func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For
 	)
 
 	c.Require().Error(err)
-	c.Assert().Nil(command)
+	c.NotNil(command)
+	c.Empty(command.Name)
 }
 
 func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For_Empty_Description() {
@@ -81,5 +83,6 @@ func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For
 	)
 
 	c.Require().Error(err)
-	c.Assert().Nil(command)
+	c.NotNil(command)
+	c.Empty(command.Description)
 }

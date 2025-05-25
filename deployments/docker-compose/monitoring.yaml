@@ -1,4 +1,3 @@
-version: "3.8"
 name: "go-food-micro"
 
 services:
@@ -7,6 +6,7 @@ services:
   # https://prometheus.io/docs/prometheus/latest/getting_started/
   # https://prometheus.io/docs/guides/go-application/
   prometheus:
+    env_file: "monitoring.env"
     image: prom/prometheus:v3.3.1
     pull_policy: if_not_present
     container_name: prometheus
@@ -28,6 +28,7 @@ services:
       - go-food-micro
 
   grafana:
+    env_file: "monitoring.env"
     image: grafana/grafana:11.6.1
     pull_policy: if_not_present
     container_name: grafana
@@ -57,6 +58,7 @@ services:
   # https://grafana.com/docs/grafana/latest/datasources/jaeger/
   # https://grafana.com/docs/tempo/latest/operations/architecture/
   tempo:
+    env_file: "monitoring.env"
     image: grafana/tempo:2.7.2
     command: ["-config.file=/etc/tempo.yaml"]
     volumes:
@@ -73,14 +75,14 @@ services:
     networks:
       - go-food-micro
 
-  # https://www.jaegertracing.io/docs/1.38/apis/#opentelemetry-protocol-stable
-  # https://deploy-preview-1892--opentelemetry.netlify.app/blog/2022/jaeger-native-otlp/
-  # https://www.jaegertracing.io/docs/1.49/deployment/
-  # https://www.jaegertracing.io/docs/1.49/getting-started/
+  # https://www.jaegertracing.io/docs/2.6/apis/#opentelemetry-protocol-stable
+  # https://www.jaegertracing.io/docs/2.6/deployment/
+  # https://www.jaegertracing.io/docs/2.6/getting-started/
   # https://opentelemetry.io/docs/instrumentation/go/exporters/
   # https://opentelemetry.io/docs/specs/otlp/
   jaeger:
-    image: jaegertracing/all-in-one:2.6.0
+    env_file: "monitoring.env"
+    image: jaegertracing/jaeger:2.6.0
     container_name: jaeger
     pull_policy: if_not_present
     restart: unless-stopped
@@ -112,3 +114,7 @@ services:
       timeout: 10s
     networks:
       - go-food-micro
+
+networks:
+  go-food-micro:
+    name: go-food-micro

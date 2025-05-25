@@ -59,7 +59,6 @@ func (ep *deleteProductEndpoint) handler() echo.HandlerFunc {
 			ctx,
 			command,
 		)
-
 		if err != nil {
 			return errors.WithMessage(
 				err,

@@ -3,10 +3,11 @@ package json
 import (
 	"log"
 
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
+
 	"github.com/TylerBrock/colorjson"
 	"github.com/goccy/go-json"
 	"github.com/mitchellh/mapstructure"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 )
 
 type jsonSerializer struct{}

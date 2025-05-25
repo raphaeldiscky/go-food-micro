@@ -1,6 +1,6 @@
 module github.com/raphaeldiscky/go-food-micro/internal/pkg
 
-go 1.22
+go 1.23
 
 require (
 	emperror.dev/errors v0.8.1

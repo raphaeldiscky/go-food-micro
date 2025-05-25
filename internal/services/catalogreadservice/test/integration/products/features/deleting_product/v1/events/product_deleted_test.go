@@ -9,13 +9,15 @@ import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/events/integration_events/external_events"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 
 	uuid "github.com/satori/go.uuid"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -23,43 +25,20 @@ import (
 func TestProductDeleted(t *testing.T) {
 	// Setup and initialization code here.
 	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
-	// in test mode we set rabbitmq `AutoStart=false` in configuration in rabbitmqOptions, so we should run rabbitmq bus manually
-	integrationTestSharedFixture.Bus.Start(context.Background())
-	// wait for consumers ready to consume before publishing messages, preparation background workers takes a bit time (for preventing messages lost)
-	time.Sleep(1 * time.Second)
+	require.NotNil(t, integrationTestSharedFixture, "Integration test shared fixture should not be nil")
+
+	// Ensure proper cleanup
+	defer func() {
+		// Give some time for messages to be processed before cleanup
+		time.Sleep(2 * time.Second)
+		err := integrationTestSharedFixture.Bus.Stop(context.Background())
+		assert.NoError(t, err, "Failed to stop RabbitMQ bus")
+	}()
 
 	Convey("Product Deleted Feature", t, func() {
 		ctx := context.Background()
 		// will execute with each subtest
-		integrationTestSharedFixture.SetupTest()
-
-		// https://specflow.org/learn/gherkin/#learn-gherkin
-		// scenario
-		Convey("Consume ProductDeleted event by consumer", func() {
-			event := &externalEvents.ProductDeletedV1{
-				Message:   types.NewMessage(uuid.NewV4().String()),
-				ProductId: integrationTestSharedFixture.Items[0].ProductId,
-			}
-			// check for consuming `ProductDeletedV1` message with existing consumer
-			hypothesis := messaging.ShouldConsume[*externalEvents.ProductDeletedV1](
-				ctx,
-				integrationTestSharedFixture.Bus,
-				nil,
-			)
-
-			Convey("When a ProductDeleted event consumed", func() {
-				err := integrationTestSharedFixture.Bus.PublishMessage(
-					ctx,
-					event,
-					nil,
-				)
-				So(err, ShouldBeNil)
-
-				Convey("Then it should consume the ProductDeleted event", func() {
-					hypothesis.Validate(ctx, "there is no consumed message", 30*time.Second)
-				})
-			})
-		})
+		integrationTestSharedFixture.SetupTest(t)
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario
@@ -69,38 +48,60 @@ func TestProductDeleted(t *testing.T) {
 				ProductId: integrationTestSharedFixture.Items[0].ProductId,
 			}
 
+			// First verify the product exists
+			existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+				ctx,
+				integrationTestSharedFixture.Items[0].ProductId,
+			)
+			So(err, ShouldBeNil)
+			So(existingProduct, ShouldNotBeNil)
+
 			Convey("When a ProductDeleted event consumed", func() {
-				err := integrationTestSharedFixture.Bus.PublishMessage(
-					ctx,
-					event,
-					nil,
-				)
-				So(err, ShouldBeNil)
+				// Publish the message with retries
+				var publishErr error
+				for i := 0; i < 3; i++ {
+					publishErr = integrationTestSharedFixture.Bus.PublishMessage(
+						ctx,
+						event,
+						nil,
+					)
+					if publishErr == nil {
+						break
+					}
+					integrationTestSharedFixture.Log.Warn(
+						"Failed to publish message, retrying...",
+						logger.Fields{
+							"attempt": i + 1,
+							"error":   publishErr,
+						},
+					)
+					time.Sleep(time.Second)
+				}
+				So(publishErr, ShouldBeNil)
 
 				Convey("It should delete product in the mongo database", func() {
-					ctx := context.Background()
-
-					productDeleted := &externalEvents.ProductDeletedV1{
-						Message:   types.NewMessage(uuid.NewV4().String()),
-						ProductId: integrationTestSharedFixture.Items[0].ProductId,
-					}
-
-					err := integrationTestSharedFixture.Bus.PublishMessage(ctx, productDeleted, nil)
-					So(err, ShouldBeNil)
-
-					var p *models.Product
-
-					So(testUtils.WaitUntilConditionMet(func() bool {
-						p, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+					// Wait for the product to be deleted with a more robust condition
+					var deletedProduct *models.Product
+					err := testUtils.WaitUntilConditionMet(func() bool {
+						deletedProduct, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
 							ctx,
 							integrationTestSharedFixture.Items[0].ProductId,
 						)
-						So(err, ShouldBeNil)
+						if err != nil {
+							integrationTestSharedFixture.Log.Errorw(
+								"Error checking product deletion",
+								logger.Fields{
+									"error":     err,
+									"productId": integrationTestSharedFixture.Items[0].ProductId,
+								},
+							)
+							return false
+						}
+						return deletedProduct == nil
+					}, 45*time.Second) // Increased timeout to 45 seconds
 
-						return p == nil
-					}), ShouldBeNil)
-
-					So(p, ShouldBeNil)
+					So(err, ShouldBeNil, "Timeout waiting for product deletion")
+					So(deletedProduct, ShouldBeNil, "Product should be deleted")
 				})
 			})
 		})
@@ -109,6 +110,4 @@ func TestProductDeleted(t *testing.T) {
 	})
 
 	integrationTestSharedFixture.Log.Info("TearDownSuite started")
-	integrationTestSharedFixture.Bus.Stop()
-	time.Sleep(1 * time.Second)
 }

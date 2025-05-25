@@ -54,7 +54,6 @@ func (p *postgresProductRepository) GetAllProducts(
 			"error in the paginate",
 		),
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -121,7 +120,6 @@ func (p *postgresProductRepository) GetProductById(
 			),
 		),
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +185,6 @@ func (p *postgresProductRepository) UpdateProduct(
 			),
 		),
 	)
-
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +217,6 @@ func (p *postgresProductRepository) DeleteProductByID(
 		"error in the deleting product with id %s into the database.",
 		uuid,
 	)))
-
 	if err != nil {
 		return err
 	}

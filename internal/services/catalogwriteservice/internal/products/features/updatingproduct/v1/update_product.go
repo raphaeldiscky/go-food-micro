@@ -46,10 +46,6 @@ func NewUpdateProductWithValidation(
 	return command, err
 }
 
-// IsTxRequest for enabling transactions on the mediatr pipeline
-func (c *UpdateProduct) isTxRequest() {
-}
-
 func (c *UpdateProduct) Validate() error {
 	err := validation.ValidateStruct(
 		c,

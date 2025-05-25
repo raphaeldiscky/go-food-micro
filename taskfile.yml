@@ -5,8 +5,8 @@ version: "3"
 vars:
   GOOS: "{{default OS .GOOS}}"
   DC_DIR: "deployments/docker-compose"
-  INFRA_DC_FILE: "{{.DC_DIR}}/docker-compose.infra.yaml"
-  MONITORING_DC_FILE: "{{.DC_DIR}}/docker-compose.monitoring.yaml"
+  INFRA_DC_FILE: "{{.DC_DIR}}/infra.yaml"
+  MONITORING_DC_FILE: "{{.DC_DIR}}/monitoring.yaml"
   SLEEP_CMD: '{{if eq .GOOS "windows"}}timeout{{else}}sleep{{end}}'
 
 tasks:
@@ -15,6 +15,14 @@ tasks:
     cmds:
       - chmod +x ./scripts/install-tools.sh
       - ./scripts/install-tools.sh
+
+  install_dependencies:
+    desc: Install project dependencies
+    cmds:
+      - sh ./scripts/install-dependencies.sh pkg
+      - sh ./scripts/install-dependencies.sh catalogwriteservice
+      - sh ./scripts/install-dependencies.sh catalogreadservice
+      - sh ./scripts/install-dependencies.sh orderservice
 
   run_catalogs_write_service:
     desc: Run catalog write service
@@ -45,35 +53,27 @@ tasks:
       - sh ./scripts/build.sh catalogreadservice
       - sh ./scripts/build.sh orderservice
 
-  install_dependencies:
-    desc: Install project dependencies
-    cmds:
-      - sh ./scripts/install-dependencies.sh pkg
-      - sh ./scripts/install-dependencies.sh catalogwriteservice
-      - sh ./scripts/install-dependencies.sh catalogreadservice
-      - sh ./scripts/install-dependencies.sh orderservice
-
   start_infra:
     desc: Start infrastructure using docker-compose
     cmds:
-      - docker-compose -f {{.INFRA_DC_FILE}} up --build -d
+      - docker compose -f {{.INFRA_DC_FILE}} up -d
 
   start_monitoring:
     desc: Start monitoring using docker-compose
     cmds:
-      - docker-compose -f {{.MONITORING_DC_FILE}} up --build -d
+      - docker compose -f {{.MONITORING_DC_FILE}} up -d
 
   stop_infra:
     desc: Stop infrastructure using docker-compose
     cmds:
-      - docker-compose -f {{.INFRA_DC_FILE}} stop
-      - docker-compose -f {{.INFRA_DC_FILE}} rm -f
+      - docker compose -f {{.INFRA_DC_FILE}} stop
+      - docker compose -f {{.INFRA_DC_FILE}} rm -f
 
   stop_monitoring:
     desc: Stop monitoring using docker-compose
     cmds:
-      - docker-compose -f {{.MONITORING_DC_FILE}} stop
-      - docker-compose -f {{.MONITORING_DC_FILE}} rm -f
+      - docker compose -f {{.MONITORING_DC_FILE}} stop
+      - docker compose -f {{.MONITORING_DC_FILE}} rm -f
 
   restart_infra:
     desc: Restart infrastructure using docker-compose

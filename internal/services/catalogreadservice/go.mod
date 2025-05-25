@@ -1,6 +1,6 @@
 module github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice
 
-go 1.22
+go 1.23
 
 // https://go.dev/doc/tutorial/call-module-code
 replace github.com/raphaeldiscky/go-food-micro/internal/pkg => ../../pkg/
@@ -12,10 +12,10 @@ require (
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/labstack/echo/v4 v4.11.1
-	github.com/raphaeldiscky/go-food-micro/internal/pkg v0.0.0-20230831075934-be8df319f588
 	github.com/mehdihadeli/go-mediatr v1.3.0
 	github.com/michaelklishin/rabbit-hole v1.5.0
 	github.com/pterm/pterm v0.12.69
+	github.com/raphaeldiscky/go-food-micro/internal/pkg v0.0.0-20230831075934-be8df319f588
 	github.com/redis/go-redis/v9 v9.2.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/smartystreets/goconvey v1.8.1
@@ -28,7 +28,6 @@ require (
 	go.opentelemetry.io/otel/metric v1.19.0
 	go.opentelemetry.io/otel/trace v1.19.0
 	go.uber.org/fx v1.20.0
-	gorm.io/gorm v1.25.5
 )
 
 require (
@@ -227,6 +226,7 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/postgres v1.5.2 // indirect
+	gorm.io/gorm v1.25.5 // indirect
 	gorm.io/plugin/opentelemetry v0.1.4 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 	modernc.org/libc v1.24.1 // indirect

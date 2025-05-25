@@ -10,7 +10,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data"
 
 	"go.opentelemetry.io/otel/metric"
-	api "go.opentelemetry.io/otel/metric"
 	"go.uber.org/fx"
 )
 
@@ -40,7 +39,7 @@ func provideCatalogsMetrics(
 
 	createProductGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_create_product_grpc_requests_total", cfg.ServiceName),
-		api.WithDescription("The total number of create product grpc requests"),
+		metric.WithDescription("The total number of create product grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -48,7 +47,7 @@ func provideCatalogsMetrics(
 
 	updateProductGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_update_product_grpc_requests_total", cfg.ServiceName),
-		api.WithDescription("The total number of update product grpc requests"),
+		metric.WithDescription("The total number of update product grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -56,7 +55,7 @@ func provideCatalogsMetrics(
 
 	deleteProductGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_delete_product_grpc_requests_total", cfg.ServiceName),
-		api.WithDescription("The total number of delete product grpc requests"),
+		metric.WithDescription("The total number of delete product grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -67,7 +66,7 @@ func provideCatalogsMetrics(
 			"%s_get_product_by_id_grpc_requests_total",
 			cfg.ServiceName,
 		),
-		api.WithDescription(
+		metric.WithDescription(
 			"The total number of get product by id grpc requests",
 		),
 	)
@@ -77,7 +76,7 @@ func provideCatalogsMetrics(
 
 	searchProductGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_search_product_grpc_requests_total", cfg.ServiceName),
-		api.WithDescription("The total number of search product grpc requests"),
+		metric.WithDescription("The total number of search product grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -88,7 +87,7 @@ func provideCatalogsMetrics(
 			"%s_create_product_rabbitmq_messages_total",
 			cfg.ServiceName,
 		),
-		api.WithDescription(
+		metric.WithDescription(
 			"The total number of create product rabbirmq messages",
 		),
 	)
@@ -101,7 +100,7 @@ func provideCatalogsMetrics(
 			"%s_update_product_rabbitmq_messages_total",
 			cfg.ServiceName,
 		),
-		api.WithDescription(
+		metric.WithDescription(
 			"The total number of update product rabbirmq messages",
 		),
 	)
@@ -114,7 +113,7 @@ func provideCatalogsMetrics(
 			"%s_delete_product_rabbitmq_messages_total",
 			cfg.ServiceName,
 		),
-		api.WithDescription(
+		metric.WithDescription(
 			"The total number of delete product rabbirmq messages",
 		),
 	)
@@ -127,7 +126,7 @@ func provideCatalogsMetrics(
 			"%s_search_product_rabbitmq_messages_total",
 			cfg.ServiceName,
 		),
-		api.WithDescription(
+		metric.WithDescription(
 			"The total number of success rabbitmq processed messages",
 		),
 	)
@@ -140,7 +139,7 @@ func provideCatalogsMetrics(
 			"%s_error_rabbitmq_processed_messages_total",
 			cfg.ServiceName,
 		),
-		api.WithDescription(
+		metric.WithDescription(
 			"The total number of error rabbitmq processed messages",
 		),
 	)

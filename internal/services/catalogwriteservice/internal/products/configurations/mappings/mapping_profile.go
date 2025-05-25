@@ -50,7 +50,7 @@ func ConfigureProductsMappings() error {
 		return err
 	}
 
-	err = mapper.CreateCustomMap(
+	mapper.CreateCustomMap(
 		func(product *models.Product) *productsService.Product {
 			return &productsService.Product{
 				ProductId:   product.Id.String(),

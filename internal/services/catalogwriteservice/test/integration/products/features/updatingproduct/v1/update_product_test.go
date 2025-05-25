@@ -11,11 +11,13 @@ import (
 	"time"
 
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1/events/integrationevents"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 
 	"github.com/mehdihadeli/go-mediatr"
@@ -79,7 +81,7 @@ var _ = Describe("Update Product Feature", func() {
 	Describe("Updating an existing product in the database", func() {
 		Context("Given product exists in the database", func() {
 			BeforeEach(func() {
-				command, err = v1.NewUpdateProduct(
+				command, err = v1.NewUpdateProductWithValidation(
 					existingProduct.Id,
 					"Updated Product ShortTypeName",
 					existingProduct.Description,
@@ -110,8 +112,9 @@ var _ = Describe("Update Product Feature", func() {
 				It(
 					"Should update the existing product in the database",
 					func() {
-						updatedProduct, err := integrationFixture.CatalogsDBContext.FindProductByID(
+						updatedProduct, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 							ctx,
+							integrationFixture.CatalogsDBContext,
 							existingProduct.Id,
 						)
 						Expect(err).To(BeNil())
@@ -137,7 +140,7 @@ var _ = Describe("Update Product Feature", func() {
 			BeforeEach(func() {
 				// Generate a random ID that does not exist in the database
 				id = uuid.NewV4()
-				command, err = v1.NewUpdateProduct(
+				command, err = v1.NewUpdateProductWithValidation(
 					id,
 					"Updated Product ShortTypeName",
 					"Updated Product Description",
@@ -191,7 +194,7 @@ var _ = Describe("Update Product Feature", func() {
 		func() {
 			Context("Given product exists in the database", func() {
 				BeforeEach(func() {
-					command, err = v1.NewUpdateProduct(
+					command, err = v1.NewUpdateProductWithValidation(
 						existingProduct.Id,
 						"Updated Product ShortTypeName",
 						existingProduct.Description,

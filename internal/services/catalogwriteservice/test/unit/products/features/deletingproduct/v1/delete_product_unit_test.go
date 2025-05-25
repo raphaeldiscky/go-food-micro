@@ -27,16 +27,17 @@ func TestDeleteProductByIdUnit(t *testing.T) {
 func (c *deleteProductUnitTests) Test_New_Delete_Product_Should_Return_No_Error_For_Valid_Input() {
 	id := uuid.NewV4()
 
-	query, err := v1.NewDeleteProduct(id)
+	command, err := v1.NewDeleteProductWithValidation(id)
 
-	c.Assert().NotNil(query)
-	c.Assert().Equal(query.ProductID, id)
+	c.Assert().NotNil(command)
+	c.Assert().Equal(command.ProductID, id)
 	c.Require().NoError(err)
 }
 
 func (c *deleteProductUnitTests) Test_New_Delete_Product_Should_Return_Error_For_Invalid_Id() {
-	query, err := v1.NewDeleteProduct(uuid.UUID{})
+	command, err := v1.NewDeleteProductWithValidation(uuid.Nil)
 
-	c.Assert().Nil(query)
 	c.Require().Error(err)
+	c.NotNil(command)
+	c.Equal(uuid.Nil, command.ProductID)
 }

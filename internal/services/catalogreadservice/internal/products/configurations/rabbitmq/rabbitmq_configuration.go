@@ -2,10 +2,12 @@ package rabbitmq
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	rabbitmqConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
+	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
 	createProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
 	deleteProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/events/integration_events/external_events"
 	updateProductExternalEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/events/integration_events/external_events"
@@ -20,12 +22,14 @@ func ConfigProductsRabbitMQ(
 	tracer tracing.AppTracer,
 ) {
 	// add custom message type mappings
-	// utils.RegisterCustomMessageTypesToRegistrty(map[string]types.IMessage{"productCreatedV1": &creatingProductIntegration.ProductCreatedV1{}})
+	utils.RegisterCustomMessageTypesToRegistrty(map[string]types.IMessage{
+		"ProductUpdatedV1": &updateProductExternalEventsV1.ProductUpdatedV1{},
+	})
 
 	builder.
 		AddConsumer(
-			createProductExternalEventV1.ProductCreatedV1{},
-			func(builder configurations.RabbitMQConsumerConfigurationBuilder) {
+			&createProductExternalEventV1.ProductCreatedV1{},
+			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
 						handlersBuilder.AddHandler(
@@ -39,8 +43,8 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			deleteProductExternalEventV1.ProductDeletedV1{},
-			func(builder configurations.RabbitMQConsumerConfigurationBuilder) {
+			&deleteProductExternalEventV1.ProductDeletedV1{},
+			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
 						handlersBuilder.AddHandler(
@@ -50,17 +54,12 @@ func ConfigProductsRabbitMQ(
 								tracer,
 							),
 						)
-						deleteProductExternalEventV1.NewProductDeletedConsumer(
-							logger,
-							validator,
-							tracer,
-						)
 					},
 				)
 			}).
 		AddConsumer(
-			updateProductExternalEventsV1.ProductUpdatedV1{},
-			func(builder configurations.RabbitMQConsumerConfigurationBuilder) {
+			&updateProductExternalEventsV1.ProductUpdatedV1{},
+			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
 						handlersBuilder.AddHandler(
@@ -69,11 +68,6 @@ func ConfigProductsRabbitMQ(
 								validator,
 								tracer,
 							),
-						)
-						updateProductExternalEventsV1.NewProductUpdatedConsumer(
-							logger,
-							validator,
-							tracer,
 						)
 					},
 				)

@@ -121,7 +121,6 @@ func (s *grpcServer) RunGrpcServer(
 	)
 
 	err = s.server.Serve(l)
-
 	if err != nil {
 		s.log.Error(
 			fmt.Sprintf(

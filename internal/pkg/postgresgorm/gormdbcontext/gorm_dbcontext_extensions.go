@@ -45,7 +45,6 @@ func FindModelByID[TDataModel interface{}, TModel interface{}](
 	// result := c.WithContext(ctx).Scopes(scopes.FilterByID(id)).First(&dataModel)
 
 	modelName := strcase.ToSnake(typeMapper.GetGenericNonePointerTypeNameByT[TModel]())
-	dataModelName := strcase.ToSnake(typeMapper.GetGenericNonePointerTypeNameByT[TDataModel]())
 
 	result := dbContext.DB().WithContext(ctx).First(&dataModel, id)
 	if result.Error != nil {
@@ -53,7 +52,7 @@ func FindModelByID[TDataModel interface{}, TModel interface{}](
 			result.Error,
 			fmt.Sprintf(
 				"%s with id `%s` not found in the database",
-				dataModelName,
+				modelName,
 				id.String(),
 			),
 		)

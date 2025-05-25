@@ -117,7 +117,6 @@ func createPostgresDB(cfg *GormOptions) error {
 	}
 
 	db, err = postgresGormDB.DB()
-
 	if err != nil {
 		return err
 	}

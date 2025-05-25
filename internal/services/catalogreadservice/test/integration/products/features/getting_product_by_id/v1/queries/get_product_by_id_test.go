@@ -21,8 +21,9 @@ func TestGetProductById(t *testing.T) {
 	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
 	ctx := context.Background()
 
-	Convey("Get Product by ID Feature", t, func() {
-		integrationTestSharedFixture.SetupTest()
+	Convey("Getting Product By ID Feature", t, func() {
+		ctx := context.Background()
+		integrationTestSharedFixture.SetupTest(t)
 
 		knownProductID, err := uuid.FromString(integrationTestSharedFixture.Items[0].Id)
 		unknownProductID := uuid.NewV4()

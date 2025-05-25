@@ -22,7 +22,7 @@ func TestGetProducts(t *testing.T) {
 
 	Convey("Get All Products Feature", t, func() {
 		ctx := context.Background()
-		integrationTestSharedFixture.SetupTest()
+		integrationTestSharedFixture.SetupTest(t)
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario

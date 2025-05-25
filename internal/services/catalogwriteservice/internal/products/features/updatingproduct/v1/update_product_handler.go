@@ -38,10 +38,6 @@ func (c *updateProductHandler) RegisterHandler() error {
 	)
 }
 
-// IsTxRequest for enabling transactions on the mediatr pipeline
-func (c *updateProductHandler) isTxRequest() {
-}
-
 func (c *updateProductHandler) Handle(
 	ctx context.Context,
 	command *UpdateProduct,

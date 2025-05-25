@@ -4,9 +4,6 @@ import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"gorm.io/gorm"
 )
 
 func (ic *CatalogsServiceConfigurator) migrateCatalogs(
@@ -25,16 +22,4 @@ func migrateGoose(
 	err := runner.Up(context.Background(), 0)
 
 	return err
-}
-
-func migrateGorm(
-	db *gorm.DB,
-) error {
-	// https://atlasgo.io/guides/orms/gorm
-	err := db.AutoMigrate(&models.Product{})
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
