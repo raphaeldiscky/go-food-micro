@@ -50,11 +50,6 @@ func ConfigProductsRabbitMQ(
 								tracer,
 							),
 						)
-						deleteProductExternalEventV1.NewProductDeletedConsumer(
-							logger,
-							validator,
-							tracer,
-						)
 					},
 				)
 			}).
@@ -69,11 +64,6 @@ func ConfigProductsRabbitMQ(
 								validator,
 								tracer,
 							),
-						)
-						updateProductExternalEventsV1.NewProductUpdatedConsumer(
-							logger,
-							validator,
-							tracer,
 						)
 					},
 				)

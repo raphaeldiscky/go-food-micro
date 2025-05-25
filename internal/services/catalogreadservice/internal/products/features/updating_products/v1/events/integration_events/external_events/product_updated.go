@@ -12,5 +12,9 @@ type ProductUpdatedV1 struct {
 	Name        string    `json:"name,omitempty"`
 	Description string    `json:"description,omitempty"`
 	Price       float64   `json:"price,omitempty"`
-	UpdatedAt   time.Time `json:"updatedAt,omitempty"`
+	UpdatedAt   time.Time `json:"updatedAt"`
+}
+
+func (p *ProductUpdatedV1) GetMessageTypeName() string {
+	return "ProductUpdatedV1"
 }

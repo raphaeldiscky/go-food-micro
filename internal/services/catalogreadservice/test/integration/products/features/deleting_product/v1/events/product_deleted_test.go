@@ -26,7 +26,7 @@ func TestProductDeleted(t *testing.T) {
 	// in test mode we set rabbitmq `AutoStart=false` in configuration in rabbitmqOptions, so we should run rabbitmq bus manually
 	integrationTestSharedFixture.Bus.Start(context.Background())
 	// wait for consumers ready to consume before publishing messages, preparation background workers takes a bit time (for preventing messages lost)
-	time.Sleep(1 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	Convey("Product Deleted Feature", t, func() {
 		ctx := context.Background()

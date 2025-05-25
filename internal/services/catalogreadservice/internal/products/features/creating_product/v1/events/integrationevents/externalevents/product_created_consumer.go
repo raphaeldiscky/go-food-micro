@@ -15,6 +15,7 @@ import (
 	"emperror.dev/errors"
 	"github.com/go-playground/validator"
 	"github.com/mehdihadeli/go-mediatr"
+	"go.opentelemetry.io/otel/attribute"
 )
 
 type productCreatedConsumer struct {
@@ -39,10 +40,33 @@ func (c *productCreatedConsumer) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
 ) error {
+	ctx, span := c.tracer.Start(ctx, "productCreatedConsumer.Handle")
+	defer span.End()
+
 	product, ok := consumeContext.Message().(*ProductCreatedV1)
 	if !ok {
-		return errors.New("error in casting message to ProductCreatedV1")
+		err := errors.New("error in casting message to ProductCreatedV1")
+		c.logger.Errorw("Failed to cast message", logger.Fields{"error": err})
+		span.RecordError(err)
+		return err
 	}
+
+	// Validate the message
+	if err := c.validator.Struct(product); err != nil {
+		validationErr := customErrors.NewValidationErrorWrap(
+			err,
+			"message validation failed",
+		)
+		c.logger.Errorw("Message validation failed", logger.Fields{"error": validationErr})
+		span.RecordError(validationErr)
+		return validationErr
+	}
+
+	span.SetAttributes(
+		attribute.String("productId", product.ProductId),
+		attribute.String("name", product.Name),
+		attribute.Float64("price", product.Price),
+	)
 
 	command, err := v1.NewCreateProduct(
 		product.ProductId,
@@ -56,23 +80,41 @@ func (c *productCreatedConsumer) Handle(
 			err,
 			"command validation failed",
 		)
-
+		c.logger.Errorw("Command validation failed", logger.Fields{"error": validationErr})
+		span.RecordError(validationErr)
 		return validationErr
 	}
+
 	_, err = mediatr.Send[*v1.CreateProduct, *dtos.CreateProductResponseDto](
 		ctx,
 		command,
 	)
 	if err != nil {
-		return errors.WithMessage(
+		err = errors.WithMessage(
 			err,
 			fmt.Sprintf(
 				"error in sending CreateProduct with id: {%s}",
 				command.ProductId,
 			),
 		)
+		c.logger.Errorw(
+			"Failed to send CreateProduct command",
+			logger.Fields{
+				"error":     err,
+				"productId": command.ProductId,
+			},
+		)
+		span.RecordError(err)
+		return err
 	}
-	c.logger.Info("Product consumer handled.")
 
-	return err
+	c.logger.Infow(
+		"Product consumer handled successfully",
+		logger.Fields{
+			"productId": command.ProductId,
+			"traceId":   span.SpanContext().TraceID().String(),
+		},
+	)
+
+	return nil
 }

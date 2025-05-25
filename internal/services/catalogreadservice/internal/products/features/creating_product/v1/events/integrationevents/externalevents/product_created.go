@@ -14,3 +14,7 @@ type ProductCreatedV1 struct {
 	Price       float64   `json:"price,omitempty"`
 	CreatedAt   time.Time `json:"createdAt"`
 }
+
+func (p *ProductCreatedV1) GetMessageTypeName() string {
+	return "ProductCreatedV1"
+}
