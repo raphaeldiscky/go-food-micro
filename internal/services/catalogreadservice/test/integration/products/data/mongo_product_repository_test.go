@@ -23,11 +23,11 @@ func TestProductPostgresRepository(t *testing.T) {
 	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
 
 	// scenario
-	Convey("Product Repository", t, func() {
-		integrationTestSharedFixture.SetupTest()
+	Convey("MongoDB Product Repository", t, func() {
+		ctx := context.Background()
+		integrationTestSharedFixture.SetupTest(t)
 
 		Convey("When we create the new product in the database", func() {
-			ctx := context.Background()
 			product := &models.Product{
 				Id:          uuid.NewV4().String(),
 				ProductId:   uuid.NewV4().String(),
@@ -61,8 +61,6 @@ func TestProductPostgresRepository(t *testing.T) {
 		})
 
 		Convey("When we delete the existing product", func() {
-			ctx := context.Background()
-
 			id := integrationTestSharedFixture.Items[0].Id
 			err := integrationTestSharedFixture.ProductRepository.DeleteProductByID(ctx, id)
 
@@ -89,8 +87,6 @@ func TestProductPostgresRepository(t *testing.T) {
 
 		Convey("When we update the existing product", func() {
 			Convey("Then the product should be updated successfully", func() {
-				ctx := context.Background()
-
 				id := integrationTestSharedFixture.Items[0].Id
 				existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, id)
 
@@ -117,8 +113,6 @@ func TestProductPostgresRepository(t *testing.T) {
 		})
 
 		Convey("When attempting to get a product that does not exist", func() {
-			ctx := context.Background()
-
 			res, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, uuid.NewV4().String())
 
 			Convey("Then it should return a NotFound error and nil result", func() {
@@ -134,8 +128,6 @@ func TestProductPostgresRepository(t *testing.T) {
 		})
 
 		Convey("When attempting to get an existing product from the database", func() {
-			ctx := context.Background()
-
 			id := integrationTestSharedFixture.Items[0].Id
 			res, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, id)
 
@@ -152,8 +144,6 @@ func TestProductPostgresRepository(t *testing.T) {
 		})
 
 		Convey("When attempting to get all existing products from the database", func() {
-			ctx := context.Background()
-
 			res, err := integrationTestSharedFixture.ProductRepository.GetAllProducts(ctx, utils.NewListQuery(10, 1))
 
 			Convey("Then it should return the list of products and no error", func() {

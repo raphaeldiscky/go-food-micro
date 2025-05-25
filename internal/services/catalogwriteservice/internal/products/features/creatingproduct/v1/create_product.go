@@ -52,9 +52,6 @@ func NewCreateProductWithValidation(
 	return command, err
 }
 
-func (c *CreateProduct) isTxRequest() {
-}
-
 func (c *CreateProduct) Validate() error {
 	err := validation.ValidateStruct(
 		c,

@@ -27,10 +27,6 @@ func NewDeleteProductWithValidation(productID uuid.UUID) (*DeleteProduct, error)
 	return command, err
 }
 
-// IsTxRequest for enabling transactions on the mediatr pipeline
-func (c *DeleteProduct) isTxRequest() {
-}
-
 func (c *DeleteProduct) Validate() error {
 	err := validation.ValidateStruct(
 		c,

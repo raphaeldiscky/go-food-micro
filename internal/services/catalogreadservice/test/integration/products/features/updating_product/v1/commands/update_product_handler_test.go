@@ -22,7 +22,7 @@ func TestUpdateProduct(t *testing.T) {
 
 	Convey("Updating Product Feature", t, func() {
 		ctx := context.Background()
-		integrationTestSharedFixture.SetupTest()
+		integrationTestSharedFixture.SetupTest(t)
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario

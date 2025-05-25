@@ -33,10 +33,6 @@ func (c *deleteProductHandler) RegisterHandler() error {
 	)
 }
 
-// IsTxRequest for enabling transactions on the mediatr pipeline
-func (c *deleteProductHandler) isTxRequest() {
-}
-
 func (c *deleteProductHandler) Handle(
 	ctx context.Context,
 	command *DeleteProduct,

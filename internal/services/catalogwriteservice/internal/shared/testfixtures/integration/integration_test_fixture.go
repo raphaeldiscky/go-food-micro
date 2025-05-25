@@ -1,17 +1,13 @@
 package integration
 
 import (
-	"context"
 	"testing"
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/testfixture"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
@@ -160,48 +156,4 @@ func seedDataManually(gormDB *gorm.DB) ([]*datamodel.ProductDataModel, error) {
 	}
 
 	return products, nil
-}
-
-func seedDataWithFixture(gormDB *gorm.DB) ([]*datamodel.ProductDataModel, error) {
-	db, err := gormDB.DB()
-	if err != nil {
-		return nil, errors.WrapIf(err, "error in seed database")
-	}
-
-	// https://github.com/go-testfixtures/testfixtures#templating
-	// seed data
-	var data []struct {
-		Name        string
-		ProductId   uuid.UUID
-		Description string
-	}
-
-	f := []struct {
-		Name        string
-		ProductId   uuid.UUID
-		Description string
-	}{
-		{gofakeit.Name(), uuid.NewV4(), gofakeit.AdjectiveDescriptive()},
-		{gofakeit.Name(), uuid.NewV4(), gofakeit.AdjectiveDescriptive()},
-	}
-
-	data = append(data, f...)
-
-	err = testfixture.RunPostgresFixture(
-		db,
-		[]string{"db/fixtures/products"},
-		map[string]interface{}{
-			"Products": data,
-		})
-	if err != nil {
-		return nil, errors.WrapIf(err, "error in seed database")
-	}
-
-	result, err := gormPostgres.Paginate[*datamodel.ProductDataModel, *datamodel.ProductDataModel](
-		context.Background(),
-		utils.NewListQuery(10, 1),
-		gormDB,
-	)
-
-	return result.Items, nil
 }

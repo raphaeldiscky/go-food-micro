@@ -24,7 +24,7 @@ func TestCreateProduct(t *testing.T) {
 
 	Convey("Creating Product Feature", t, func() {
 		ctx := context.Background()
-		integrationTestSharedFixture.SetupTest()
+		integrationTestSharedFixture.SetupTest(t)
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario

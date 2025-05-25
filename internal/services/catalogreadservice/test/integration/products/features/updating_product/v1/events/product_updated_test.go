@@ -102,7 +102,10 @@ func TestProductUpdatedConsumer(t *testing.T) {
 				func(msg *externalEvents.ProductUpdatedV1) bool {
 					if msg == nil {
 						err := fmt.Errorf("received nil message")
-						integrationTestSharedFixture.Log.Errorw("Message consumption error", logger.Fields{"error": err})
+						integrationTestSharedFixture.Log.Errorw(
+							"Message consumption error",
+							logger.Fields{"error": err},
+						)
 						messageError <- err
 						return false
 					}
@@ -175,7 +178,9 @@ func TestProductUpdatedConsumer(t *testing.T) {
 						)
 						t.Fatalf("Error consuming message: %v", err)
 					case <-messageConsumed:
-						integrationTestSharedFixture.Log.Info("Message consumed successfully, waiting for database update...")
+						integrationTestSharedFixture.Log.Info(
+							"Message consumed successfully, waiting for database update...",
+						)
 						// Message was consumed, now wait for database update
 						var product *models.Product
 						var dbErr error
@@ -215,7 +220,6 @@ func TestProductUpdatedConsumer(t *testing.T) {
 
 							return matches
 						}, 45*time.Second) // Increased timeout for database update
-
 						if err != nil {
 							integrationTestSharedFixture.Log.Errorw(
 								"Database update timeout",
@@ -237,7 +241,9 @@ func TestProductUpdatedConsumer(t *testing.T) {
 						So(product.Description, ShouldEqual, fakeUpdateProduct.Description)
 						So(product.Price, ShouldEqual, fakeUpdateProduct.Price)
 					case <-time.After(45 * time.Second): // Increased timeout for message consumption
-						integrationTestSharedFixture.Log.Error("Message consumption timeout - the event was not consumed within the expected time")
+						integrationTestSharedFixture.Log.Error(
+							"Message consumption timeout - the event was not consumed within the expected time",
+						)
 						t.Fatal("Message consumption timeout - the event was not consumed within the expected time")
 					}
 				})
