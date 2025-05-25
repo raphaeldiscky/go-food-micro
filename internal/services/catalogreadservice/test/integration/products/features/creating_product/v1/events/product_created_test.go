@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/test/integration/shared"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/test/integration/shared/fixtures"
@@ -49,8 +49,8 @@ func TestProductCreatedConsumer(t *testing.T) {
 		ctx := context.Background()
 		fakeProduct := &externalEvents.ProductCreatedV1{
 			Message: &types.Message{
-				Id:        uuid.New().String(),
-				Timestamp: time.Now().UTC(),
+				MessageId: uuid.New().String(),
+				Created:   time.Now().UTC(),
 			},
 			ProductId:   uuid.New().String(),
 			Name:        gofakeit.Name(),
