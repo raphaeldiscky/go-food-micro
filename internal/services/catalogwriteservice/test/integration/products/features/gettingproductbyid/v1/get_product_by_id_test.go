@@ -129,7 +129,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 
 				// "When" step
 				When(
-					"the GteProductById query is executed for non-existing product",
+					"the GetProductById query is executed for non-existing product",
 					func() {
 						BeforeEach(func() {
 							result, err = mediatr.Send[*getProductByIdQuery.GetProductById, *dtos.GetProductByIdResponseDto](
@@ -144,6 +144,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 						})
 
 						It("Should return a NotFound error", func() {
+							fmt.Println(err)
 							Expect(
 								err,
 							).To(MatchError(ContainSubstring(fmt.Sprintf("product with id `%s` not found in the database", query.ProductID.String()))))
