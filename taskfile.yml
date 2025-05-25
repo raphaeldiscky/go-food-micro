@@ -104,12 +104,10 @@ tasks:
 
   unit_test:
     desc: Run unit tests
-    vars:
-      DEBUG: "{{default false .DEBUG}}"
     cmds:
-      - sh ./scripts/test.sh catalogwriteservice unit {{.DEBUG}}
-      - sh ./scripts/test.sh catalogreadservice unit {{.DEBUG}}
-      - sh ./scripts/test.sh orderservice unit {{.DEBUG}}
+      - sh ./scripts/test.sh catalogwriteservice unit
+      - sh ./scripts/test.sh catalogreadservice unit
+      - sh ./scripts/test.sh orderservice unit
 
   integration_test:
     desc: Run integration tests

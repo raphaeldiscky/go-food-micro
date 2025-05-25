@@ -46,6 +46,18 @@ func NewIntegrationTestSharedFixture(
 ) *IntegrationTestSharedFixture {
 	result := test.NewTestApp().Run(t)
 
+	// Log the RabbitMQ connection details for debugging
+	result.Logger.Infow(
+		"RabbitMQ connection details",
+		logger.Fields{
+			"host":     result.RabbitmqOptions.RabbitmqHostOptions.HostName,
+			"port":     result.RabbitmqOptions.RabbitmqHostOptions.Port,
+			"httpPort": result.RabbitmqOptions.RabbitmqHostOptions.HttpPort,
+			"user":     result.RabbitmqOptions.RabbitmqHostOptions.UserName,
+			"vhost":    result.RabbitmqOptions.RabbitmqHostOptions.VirtualHost,
+		},
+	)
+
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
 		result.RabbitmqOptions.RabbitmqHostOptions.HttpEndPoint(),
@@ -53,6 +65,7 @@ func NewIntegrationTestSharedFixture(
 		result.RabbitmqOptions.RabbitmqHostOptions.Password)
 	if err != nil {
 		result.Logger.Error(errors.WrapIf(err, "error in creating rabbithole client"))
+		t.Fatalf("Failed to create RabbitMQ management client: %v", err)
 	}
 
 	shared := &IntegrationTestSharedFixture{
@@ -69,6 +82,35 @@ func NewIntegrationTestSharedFixture(
 		mongoClient:            result.MongoClient,
 		Tracer:                 result.Tracer,
 	}
+
+	// Start the bus with a context that has a timeout
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	// Try to start the bus with retries
+	var startErr error
+	for i := 0; i < 3; i++ {
+		startErr = shared.Bus.Start(ctx)
+		if startErr == nil {
+			break
+		}
+		result.Logger.Warn(
+			"Failed to start RabbitMQ bus, retrying...",
+			logger.Fields{
+				"attempt": i + 1,
+				"error":   startErr,
+			},
+		)
+		time.Sleep(2 * time.Second)
+	}
+
+	if startErr != nil {
+		result.Logger.Error(errors.WrapIf(startErr, "error starting RabbitMQ bus"))
+		t.Fatalf("Failed to start RabbitMQ bus after retries: %v", startErr)
+	}
+
+	// Wait for the bus to be ready
+	time.Sleep(5 * time.Second)
 
 	return shared
 }

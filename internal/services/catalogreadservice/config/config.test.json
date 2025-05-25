@@ -29,13 +29,17 @@
   },
   "rabbitmqOptions": {
     "autoStart": false,
-    "reconnecting": false,
+    "reconnecting": true,
+    "reconnectDelay": 5,
+    "maxRetries": 3,
     "rabbitmqHostOptions": {
       "userName": "guest",
       "password": "guest",
       "hostName": "localhost",
       "port": 5672,
-      "httpPort": 15672
+      "httpPort": 15672,
+      "connectionTimeout": 30,
+      "heartbeat": 10
     }
   },
   "redisOptions": {

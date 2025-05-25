@@ -150,7 +150,3 @@ func TestProductUpdatedConsumer(t *testing.T) {
 	integrationTestSharedFixture.Bus.Stop()
 	time.Sleep(1 * time.Second)
 }
-
-func (m *Message) GetMessageTypeName() string {
-	return typeMapper.GetTypeName(m)
-}
