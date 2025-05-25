@@ -16,12 +16,12 @@ require (
 	github.com/iancoleman/strcase v0.3.0
 	github.com/labstack/echo/v4 v4.11.1
 	github.com/lib/pq v1.10.9
-	github.com/raphaeldiscky/go-food-micro/internal/pkg v0.0.0-20230831075934-be8df319f588
 	github.com/mehdihadeli/go-mediatr v1.3.0
 	github.com/michaelklishin/rabbit-hole v1.5.0
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.28.0
 	github.com/pterm/pterm v0.12.69
+	github.com/raphaeldiscky/go-food-micro/internal/pkg v0.0.0-20230831075934-be8df319f588
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4

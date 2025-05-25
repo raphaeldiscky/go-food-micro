@@ -7,6 +7,10 @@ package events
 
 import (
 	"context"
+	"go-food-micro/internal/pkg/core/messaging"
+	"go-food-micro/internal/pkg/core/types"
+	"go-food-micro/internal/services/catalogreadservice/test/integration/shared"
+	"go-food-micro/internal/services/catalogreadservice/test/integration/shared/fixtures"
 	"testing"
 	"time"
 
@@ -16,15 +20,10 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
-
-	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go-food-micro/internal/pkg/core/messaging"
-	"go-food-micro/internal/pkg/core/types"
-	"go-food-micro/internal/services/catalogreadservice/test/integration/shared"
-	"go-food-micro/internal/services/catalogreadservice/test/integration/shared/fixtures"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestProductCreatedConsumer(t *testing.T) {

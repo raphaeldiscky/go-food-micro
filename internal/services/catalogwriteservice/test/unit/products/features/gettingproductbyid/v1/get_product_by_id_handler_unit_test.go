@@ -73,7 +73,7 @@ func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_NotFound_Error_For
 	c.ErrorContains(
 		err,
 		fmt.Sprintf(
-			"product_data_model with id `%s` not found in the database",
+			"product with id `%s` not found in the database",
 			id.String(),
 		),
 	)

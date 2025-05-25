@@ -16,6 +16,14 @@ tasks:
       - chmod +x ./scripts/install-tools.sh
       - ./scripts/install-tools.sh
 
+  install_dependencies:
+    desc: Install project dependencies
+    cmds:
+      - sh ./scripts/install-dependencies.sh pkg
+      - sh ./scripts/install-dependencies.sh catalogwriteservice
+      - sh ./scripts/install-dependencies.sh catalogreadservice
+      - sh ./scripts/install-dependencies.sh orderservice
+
   run_catalogs_write_service:
     desc: Run catalog write service
     cmds:
@@ -44,14 +52,6 @@ tasks:
       - sh ./scripts/build.sh catalogwriteservice
       - sh ./scripts/build.sh catalogreadservice
       - sh ./scripts/build.sh orderservice
-
-  install_dependencies:
-    desc: Install project dependencies
-    cmds:
-      - sh ./scripts/install-dependencies.sh pkg
-      - sh ./scripts/install-dependencies.sh catalogwriteservice
-      - sh ./scripts/install-dependencies.sh catalogreadservice
-      - sh ./scripts/install-dependencies.sh orderservice
 
   start_infra:
     desc: Start infrastructure using docker-compose
@@ -104,10 +104,12 @@ tasks:
 
   unit_test:
     desc: Run unit tests
+    vars:
+      DEBUG: "{{default false .DEBUG}}"
     cmds:
-      - sh ./scripts/test.sh catalogwriteservice unit
-      - sh ./scripts/test.sh catalogreadservice unit
-      - sh ./scripts/test.sh orderservice unit
+      - sh ./scripts/test.sh catalogwriteservice unit {{.DEBUG}}
+      - sh ./scripts/test.sh catalogreadservice unit {{.DEBUG}}
+      - sh ./scripts/test.sh orderservice unit {{.DEBUG}}
 
   integration_test:
     desc: Run integration tests

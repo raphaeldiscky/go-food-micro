@@ -24,7 +24,7 @@ func ConfigProductsRabbitMQ(
 
 	builder.
 		AddConsumer(
-			createProductExternalEventV1.ProductCreatedV1{},
+			&createProductExternalEventV1.ProductCreatedV1{},
 			func(builder configurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
@@ -39,7 +39,7 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			deleteProductExternalEventV1.ProductDeletedV1{},
+			&deleteProductExternalEventV1.ProductDeletedV1{},
 			func(builder configurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
@@ -54,7 +54,7 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			updateProductExternalEventsV1.ProductUpdatedV1{},
+			&updateProductExternalEventsV1.ProductUpdatedV1{},
 			func(builder configurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
