@@ -150,7 +150,7 @@ func TestProductPostgresRepository(t *testing.T) {
 				// Ensure there is no error.
 				So(err, ShouldBeNil)
 
-				// Verify the expected number of products in the list.
+				// Verify the expected number of products in the list (2 products are seeded in SetupTest).
 				So(len(res.Items), ShouldEqual, 2)
 			})
 		})

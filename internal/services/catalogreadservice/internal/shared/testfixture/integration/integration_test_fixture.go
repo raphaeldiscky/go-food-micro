@@ -171,20 +171,34 @@ func seedData(
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	product := &models.Product{
-		Id:          uuid.NewV4().String(),
-		ProductId:   uuid.NewV4().String(),
-		Name:        gofakeit.Name(),
-		CreatedAt:   time.Now(),
-		Description: gofakeit.AdjectiveDescriptive(),
-		Price:       gofakeit.Price(100, 1000),
+	// Create 2 products for testing
+	products := []*models.Product{
+		{
+			Id:          uuid.NewV4().String(),
+			ProductId:   uuid.NewV4().String(),
+			Name:        gofakeit.Name(),
+			CreatedAt:   time.Now(),
+			Description: gofakeit.AdjectiveDescriptive(),
+			Price:       gofakeit.Price(100, 1000),
+		},
+		{
+			Id:          uuid.NewV4().String(),
+			ProductId:   uuid.NewV4().String(),
+			Name:        gofakeit.Name(),
+			CreatedAt:   time.Now(),
+			Description: gofakeit.AdjectiveDescriptive(),
+			Price:       gofakeit.Price(100, 1000),
+		},
 	}
 
 	collection := db.Database(databaseName).Collection("products")
 
-	_, err := collection.InsertOne(ctx, product)
-	if err != nil {
-		return nil, errors.WrapIf(err, "failed to insert test product")
+	// Insert both products
+	for _, product := range products {
+		_, err := collection.InsertOne(ctx, product)
+		if err != nil {
+			return nil, errors.WrapIf(err, "failed to insert test product")
+		}
 	}
 
 	// Retrieve all products for debugging

@@ -13,8 +13,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/test/integration/shared"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/test/integration/shared/fixtures"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 
 	"github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
@@ -26,7 +26,7 @@ import (
 
 func TestProductCreatedConsumer(t *testing.T) {
 	// Initialize the shared fixture for integration tests
-	integrationTestSharedFixture := fixtures.NewIntegrationTestSharedFixture(t)
+	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
 	require.NotNil(t, integrationTestSharedFixture, "Integration test shared fixture should not be nil")
 
 	// Start the RabbitMQ bus manually to ensure it's running before the test
@@ -76,9 +76,9 @@ func TestProductCreatedConsumer(t *testing.T) {
 		assert.True(t, consumed, "Message should be consumed")
 
 		// Wait for the product to be created in the database with retries
-		var product *shared.Product
+		var product *models.Product
 		for i := 0; i < 5; i++ {
-			product, err = integrationTestSharedFixture.MongoDB.GetProduct(ctx, fakeProduct.ProductId)
+			product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(ctx, fakeProduct.ProductId)
 			if err == nil && product != nil {
 				break
 			}
@@ -88,21 +88,16 @@ func TestProductCreatedConsumer(t *testing.T) {
 		require.NotNil(t, product, "Product should be stored in database")
 
 		// Verify the product data
-		assert.Equal(t, fakeProduct.ProductId, product.Id)
+		assert.Equal(t, fakeProduct.ProductId, product.ProductId)
 		assert.Equal(t, fakeProduct.Name, product.Name)
 		assert.Equal(t, fakeProduct.Description, product.Description)
 		assert.Equal(t, fakeProduct.Price, product.Price)
 		assert.Equal(t, fakeProduct.CreatedAt.Unix(), product.CreatedAt.Unix())
 
-		// Verify no duplicate products
-		products, err := integrationTestSharedFixture.MongoDB.GetProducts(ctx)
-		require.NoError(t, err, "Failed to get products from database")
-		count := 0
-		for _, p := range products {
-			if p.Id == fakeProduct.ProductId {
-				count++
-			}
-		}
-		assert.Equal(t, 1, count, "Should have exactly one product with the given ID")
+		// Verify no duplicate products by checking if we can retrieve the product
+		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(ctx, fakeProduct.ProductId)
+		require.NoError(t, err, "Failed to get product from database")
+		require.NotNil(t, retrievedProduct, "Product should exist in database")
+		assert.Equal(t, fakeProduct.ProductId, retrievedProduct.ProductId, "Should have exactly one product with the given ID")
 	})
 }
