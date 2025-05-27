@@ -32,31 +32,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
+
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: make install-dependencies
+        run: task install-dependencies
 
         # https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
         # https://pkg.go.dev/cmd/go#hdr-Package_lists_and_patterns
 
       - name: Format
-        run: make format
+        run: task format
 
       - name: Lint
-        run: make lint
+        run: task lint
 
       - name: Build
-        run: make build
+        run: task build
 
         # https://go.dev/doc/articles/race_detector
         # https://dev.to/s0xzwasd/run-tests-with-race-flag-in-goland-512j
       - name: Unit Tests
         run:
-          make unit-test
+          task unit-test
 
           # there are some problem with test-container library in the github-actions!! locally all tests will pass
       - name: Integration Tests
-        run: make integration-test
+        run: task integration-test
 
       - name: End-To-End Tests
-        run: make e2e-test
+        run: task e2e-test

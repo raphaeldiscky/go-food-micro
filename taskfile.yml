@@ -10,6 +10,11 @@ vars:
   SLEEP_CMD: '{{if eq .GOOS "windows"}}timeout{{else}}sleep{{end}}'
 
 tasks:
+  ci:
+    desc: Run CI pipeline locally
+    cmds:
+      - act -n
+
   install_tools:
     desc: Install necessary tools
     cmds:
