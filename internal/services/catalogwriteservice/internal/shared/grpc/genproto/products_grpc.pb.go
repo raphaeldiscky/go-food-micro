@@ -151,7 +151,7 @@ func _ProductsService_GetProductById_Handler(srv interface{}, ctx context.Contex
 		FullMethod: ProductsService_GetProductById_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.(ProductsServiceServer).GetProductByID(ctx, req.(*GetProductByIDReq))
+		return srv.(ProductsServiceServer).GetProductByID(ctx, req.(*GetProductByIDReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }

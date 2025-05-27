@@ -1,134 +1,142 @@
-set dotenv
-
-# Install development tools
+.PHONY: install-tools
 install-tools:
-    #!/usr/bin/env bash
-    ./scripts/install-tools.sh
+	@./scripts/install-tools.sh
 
-# Run services
+.PHONY: run-catalogs-write-service
 run-catalogs-write-service:
-    #!/usr/bin/env bash
-    ./scripts/run.sh catalogwriteservice
+	@./scripts/run.sh  catalogwriteservice
 
+.PHONY: run-catalog-read-service
 run-catalog-read-service:
-    #!/usr/bin/env bash
-    ./scripts/run.sh catalogreadservice
+	@./scripts/run.sh  catalogreadservice
 
+.PHONY: run-order-service
 run-order-service:
-    #!/usr/bin/env bash
-    ./scripts/run.sh orderservice
+	@./scripts/run.sh  orderservice
 
-# Build services
-build *services="pkg catalogwriteservice catalogreadservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/build.sh $service
-    done
+.PHONY: build
+build:
+	@./scripts/build.sh  pkg
+	@./scripts/build.sh  catalogwriteservice
+	@./scripts/build.sh  catalogreadservice
+	@./scripts/build.sh  orderservice
 
-# Update dependencies
-update-dependencies *services="pkg catalogwriteservice catalogreadservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/update-dependencies.sh $service
-    done
+.PHONY: update-dependencies
+update-dependencies:
+	@./scripts/update-dependencies.sh  pkg
+	@./scripts/update-dependencies.sh  catalogwriteservice
+	@./scripts/update-dependencies.sh  catalogreadservice
+	@./scripts/update-dependencies.sh  orderservice
 
-# Install dependencies
-install-dependencies *services="pkg catalogwriteservice catalogreadservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/install-dependencies.sh $service
-    done
+.PHONY: install-dependencies
+install-dependencies:
+	@./scripts/install-dependencies.sh  pkg
+	@./scripts/install-dependencies.sh  catalogwriteservice
+	@./scripts/install-dependencies.sh  catalogreadservice
+	@./scripts/install-dependencies.sh  orderservice
 
-# Docker compose commands
+.PHONY: docker-compose-infra-up
 docker-compose-infra-up:
-    #!/usr/bin/env bash
-    docker-compose -f deployments/docker-compose/docker-compose.infrastructure.yaml up --build -d
+	@docker-compose -f deployments/docker-compose/docker-compose.infrastructure.yaml up --build -d
 
 docker-compose-infra-down:
-    #!/usr/bin/env bash
-    docker-compose -f deployments/docker-compose/docker-compose.infrastructure.yaml down
+	@docker-compose -f deployments/docker-compose/docker-compose.infrastructure.yaml down
 
-# Generate OpenAPI specs
-openapi *services="catalogwriteservice catalogreadservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/openapi.sh $service
-    done
+.PHONY: openapi
+openapi:
+	@./scripts/openapi.sh catalogwriteservice
+	@./scripts/openapi.sh catalogreadservice
+	@./scripts/openapi.sh orderservice
 
-# Generate protobuf files
-proto *services="catalogwriteservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/proto.sh $service
-    done
+# https://stackoverflow.com/questions/13616033/install-protocol-buffers-on-windows
+.PHONY: proto
+proto:
+	@./scripts/proto.sh catalogwriteservice
+	@./scripts/proto.sh orderservice
 
-# Run tests
-unit-test *services="catalogreadservice catalogwriteservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/test.sh $service unit
-    done
+.PHONY: unit-test
+unit-test:
+	@./scripts/test.sh catalogreadservice unit
+	@./scripts/test.sh catalogwriteservice unit
+	@./scripts/test.sh  orderservice unit
 
-integration-test *services="catalogreadservice catalogwriteservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/test.sh $service integration
-    done
+.PHONY: integration-test
+integration-test:
+	@./scripts/test.sh catalogreadservice integration
+	@./scripts/test.sh catalogwriteservice integration
+	@./scripts/test.sh  orderservice integration
 
-e2e-test *services="catalogreadservice catalogwriteservice orderservice":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/test.sh $service e2e
-    done
+.PHONY: e2e-test
+e2e-test:
+	@./scripts/test.sh catalogreadservice e2e
+	@./scripts/test.sh catalogwriteservice e2e
+	@./scripts/test.sh  orderservice e2e
 
-# Code quality
-format *services="catalogwriteservice catalogreadservice orderservice pkg":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/format.sh $service
-    done
+#.PHONY: load-test
+#load-test:
+#	@./scripts/test.sh catalogs_write load-test
+#	@./scripts/test.sh catalogs_read load-test
+#	@./scripts/test.sh  orders load-test
 
-lint *services="catalogwriteservice catalogreadservice orderservice pkg":
-    #!/usr/bin/env bash
-    for service in {{services}}; do
-        ./scripts/lint.sh $service
-    done
+.PHONY: format
+format:
+	@./scripts/format.sh catalogwriteservice
+	@./scripts/format.sh catalogreadservice
+	@./scripts/format.sh orderservice
+	@./scripts/format.sh pkg
 
-# Database migrations
+.PHONY: lint
+lint:
+	@./scripts/lint.sh catalogwriteservice
+	@./scripts/lint.sh catalogreadservice
+	@./scripts/lint.sh orderservice
+	@./scripts/lint.sh pkg
+
+# https://github.com/golang-migrate/migrate/blob/856ea12df9d230b0145e23d951b7dbd6b86621cb/database/postgres/TUTORIAL.md
+# https://github.com/golang-migrate/migrate/blob/856ea12df9d230b0145e23d951b7dbd6b86621cb/GETTING_STARTED.md
+# https://github.com/golang-migrate/migrate/blob/856ea12df9d230b0145e23d951b7dbd6b86621cb/MIGRATIONS.md
+# https://github.com/golang-migrate/migrate/tree/856ea12df9d230b0145e23d951b7dbd6b86621cb/cmd/migrate#usage
+.PHONY: go-migrate
 go-migrate:
-    #!/usr/bin/env bash
-    ./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c create -n create_product_table
-    ./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c up -o postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable
-    ./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c down -o postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable
+	@./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c create -n create_product_table
+	@./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c up -o postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable
+	@./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c down -o postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable
 
+# https://github.com/pressly/goose#usage
+.PHONY: goose-migrate
 goose-migrate:
-    #!/usr/bin/env bash
-    ./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c create -n create_product_table
-    ./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c up -o "user=postgres password=postgres dbname=catalogs_write_service sslmode=disable"
-    ./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c down -o "user=postgres password=postgres dbname=catalogs_write_service sslmode=disable"
+	@./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c create -n create_product_table
+	@./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c up -o "user=postgres password=postgres dbname=catalogs_write_service sslmode=disable"
+	@./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c down -o "user=postgres password=postgres dbname=catalogs_write_service sslmode=disable"
 
+# https://atlasgo.io/guides/orms/gorm
+.PHONY: atlas
 atlas:
-    #!/usr/bin/env bash
-    ./scripts/atlas-migrate.sh -c gorm-sync -p "./internal/services/catalogwriteservice"
-    ./scripts/atlas-migrate.sh -c apply -p "./internal/services/catalogwriteservice" -o "postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable"
+	@./scripts/atlas-migrate.sh -c gorm-sync -p "./internal/services/catalogwriteservice"
+	@./scripts/atlas-migrate.sh -c apply -p "./internal/services/catalogwriteservice" -o "postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable"
 
-# Code analysis
+.PHONY: cycle-check
 cycle-check:
-    #!/usr/bin/env bash
-    cd internal/pkg && goimportcycle -dot imports.dot dot -Tpng -o cycle/pkg.png imports.dot
-    cd internal/services/catalogwriteservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogwriteservice.png imports.dot
-    cd internal/services/catalogreadservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogreadservice.png imports.dot
-    cd internal/services/orderservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/orderservice.png imports.dot
+	cd internal/pkg && goimportcycle -dot imports.dot dot -Tpng -o cycle/pkg.png imports.dot
+	cd internal/services/catalogwriteservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogwriteservice.png imports.dot
+	cd internal/services/catalogwriteservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogwriteservice.png imports.dot
+	cd internal/services/orderservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/orderservice.png imports.dot
 
-# Generate mocks
+#.PHONY: c4
+#c4:
+#	cd tools/c4 && go mod tidy && sh generate.sh
+
+# https://medium.com/yemeksepeti-teknoloji/mocking-an-interface-using-mockery-in-go-afbcb83cc773
+# https://vektra.github.io/mockery/latest/running/
+# https://amitshekhar.me/blog/test-with-testify-and-mockery-in-go
+.PHONY: pkg-mocks
 pkg-mocks:
-    #!/usr/bin/env bash
-    cd internal/pkg/es && mockery --output mocks --all
-    cd internal/pkg/core/serializer && mockery --output mocks --all
-    cd internal/pkg/core/messaging && mockery --output mocks --all
+	cd internal/pkg/es && mockery --output mocks --all
+	cd internal/pkg/core/serializer && mockery --output mocks --all
+	cd internal/pkg/core/messaging && mockery --output mocks --all
 
+.PHONY: services-mocks
 services-mocks:
-    #!/usr/bin/env bash
-    cd internal/services/catalogwriteservice && mockery --output mocks --all
-    cd internal/services/catalogreadservice && mockery --output mocks --all
-    cd internal/services/orderservice && mockery --output mocks --all
+	cd internal/services/catalogwriteservice && mockery --output mocks --all
+	cd internal/services/catalogreadservice && mockery --output mocks --all
+	cd internal/services/orderservice && mockery --output mocks --all

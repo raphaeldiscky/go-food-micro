@@ -39,9 +39,13 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Install Dependencies
+      - name: Install Dependencies & Tools
         if: steps.cache.outputs.cache-hit != 'true'
-        run: task install_dependencies
+        run: |
+          task install_dependencies
+          go install github.com/segmentio/golines@latest
+          go install github.com/daixiang0/gci@latest
+          go install mvdan.cc/gofumpt@latest
 
         # https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
         # https://pkg.go.dev/cmd/go#hdr-Package_lists_and_patterns
