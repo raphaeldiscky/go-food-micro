@@ -46,15 +46,11 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Golangci-lint
-        uses: golangci/golangci-lint-action@v8.0.0
-        with:
-          github-token: ${{ secrets.REPO_TOKEN }}
-          verify: true
-
       - name: Install Project Dependencies
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
-        run: task install_dependencies
+        run: |
+          task install_dependencies
+          go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
       - name: Lint Code
         run: task lint
