@@ -40,7 +40,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
-        run: task install-dependencies
+        run: task install_dependencies
 
         # https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
         # https://pkg.go.dev/cmd/go#hdr-Package_lists_and_patterns
@@ -58,11 +58,11 @@ jobs:
         # https://dev.to/s0xzwasd/run-tests-with-race-flag-in-goland-512j
       - name: Unit Tests
         run:
-          task unit-test
+          task unit_test
 
           # there are some problem with test-container library in the github-actions!! locally all tests will pass
       - name: Integration Tests
-        run: task integration-test
+        run: task integration_test
 
       - name: End-To-End Tests
-        run: task e2e-test
+        run: task e2e_test
