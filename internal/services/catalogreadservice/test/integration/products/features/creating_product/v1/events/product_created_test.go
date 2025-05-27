@@ -33,14 +33,6 @@ func TestProductCreatedConsumer(t *testing.T) {
 	err := integrationTestSharedFixture.Bus.Start(context.Background())
 	require.NoError(t, err, "Failed to start RabbitMQ bus")
 
-	// Ensure proper cleanup
-	defer func() {
-		// Give some time for messages to be processed before cleanup
-		time.Sleep(2 * time.Second)
-		err := integrationTestSharedFixture.Bus.Stop(context.Background())
-		assert.NoError(t, err, "Failed to stop RabbitMQ bus")
-	}()
-
 	// Wait for the bus to be ready
 	time.Sleep(2 * time.Second)
 

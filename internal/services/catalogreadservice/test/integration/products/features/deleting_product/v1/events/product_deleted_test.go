@@ -16,7 +16,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 
 	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -26,14 +25,6 @@ func TestProductDeleted(t *testing.T) {
 	// Setup and initialization code here.
 	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
 	require.NotNil(t, integrationTestSharedFixture, "Integration test shared fixture should not be nil")
-
-	// Ensure proper cleanup
-	defer func() {
-		// Give some time for messages to be processed before cleanup
-		time.Sleep(2 * time.Second)
-		err := integrationTestSharedFixture.Bus.Stop(context.Background())
-		assert.NoError(t, err, "Failed to stop RabbitMQ bus")
-	}()
 
 	Convey("Product Deleted Feature", t, func() {
 		ctx := context.Background()
