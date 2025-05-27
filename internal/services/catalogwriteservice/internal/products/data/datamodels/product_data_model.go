@@ -11,7 +11,7 @@ import (
 // https://gorm.io/docs/conventions.html
 // https://gorm.io/docs/models.html#gorm-Model
 
-// ProductDataModel data model
+// ProductDataModel data model.
 type ProductDataModel struct {
 	Id          uuid.UUID `gorm:"primaryKey"`
 	Name        string

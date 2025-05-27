@@ -14,19 +14,19 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
-type getProductByIdEndpoint struct {
+type getProductByIDEndpoint struct {
 	params.ProductRouteParams
 }
 
 func NewGetProductByIdEndpoint(
 	params params.ProductRouteParams,
 ) route.Endpoint {
-	return &getProductByIdEndpoint{
+	return &getProductByIDEndpoint{
 		ProductRouteParams: params,
 	}
 }
 
-func (ep *getProductByIdEndpoint) MapEndpoint() {
+func (ep *getProductByIDEndpoint) MapEndpoint() {
 	ep.ProductsGroup.GET("/:id", ep.handler())
 }
 
@@ -39,7 +39,7 @@ func (ep *getProductByIdEndpoint) MapEndpoint() {
 // @Param id path string true "Product ID"
 // @Success 200 {object} dtos.GetProductByIdResponseDto
 // @Router /api/v1/products/{id} [get]
-func (ep *getProductByIdEndpoint) handler() echo.HandlerFunc {
+func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 

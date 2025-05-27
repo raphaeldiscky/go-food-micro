@@ -67,13 +67,6 @@ func (c *UnitTestSharedFixture) BeginTx() {
 	tx := c.CatalogDBContext.DB().Begin()
 	gormContext := gormextensions.SetTxToContext(c.Ctx, tx)
 	c.Ctx = gormContext
-
-	//// works on both transaction and none-transactional gormdbcontext
-	//var productData []*datamodel.ProductDataModel
-	//var productData2 []*datamodel.ProductDataModel
-	//
-	//s := c.CatalogDBContext.Find(&productData).Error
-	//s2 := tx.Find(&productData2).Error
 }
 
 func (c *UnitTestSharedFixture) CommitTx() {

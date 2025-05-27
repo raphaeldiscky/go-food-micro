@@ -75,8 +75,8 @@ func executeMigration(cmd *cobra.Command, commandType migration.CommandType) {
 		fxlog.FxLogger,
 		gormPostgres.Module,
 		appconfig.Module,
-		//// use go-migrate library for migration
-		//gomigrate.Module,
+		// use go-migrate library for migration
+		// gomigrate.Module,
 		// use go-migrate library for migration
 		goose.Module,
 		fx.Invoke(

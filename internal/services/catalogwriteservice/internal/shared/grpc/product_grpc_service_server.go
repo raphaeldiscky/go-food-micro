@@ -163,9 +163,9 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 	ctx context.Context,
 	req *productsService.GetProductByIDReq,
 ) (*productsService.GetProductByIDRes, error) {
-	//// we could use trace manually, but I used grpc middleware for doing this
-	//ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductByID")
-	//defer clean()
+	// we could use trace manually, but I used grpc middleware for doing this
+	// ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductByID")
+	// defer clean()
 
 	s.catalogsMetrics.GetProductByIdGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 	span := trace.SpanFromContext(ctx)

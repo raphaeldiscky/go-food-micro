@@ -36,7 +36,7 @@ func (ep *updateProductEndpoint) MapEndpoint() {
 // @Param UpdateProductRequestDto body dtos.UpdateProductRequestDto true "Product data"
 // @Param id path string true "Product ID"
 // @Success 204
-// @Router /api/v1/products/{id} [put]
+// @Router /api/v1/products/{id} [put].
 func (ep *updateProductEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
