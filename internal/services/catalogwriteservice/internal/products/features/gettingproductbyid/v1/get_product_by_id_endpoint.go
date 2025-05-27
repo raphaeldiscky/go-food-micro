@@ -55,14 +55,14 @@ func (ep *getProductByIdEndpoint) handler() echo.HandlerFunc {
 			return err
 		}
 
-		queryResult, err := mediatr.Send[*GetProductById, *dtos.GetProductByIdResponseDto](
+		queryResult, err := mediatr.Send[*GetProductByID, *dtos.GetProductByIdResponseDto](
 			ctx,
 			query,
 		)
 		if err != nil {
 			return errors.WithMessage(
 				err,
-				"error in sending GetProductById",
+				"error in sending GetProductByID",
 			)
 		}
 

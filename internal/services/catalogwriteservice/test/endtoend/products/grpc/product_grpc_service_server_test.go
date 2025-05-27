@@ -74,9 +74,9 @@ var _ = Describe("Product Grpc Service Feature", func() {
 			// "Then" step
 			It("Should return data with a matching Id", func() {
 				// Make the gRPC request to retrieve data by ID
-				res, err := integrationFixture.ProductServiceClient.GetProductById(
+				res, err := integrationFixture.ProductServiceClient.GetProductByID(
 					ctx,
-					&productService.GetProductByIdReq{ProductId: id.String()},
+					&productService.GetProductByIDReq{ProductId: id.String()},
 				)
 
 				Expect(err).To(BeNil())

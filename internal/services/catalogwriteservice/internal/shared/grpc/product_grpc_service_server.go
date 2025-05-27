@@ -159,12 +159,12 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 	return &productsService.UpdateProductRes{}, nil
 }
 
-func (s *ProductGrpcServiceServer) GetProductById(
+func (s *ProductGrpcServiceServer) GetProductByID(
 	ctx context.Context,
-	req *productsService.GetProductByIdReq,
-) (*productsService.GetProductByIdRes, error) {
+	req *productsService.GetProductByIDReq,
+) (*productsService.GetProductByIDRes, error) {
 	//// we could use trace manually, but I used grpc middleware for doing this
-	//ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductById")
+	//ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductByID")
 	//defer clean()
 
 	s.catalogsMetrics.GetProductByIdGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
@@ -201,14 +201,14 @@ func (s *ProductGrpcServiceServer) GetProductById(
 		return nil, validationErr
 	}
 
-	queryResult, err := mediatr.Send[*getProductByIdQueryV1.GetProductById, *getProductByIdDtosV1.GetProductByIdResponseDto](
+	queryResult, err := mediatr.Send[*getProductByIdQueryV1.GetProductByID, *getProductByIdDtosV1.GetProductByIdResponseDto](
 		ctx,
 		query,
 	)
 	if err != nil {
 		err = errors.WithMessage(
 			err,
-			"[ProductGrpcServiceServer_GetProductById.Send] error in sending GetProductById",
+			"[ProductGrpcServiceServer_GetProductById.Send] error in sending GetProductByID",
 		)
 		s.logger.Errorw(
 			fmt.Sprintf(
@@ -230,5 +230,5 @@ func (s *ProductGrpcServiceServer) GetProductById(
 		return nil, err
 	}
 
-	return &productsService.GetProductByIdRes{Product: product}, nil
+	return &productsService.GetProductByIDRes{Product: product}, nil
 }

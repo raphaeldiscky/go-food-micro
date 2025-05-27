@@ -95,8 +95,8 @@ func (_c *ProductsServiceClient_CreateProduct_Call) RunAndReturn(run func(contex
 	return _c
 }
 
-// GetProductById provides a mock function with given fields: ctx, in, opts
-func (_m *ProductsServiceClient) GetProductById(ctx context.Context, in *productsservice.GetProductByIdReq, opts ...grpc.CallOption) (*productsservice.GetProductByIdRes, error) {
+// GetProductByID provides a mock function with given fields: ctx, in, opts
+func (_m *ProductsServiceClient) GetProductByID(ctx context.Context, in *productsservice.GetProductByIDReq, opts ...grpc.CallOption) (*productsservice.GetProductByIDRes, error) {
 	_va := make([]interface{}, len(opts))
 	for _i := range opts {
 		_va[_i] = opts[_i]
@@ -106,20 +106,20 @@ func (_m *ProductsServiceClient) GetProductById(ctx context.Context, in *product
 	_ca = append(_ca, _va...)
 	ret := _m.Called(_ca...)
 
-	var r0 *productsservice.GetProductByIdRes
+	var r0 *productsservice.GetProductByIDRes
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIdReq, ...grpc.CallOption) (*productsservice.GetProductByIdRes, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIDReq, ...grpc.CallOption) (*productsservice.GetProductByIDRes, error)); ok {
 		return rf(ctx, in, opts...)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIdReq, ...grpc.CallOption) *productsservice.GetProductByIdRes); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIDReq, ...grpc.CallOption) *productsservice.GetProductByIDRes); ok {
 		r0 = rf(ctx, in, opts...)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*productsservice.GetProductByIdRes)
+			r0 = ret.Get(0).(*productsservice.GetProductByIDRes)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *productsservice.GetProductByIdReq, ...grpc.CallOption) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *productsservice.GetProductByIDReq, ...grpc.CallOption) error); ok {
 		r1 = rf(ctx, in, opts...)
 	} else {
 		r1 = ret.Error(1)
@@ -128,21 +128,21 @@ func (_m *ProductsServiceClient) GetProductById(ctx context.Context, in *product
 	return r0, r1
 }
 
-// ProductsServiceClient_GetProductById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProductById'
+// ProductsServiceClient_GetProductById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProductByID'
 type ProductsServiceClient_GetProductById_Call struct {
 	*mock.Call
 }
 
-// GetProductById is a helper method to define mock.On call
+// GetProductByID is a helper method to define mock.On call
 //   - ctx context.Context
-//   - in *products_service.GetProductByIdReq
+//   - in *products_service.GetProductByIDReq
 //   - opts ...grpc.CallOption
-func (_e *ProductsServiceClient_Expecter) GetProductById(ctx interface{}, in interface{}, opts ...interface{}) *ProductsServiceClient_GetProductById_Call {
-	return &ProductsServiceClient_GetProductById_Call{Call: _e.mock.On("GetProductById",
+func (_e *ProductsServiceClient_Expecter) GetProductByID(ctx interface{}, in interface{}, opts ...interface{}) *ProductsServiceClient_GetProductById_Call {
+	return &ProductsServiceClient_GetProductById_Call{Call: _e.mock.On("GetProductByID",
 		append([]interface{}{ctx, in}, opts...)...)}
 }
 
-func (_c *ProductsServiceClient_GetProductById_Call) Run(run func(ctx context.Context, in *productsservice.GetProductByIdReq, opts ...grpc.CallOption)) *ProductsServiceClient_GetProductById_Call {
+func (_c *ProductsServiceClient_GetProductById_Call) Run(run func(ctx context.Context, in *productsservice.GetProductByIDReq, opts ...grpc.CallOption)) *ProductsServiceClient_GetProductById_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		variadicArgs := make([]grpc.CallOption, len(args)-2)
 		for i, a := range args[2:] {
@@ -150,17 +150,17 @@ func (_c *ProductsServiceClient_GetProductById_Call) Run(run func(ctx context.Co
 				variadicArgs[i] = a.(grpc.CallOption)
 			}
 		}
-		run(args[0].(context.Context), args[1].(*productsservice.GetProductByIdReq), variadicArgs...)
+		run(args[0].(context.Context), args[1].(*productsservice.GetProductByIDReq), variadicArgs...)
 	})
 	return _c
 }
 
-func (_c *ProductsServiceClient_GetProductById_Call) Return(_a0 *productsservice.GetProductByIdRes, _a1 error) *ProductsServiceClient_GetProductById_Call {
+func (_c *ProductsServiceClient_GetProductById_Call) Return(_a0 *productsservice.GetProductByIDRes, _a1 error) *ProductsServiceClient_GetProductById_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *ProductsServiceClient_GetProductById_Call) RunAndReturn(run func(context.Context, *productsservice.GetProductByIdReq, ...grpc.CallOption) (*productsservice.GetProductByIdRes, error)) *ProductsServiceClient_GetProductById_Call {
+func (_c *ProductsServiceClient_GetProductById_Call) RunAndReturn(run func(context.Context, *productsservice.GetProductByIDReq, ...grpc.CallOption) (*productsservice.GetProductByIDRes, error)) *ProductsServiceClient_GetProductById_Call {
 	_c.Call.Return(run)
 	return _c
 }

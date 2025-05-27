@@ -79,7 +79,7 @@ func ConfigProductsMediator(
 		return errors.WrapIf(err, "error while registering handlers in the mediator")
 	}
 
-	err = mediatr.RegisterRequestHandler[*getProductByIdQueryV1.GetProductById, *getProductByIdDtosV1.GetProductByIdResponseDto](
+	err = mediatr.RegisterRequestHandler[*getProductByIdQueryV1.GetProductByID, *getProductByIdDtosV1.GetProductByIdResponseDto](
 		getProductByIdQueryV1.NewGetProductByIdHandler(
 			logger,
 			mongoProductRepository,

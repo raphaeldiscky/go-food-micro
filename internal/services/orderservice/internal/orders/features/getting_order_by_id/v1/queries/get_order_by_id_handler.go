@@ -41,7 +41,7 @@ func (q *GetOrderByIdHandler) Handle(
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			fmt.Sprintf(
-				"[GetOrderByIdHandler_Handle.GetProductById] error in getting order with id %s in the mongo repository",
+				"[GetOrderByIdHandler_Handle.GetProductByID] error in getting order with id %s in the mongo repository",
 				query.Id.String(),
 			),
 		)
@@ -54,7 +54,7 @@ func (q *GetOrderByIdHandler) Handle(
 			return nil, customErrors.NewApplicationErrorWrap(
 				err,
 				fmt.Sprintf(
-					"[GetOrderByIdHandler_Handle.GetProductById] error in getting order with orderId %s in the mongo repository",
+					"[GetOrderByIdHandler_Handle.GetProductByID] error in getting order with orderId %s in the mongo repository",
 					query.Id.String(),
 				),
 			)

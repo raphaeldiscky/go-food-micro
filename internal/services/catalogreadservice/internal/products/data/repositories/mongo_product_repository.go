@@ -118,11 +118,11 @@ func (p *mongoProductRepository) SearchProducts(
 	return result, nil
 }
 
-func (p *mongoProductRepository) GetProductById(
+func (p *mongoProductRepository) GetProductByID(
 	ctx context.Context,
 	uuid string,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.GetProductById")
+	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.GetProductByID")
 	span.SetAttributes(attribute2.String("Id", uuid))
 	defer span.End()
 

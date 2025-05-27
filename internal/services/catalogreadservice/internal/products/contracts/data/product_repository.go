@@ -17,7 +17,7 @@ type ProductRepository interface {
 		searchText string,
 		listQuery *utils.ListQuery,
 	) (*utils.ListResult[*models.Product], error)
-	GetProductById(ctx context.Context, uuid string) (*models.Product, error)
+	GetProductByID(ctx context.Context, uuid string) (*models.Product, error)
 	GetProductByProductId(ctx context.Context, uuid string) (*models.Product, error)
 	CreateProduct(ctx context.Context, product *models.Product) (*models.Product, error)
 	UpdateProduct(ctx context.Context, product *models.Product) (*models.Product, error)

@@ -37,9 +37,9 @@ func NewGetProductByIdHandler(
 
 func (q *GetProductByIdHandler) Handle(
 	ctx context.Context,
-	query *GetProductById,
+	query *GetProductByID,
 ) (*dtos.GetProductByIdResponseDto, error) {
-	redisProduct, err := q.redisRepository.GetProductById(
+	redisProduct, err := q.redisRepository.GetProductByID(
 		ctx,
 		query.Id.String(),
 	)
@@ -59,7 +59,7 @@ func (q *GetProductByIdHandler) Handle(
 		product = redisProduct
 	} else {
 		var mongoProduct *models.Product
-		mongoProduct, err = q.mongoRepository.GetProductById(ctx, query.Id.String())
+		mongoProduct, err = q.mongoRepository.GetProductByID(ctx, query.Id.String())
 		if err != nil {
 			return nil, customErrors.NewApplicationErrorWrap(err, fmt.Sprintf("error in getting product with id %d in the mongo repository", query.Id))
 		}

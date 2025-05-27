@@ -101,11 +101,11 @@ func (p *postgresProductRepository) SearchProducts(
 	return result, nil
 }
 
-func (p *postgresProductRepository) GetProductById(
+func (p *postgresProductRepository) GetProductByID(
 	ctx context.Context,
 	uuid uuid.UUID,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.GetProductById")
+	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.GetProductByID")
 	span.SetAttributes(attribute2.String("Id", uuid.String()))
 	defer span.End()
 

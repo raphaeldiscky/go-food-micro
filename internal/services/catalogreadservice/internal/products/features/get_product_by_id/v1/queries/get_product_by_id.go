@@ -6,12 +6,12 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-type GetProductById struct {
+type GetProductByID struct {
 	Id uuid.UUID
 }
 
-func NewGetProductById(id uuid.UUID) (*GetProductById, error) {
-	product := &GetProductById{Id: id}
+func NewGetProductById(id uuid.UUID) (*GetProductByID, error) {
+	product := &GetProductByID{Id: id}
 	if err := product.Validate(); err != nil {
 		return nil, err
 	}
@@ -19,6 +19,6 @@ func NewGetProductById(id uuid.UUID) (*GetProductById, error) {
 	return product, nil
 }
 
-func (p *GetProductById) Validate() error {
+func (p *GetProductByID) Validate() error {
 	return validation.ValidateStruct(p, validation.Field(&p.Id, validation.Required, is.UUIDv4))
 }

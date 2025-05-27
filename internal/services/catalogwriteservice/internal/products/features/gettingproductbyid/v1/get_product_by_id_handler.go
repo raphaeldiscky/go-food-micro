@@ -24,21 +24,21 @@ type GetProductByIDHandler struct {
 
 func NewGetProductByIDHandler(
 	params fxparams.ProductHandlerParams,
-) cqrs.RequestHandlerWithRegisterer[*GetProductById, *dtos.GetProductByIdResponseDto] {
+) cqrs.RequestHandlerWithRegisterer[*GetProductByID, *dtos.GetProductByIdResponseDto] {
 	return &GetProductByIDHandler{
 		ProductHandlerParams: params,
 	}
 }
 
 func (c *GetProductByIDHandler) RegisterHandler() error {
-	return mediatr.RegisterRequestHandler[*GetProductById, *dtos.GetProductByIdResponseDto](
+	return mediatr.RegisterRequestHandler[*GetProductByID, *dtos.GetProductByIdResponseDto](
 		c,
 	)
 }
 
 func (c *GetProductByIDHandler) Handle(
 	ctx context.Context,
-	query *GetProductById,
+	query *GetProductByID,
 ) (*dtos.GetProductByIdResponseDto, error) {
 	product, err := gormdbcontext.FindModelByID[*datamodels.ProductDataModel, *models.Product](
 		ctx,

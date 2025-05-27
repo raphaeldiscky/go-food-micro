@@ -94,11 +94,11 @@ func (r *redisProductRepository) PutProduct(
 	return nil
 }
 
-func (r *redisProductRepository) GetProductById(
+func (r *redisProductRepository) GetProductByID(
 	ctx context.Context,
 	key string,
 ) (*models.Product, error) {
-	ctx, span := r.tracer.Start(ctx, "redisRepository.GetProductById")
+	ctx, span := r.tracer.Start(ctx, "redisRepository.GetProductByID")
 	span.SetAttributes(
 		attribute2.String("PrefixKey", r.getRedisProductPrefixKey()),
 	)

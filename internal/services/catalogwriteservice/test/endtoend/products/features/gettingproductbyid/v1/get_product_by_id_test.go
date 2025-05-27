@@ -22,7 +22,7 @@ var integrationFixture *integration.IntegrationTestSharedFixture
 func TestGetProductByIdEndpoint(t *testing.T) {
 	RegisterFailHandler(Fail)
 	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
-	RunSpecs(t, "GetProductById Endpoint EndToEnd Tests")
+	RunSpecs(t, "GetProductByID Endpoint EndToEnd Tests")
 }
 
 var _ = Describe("Get Product By Id Feature", func() {

@@ -1,4 +1,6 @@
-linters-settings:
+version: "2"
+
+settings:
   dupl:
     threshold: 120
   errorlint:
@@ -51,7 +53,6 @@ linters-settings:
     require-specific: true
 
 linters:
-  disable-all: true
   enable:
     - asciicheck
     - bodyclose
@@ -62,10 +63,8 @@ linters:
     - errcheck
     - errorlint
     - exhaustive
-    - exportloopref
     - forbidigo
     - funlen
-    - gci
     - gochecknoglobals
     - gochecknoinits
     - gocognit
@@ -74,14 +73,8 @@ linters:
     - gocyclo
     - godot
     - godox
-    - goerr113
-    - gofmt
-    - gofumpt
-    - goimports
-    - gomnd
     - gomodguard
     - gosec
-    - gosimple
     - govet
     - ineffassign
     - makezero
@@ -97,7 +90,6 @@ linters:
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
-    - stylecheck
     - tparallel
     - thelper
     - unconvert
@@ -105,11 +97,3 @@ linters:
     - unused
     - wsl
     - whitespace
-
-run:
-  skip-dirs:
-    - docs
-
-issues:
-  # Show only new issues created after git revision: e016c66
-  new-from-rev: e016c66

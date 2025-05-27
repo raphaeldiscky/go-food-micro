@@ -61,7 +61,7 @@ func TestCreateProduct(t *testing.T) {
 										Convey(
 											"And product detail should be retrievable from the database",
 											func() {
-												createdProduct, err := integrationTestSharedFixture.ProductRepository.GetProductById(
+												createdProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
 													ctx,
 													result.Id,
 												)

@@ -70,7 +70,10 @@ func TestProductCreatedConsumer(t *testing.T) {
 		// Wait for the product to be created in the database with retries
 		var product *models.Product
 		for i := 0; i < 5; i++ {
-			product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(ctx, fakeProduct.ProductId)
+			product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+				ctx,
+				fakeProduct.ProductId,
+			)
 			if err == nil && product != nil {
 				break
 			}
@@ -87,9 +90,17 @@ func TestProductCreatedConsumer(t *testing.T) {
 		assert.Equal(t, fakeProduct.CreatedAt.Unix(), product.CreatedAt.Unix())
 
 		// Verify no duplicate products by checking if we can retrieve the product
-		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(ctx, fakeProduct.ProductId)
+		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+			ctx,
+			fakeProduct.ProductId,
+		)
 		require.NoError(t, err, "Failed to get product from database")
 		require.NotNil(t, retrievedProduct, "Product should exist in database")
-		assert.Equal(t, fakeProduct.ProductId, retrievedProduct.ProductId, "Should have exactly one product with the given ID")
+		assert.Equal(
+			t,
+			fakeProduct.ProductId,
+			retrievedProduct.ProductId,
+			"Should have exactly one product with the given ID",
+		)
 	})
 }

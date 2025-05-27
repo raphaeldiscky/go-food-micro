@@ -12,28 +12,28 @@ import (
 // https://echo.labstack.com/guide/request/
 // https://github.com/go-playground/validator
 
-type GetProductById struct {
+type GetProductByID struct {
 	cqrs.Query
 	ProductID uuid.UUID
 }
 
-func NewGetProductById(productId uuid.UUID) *GetProductById {
-	query := &GetProductById{
-		Query:     cqrs.NewQueryByT[GetProductById](),
+func NewGetProductById(productId uuid.UUID) *GetProductByID {
+	query := &GetProductByID{
+		Query:     cqrs.NewQueryByT[GetProductByID](),
 		ProductID: productId,
 	}
 
 	return query
 }
 
-func NewGetProductByIdWithValidation(productId uuid.UUID) (*GetProductById, error) {
+func NewGetProductByIdWithValidation(productId uuid.UUID) (*GetProductByID, error) {
 	query := NewGetProductById(productId)
 	err := query.Validate()
 
 	return query, err
 }
 
-func (p *GetProductById) Validate() error {
+func (p *GetProductByID) Validate() error {
 	err := validation.ValidateStruct(
 		p,
 		validation.Field(&p.ProductID, validation.Required, is.UUIDv4),
