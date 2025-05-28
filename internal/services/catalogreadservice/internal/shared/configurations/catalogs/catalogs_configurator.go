@@ -6,12 +6,13 @@ import (
 	"net/http"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
+
+	echo "github.com/labstack/echo/v4"
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs/infrastructure"
-
-	echo "github.com/labstack/echo/v4"
 )
 
 // CatalogReadServiceConfigurator is a struct that contains the catalogs service configurator.

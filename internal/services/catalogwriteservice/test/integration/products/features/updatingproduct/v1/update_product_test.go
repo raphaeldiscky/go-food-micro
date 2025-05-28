@@ -25,17 +25,20 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
-var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
+// with a real *testing.T instance and shared across all test cases. This is the established pattern
+// used throughout the codebase for integration tests.
+//
+//nolint:gochecknoglobals // fixture is a global variable because it needs to be initialized in TestUpdateProduct
+var fixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestUpdateProduct(t *testing.T) {
 	t.Parallel()
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
+	fixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
 	ginkgo.RunSpecs(t, "Updated Products Integration Tests")
 }
 
 var _ = ginkgo.Describe("Update Product Feature", func() {
-	// Define variables to hold command and result data
 	var (
 		ctx             context.Context
 		existingProduct *datamodel.ProductDataModel
@@ -46,37 +49,39 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 		shouldPublish   hypothesis.Hypothesis[*integrationevents.ProductUpdatedV1]
 	)
 
-	_ = ginkgo.BeforeEach(func() {
-		ginkgo.By("Seeding the required data")
-		integrationFixture.SetupTest()
-
-		existingProduct = integrationFixture.Items[0]
-	})
-
-	_ = ginkgo.AfterEach(func() {
-		ginkgo.By("Cleanup test data")
-		integrationFixture.TearDownTest()
-	})
-
 	_ = ginkgo.BeforeSuite(func() {
 		ctx = context.Background()
 
 		// in test mode we set rabbitmq `AutoStart=false` in configuration in rabbitmqOptions, so we should run rabbitmq bus manually
-		err = integrationFixture.Bus.Start(context.Background())
+		err = fixture.Bus.Start(context.Background())
 		gomega.Expect(err).ShouldNot(gomega.HaveOccurred())
 
 		// wait for consumers ready to consume before publishing messages, preparation background workers takes a bit time (for preventing messages lost)
 		time.Sleep(1 * time.Second)
 	})
 
-	_ = ginkgo.AfterSuite(func() {
-		integrationFixture.Log.Info("TearDownSuite started")
-		err := integrationFixture.Bus.Stop()
-		gomega.Expect(err).ShouldNot(gomega.HaveOccurred())
-		time.Sleep(1 * time.Second)
+	_ = ginkgo.BeforeEach(func() {
+		ginkgo.By("Seeding the required data")
+		fixture.SetupTest()
+
+		existingProduct = fixture.Items[0]
 	})
 
-	// "Scenario" step for testing updating an existing product
+	_ = ginkgo.AfterEach(func() {
+		ginkgo.By("Cleanup test data")
+		fixture.TearDownTest()
+	})
+
+	_ = ginkgo.AfterSuite(func() {
+		if fixture != nil {
+			fixture.Log.Info("TearDownSuite started")
+			if err := fixture.Bus.Stop(); err != nil {
+				fixture.Log.Error(err, "Failed to stop bus")
+			}
+			time.Sleep(1 * time.Second)
+		}
+	})
+
 	ginkgo.Describe("Updating an existing product in the database", func() {
 		ginkgo.Context("Given product exists in the database", func() {
 			ginkgo.BeforeEach(func() {
@@ -89,7 +94,6 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
 
-			// "When" step
 			ginkgo.When("the UpdateProduct command is executed", func() {
 				ginkgo.BeforeEach(func() {
 					result, err = mediatr.Send[*v1.UpdateProduct, *mediatr.Unit](
@@ -98,7 +102,6 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 					)
 				})
 
-				// "Then" step
 				ginkgo.It("Should not return an error", func() {
 					gomega.Expect(err).NotTo(gomega.HaveOccurred())
 					gomega.Expect(result).NotTo(gomega.BeNil())
@@ -113,7 +116,7 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 					func() {
 						updatedProduct, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 							ctx,
-							integrationFixture.CatalogsDBContext,
+							fixture.CatalogsDBContext,
 							existingProduct.ID,
 						)
 						gomega.Expect(err).To(gomega.BeNil())
@@ -133,11 +136,9 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 		})
 	})
 
-	// "Scenario" step for testing updating a non-existing product
 	ginkgo.Describe("Updating a non-existing product in the database", func() {
 		ginkgo.Context("Given product not exists in the database", func() {
 			ginkgo.BeforeEach(func() {
-				// Generate a random ID that does not exist in the database
 				id = uuid.NewV4()
 				command, err = v1.NewUpdateProductWithValidation(
 					id,
@@ -148,7 +149,6 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 				gomega.Expect(err).NotTo(gomega.HaveOccurred())
 			})
 
-			// "When" step
 			ginkgo.When(
 				"the UpdateProduct command executed for non-existing product",
 				func() {
@@ -159,7 +159,6 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 						)
 					})
 
-					// "Then" step
 					ginkgo.It("Should return an error", func() {
 						gomega.Expect(err).To(gomega.HaveOccurred())
 					})
@@ -187,7 +186,6 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 		})
 	})
 
-	// "Scenario" step for testing updating an existing product
 	ginkgo.Describe(
 		"Publishing ProductUpdated when product updated  successfully",
 		func() {
@@ -203,12 +201,11 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 
 					shouldPublish = messaging.ShouldProduced[*integrationevents.ProductUpdatedV1](
 						ctx,
-						integrationFixture.Bus,
+						fixture.Bus,
 						nil,
 					)
 				})
 
-				// "When" step
 				ginkgo.When(
 					"the UpdateProduct command is executed for existing product",
 					func() {
@@ -222,7 +219,6 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 						ginkgo.It(
 							"Should publish ProductUpdated event to the broker",
 							func() {
-								// ensuring message published to the rabbitmq broker
 								shouldPublish.Validate(
 									ctx,
 									"there is no published message",

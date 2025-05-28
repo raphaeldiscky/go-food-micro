@@ -3,13 +3,13 @@ package catalogs
 import (
 	"fmt"
 
+	"go.opentelemetry.io/otel/metric"
+	"go.uber.org/fx"
+
 	appconfig "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs/infrastructure"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/contracts"
-
-	"go.opentelemetry.io/otel/metric"
-	"go.uber.org/fx"
 )
 
 // https://pmihaylov.com/shared-components-go-microservices/
@@ -51,7 +51,9 @@ func newMetricBuilder(meter metric.Meter, serviceName string) *metricBuilder {
 }
 
 // createMetrics creates a slice of metric counters from a slice of definitions.
-func (b *metricBuilder) createMetrics(definitions []metricDefinition) ([]metric.Float64Counter, error) {
+func (b *metricBuilder) createMetrics(
+	definitions []metricDefinition,
+) ([]metric.Float64Counter, error) {
 	counters := make([]metric.Float64Counter, 0, len(definitions))
 	for _, def := range definitions {
 		counter, err := b.meter.Float64Counter(
@@ -63,6 +65,7 @@ func (b *metricBuilder) createMetrics(definitions []metricDefinition) ([]metric.
 		}
 		counters = append(counters, counter)
 	}
+
 	return counters, nil
 }
 

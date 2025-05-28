@@ -3,16 +3,17 @@ package endpoints
 import (
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/params"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/queries"
-
-	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type getProductsEndpoint struct {
@@ -39,7 +40,7 @@ func (ep *getProductsEndpoint) MapEndpoint() {
 // @Produce json
 // @Param getProductsRequestDto query dtos.GetProductsRequestDto false "GetProductsRequestDto"
 // @Success 200 {object} dtos.GetProductsResponseDto
-// @Router /api/v1/products [get]
+// @Router /api/v1/products [get].
 func (ep *getProductsEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()

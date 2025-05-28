@@ -5,22 +5,23 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.opentelemetry.io/otel/trace"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	rabbithole "github.com/michaelklishin/rabbit-hole"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
-
-	"emperror.dev/errors"
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	rabbithole "github.com/michaelklishin/rabbit-hole"
-	uuid "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.opentelemetry.io/otel/trace"
 )
 
 type IntegrationTestSharedFixture struct {
@@ -92,6 +93,7 @@ func NewIntegrationTestSharedFixture(
 		if startErr == nil {
 			// Wait longer for the bus to be fully ready
 			time.Sleep(10 * time.Second)
+
 			break
 		}
 		result.Logger.Warn(
@@ -269,6 +271,7 @@ func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 	if err != nil {
 		return errors.WrapIf(err, "failed to cleanup MongoDB collections")
 	}
+
 	return nil
 }
 
@@ -289,5 +292,6 @@ func cleanupCollections(
 			return errors.WrapIf(err, "failed to delete documents from collection: "+collectionName)
 		}
 	}
+
 	return nil
 }

@@ -9,14 +9,15 @@ import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	gettingproductsv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproducts/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproducts/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	mediatr "github.com/mehdihadeli/go-mediatr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
+	gettingproductsv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproducts/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproducts/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

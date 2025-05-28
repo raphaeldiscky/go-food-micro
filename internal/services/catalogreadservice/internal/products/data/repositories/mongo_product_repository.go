@@ -11,21 +11,22 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb/repository"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
-	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"go.mongodb.org/mongo-driver/mongo"
+
+	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
+	uuid2 "github.com/satori/go.uuid"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-
-	"emperror.dev/errors"
-	uuid2 "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/mongo"
-	attribute2 "go.opentelemetry.io/otel/attribute"
 )
 
 const (
@@ -49,6 +50,7 @@ func NewMongoProductRepository(
 		mongoOptions.Database,
 		productCollection,
 	)
+
 	return &mongoProductRepository{
 		log:                    log,
 		mongoGenericRepository: mongoRepo,

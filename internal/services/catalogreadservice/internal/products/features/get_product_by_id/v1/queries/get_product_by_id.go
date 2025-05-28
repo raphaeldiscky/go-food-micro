@@ -1,8 +1,9 @@
 package queries
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+
+	validation "github.com/go-ozzo/ozzo-validation"
 	uuid "github.com/satori/go.uuid"
 )
 

@@ -6,12 +6,13 @@ package v1
 import (
 	"testing"
 
-	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
+	"github.com/stretchr/testify/suite"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
+
+	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
 )
 
 type updateProductUnitTests struct {
@@ -21,7 +22,9 @@ type updateProductUnitTests struct {
 func TestUpdateProductUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&updateProductUnitTests{CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t)},
+		&updateProductUnitTests{
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
+		},
 	)
 }
 

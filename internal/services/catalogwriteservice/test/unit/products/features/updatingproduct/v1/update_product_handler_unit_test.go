@@ -8,20 +8,21 @@ import (
 	"net/http"
 	"testing"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	updatingoroductsv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	"emperror.dev/errors"
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	mediatr "github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
 )
 
 type updateProductHandlerUnitTests struct {

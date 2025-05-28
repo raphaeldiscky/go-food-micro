@@ -4,19 +4,20 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
+	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
-
-	"emperror.dev/errors"
-	"github.com/go-playground/validator"
-	mediatr "github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
 	"go.opentelemetry.io/otel/attribute"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
 )
 
 type productDeletedConsumer struct {
@@ -49,6 +50,7 @@ func (c *productDeletedConsumer) Handle(
 		err := errors.New("error in casting message to ProductDeletedV1")
 		c.logger.Errorw("Failed to cast message", logger.Fields{"error": err})
 		span.RecordError(err)
+
 		return err
 	}
 
@@ -60,6 +62,7 @@ func (c *productDeletedConsumer) Handle(
 		)
 		c.logger.Errorw("Message validation failed", logger.Fields{"error": validationErr})
 		span.RecordError(validationErr)
+
 		return validationErr
 	}
 
@@ -82,6 +85,7 @@ func (c *productDeletedConsumer) Handle(
 			),
 		)
 		span.RecordError(badRequestErr)
+
 		return badRequestErr
 	}
 
@@ -98,6 +102,7 @@ func (c *productDeletedConsumer) Handle(
 			),
 		)
 		span.RecordError(validationErr)
+
 		return validationErr
 	}
 
@@ -118,6 +123,7 @@ func (c *productDeletedConsumer) Handle(
 			},
 		)
 		span.RecordError(err)
+
 		return err
 	}
 

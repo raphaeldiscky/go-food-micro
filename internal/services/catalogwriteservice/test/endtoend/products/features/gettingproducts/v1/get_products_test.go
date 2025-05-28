@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	httpexpect "github.com/gavv/httpexpect/v2"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

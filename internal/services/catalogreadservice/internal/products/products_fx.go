@@ -4,13 +4,14 @@ package products
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+	"go.uber.org/fx"
+
+	echo "github.com/labstack/echo/v4"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/data/repositories"
 	getProductByIdV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/endpoints"
 	getProductsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/endpoints"
 	searchProductV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/endpoints"
-
-	echo "github.com/labstack/echo/v4"
-	"go.uber.org/fx"
 )
 
 // Module is a module that contains the products module.

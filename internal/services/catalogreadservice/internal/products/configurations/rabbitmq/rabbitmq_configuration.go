@@ -1,18 +1,19 @@
 package rabbitmq
 
 import (
+	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
 	rabbitmqConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
 	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
+
 	createProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
 	deleteProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/events/integration_events/external_events"
 	updateProductExternalEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/events/integration_events/external_events"
-
-	"github.com/go-playground/validator"
 )
 
 func ConfigProductsRabbitMQ(

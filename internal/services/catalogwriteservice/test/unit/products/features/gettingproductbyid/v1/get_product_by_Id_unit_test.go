@@ -6,11 +6,12 @@ package v1
 import (
 	"testing"
 
-	getProductByIdQuery "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
+	"github.com/stretchr/testify/suite"
 
 	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
+
+	getProductByIdQuery "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
 )
 
 type getProductByIdUnitTests struct {
@@ -20,7 +21,9 @@ type getProductByIdUnitTests struct {
 func TestGetProductByIdUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&getProductByIdUnitTests{CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t)},
+		&getProductByIdUnitTests{
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
+		},
 	)
 }
 

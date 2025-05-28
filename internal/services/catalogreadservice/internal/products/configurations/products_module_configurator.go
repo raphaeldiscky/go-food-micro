@@ -4,8 +4,10 @@ package configurations
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
-	logger2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
+	logger2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/configurations/mappings"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/configurations/mediator"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
@@ -45,6 +47,7 @@ func (c *ProductsModuleConfigurator) ConfigureProductsModule() {
 			if err != nil {
 				return err
 			}
+
 			return nil
 		},
 	)

@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 

@@ -8,14 +8,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	httpexpect "github.com/gavv/httpexpect/v2"
-
 	ginkgo "github.com/onsi/ginkgo"
 	gomega "github.com/onsi/gomega"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

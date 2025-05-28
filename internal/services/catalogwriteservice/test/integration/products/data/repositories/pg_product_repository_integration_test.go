@@ -8,16 +8,17 @@ import (
 	"testing"
 	"time"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

@@ -4,13 +4,13 @@ package infrastructure
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	loggingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/pipelines"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
-	metricspipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics/mediatr/pipelines"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
-	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
+	loggingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/pipelines"
+	metricspipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics/mediatr/pipelines"
+	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 )
 
 // CatalogReadInfraConfigurator is a struct that contains the infrastructure configurator.

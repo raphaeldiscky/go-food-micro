@@ -5,16 +5,17 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 
-	"emperror.dev/errors"
 	redis "github.com/redis/go-redis/v9"
 	attribute2 "go.opentelemetry.io/otel/attribute"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 
 const (
@@ -57,7 +58,7 @@ func (r *redisProductRepository) PutProduct(
 			span,
 			errors.WrapIf(
 				err,
-				"error marshalling product",
+				"error marshaling product",
 			),
 		)
 	}

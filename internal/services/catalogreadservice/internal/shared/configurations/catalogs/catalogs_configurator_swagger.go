@@ -1,11 +1,11 @@
 package catalogs
 
 import (
-	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/docs"
-
 	echo "github.com/labstack/echo/v4"
+	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	echoSwagger "github.com/swaggo/echo-swagger"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/docs"
 )
 
 func (ic *CatalogReadServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {

@@ -2,7 +2,7 @@ package contracts
 
 import "go.opentelemetry.io/otel/metric"
 
-// GrpcMetrics contains all gRPC-related metrics
+// GrpcMetrics contains all gRPC-related metrics.
 type GrpcMetrics struct {
 	CreateProduct  metric.Float64Counter
 	UpdateProduct  metric.Float64Counter
@@ -11,7 +11,7 @@ type GrpcMetrics struct {
 	SearchProduct  metric.Float64Counter
 }
 
-// RabbitMQMetrics contains all RabbitMQ-related metrics
+// RabbitMQMetrics contains all RabbitMQ-related metrics.
 type RabbitMQMetrics struct {
 	CreateProduct metric.Float64Counter
 	UpdateProduct metric.Float64Counter

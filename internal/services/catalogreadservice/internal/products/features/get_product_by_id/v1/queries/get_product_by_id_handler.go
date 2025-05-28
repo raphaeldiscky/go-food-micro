@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/dto"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"

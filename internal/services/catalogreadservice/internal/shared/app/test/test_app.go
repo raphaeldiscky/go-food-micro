@@ -8,22 +8,23 @@ import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
-	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
-	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
-	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
-	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/redis"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
-	catalogs2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"
-
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.opentelemetry.io/otel/trace"
+
+	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
+	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
+	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/redis"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
+	catalogs2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"
 )
 
 // CatalogReadTestApp is a test application for the Catalog Read service.
@@ -122,5 +123,5 @@ func (a *CatalogReadTestApp) Run(t *testing.T) (result *CatalogReadTestAppResult
 		require.NoError(t, err)
 	})
 
-	return
+	return result
 }

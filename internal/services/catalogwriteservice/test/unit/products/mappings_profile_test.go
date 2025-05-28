@@ -8,13 +8,14 @@ import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
-	dtoV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
+	"github.com/stretchr/testify/suite"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
+
+	dtoV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
 )
 
 type mappingProfileUnitTests struct {
@@ -24,7 +25,9 @@ type mappingProfileUnitTests struct {
 func TestMappingProfileUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&mappingProfileUnitTests{CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t)},
+		&mappingProfileUnitTests{
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
+		},
 	)
 }
 

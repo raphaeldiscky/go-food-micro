@@ -3,8 +3,9 @@ package commands
 import (
 	"time"
 
-	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+
+	validation "github.com/go-ozzo/ozzo-validation"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -32,6 +33,7 @@ func NewUpdateProduct(
 	if err := product.Validate(); err != nil {
 		return nil, err
 	}
+
 	return product, nil
 }
 

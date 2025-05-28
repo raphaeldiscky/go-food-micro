@@ -8,15 +8,16 @@ import (
 	"testing"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
+	"github.com/stretchr/testify/suite"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	gettingproductbyidv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
 )
 
 type getProductByIdHandlerTest struct {

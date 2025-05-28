@@ -7,14 +7,14 @@ import (
 	"context"
 	"testing"
 
-	productService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	productService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

@@ -7,22 +7,23 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
 	datamodels "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	creatingproductv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1"
 	creatingproductdtosv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	"emperror.dev/errors"
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
 )
 
 type createProductHandlerUnitTests struct {

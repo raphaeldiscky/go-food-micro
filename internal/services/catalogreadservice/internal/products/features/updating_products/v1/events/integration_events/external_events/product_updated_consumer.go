@@ -4,19 +4,20 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
+	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
 
-	"emperror.dev/errors"
-	"github.com/go-playground/validator"
 	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
 )
 
 type productUpdatedConsumer struct {
@@ -63,6 +64,7 @@ func (c *productUpdatedConsumer) Handle(
 				utils.TraceErrStatusFromSpan(span, badRequestErr),
 			),
 		)
+
 		return err
 	}
 
@@ -83,6 +85,7 @@ func (c *productUpdatedConsumer) Handle(
 				utils.TraceErrStatusFromSpan(span, validationErr),
 			),
 		)
+
 		return err
 	}
 
@@ -100,6 +103,7 @@ func (c *productUpdatedConsumer) Handle(
 			),
 			logger.Fields{"ID": command.ProductId},
 		)
+
 		return err
 	}
 

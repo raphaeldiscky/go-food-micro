@@ -4,18 +4,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
-	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
-
 	"emperror.dev/errors"
 	"github.com/go-playground/validator"
-	mediatr "github.com/mehdihadeli/go-mediatr"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"go.opentelemetry.io/otel/attribute"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
+	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
 )
 
 type productCreatedConsumer struct {
@@ -48,6 +49,7 @@ func (c *productCreatedConsumer) Handle(
 		err := errors.New("error in casting message to ProductCreatedV1")
 		c.logger.Errorw("Failed to cast message", logger.Fields{"error": err})
 		span.RecordError(err)
+
 		return err
 	}
 
@@ -59,6 +61,7 @@ func (c *productCreatedConsumer) Handle(
 		)
 		c.logger.Errorw("Message validation failed", logger.Fields{"error": validationErr})
 		span.RecordError(validationErr)
+
 		return validationErr
 	}
 
@@ -82,6 +85,7 @@ func (c *productCreatedConsumer) Handle(
 		)
 		c.logger.Errorw("Command validation failed", logger.Fields{"error": validationErr})
 		span.RecordError(validationErr)
+
 		return validationErr
 	}
 
@@ -105,6 +109,7 @@ func (c *productCreatedConsumer) Handle(
 			},
 		)
 		span.RecordError(err)
+
 		return err
 	}
 

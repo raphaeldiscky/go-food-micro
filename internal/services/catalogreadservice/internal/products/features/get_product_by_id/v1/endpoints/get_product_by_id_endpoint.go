@@ -3,15 +3,16 @@ package endpoints
 import (
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/params"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
-
-	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type getProductByIDEndpoint struct {
@@ -38,7 +39,7 @@ func (ep *getProductByIDEndpoint) MapEndpoint() {
 // @Produce json
 // @Param id path string true "Product ID"
 // @Success 200 {object} dtos.GetProductByIDResponseDto
-// @Router /api/v1/products/{id} [get]
+// @Router /api/v1/products/{id} [get].
 func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()

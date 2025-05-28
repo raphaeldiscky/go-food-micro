@@ -9,25 +9,26 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/scopes"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/mappings"
-	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"emperror.dev/errors"
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 	"gorm.io/gorm"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/mappings"
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 )
 
 // Define the suite

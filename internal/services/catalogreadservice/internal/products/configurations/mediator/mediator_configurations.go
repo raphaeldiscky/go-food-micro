@@ -1,8 +1,12 @@
 package mediator
 
 import (
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
 	createProductDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
@@ -14,9 +18,6 @@ import (
 	searchProductsDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/dtos"
 	searchProductsQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/queries"
 	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
-
-	"emperror.dev/errors"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 func ConfigProductsMediator(

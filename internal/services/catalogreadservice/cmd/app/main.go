@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app"
-
 	"github.com/pterm/pterm"
 	"github.com/pterm/pterm/putils"
 	"github.com/spf13/cobra"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app"
 )
 
 func newRootCmd() *cobra.Command {
