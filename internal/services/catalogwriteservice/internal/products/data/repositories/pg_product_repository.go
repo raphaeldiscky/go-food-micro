@@ -20,12 +20,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// postgresProductRepository is a struct that contains the postgres product repository.
 type postgresProductRepository struct {
 	log                   logger.Logger
 	gormGenericRepository data.GenericRepository[*models.Product]
 	tracer                tracing.AppTracer
 }
 
+// NewPostgresProductRepository is a constructor for the postgresProductRepository.
 func NewPostgresProductRepository(
 	log logger.Logger,
 	db *gorm.DB,
@@ -39,6 +41,7 @@ func NewPostgresProductRepository(
 	}
 }
 
+// GetAllProducts is a method that gets all products.
 func (p *postgresProductRepository) GetAllProducts(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -68,6 +71,7 @@ func (p *postgresProductRepository) GetAllProducts(
 	return result, nil
 }
 
+// SearchProducts is a method that searches for products.
 func (p *postgresProductRepository) SearchProducts(
 	ctx context.Context,
 	searchText string,
@@ -101,6 +105,7 @@ func (p *postgresProductRepository) SearchProducts(
 	return result, nil
 }
 
+// GetProductByID is a method that gets a product by id.
 func (p *postgresProductRepository) GetProductByID(
 	ctx context.Context,
 	uuid uuid.UUID,

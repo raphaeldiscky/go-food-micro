@@ -11,11 +11,13 @@ import (
 	"go.uber.org/fx/fxtest"
 )
 
+// CatalogsReadTestApplication is a struct that contains the catalogs read test application.
 type CatalogsReadTestApplication struct {
 	*app.CatalogsReadApplication
 	tb fxtest.TB
 }
 
+// NewCatalogsReadTestApplication is a constructor for the CatalogsReadTestApplication.
 func NewCatalogsReadTestApplication(
 	tb fxtest.TB,
 	providers []interface{},

@@ -40,7 +40,7 @@ func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 
-		request := &dtos.GetProductByIdRequestDto{}
+		request := &dtos.GetProductByIDRequestDto{}
 		if err := c.Bind(request); err != nil {
 			badRequestErr := customErrors.NewBadRequestErrorWrap(
 				err,

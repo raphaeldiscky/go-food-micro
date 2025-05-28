@@ -14,10 +14,12 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// searchProductsEndpoint is a struct that contains the search products endpoint.
 type searchProductsEndpoint struct {
 	fxparams.ProductRouteParams
 }
 
+// NewSearchProductsEndpoint is a constructor for the searchProductsEndpoint.
 func NewSearchProductsEndpoint(
 	params fxparams.ProductRouteParams,
 ) route.Endpoint {
@@ -36,7 +38,7 @@ func (ep *searchProductsEndpoint) MapEndpoint() {
 // @Produce json
 // @Param searchProductsRequestDto query dtos.SearchProductsRequestDto false "SearchProductsRequestDto"
 // @Success 200 {object} dtos.SearchProductsResponseDto
-// @Router /api/v1/products/search [get]
+// @Router /api/v1/products/search [get].
 func (ep *searchProductsEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()

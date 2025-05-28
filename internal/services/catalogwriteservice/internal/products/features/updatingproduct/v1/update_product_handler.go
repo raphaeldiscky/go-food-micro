@@ -19,11 +19,13 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// updateProductHandler is a struct that contains the update product handler.
 type updateProductHandler struct {
 	fxparams.ProductHandlerParams
 	cqrs.HandlerRegisterer
 }
 
+// NewUpdateProductHandler is a constructor for the updateProductHandler.
 func NewUpdateProductHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*UpdateProduct, *mediatr.Unit] {
@@ -32,12 +34,14 @@ func NewUpdateProductHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the update product handler.
 func (c *updateProductHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*UpdateProduct, *mediatr.Unit](
 		c,
 	)
 }
 
+// Handle is a method that handles the update product command.
 func (c *updateProductHandler) Handle(
 	ctx context.Context,
 	command *UpdateProduct,

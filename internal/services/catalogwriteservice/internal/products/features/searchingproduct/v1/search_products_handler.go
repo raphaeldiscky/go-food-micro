@@ -23,10 +23,12 @@ import (
 	"gorm.io/gorm"
 )
 
+// searchProductsHandler is a struct that contains the search products handler.
 type searchProductsHandler struct {
 	fxparams.ProductHandlerParams
 }
 
+// NewSearchProductsHandler is a constructor for the searchProductsHandler.
 func NewSearchProductsHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*SearchProducts, *dtos.SearchProductsResponseDto] {
@@ -35,12 +37,14 @@ func NewSearchProductsHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the search products handler.
 func (c *searchProductsHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*SearchProducts, *dtos.SearchProductsResponseDto](
 		c,
 	)
 }
 
+// Handle is a method that handles the search products query.
 func (c *searchProductsHandler) Handle(
 	ctx context.Context,
 	query *SearchProducts,
@@ -74,6 +78,7 @@ func (c *searchProductsHandler) Handle(
 	return &dtos.SearchProductsResponseDto{Products: listResultDto}, nil
 }
 
+// prepareSearchDBQuery is a method that prepares the search db query.
 func (c *searchProductsHandler) prepareSearchDBQuery(
 	query *SearchProducts,
 ) *gorm.DB {

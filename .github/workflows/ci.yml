@@ -49,8 +49,10 @@ jobs:
       - name: Install Linting Tools
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
         run: |
-          # Install linting tools
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
+          go install github.com/mgechev/revive@latest
+          go install honnef.co/go/tools/cmd/staticcheck@latest
+          go install github.com/kisielk/errcheck@latest
 
       - name: Install Project Dependencies
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
