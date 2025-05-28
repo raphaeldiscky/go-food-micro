@@ -1,3 +1,4 @@
+// Package products contains the products module.
 package products
 
 import (

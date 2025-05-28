@@ -149,7 +149,7 @@ func (a *EventSourcedAggregateRoot) AddDomainEvents(event domain.IDomainEvent) e
 	if exists {
 		return errors2.EventAlreadyExistsError
 	}
-	event.WithAggregate(a.Id(), a.CurrentVersion()+1)
+	event.WithAggregate(a.ID(), a.CurrentVersion()+1)
 	a.uncommittedEvents = append(a.uncommittedEvents, event)
 
 	return nil

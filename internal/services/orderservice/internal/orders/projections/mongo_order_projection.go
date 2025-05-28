@@ -121,15 +121,15 @@ func (m *mongoOrderProjection) onOrderCreated(
 			"[mongoOrderProjection.onOrderCreated] OrderCreated message with messageId `%s` published to the rabbitmq broker",
 			orderCreatedEvent.MessageId,
 		),
-		logger.Fields{"MessageId": orderCreatedEvent.MessageId, "Id": orderCreatedEvent.OrderId},
+		logger.Fields{"MessageId": orderCreatedEvent.MessageId, "ID": orderCreatedEvent.OrderId},
 	)
 
 	m.logger.Infow(
 		fmt.Sprintf(
 			"[mongoOrderProjection.onOrderCreated] order with id '%s' created",
-			orderCreatedEvent.Id,
+			orderCreatedEvent.ID,
 		),
-		logger.Fields{"Id": orderRead.Id, "MessageId": orderCreatedEvent.MessageId},
+		logger.Fields{"ID": orderRead.ID, "MessageId": orderCreatedEvent.MessageId},
 	)
 
 	return nil

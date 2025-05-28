@@ -125,7 +125,7 @@ func (m mongoOrderReadRepository) GetOrderById(
 	id uuid.UUID,
 ) (*read_models.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderById")
-	span.SetAttributes(attribute2.String("Id", id.String()))
+	span.SetAttributes(attribute2.String("ID", id.String()))
 	defer span.End()
 
 	collection := m.mongoClient.Database(m.mongoOptions.Database).Collection(orderCollection)
@@ -151,7 +151,7 @@ func (m mongoOrderReadRepository) GetOrderById(
 
 	m.log.Infow(
 		fmt.Sprintf("[mongoOrderReadRepository.GetOrderById] order with id %s laoded", id.String()),
-		logger.Fields{"Order": order, "Id": id},
+		logger.Fields{"Order": order, "ID": id},
 	)
 
 	return &order, nil
@@ -222,7 +222,7 @@ func (m mongoOrderReadRepository) CreateOrder(
 			"[mongoOrderReadRepository.CreateOrder] order with id '%s' created",
 			order.OrderId,
 		),
-		logger.Fields{"Order": order, "Id": order.OrderId},
+		logger.Fields{"Order": order, "ID": order.OrderId},
 	)
 
 	return order, nil
@@ -261,7 +261,7 @@ func (m mongoOrderReadRepository) UpdateOrder(
 			"[mongoOrderReadRepository.UpdateOrder] order with id '%s' updated",
 			order.OrderId,
 		),
-		logger.Fields{"Order": order, "Id": order.OrderId},
+		logger.Fields{"Order": order, "ID": order.OrderId},
 	)
 
 	return &updated, nil
@@ -269,7 +269,7 @@ func (m mongoOrderReadRepository) UpdateOrder(
 
 func (m mongoOrderReadRepository) DeleteOrderByID(ctx context.Context, uuid uuid.UUID) error {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.DeleteOrderByID")
-	span.SetAttributes(attribute2.String("Id", uuid.String()))
+	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()
 
 	collection := m.mongoClient.Database(m.mongoOptions.Database).Collection(orderCollection)
@@ -283,7 +283,7 @@ func (m mongoOrderReadRepository) DeleteOrderByID(ctx context.Context, uuid uuid
 
 	m.log.Infow(
 		fmt.Sprintf("[mongoOrderReadRepository.DeleteOrderByID] order with id %s deleted", uuid),
-		logger.Fields{"Id": uuid},
+		logger.Fields{"ID": uuid},
 	)
 
 	return nil

@@ -1,3 +1,4 @@
+// Package v1 contains the search products endpoint.
 package v1
 
 import (

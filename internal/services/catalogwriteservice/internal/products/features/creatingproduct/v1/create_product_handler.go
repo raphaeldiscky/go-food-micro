@@ -47,7 +47,7 @@ func (c *createProductHandler) Handle(
 	command *CreateProduct,
 ) (*dtos.CreateProductResponseDto, error) {
 	product := &models.Product{
-		Id:          command.ProductID,
+		ID:          command.ProductID,
 		Name:        command.Name,
 		Description: command.Description,
 		Price:       command.Price,
@@ -94,7 +94,7 @@ func (c *createProductHandler) Handle(
 	)
 
 	createProductResult = &dtos.CreateProductResponseDto{
-		ProductID: product.Id,
+		ProductID: product.ID,
 	}
 
 	c.Log.Infow(
@@ -103,7 +103,7 @@ func (c *createProductHandler) Handle(
 			command.ProductID,
 		),
 		logger.Fields{
-			"Id":        command.ProductID,
+			"ID":        command.ProductID,
 			"MessageId": productCreated.MessageId,
 		},
 	)

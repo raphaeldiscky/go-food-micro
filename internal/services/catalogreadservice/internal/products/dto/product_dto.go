@@ -5,7 +5,7 @@ import (
 )
 
 type ProductDto struct {
-	Id          string    `json:"id"`
+	ID          string    `json:"id"`
 	ProductId   string    `json:"productId"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`

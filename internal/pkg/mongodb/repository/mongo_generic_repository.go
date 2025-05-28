@@ -360,7 +360,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Update(
 
 	if modelType == dataModelType {
 		var id interface{}
-		id = reflectionHelper.GetFieldValueByName(entity, "Id")
+		id = reflectionHelper.GetFieldValueByName(entity, "ID")
 		if id == nil {
 			id = reflectionHelper.GetFieldValueByName(entity, "ID")
 			if id == nil {
@@ -380,7 +380,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Update(
 		}
 
 		var id interface{}
-		id = reflectionHelper.GetFieldValueByName(dataModel, "Id")
+		id = reflectionHelper.GetFieldValueByName(dataModel, "ID")
 		if id == nil {
 			id = reflectionHelper.GetFieldValueByName(dataModel, "ID")
 			if id == nil {

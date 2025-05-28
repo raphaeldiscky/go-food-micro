@@ -366,7 +366,7 @@ func mapStructs[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 				}
 			}
 		} else {
-			// there is no field corresponding to destination filed, so we search on source methods (properties) for getting src field value for example `Id()` property
+			// there is no field corresponding to destination filed, so we search on source methods (properties) for getting src field value for example `ID()` property
 			sourceFiledValue = reflectionHelper.GetFieldValueFromMethodAndReflectValue(src.Addr(), strcase.ToCamel(keys[SrcKeyIndex]))
 		}
 

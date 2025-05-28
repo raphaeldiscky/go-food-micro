@@ -67,7 +67,7 @@ func (c *GetProductByIDHandler) Handle(
 			"product with id: {%s} fetched",
 			query.ProductID,
 		),
-		logger.Fields{"Id": query.ProductID.String()},
+		logger.Fields{"ID": query.ProductID.String()},
 	)
 
 	return &dtos.GetProductByIDResponseDto{Product: productDto}, nil

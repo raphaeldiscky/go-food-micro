@@ -96,7 +96,7 @@ func (o OrderGrpcServiceServer) CreateOrder(
 				command.OrderId,
 				err,
 			),
-			logger.Fields{"Id": command.OrderId},
+			logger.Fields{"ID": command.OrderId},
 		)
 		return nil, err
 	}
@@ -112,7 +112,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 	span.SetAttributes(attribute2.Object("Request", req))
 	o.ordersMetrics.GetOrderByIdGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 
-	orderIdUUID, err := uuid.FromString(req.Id)
+	orderIdUUID, err := uuid.FromString(req.ID)
 	if err != nil {
 		badRequestErr := customErrors.NewBadRequestErrorWrap(
 			err,
@@ -151,10 +151,10 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 		o.logger.Errorw(
 			fmt.Sprintf(
 				"[OrderGrpcServiceServer_GetOrderByID.Send] id: {%s}, err: %v",
-				query.Id,
+				query.ID,
 				err,
 			),
-			logger.Fields{"Id": query.Id},
+			logger.Fields{"ID": query.ID},
 		)
 		return nil, err
 	}

@@ -8,7 +8,7 @@ import (
 
 type OrderReadModel struct {
 	// we generate id ourself because auto generate mongo string id column with type _id is not an uuid
-	Id              string               `json:"id"                        bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
+	ID              string               `json:"id"                        bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
 	OrderId         string               `json:"orderId"                   bson:"orderId,omitempty"`
 	ShopItems       []*ShopItemReadModel `json:"shopItems,omitempty"       bson:"shopItems,omitempty"`
 	AccountEmail    string               `json:"accountEmail,omitempty"    bson:"accountEmail,omitempty"`
@@ -33,7 +33,7 @@ func NewOrderReadModel(
 	deliveryTime time.Time,
 ) *OrderReadModel {
 	return &OrderReadModel{
-		Id: uuid.NewV4().
+		ID: uuid.NewV4().
 			String(),
 		// we generate id ourself because auto generate mongo string id column with type _id is not an uuid
 		OrderId:         orderId.String(),

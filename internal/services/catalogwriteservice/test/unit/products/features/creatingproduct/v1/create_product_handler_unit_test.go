@@ -81,7 +81,7 @@ func (c *createProductHandlerUnitTests) Test_Handle_Should_Create_New_Product_Wi
 	)
 	c.Require().NoError(err)
 
-	c.Assert().Equal(res.Id, id)
+	c.Assert().Equal(res.ID, createProduct.ProductID)
 }
 
 func (c *createProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Duplicate_Item() {

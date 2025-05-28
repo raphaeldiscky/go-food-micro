@@ -82,7 +82,7 @@ var _ = Describe("Update Product Feature", func() {
 		Context("Given product exists in the database", func() {
 			BeforeEach(func() {
 				command, err = v1.NewUpdateProductWithValidation(
-					existingProduct.Id,
+					existingProduct.ID,
 					"Updated Product ShortTypeName",
 					existingProduct.Description,
 					existingProduct.Price,
@@ -115,13 +115,13 @@ var _ = Describe("Update Product Feature", func() {
 						updatedProduct, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 							ctx,
 							integrationFixture.CatalogsDBContext,
-							existingProduct.Id,
+							existingProduct.ID,
 						)
 						Expect(err).To(BeNil())
 						Expect(updatedProduct).NotTo(BeNil())
 						Expect(
-							updatedProduct.Id,
-						).To(Equal(existingProduct.Id))
+							updatedProduct.ID,
+						).To(Equal(existingProduct.ID))
 						Expect(
 							updatedProduct.Price,
 						).To(Equal(existingProduct.Price))
@@ -195,7 +195,7 @@ var _ = Describe("Update Product Feature", func() {
 			Context("Given product exists in the database", func() {
 				BeforeEach(func() {
 					command, err = v1.NewUpdateProductWithValidation(
-						existingProduct.Id,
+						existingProduct.ID,
 						"Updated Product ShortTypeName",
 						existingProduct.Description,
 						existingProduct.Price,

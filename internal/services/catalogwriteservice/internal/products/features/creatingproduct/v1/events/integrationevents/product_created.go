@@ -1,3 +1,4 @@
+// Package integrationevents contains the product created v1.
 package integrationevents
 
 import (

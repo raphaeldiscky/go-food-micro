@@ -41,14 +41,14 @@ func (q *GetProductByIdHandler) Handle(
 ) (*dtos.GetProductByIDResponseDto, error) {
 	redisProduct, err := q.redisRepository.GetProductByID(
 		ctx,
-		query.Id.String(),
+		query.ID.String(),
 	)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			fmt.Sprintf(
 				"error in getting product with id %d in the redis repository",
-				query.Id,
+				query.ID,
 			),
 		)
 	}
@@ -59,19 +59,19 @@ func (q *GetProductByIdHandler) Handle(
 		product = redisProduct
 	} else {
 		var mongoProduct *models.Product
-		mongoProduct, err = q.mongoRepository.GetProductByID(ctx, query.Id.String())
+		mongoProduct, err = q.mongoRepository.GetProductByID(ctx, query.ID.String())
 		if err != nil {
-			return nil, customErrors.NewApplicationErrorWrap(err, fmt.Sprintf("error in getting product with id %d in the mongo repository", query.Id))
+			return nil, customErrors.NewApplicationErrorWrap(err, fmt.Sprintf("error in getting product with id %d in the mongo repository", query.ID))
 		}
 		if mongoProduct == nil {
-			mongoProduct, err = q.mongoRepository.GetProductByProductId(ctx, query.Id.String())
+			mongoProduct, err = q.mongoRepository.GetProductByProductId(ctx, query.ID.String())
 		}
 		if err != nil {
 			return nil, err
 		}
 
 		product = mongoProduct
-		err = q.redisRepository.PutProduct(ctx, product.Id, product)
+		err = q.redisRepository.PutProduct(ctx, product.ID, product)
 		if err != nil {
 			return new(dtos.GetProductByIDResponseDto), err
 		}
@@ -88,9 +88,9 @@ func (q *GetProductByIdHandler) Handle(
 	q.log.Infow(
 		fmt.Sprintf(
 			"product with id: {%s} fetched",
-			query.Id,
+			query.ID,
 		),
-		logger.Fields{"ProductId": product.ProductId, "Id": product.Id},
+		logger.Fields{"ProductId": product.ProductId, "ID": product.ID},
 	)
 
 	return &dtos.GetProductByIDResponseDto{Product: productDto}, nil

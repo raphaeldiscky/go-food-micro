@@ -60,14 +60,14 @@ func (c *DeleteProductCommand) Handle(
 		)
 	}
 
-	if err := c.mongoRepository.DeleteProductByID(ctx, product.Id); err != nil {
+	if err := c.mongoRepository.DeleteProductByID(ctx, product.ID); err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			"error in deleting product in the mongo repository",
 		)
 	}
 
-	err = c.redisRepository.DeleteProduct(ctx, product.Id)
+	err = c.redisRepository.DeleteProduct(ctx, product.ID)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
@@ -78,9 +78,9 @@ func (c *DeleteProductCommand) Handle(
 	c.log.Infow(
 		fmt.Sprintf(
 			"product with id: {%s} deleted",
-			product.Id,
+			product.ID,
 		),
-		logger.Fields{"ProductId": command.ProductId, "Id": product.Id},
+		logger.Fields{"ProductId": command.ProductId, "ID": product.ID},
 	)
 
 	return &mediatr.Unit{}, nil

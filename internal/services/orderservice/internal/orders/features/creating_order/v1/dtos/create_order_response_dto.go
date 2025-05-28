@@ -4,5 +4,5 @@ import uuid "github.com/satori/go.uuid"
 
 // https://echo.labstack.com/guide/response/
 type CreateOrderResponseDto struct {
-	OrderId uuid.UUID `json:"Id"`
+	OrderId uuid.UUID `json:"ID"`
 }

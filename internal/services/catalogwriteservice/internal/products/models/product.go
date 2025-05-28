@@ -1,3 +1,4 @@
+// Package models contains the product model.
 package models
 
 import (
@@ -8,7 +9,7 @@ import (
 
 // Product is a struct that contains the product.
 type Product struct {
-	Id          uuid.UUID
+	ID          uuid.UUID
 	Name        string
 	Description string
 	Price       float64

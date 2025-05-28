@@ -9,7 +9,7 @@ import (
 
 type CreateProduct struct {
 	// we generate id ourselves because auto generate mongo string id column with type _id is not an uuid
-	Id          string
+	ID          string
 	ProductId   string
 	Name        string
 	Description string
@@ -25,7 +25,7 @@ func NewCreateProduct(
 	createdAt time.Time,
 ) (*CreateProduct, error) {
 	command := &CreateProduct{
-		Id:          uuid.NewV4().String(),
+		ID:          uuid.NewV4().String(),
 		ProductId:   productId,
 		Name:        name,
 		Description: description,
@@ -40,7 +40,7 @@ func NewCreateProduct(
 }
 
 func (p *CreateProduct) Validate() error {
-	return validation.ValidateStruct(p, validation.Field(&p.Id, validation.Required),
+	return validation.ValidateStruct(p, validation.Field(&p.ID, validation.Required),
 		validation.Field(&p.ProductId, validation.Required),
 		validation.Field(&p.Name, validation.Required, validation.Length(3, 250)),
 		validation.Field(&p.Description, validation.Required, validation.Length(3, 500)),

@@ -1,3 +1,4 @@
+// Package v1 contains the search products handler.
 package v1
 
 import (

@@ -56,7 +56,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 ) (*appendResult.AppendEventsResult, error) {
 	ctx, span := a.tracer.Start(ctx, "esdbAggregateStore.StoreWithVersion")
 	span.SetAttributes(
-		attribute2.String("AggregateID", aggregate.Id().String()),
+		attribute2.String("AggregateID", aggregate.ID().String()),
 	)
 	defer span.End()
 
@@ -64,9 +64,9 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 		a.log.Infow(
 			fmt.Sprintf(
 				"[esdbAggregateStore.StoreWithVersion] No events to store for aggregateId %s",
-				aggregate.Id(),
+				aggregate.ID(),
 			),
-			logger.Fields{"AggregateID": aggregate.Id()},
+			logger.Fields{"AggregateID": aggregate.ID()},
 		)
 		return appendResult.NoOp, nil
 	}
@@ -104,7 +104,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 			errors.WrapIff(
 				err,
 				"[esdbAggregateStore_StoreWithVersion:AppendEvents] error in storing aggregate with id {%d}",
-				aggregate.Id(),
+				aggregate.ID(),
 			),
 		)
 	}
@@ -116,7 +116,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 	a.log.Infow(
 		fmt.Sprintf(
 			"[esdbAggregateStore.StoreWithVersion] aggregate with id %d stored successfully",
-			aggregate.Id(),
+			aggregate.ID(),
 		),
 		logger.Fields{"Aggregate": aggregate, "StreamId": streamId},
 	)
@@ -148,7 +148,7 @@ func (a *esdbAggregateStore[T]) Store(
 			errors.WrapIff(
 				err,
 				"[esdbAggregateStore_Store:StoreWithVersion] failed to store aggregate with id{%v}",
-				aggregate.Id(),
+				aggregate.ID(),
 			),
 		)
 	}

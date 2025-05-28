@@ -75,7 +75,7 @@ func (c *deleteProductHandler) Handle(
 			"product with id '%s' deleted",
 			command.ProductID,
 		),
-		logger.Fields{"Id": command.ProductID},
+		logger.Fields{"ID": command.ProductID},
 	)
 
 	return &mediatr.Unit{}, err

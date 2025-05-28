@@ -74,7 +74,7 @@ func (c *UpdateProductHandler) Handle(
 		)
 	}
 
-	err = c.redisRepository.PutProduct(ctx, product.Id, product)
+	err = c.redisRepository.PutProduct(ctx, product.ID, product)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
@@ -85,9 +85,9 @@ func (c *UpdateProductHandler) Handle(
 	c.log.Infow(
 		fmt.Sprintf(
 			"product with id: {%s} updated",
-			product.Id,
+			product.ID,
 		),
-		logger.Fields{"ProductId": command.ProductId, "Id": product.Id},
+		logger.Fields{"ProductId": command.ProductId, "ID": product.ID},
 	)
 
 	return &mediatr.Unit{}, nil

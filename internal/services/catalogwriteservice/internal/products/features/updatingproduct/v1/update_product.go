@@ -1,3 +1,4 @@
+// Package v1 contains the update product command.
 package v1
 
 import (

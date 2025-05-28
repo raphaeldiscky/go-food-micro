@@ -87,7 +87,7 @@ func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 					command.OrderId,
 					err,
 				),
-				logger.Fields{"Id": command.OrderId},
+				logger.Fields{"ID": command.OrderId},
 			)
 			return err
 		}

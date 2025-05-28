@@ -35,14 +35,14 @@ func seedDataManually(gormDB *gorm.DB) error {
 
 	products := []*datamodel.ProductDataModel{
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
 			Price:       gofakeit.Price(100, 1000),
 		},
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),

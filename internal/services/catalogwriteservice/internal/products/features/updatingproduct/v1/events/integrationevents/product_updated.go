@@ -1,3 +1,4 @@
+// Package integrationevents contains the product updated v1.
 package integrationevents
 
 import (

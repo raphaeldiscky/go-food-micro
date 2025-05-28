@@ -15,7 +15,7 @@ import (
 
 // ProductDataModel is a struct that contains the product data model.
 type ProductDataModel struct {
-	Id          uuid.UUID `gorm:"primaryKey"`
+	ID          uuid.UUID `gorm:"primaryKey"`
 	Name        string
 	Description string
 	Price       float64

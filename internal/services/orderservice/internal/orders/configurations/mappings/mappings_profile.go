@@ -33,7 +33,7 @@ func ConfigureOrdersMappings() error {
 			//}
 
 			order, err := aggregate.NewOrder(
-				orderDto.Id,
+				orderDto.ID,
 				items,
 				orderDto.AccountEmail,
 				orderDto.DeliveryAddress,
@@ -70,7 +70,7 @@ func ConfigureOrdersMappings() error {
 			}
 
 			return &grpcOrderService.OrderReadModel{
-				Id:              orderReadDto.Id,
+				ID:              orderReadDto.ID,
 				OrderId:         orderReadDto.OrderId,
 				PaymentId:       orderReadDto.PaymentId,
 				DeliveredTime:   timestamppb.New(orderReadDto.DeliveredTime),
@@ -176,7 +176,7 @@ func ConfigureOrdersMappings() error {
 			}
 
 			return &grpcOrderService.Order{
-				OrderId:         order.Id().String(),
+				OrderId:         order.ID().String(),
 				DeliveryAddress: order.DeliveryAddress(),
 				DeliveredTime:   timestamppb.New(order.DeliveredTime()),
 				AccountEmail:    order.AccountEmail(),

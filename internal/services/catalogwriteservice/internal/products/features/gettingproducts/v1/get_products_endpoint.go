@@ -1,3 +1,4 @@
+// Package v1 contains the get products endpoint.
 package v1
 
 import (

@@ -37,7 +37,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {
@@ -50,7 +50,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 		// "When" step
 		When("A request is made to create a product with valid data", func() {
 			// "Then" step
-			It("Should return a non-empty Id", func() {
+			It("Should return a non-empty ID", func() {
 				// Create a gRPC request with valid data
 				request := &productService.CreateProductReq{
 					Price:       gofakeit.Price(100, 1000),
@@ -72,7 +72,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 		// "When" step
 		When("A request is made to retrieve data with a valid ID", func() {
 			// "Then" step
-			It("Should return data with a matching Id", func() {
+			It("Should return data with a matching ID", func() {
 				// Make the gRPC request to retrieve data by ID
 				res, err := integrationFixture.ProductServiceClient.GetProductByID(
 					ctx,

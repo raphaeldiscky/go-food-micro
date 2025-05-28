@@ -85,7 +85,7 @@ func (r *redisProductRepository) PutProduct(
 		),
 		logger.Fields{
 			"Product":   product,
-			"Id":        product.ProductId,
+			"ID":        product.ProductId,
 			"Key":       key,
 			"PrefixKey": r.getRedisProductPrefixKey(),
 		},
@@ -139,7 +139,7 @@ func (r *redisProductRepository) GetProductByID(
 		),
 		logger.Fields{
 			"Product":   product,
-			"Id":        product.ProductId,
+			"ID":        product.ProductId,
 			"Key":       key,
 			"PrefixKey": r.getRedisProductPrefixKey(),
 		},

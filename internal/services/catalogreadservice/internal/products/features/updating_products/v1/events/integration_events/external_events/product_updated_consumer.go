@@ -98,7 +98,7 @@ func (c *productUpdatedConsumer) Handle(
 				command.ProductId,
 				utils.TraceErrStatusFromSpan(span, err),
 			),
-			logger.Fields{"Id": command.ProductId},
+			logger.Fields{"ID": command.ProductId},
 		)
 		return err
 	}

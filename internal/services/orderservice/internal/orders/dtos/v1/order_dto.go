@@ -7,7 +7,7 @@ import (
 )
 
 type OrderDto struct {
-	Id              uuid.UUID      `json:"id"`
+	ID              uuid.UUID      `json:"id"`
 	ShopItems       []*ShopItemDto `json:"shopItems"`
 	AccountEmail    string         `json:"accountEmail"`
 	DeliveryAddress string         `json:"deliveryAddress"`

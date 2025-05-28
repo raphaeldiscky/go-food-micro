@@ -44,7 +44,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 		integrationFixture.SetupTest()
 
 		// child hook codes should be here
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {
@@ -75,7 +75,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 
 	// "Scenario" step for testing returning an existing product with correct properties
 	Describe(
-		"Returning an existing product with valid Id from the database with correct properties",
+		"Returning an existing product with valid ID from the database with correct properties",
 		func() {
 			Context("Given products exists in the database", func() {
 				BeforeEach(func() {
@@ -106,7 +106,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 							"Should return a product with the correct ID",
 							func() {
 								Expect(result.Product).NotTo(BeNil())
-								Expect(result.Product.Id).To(Equal(id))
+								Expect(result.Product.ID).To(Equal(id))
 							},
 						)
 					},

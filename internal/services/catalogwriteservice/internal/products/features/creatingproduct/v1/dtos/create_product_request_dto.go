@@ -1,3 +1,4 @@
+// Package dtos contains the create product request dto.
 package dtos
 
 // https://echo.labstack.com/guide/binding/

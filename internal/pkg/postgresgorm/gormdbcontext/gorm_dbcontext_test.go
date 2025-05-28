@@ -30,7 +30,7 @@ import (
 
 // ProductDataModel data model
 type ProductDataModel struct {
-	Id          uuid.UUID `gorm:"primaryKey"`
+	ID          uuid.UUID `gorm:"primaryKey"`
 	Name        string
 	Description string
 	Price       float64
@@ -53,7 +53,7 @@ func (p *ProductDataModel) String() string {
 
 // Product model
 type Product struct {
-	Id          uuid.UUID
+	ID          uuid.UUID
 	Name        string
 	Description string
 	Price       float64
@@ -79,7 +79,7 @@ func TestGormDBContext(t *testing.T) {
 func (s *GormDBContextTestSuite) Test_FindProductByID() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	p, err := FindModelByID[*ProductDataModel, *Product](
 		context.Background(),
@@ -89,13 +89,13 @@ func (s *GormDBContextTestSuite) Test_FindProductByID() {
 	s.Require().NoError(err)
 	s.Require().NotNil(p)
 
-	s.Assert().Equal(p.Id, id)
+	s.Assert().Equal(p.ID, id)
 }
 
 func (s *GormDBContextTestSuite) Test_ExistsProductByID() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	exist := Exists[*ProductDataModel](
 		context.Background(),
@@ -123,7 +123,7 @@ func (s *GormDBContextTestSuite) Test_NoneExistsProductByID() {
 func (s *GormDBContextTestSuite) Test_DeleteProductByID() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	err := DeleteDataModelByID[*ProductDataModel](
 		context.Background(),
@@ -160,7 +160,7 @@ func (s *GormDBContextTestSuite) Test_CreateProduct() {
 	s.Require().NotNil(s.dbContext)
 
 	item := &Product{
-		Id:          uuid.NewV4(),
+		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),
 		Description: gofakeit.AdjectiveDescriptive(),
 		Price:       gofakeit.Price(100, 1000),
@@ -172,19 +172,19 @@ func (s *GormDBContextTestSuite) Test_CreateProduct() {
 	p, err := FindModelByID[*ProductDataModel, *Product](
 		context.Background(),
 		s.dbContext,
-		item.Id,
+		item.ID,
 	)
 	s.Require().NoError(err)
 	s.Require().NotNil(p)
 
-	s.Assert().Equal(p.Id, item.Id)
-	s.Assert().Equal(p.Id, res.Id)
+	s.Assert().Equal(p.ID, item.ID)
+	s.Assert().Equal(p.ID, res.ID)
 }
 
 func (s *GormDBContextTestSuite) Test_UpdateProduct() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	p, err := FindModelByID[*ProductDataModel, *Product](
 		context.Background(),
@@ -288,14 +288,14 @@ func migrateGorm(db *gorm.DB) error {
 func seedData(gormDB *gorm.DB) ([]*ProductDataModel, error) {
 	products := []*ProductDataModel{
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
 			Price:       gofakeit.Price(100, 1000),
 		},
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),

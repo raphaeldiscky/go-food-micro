@@ -1,3 +1,4 @@
+// Package rabbitmq contains the rabbitmq configurations.
 package rabbitmq
 
 import (

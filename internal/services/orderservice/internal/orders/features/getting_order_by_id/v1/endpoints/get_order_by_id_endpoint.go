@@ -54,7 +54,7 @@ func (ep *getOrderByIdEndpoint) handler() echo.HandlerFunc {
 			return badRequestErr
 		}
 
-		query, err := queries.NewGetOrderById(request.Id)
+		query, err := queries.NewGetOrderById(request.ID)
 		if err != nil {
 			validationErr := customErrors.NewValidationErrorWrap(
 				err,
@@ -76,10 +76,10 @@ func (ep *getOrderByIdEndpoint) handler() echo.HandlerFunc {
 			ep.Logger.Errorw(
 				fmt.Sprintf(
 					"[getProductByIdEndpoint_handler.Send] id: {%s}, err: %v",
-					query.Id,
+					query.ID,
 					err,
 				),
-				logger.Fields{"Id": query.Id},
+				logger.Fields{"ID": query.ID},
 			)
 			return err
 		}

@@ -1,3 +1,4 @@
+// Package fxparams contains the product handler params.
 package fxparams
 
 import (

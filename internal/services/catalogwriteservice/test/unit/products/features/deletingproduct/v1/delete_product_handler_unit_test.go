@@ -55,7 +55,7 @@ func (c *deleteProductHandlerUnitTests) TearDownTest() {
 }
 
 func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_Valid_Id() {
-	id := c.Products[0].Id
+	id := c.Products[0].ID
 
 	deleteProduct := &deletingproductv1.DeleteProduct{
 		ProductID: id,
@@ -98,7 +98,7 @@ func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_NotFound_Error
 }
 
 func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Error_In_Bus() {
-	id := c.Products[0].Id
+	id := c.Products[0].ID
 
 	deleteProduct := &deletingproductv1.DeleteProduct{
 		ProductID: id,

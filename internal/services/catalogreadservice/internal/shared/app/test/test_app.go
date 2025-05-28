@@ -1,3 +1,4 @@
+// Package test contains the test app.
 package test
 
 import (

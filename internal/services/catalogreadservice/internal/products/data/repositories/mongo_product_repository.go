@@ -123,7 +123,7 @@ func (p *mongoProductRepository) GetProductByID(
 	uuid string,
 ) (*models.Product, error) {
 	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.GetProductByID")
-	span.SetAttributes(attribute2.String("Id", uuid))
+	span.SetAttributes(attribute2.String("ID", uuid))
 	defer span.End()
 
 	id, err := uuid2.FromString(uuid)
@@ -149,7 +149,7 @@ func (p *mongoProductRepository) GetProductByID(
 
 	p.log.Infow(
 		fmt.Sprintf("product with id %s laoded", uuid),
-		logger.Fields{"Product": product, "Id": uuid},
+		logger.Fields{"Product": product, "ID": uuid},
 	)
 
 	return product, nil
@@ -222,7 +222,7 @@ func (p *mongoProductRepository) CreateProduct(
 			"product with id '%s' created",
 			product.ProductId,
 		),
-		logger.Fields{"Product": product, "Id": product.ProductId},
+		logger.Fields{"Product": product, "ID": product.ProductId},
 	)
 
 	return product, nil
@@ -256,7 +256,7 @@ func (p *mongoProductRepository) UpdateProduct(
 			"product with id '%s' updated",
 			updateProduct.ProductId,
 		),
-		logger.Fields{"Product": updateProduct, "Id": updateProduct.ProductId},
+		logger.Fields{"Product": updateProduct, "ID": updateProduct.ProductId},
 	)
 
 	return updateProduct, nil
@@ -267,7 +267,7 @@ func (p *mongoProductRepository) DeleteProductByID(
 	uuid string,
 ) error {
 	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.DeleteProductByID")
-	span.SetAttributes(attribute2.String("Id", uuid))
+	span.SetAttributes(attribute2.String("ID", uuid))
 	defer span.End()
 
 	id, err := uuid2.FromString(uuid)

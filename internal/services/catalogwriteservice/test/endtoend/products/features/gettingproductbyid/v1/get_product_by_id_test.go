@@ -25,7 +25,7 @@ func TestGetProductByIdEndpoint(t *testing.T) {
 	RunSpecs(t, "GetProductByID Endpoint EndToEnd Tests")
 }
 
-var _ = Describe("Get Product By Id Feature", func() {
+var _ = Describe("Get Product By ID Feature", func() {
 	var (
 		ctx context.Context
 		id  uuid.UUID
@@ -37,7 +37,7 @@ var _ = Describe("Get Product By Id Feature", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {

@@ -7,11 +7,11 @@ import (
 )
 
 type GetProductByID struct {
-	Id uuid.UUID
+	ID uuid.UUID
 }
 
 func NewGetProductByID(id uuid.UUID) (*GetProductByID, error) {
-	product := &GetProductByID{Id: id}
+	product := &GetProductByID{ID: id}
 	if err := product.Validate(); err != nil {
 		return nil, err
 	}
@@ -20,5 +20,5 @@ func NewGetProductByID(id uuid.UUID) (*GetProductByID, error) {
 }
 
 func (p *GetProductByID) Validate() error {
-	return validation.ValidateStruct(p, validation.Field(&p.Id, validation.Required, is.UUIDv4))
+	return validation.ValidateStruct(p, validation.Field(&p.ID, validation.Required, is.UUIDv4))
 }

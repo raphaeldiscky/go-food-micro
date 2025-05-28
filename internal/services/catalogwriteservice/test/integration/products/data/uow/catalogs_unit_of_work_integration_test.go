@@ -60,7 +60,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
-								Id:          uuid.NewV4(),
+								ID:          uuid.NewV4(),
 								Price:       gofakeit.Price(100, 1000),
 								CreatedAt:   time.Now(),
 							})
@@ -95,7 +95,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
-								Id:          uuid.NewV4(),
+								ID:          uuid.NewV4(),
 								Price:       gofakeit.Price(100, 1000),
 								CreatedAt:   time.Now(),
 							})
@@ -131,7 +131,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
-								Id:          uuid.NewV4(),
+								ID:          uuid.NewV4(),
 								Price:       gofakeit.Price(100, 1000),
 								CreatedAt:   time.Now(),
 							})
@@ -141,7 +141,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
-								Id:          uuid.NewV4(),
+								ID:          uuid.NewV4(),
 								Price:       gofakeit.Price(100, 1000),
 								CreatedAt:   time.Now(),
 							})
@@ -177,7 +177,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
-								Id:          uuid.NewV4(),
+								ID:          uuid.NewV4(),
 								Price:       gofakeit.Price(100, 1000),
 								CreatedAt:   time.Now(),
 							})

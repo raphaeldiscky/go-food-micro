@@ -1,3 +1,4 @@
+// Package dtos contains the get products response dto.
 package dtos
 
 import (

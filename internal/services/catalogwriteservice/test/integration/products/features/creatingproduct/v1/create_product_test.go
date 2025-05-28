@@ -52,7 +52,7 @@ var _ = Describe("Creating Product Feature", func() {
 		integrationFixture.SetupTest()
 
 		// child hook codes should be here
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {

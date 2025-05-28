@@ -36,26 +36,26 @@ func (q *GetOrderByIdHandler) Handle(
 	query *GetOrderById,
 ) (*dtos.GetOrderByIdResponseDto, error) {
 	// get order by order-read id
-	order, err := q.orderMongoRepository.GetOrderById(ctx, query.Id)
+	order, err := q.orderMongoRepository.GetOrderById(ctx, query.ID)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			fmt.Sprintf(
 				"[GetOrderByIdHandler_Handle.GetProductByID] error in getting order with id %s in the mongo repository",
-				query.Id.String(),
+				query.ID.String(),
 			),
 		)
 	}
 
 	if order == nil {
 		// get order by order-write id
-		order, err = q.orderMongoRepository.GetOrderByOrderId(ctx, query.Id)
+		order, err = q.orderMongoRepository.GetOrderByOrderId(ctx, query.ID)
 		if err != nil {
 			return nil, customErrors.NewApplicationErrorWrap(
 				err,
 				fmt.Sprintf(
 					"[GetOrderByIdHandler_Handle.GetProductByID] error in getting order with orderId %s in the mongo repository",
-					query.Id.String(),
+					query.ID.String(),
 				),
 			)
 		}
@@ -70,8 +70,8 @@ func (q *GetOrderByIdHandler) Handle(
 	}
 
 	q.log.Infow(
-		fmt.Sprintf("[GetOrderByIdHandler.Handle] order with id: {%s} fetched", query.Id.String()),
-		logger.Fields{"Id": query.Id},
+		fmt.Sprintf("[GetOrderByIdHandler.Handle] order with id: {%s} fetched", query.ID.String()),
+		logger.Fields{"ID": query.ID},
 	)
 
 	return &dtos.GetOrderByIdResponseDto{Order: orderDto}, nil

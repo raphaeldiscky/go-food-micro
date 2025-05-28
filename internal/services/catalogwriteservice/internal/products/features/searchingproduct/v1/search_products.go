@@ -1,3 +1,4 @@
+// Package v1 contains the search products query.
 package v1
 
 import (

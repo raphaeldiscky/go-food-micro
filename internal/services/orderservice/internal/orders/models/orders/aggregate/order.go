@@ -131,7 +131,7 @@ func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) er
 	o.deliveryAddress = evt.DeliveryAddress
 	o.deliveredTime = evt.DeliveredTime
 	o.createdAt = evt.CreatedAt
-	o.SetId(evt.GetAggregateId()) // o.SetId(evt.Id)
+	o.SetId(evt.GetAggregateId()) // o.SetId(evt.ID)
 
 	return nil
 }

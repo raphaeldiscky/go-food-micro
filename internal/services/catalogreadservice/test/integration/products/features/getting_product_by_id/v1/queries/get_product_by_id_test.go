@@ -25,14 +25,14 @@ func TestGetProductById(t *testing.T) {
 		ctx := context.Background()
 		integrationTestSharedFixture.SetupTest(t)
 
-		knownProductID, err := uuid.FromString(integrationTestSharedFixture.Items[0].Id)
+		knownProductID, err := uuid.FromString(integrationTestSharedFixture.Items[0].ID)
 		unknownProductID := uuid.NewV4()
 		So(err, ShouldBeNil)
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario
 		Convey(
-			"Returning an existing product with valid Id from the database with correct properties",
+			"Returning an existing product with valid ID from the database with correct properties",
 			func() {
 				Convey("Given a product with a known ID exists in the database", func() {
 					query, err := queries.NewGetProductByID(knownProductID)
@@ -55,7 +55,7 @@ func TestGetProductById(t *testing.T) {
 									"And the retrieved product should have the correct ID",
 									func() {
 										// Assert that the retrieved product's ID matches the known ID.
-										So(result.Product.Id, ShouldEqual, knownProductID.String())
+										So(result.Product.ID, ShouldEqual, knownProductID.String())
 									},
 								)
 

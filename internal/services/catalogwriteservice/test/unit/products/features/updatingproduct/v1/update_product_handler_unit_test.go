@@ -60,7 +60,7 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_V
 	existing := c.Products[0]
 
 	updateProductCommand, err := updatingoroductsv1.NewUpdateProductWithValidation(
-		existing.Id,
+		existing.ID,
 		gofakeit.Name(),
 		gofakeit.EmojiDescription(),
 		existing.Price,
@@ -80,7 +80,7 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_V
 	)
 	c.Require().NoError(err)
 
-	c.Assert().Equal(updatedProduct.Id, updateProductCommand.ProductID)
+	c.Assert().Equal(updatedProduct.ID, updateProductCommand.ProductID)
 	c.Assert().Equal(updatedProduct.Name, updateProductCommand.Name)
 	c.Bus.AssertNumberOfCalls(c.T(), "PublishMessage", 1)
 }
@@ -112,7 +112,7 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Erro
 	existing := c.Products[0]
 
 	updateProductCommand, err := updatingoroductsv1.NewUpdateProductWithValidation(
-		existing.Id,
+		existing.ID,
 		gofakeit.Name(),
 		gofakeit.EmojiDescription(),
 		existing.Price,

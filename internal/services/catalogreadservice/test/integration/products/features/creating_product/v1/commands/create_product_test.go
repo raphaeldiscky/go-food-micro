@@ -56,14 +56,14 @@ func TestCreateProduct(t *testing.T) {
 								Convey(
 									"And the product ID should not be empty and same as commandId",
 									func() {
-										So(result.Id, ShouldEqual, command.Id)
+										So(result.ID, ShouldEqual, command.ID)
 
 										Convey(
 											"And product detail should be retrievable from the database",
 											func() {
 												createdProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
 													ctx,
-													result.Id,
+													result.ID,
 												)
 												So(err, ShouldBeNil)
 												So(createdProduct, ShouldNotBeNil)

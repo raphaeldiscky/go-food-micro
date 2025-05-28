@@ -33,7 +33,7 @@ func For[T models.IHaveEventSourcedAggregate](aggregate T) StreamName {
 		aggregateName = reflect.TypeOf(aggregate).Name()
 	}
 
-	return StreamName(fmt.Sprintf("%s-%s", strings.ToLower(aggregateName), aggregate.Id().String()))
+	return StreamName(fmt.Sprintf("%s-%s", strings.ToLower(aggregateName), aggregate.ID().String()))
 }
 
 // ForID gets stream name for AggregateID

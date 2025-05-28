@@ -3,7 +3,7 @@ package dtosV1
 import "time"
 
 type OrderReadDto struct {
-	Id              string             `json:"id"`
+	ID              string             `json:"id"`
 	OrderId         string             `json:"orderId"`
 	ShopItems       []*ShopItemReadDto `json:"shopItems"`
 	AccountEmail    string             `json:"accountEmail"`

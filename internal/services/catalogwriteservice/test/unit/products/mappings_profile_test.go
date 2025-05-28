@@ -30,7 +30,7 @@ func TestMappingProfileUnit(t *testing.T) {
 
 func (m *mappingProfileUnitTests) Test_Mappings() {
 	productModel := &models.Product{
-		Id:          uuid.NewV4(),
+		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),
 		CreatedAt:   time.Now(),
 		Description: gofakeit.EmojiDescription(),
@@ -38,7 +38,7 @@ func (m *mappingProfileUnitTests) Test_Mappings() {
 	}
 
 	productDto := &dtoV1.ProductDto{
-		Id:          uuid.NewV4(),
+		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),
 		CreatedAt:   time.Now(),
 		Description: gofakeit.EmojiDescription(),
@@ -48,7 +48,7 @@ func (m *mappingProfileUnitTests) Test_Mappings() {
 	m.Run("Should_Map_Product_To_ProductDto", func() {
 		d, err := mapper.Map[*dtoV1.ProductDto](productModel)
 		m.Require().NoError(err)
-		m.Equal(productModel.Id, d.Id)
+		m.Equal(productModel.ID, d.ID)
 		m.Equal(productModel.Name, d.Name)
 	})
 
@@ -61,7 +61,7 @@ func (m *mappingProfileUnitTests) Test_Mappings() {
 	m.Run("Should_Map_ProductDto_To_Product", func() {
 		d, err := mapper.Map[*models.Product](productDto)
 		m.Require().NoError(err)
-		m.Equal(productDto.Id, d.Id)
+		m.Equal(productDto.ID, d.ID)
 		m.Equal(productDto.Name, d.Name)
 	})
 

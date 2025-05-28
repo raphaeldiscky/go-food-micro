@@ -65,7 +65,7 @@ func (c *CreateOrderHandler) Handle(
 		)
 	}
 
-	response := &dtos.CreateOrderResponseDto{OrderId: order.Id()}
+	response := &dtos.CreateOrderResponseDto{OrderId: order.ID()}
 
 	c.log.Infow(
 		fmt.Sprintf("[CreateOrderHandler.Handle] order with id: {%s} created", command.OrderId),

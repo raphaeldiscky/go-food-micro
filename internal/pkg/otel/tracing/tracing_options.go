@@ -20,7 +20,7 @@ type TracingOptions struct {
 	ServiceName               string                 `mapstructure:"serviceName"`
 	Version                   string                 `mapstructure:"version"`
 	InstrumentationName       string                 `mapstructure:"instrumentationName"`
-	Id                        int64                  `mapstructure:"id"`
+	ID                        int64                  `mapstructure:"id"`
 	AlwaysOnSampler           bool                   `mapstructure:"alwaysOnSampler"`
 	ZipkinExporterOptions     *ZipkinExporterOptions `mapstructure:"zipkinExporterOptions"`
 	JaegerExporterOptions     *OTLPProvider          `mapstructure:"jaegerExporterOptions"`

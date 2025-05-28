@@ -1,3 +1,4 @@
+// Package grpc contains the product grpc service server.
 package grpc
 
 import (
@@ -43,11 +44,11 @@ type ProductGrpcServiceServer struct {
 // NewProductGrpcService is a constructor for the ProductGrpcServiceServer.
 func NewProductGrpcService(
 	catalogsMetrics *contracts.CatalogsMetrics,
-	logger logger.Logger,
+	log logger.Logger,
 ) *ProductGrpcServiceServer {
 	return &ProductGrpcServiceServer{
 		catalogsMetrics: catalogsMetrics,
-		logger:          logger,
+		logger:          log,
 	}
 }
 
@@ -95,7 +96,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 				command.ProductID,
 				err,
 			),
-			logger.Fields{"Id": command.ProductID},
+			logger.Fields{"ID": command.ProductID},
 		)
 
 		return nil, err
@@ -163,7 +164,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 				command.ProductID,
 				err,
 			),
-			logger.Fields{"Id": command.ProductID},
+			logger.Fields{"ID": command.ProductID},
 		)
 
 		return nil, err
@@ -232,7 +233,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 				query.ProductID,
 				err,
 			),
-			logger.Fields{"Id": query.ProductID},
+			logger.Fields{"ID": query.ProductID},
 		)
 
 		return nil, err

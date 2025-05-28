@@ -169,7 +169,7 @@ func seedReadModelData(
 
 	orders := []*read_models.OrderReadModel{
 		{
-			Id:              gofakeit.UUID(),
+			ID:              gofakeit.UUID(),
 			OrderId:         gofakeit.UUID(),
 			ShopItems:       generateShopItems(),
 			AccountEmail:    gofakeit.Email(),
@@ -186,7 +186,7 @@ func seedReadModelData(
 			UpdatedAt:       gofakeit.Date(),
 		},
 		{
-			Id:              gofakeit.UUID(),
+			ID:              gofakeit.UUID(),
 			OrderId:         gofakeit.UUID(),
 			ShopItems:       generateShopItems(),
 			AccountEmail:    gofakeit.Email(),

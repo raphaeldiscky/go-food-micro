@@ -18,11 +18,11 @@ import (
 func TestGetProductById(t *testing.T) {
 	e2eFixture := integration.NewIntegrationTestSharedFixture(t)
 
-	Convey("Get Product By Id Feature", t, func() {
+	Convey("Get Product By ID Feature", t, func() {
 		e2eFixture.SetupTest()
 
 		ctx := context.Background()
-		id := e2eFixture.Items[0].Id
+		id := e2eFixture.Items[0].ID
 
 		// "Scenario" step for testing the get product by ID API with a valid ID
 		Convey("Get product by ID with a valid ID returns ok status", func() {

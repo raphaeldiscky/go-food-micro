@@ -1,3 +1,4 @@
+// Package app contains the app.
 package app
 
 import "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"

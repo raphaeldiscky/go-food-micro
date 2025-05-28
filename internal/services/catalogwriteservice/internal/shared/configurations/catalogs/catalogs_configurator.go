@@ -1,3 +1,4 @@
+// Package catalogs contains the catalogs service configurator.
 package catalogs
 
 import (

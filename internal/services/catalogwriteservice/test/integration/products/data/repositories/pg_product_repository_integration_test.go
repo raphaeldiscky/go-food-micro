@@ -44,7 +44,7 @@ var _ = Describe("Product Repository Suite", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {
@@ -76,7 +76,7 @@ var _ = Describe("Product Repository Suite", func() {
 			product = &models.Product{
 				Name:        gofakeit.Name(),
 				Description: gofakeit.AdjectiveDescriptive(),
-				Id:          uuid.NewV4(),
+				ID:          uuid.NewV4(),
 				Price:       gofakeit.Price(100, 1000),
 				CreatedAt:   time.Now(),
 			}
@@ -100,18 +100,18 @@ var _ = Describe("Product Repository Suite", func() {
 				Expect(createdProduct).NotTo(BeNil())
 			})
 
-			It("Should have the same Id as the input product", func() {
-				Expect(createdProduct.Id).To(Equal(product.Id))
+			It("Should have the same ID as the input product", func() {
+				Expect(createdProduct.ID).To(Equal(product.ID))
 			})
 
 			It("Should be able to retrieve the created product from the database", func() {
 				retrievedProduct, err := integrationFixture.ProductRepository.GetProductByID(
 					ctx,
-					createdProduct.Id,
+					createdProduct.ID,
 				)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(retrievedProduct).NotTo(BeNil())
-				Expect(retrievedProduct.ProductId).To(Equal(createdProduct.Id))
+				Expect(retrievedProduct.ProductId).To(Equal(createdProduct.ID))
 			})
 		})
 	})
@@ -140,7 +140,7 @@ var _ = Describe("Product Repository Suite", func() {
 			It("Should be able to retrieve the updated product from the database", func() {
 				updatedProduct, err = integrationFixture.ProductRepository.GetProductByID(
 					ctx,
-					existingProduct.Id,
+					existingProduct.ID,
 				)
 				Expect(err).To(BeNil())
 				Expect(updatedProduct).NotTo(BeNil())
@@ -198,8 +198,8 @@ var _ = Describe("Product Repository Suite", func() {
 				Expect(existingProduct).NotTo(BeNil())
 			})
 
-			It("should retrieve correct data from database by Id", func() {
-				Expect(existingProduct.Id).To(Equal(id))
+			It("should retrieve correct data from database by ID", func() {
+				Expect(existingProduct.ID).To(Equal(id))
 			})
 		})
 	})

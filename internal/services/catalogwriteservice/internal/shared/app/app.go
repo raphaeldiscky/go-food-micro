@@ -1,3 +1,4 @@
+// Package app contains the app.
 package app
 
 import (

@@ -14,14 +14,14 @@ type Entity struct {
 }
 
 type EntityDataModel struct {
-	Id         uuid.UUID `json:"id"          bson:"id,omitempty"`
+	ID         uuid.UUID `json:"id"          bson:"id,omitempty"`
 	EntityType string    `json:"entity_type" bson:"entity_type,omitempty"`
 	CreatedAt  time.Time `json:"created_at"  bson:"created_at,omitempty"`
 	UpdatedAt  time.Time `json:"updated_at"  bson:"updated_at"`
 }
 
 type IEntity interface {
-	Id() uuid.UUID
+	ID() uuid.UUID
 	CreatedAt() time.Time
 	UpdatedAt() time.Time
 	SetUpdatedAt(updatedAt time.Time)
@@ -46,7 +46,7 @@ func NewEntity(entityType string) *Entity {
 	}
 }
 
-func (e *Entity) Id() uuid.UUID {
+func (e *Entity) ID() uuid.UUID {
 	return e.id
 }
 

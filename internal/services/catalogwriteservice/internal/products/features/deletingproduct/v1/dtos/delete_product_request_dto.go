@@ -1,3 +1,4 @@
+// Package dtos contains the delete product request dto.
 package dtos
 
 import uuid "github.com/satori/go.uuid"

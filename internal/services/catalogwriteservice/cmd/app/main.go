@@ -1,3 +1,4 @@
+// Package main contains the main function for the catalogs write service.
 package main
 
 import (

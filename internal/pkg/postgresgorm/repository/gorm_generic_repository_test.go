@@ -24,7 +24,7 @@ import (
 
 // Product is a domain_events entity
 type Product struct {
-	Id          uuid.UUID
+	ID          uuid.UUID
 	Name        string
 	Weight      int
 	IsAvailable bool
@@ -32,7 +32,7 @@ type Product struct {
 
 // ProductGorm is DTO used to map Product entity to database
 type ProductGorm struct {
-	Id          uuid.UUID `gorm:"primaryKey;column:id"`
+	ID          uuid.UUID `gorm:"primaryKey;column:id"`
 	Name        string    `gorm:"column:name"`
 	Weight      int       `gorm:"column:weight"`
 	IsAvailable bool      `gorm:"column:is_available"`
@@ -100,7 +100,7 @@ func (c *gormGenericRepositoryTest) Test_Add() {
 	ctx := context.Background()
 
 	product := &ProductGorm{
-		Id:          uuid.NewV4(),
+		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),
 		Weight:      gofakeit.Number(100, 1000),
 		IsAvailable: true,
@@ -109,20 +109,20 @@ func (c *gormGenericRepositoryTest) Test_Add() {
 	err := c.productRepository.Add(ctx, product)
 	c.Require().NoError(err)
 
-	p, err := c.productRepository.GetById(ctx, product.Id)
+	p, err := c.productRepository.GetById(ctx, product.ID)
 	if err != nil {
 		return
 	}
 
 	c.Assert().NotNil(p)
-	c.Assert().Equal(product.Id, p.Id)
+	c.Assert().Equal(product.ID, p.ID)
 }
 
 func (c *gormGenericRepositoryTest) Test_Add_With_Data_Model() {
 	ctx := context.Background()
 
 	product := &Product{
-		Id:          uuid.NewV4(),
+		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),
 		Weight:      gofakeit.Number(100, 1000),
 		IsAvailable: true,
@@ -131,13 +131,13 @@ func (c *gormGenericRepositoryTest) Test_Add_With_Data_Model() {
 	err := c.productRepositoryWithDataModel.Add(ctx, product)
 	c.Require().NoError(err)
 
-	p, err := c.productRepositoryWithDataModel.GetById(ctx, product.Id)
+	p, err := c.productRepositoryWithDataModel.GetById(ctx, product.ID)
 	if err != nil {
 		return
 	}
 
 	c.Assert().NotNil(p)
-	c.Assert().Equal(product.Id, p.Id)
+	c.Assert().Equal(product.ID, p.ID)
 }
 
 func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
@@ -155,7 +155,7 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
 	}{
 		{
 			Name:         p.Name,
-			ProductId:    p.Id,
+			ProductId:    p.ID,
 			ExpectResult: p,
 		},
 		{
@@ -176,7 +176,7 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, res)
-				assert.Equal(t, p.Id, res.Id)
+				assert.Equal(t, p.ID, res.ID)
 			}
 		})
 	}
@@ -201,7 +201,7 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 	}{
 		{
 			Name:         p.Name,
-			ProductId:    p.Id,
+			ProductId:    p.ID,
 			ExpectResult: p,
 		},
 		{
@@ -226,7 +226,7 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, res)
-				assert.Equal(t, p.Id, res.Id)
+				assert.Equal(t, p.ID, res.ID)
 			}
 		})
 	}
@@ -319,7 +319,7 @@ func (c *gormGenericRepositoryTest) Test_Update() {
 	err = c.productRepository.Update(ctx, product)
 	c.Require().NoError(err)
 
-	single, err := c.productRepository.GetById(ctx, product.Id)
+	single, err := c.productRepository.GetById(ctx, product.ID)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
@@ -341,7 +341,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 	err = c.productRepositoryWithDataModel.Update(ctx, product)
 	c.Require().NoError(err)
 
-	single, err := c.productRepositoryWithDataModel.GetById(ctx, product.Id)
+	single, err := c.productRepositoryWithDataModel.GetById(ctx, product.ID)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
@@ -474,13 +474,13 @@ func migrationDatabase(db *gorm.DB) error {
 func seedData(ctx context.Context, db *gorm.DB) ([]*ProductGorm, error) {
 	seedProducts := []*ProductGorm{
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        "seed_product1",
 			Weight:      100,
 			IsAvailable: true,
 		},
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        "seed_product2",
 			Weight:      100,
 			IsAvailable: true,

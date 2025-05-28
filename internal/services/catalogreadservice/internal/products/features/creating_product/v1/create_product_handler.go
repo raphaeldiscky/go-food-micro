@@ -38,7 +38,7 @@ func (c *CreateProductHandler) Handle(
 	command *CreateProduct,
 ) (*dtos.CreateProductResponseDto, error) {
 	product := &models.Product{
-		Id:          command.Id, // we generate id ourselves because auto generate mongo string id column with type _id is not an uuid
+		ID:          command.ID, // we generate id ourselves because auto generate mongo string id column with type _id is not an uuid
 		ProductId:   command.ProductId,
 		Name:        command.Name,
 		Description: command.Description,
@@ -54,7 +54,7 @@ func (c *CreateProductHandler) Handle(
 		)
 	}
 
-	err = c.redisRepository.PutProduct(ctx, createdProduct.Id, createdProduct)
+	err = c.redisRepository.PutProduct(ctx, createdProduct.ID, createdProduct)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
@@ -62,14 +62,14 @@ func (c *CreateProductHandler) Handle(
 		)
 	}
 
-	response := &dtos.CreateProductResponseDto{Id: createdProduct.Id}
+	response := &dtos.CreateProductResponseDto{ID: createdProduct.ID}
 
 	c.log.Infow(
 		fmt.Sprintf(
 			"product with id: {%s} created",
-			product.Id,
+			product.ID,
 		),
-		logger.Fields{"ProductId": command.ProductId, "Id": product.Id},
+		logger.Fields{"ProductId": command.ProductId, "ID": product.ID},
 	)
 
 	return response, nil

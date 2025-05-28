@@ -53,7 +53,7 @@ func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 			return badRequestErr
 		}
 
-		query, err := queries.NewGetProductByID(request.Id)
+		query, err := queries.NewGetProductByID(request.ID)
 		if err != nil {
 			validationErr := customErrors.NewValidationErrorWrap(
 				err,

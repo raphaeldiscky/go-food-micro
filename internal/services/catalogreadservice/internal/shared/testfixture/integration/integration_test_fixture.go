@@ -174,7 +174,7 @@ func seedData(
 	// Create 2 products for testing
 	products := []*models.Product{
 		{
-			Id:          uuid.NewV4().String(),
+			ID:          uuid.NewV4().String(),
 			ProductId:   uuid.NewV4().String(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
@@ -182,7 +182,7 @@ func seedData(
 			Price:       gofakeit.Price(100, 1000),
 		},
 		{
-			Id:          uuid.NewV4().String(),
+			ID:          uuid.NewV4().String(),
 			ProductId:   uuid.NewV4().String(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
@@ -218,8 +218,8 @@ func seedData(
 		println(
 			"[DEBUG] Seeded Product",
 			i,
-			"Id:",
-			p.Id,
+			"ID:",
+			p.ID,
 			"ProductId:",
 			p.ProductId,
 			"Name:",

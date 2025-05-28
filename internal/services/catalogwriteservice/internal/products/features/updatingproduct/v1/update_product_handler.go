@@ -103,7 +103,7 @@ func (c *updateProductHandler) Handle(
 			"product with id '%s' updated",
 			command.ProductID,
 		),
-		logger.Fields{"Id": command.ProductID},
+		logger.Fields{"ID": command.ProductID},
 	)
 
 	c.Log.Infow(

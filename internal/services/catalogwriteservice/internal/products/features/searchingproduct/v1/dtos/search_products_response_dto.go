@@ -1,3 +1,4 @@
+// Package dtos contains the search products response dto.
 package dtos
 
 import (

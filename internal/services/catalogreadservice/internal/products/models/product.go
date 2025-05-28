@@ -7,7 +7,7 @@ import (
 // Product is a struct that contains the product.
 type Product struct {
 	// we generate id ourselves because auto generate mongo string id column with type _id is not an uuid
-	Id          string    `json:"id"                    bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
+	ID          string    `json:"id"                    bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
 	ProductId   string    `json:"productId"             bson:"productId"`
 	Name        string    `json:"name,omitempty"        bson:"name,omitempty"`
 	Description string    `json:"description,omitempty" bson:"description,omitempty"`

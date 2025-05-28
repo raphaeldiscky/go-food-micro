@@ -48,7 +48,7 @@ func TestDBContextTestSuite(t *testing.T) {
 func (s *DBContextTestSuite) Test_FindProductByID() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	p, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 		context.Background(),
@@ -58,13 +58,13 @@ func (s *DBContextTestSuite) Test_FindProductByID() {
 	s.Require().NoError(err)
 	s.Require().NotNil(p)
 
-	s.Assert().Equal(p.Id, id)
+	s.Assert().Equal(p.ID, id)
 }
 
 func (s *DBContextTestSuite) Test_ExistsProductByID() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	exist := gormdbcontext.Exists[*datamodel.ProductDataModel](
 		context.Background(),
@@ -91,7 +91,7 @@ func (s *DBContextTestSuite) Test_NoneExistsProductByID() {
 func (s *DBContextTestSuite) Test_DeleteProductByID() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	err := gormdbcontext.DeleteDataModelByID[*datamodel.ProductDataModel](
 		context.Background(),
@@ -134,7 +134,7 @@ func (s *DBContextTestSuite) Test_CreateProduct() {
 	s.Require().NotNil(s.dbContext)
 
 	item := &models.Product{
-		Id:          uuid.NewV4(),
+		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),
 		Description: gofakeit.AdjectiveDescriptive(),
 		Price:       gofakeit.Price(100, 1000),
@@ -150,19 +150,19 @@ func (s *DBContextTestSuite) Test_CreateProduct() {
 	p, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 		context.Background(),
 		s.dbContext,
-		item.Id,
+		item.ID,
 	)
 	s.Require().NoError(err)
 	s.Require().NotNil(p)
 
-	s.Assert().Equal(p.Id, item.Id)
-	s.Assert().Equal(p.Id, res.Id)
+	s.Assert().Equal(p.ID, item.ID)
+	s.Assert().Equal(p.ID, res.ID)
 }
 
 func (s *DBContextTestSuite) Test_UpdateProduct() {
 	s.Require().NotNil(s.dbContext)
 
-	id := s.items[0].Id
+	id := s.items[0].ID
 
 	p, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 		context.Background(),
@@ -270,14 +270,14 @@ func migrateGorm(db *gorm.DB) error {
 func seedData(gormDB *gorm.DB) ([]*datamodel.ProductDataModel, error) {
 	products := []*datamodel.ProductDataModel{
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
 			Price:       gofakeit.Price(100, 1000),
 		},
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
