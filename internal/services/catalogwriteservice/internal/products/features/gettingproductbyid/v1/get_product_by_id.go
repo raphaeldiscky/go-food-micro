@@ -1,3 +1,4 @@
+// Package v1 contains the get product by id query.
 package v1
 
 import (

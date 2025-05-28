@@ -15,20 +15,22 @@ import (
 
 // https://pmihaylov.com/shared-components-go-microservices/
 
-// CatalogsServiceModule is a module that contains the catalogs service module.
-var CatalogsServiceModule = fx.Module(
-	"catalogsfx",
-	// Shared Modules
-	config.Module,
-	infrastructure.Module,
-	data.Module,
+// NewCatalogsServiceModule is a module that contains the catalogs service module.
+func NewCatalogsServiceModule() fx.Option {
+	return fx.Module(
+		"catalogsfx",
+		// Shared Modules
+		config.NewModule(),
+		infrastructure.NewModule(),
+		data.NewModule(),
 
-	// Features Modules
-	products.Module,
+		// Features Modules
+		products.NewModule(),
 
-	// Other provides
-	fx.Provide(provideCatalogsMetrics),
-)
+		// Other provides
+		fx.Provide(provideCatalogsMetrics),
+	)
+}
 
 // metricDefinition holds the metadata for creating a metric counter.
 type metricDefinition struct {

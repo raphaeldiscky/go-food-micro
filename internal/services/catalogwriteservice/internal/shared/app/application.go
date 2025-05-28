@@ -19,10 +19,10 @@ func NewCatalogsWriteApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
-	logger logger.Logger,
-	environment environment.Environment,
+	log logger.Logger,
+	env environment.Environment,
 ) *CatalogsWriteApplication {
-	app := fxapp.NewApplication(providers, decorates, options, logger, environment)
+	app := fxapp.NewApplication(providers, decorates, options, log, env)
 
 	return &CatalogsWriteApplication{
 		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(app),

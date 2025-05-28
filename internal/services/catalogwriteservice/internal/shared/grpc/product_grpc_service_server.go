@@ -25,9 +25,12 @@ import (
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
 
-var grpcMetricsAttr = api.WithAttributes(
-	attribute2.Key("MetricsType").String("Http"),
-)
+// grpcMetricsAttr returns the metric attributes for gRPC metrics.
+func grpcMetricsAttr() api.MeasurementOption {
+	return api.WithAttributes(
+		attribute2.Key("MetricsType").String("Http"),
+	)
+}
 
 // ProductGrpcServiceServer is a struct that contains the ProductGrpcServiceServer.
 type ProductGrpcServiceServer struct {
@@ -55,7 +58,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 ) (*productsService.CreateProductRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
-	s.catalogsMetrics.CreateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	s.catalogsMetrics.CreateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr())
 
 	command, err := createProductCommandV1.NewCreateProductWithValidation(
 		req.GetName(),
@@ -108,7 +111,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 	ctx context.Context,
 	req *productsService.UpdateProductReq,
 ) (*productsService.UpdateProductRes, error) {
-	s.catalogsMetrics.UpdateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	s.catalogsMetrics.UpdateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr())
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
 
@@ -174,7 +177,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 	ctx context.Context,
 	req *productsService.GetProductByIDReq,
 ) (*productsService.GetProductByIDRes, error) {
-	s.catalogsMetrics.GetProductByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	s.catalogsMetrics.GetProductByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr())
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
 

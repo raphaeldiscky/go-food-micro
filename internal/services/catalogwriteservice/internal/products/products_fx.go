@@ -18,80 +18,82 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc"
 )
 
-// Module is a module that contains the products module.
-var Module = fx.Module(
-	"productsfx",
+// NewModule is a module that contains the products module.
+func NewModule() fx.Option {
+	return fx.Module(
+		"productsfx",
 
-	// Other provides
-	fx.Provide(repositories.NewPostgresProductRepository),
-	fx.Provide(grpc.NewProductGrpcService),
+		// Other provides
+		fx.Provide(repositories.NewPostgresProductRepository),
+		fx.Provide(grpc.NewProductGrpcService),
 
-	fx.Provide(
-		fx.Annotate(func(catalogsServer contracts.EchoHttpServer) *echo.Group {
-			var g *echo.Group
-			catalogsServer.RouteBuilder().
-				RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {
-					group := v1.Group("/products")
-					g = group
-				})
+		fx.Provide(
+			fx.Annotate(func(catalogsServer contracts.EchoHttpServer) *echo.Group {
+				var g *echo.Group
+				catalogsServer.RouteBuilder().
+					RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {
+						group := v1.Group("/products")
+						g = group
+					})
 
-			return g
-		}, fx.ResultTags(`name:"product-echo-group"`)),
-	),
+				return g
+			}, fx.ResultTags(`name:"product-echo-group"`)),
+		),
 
-	// add cqrs handlers to DI
-	fx.Provide(
-		cqrs.AsHandler(
-			creatingproductv1.NewCreateProductHandler,
-			"product-handlers",
+		// add cqrs handlers to DI
+		fx.Provide(
+			cqrs.AsHandler(
+				creatingproductv1.NewCreateProductHandler,
+				"product-handlers",
+			),
+			cqrs.AsHandler(
+				gettingproductsv1.NewGetProductsHandler,
+				"product-handlers",
+			),
+			cqrs.AsHandler(
+				deletingproductv1.NewDeleteProductHandler,
+				"product-handlers",
+			),
+			cqrs.AsHandler(
+				gettingproductbyidv1.NewGetProductByIDHandler,
+				"product-handlers",
+			),
+			cqrs.AsHandler(
+				searchingproductsv1.NewSearchProductsHandler,
+				"product-handlers",
+			),
+			cqrs.AsHandler(
+				updatingoroductsv1.NewUpdateProductHandler,
+				"product-handlers",
+			),
 		),
-		cqrs.AsHandler(
-			gettingproductsv1.NewGetProductsHandler,
-			"product-handlers",
-		),
-		cqrs.AsHandler(
-			deletingproductv1.NewDeleteProductHandler,
-			"product-handlers",
-		),
-		cqrs.AsHandler(
-			gettingproductbyidv1.NewGetProductByIDHandler,
-			"product-handlers",
-		),
-		cqrs.AsHandler(
-			searchingproductsv1.NewSearchProductsHandler,
-			"product-handlers",
-		),
-		cqrs.AsHandler(
-			updatingoroductsv1.NewUpdateProductHandler,
-			"product-handlers",
-		),
-	),
 
-	// add endpoints to DI
-	fx.Provide(
-		route.AsRoute(
-			creatingproductv1.NewCreteProductEndpoint,
-			"product-routes",
+		// add endpoints to DI
+		fx.Provide(
+			route.AsRoute(
+				creatingproductv1.NewCreteProductEndpoint,
+				"product-routes",
+			),
+			route.AsRoute(
+				updatingoroductsv1.NewUpdateProductEndpoint,
+				"product-routes",
+			),
+			route.AsRoute(
+				gettingproductsv1.NewGetProductsEndpoint,
+				"product-routes",
+			),
+			route.AsRoute(
+				searchingproductsv1.NewSearchProductsEndpoint,
+				"product-routes",
+			),
+			route.AsRoute(
+				gettingproductbyidv1.NewGetProductByIDEndpoint,
+				"product-routes",
+			),
+			route.AsRoute(
+				deletingproductv1.NewDeleteProductEndpoint,
+				"product-routes",
+			),
 		),
-		route.AsRoute(
-			updatingoroductsv1.NewUpdateProductEndpoint,
-			"product-routes",
-		),
-		route.AsRoute(
-			gettingproductsv1.NewGetProductsEndpoint,
-			"product-routes",
-		),
-		route.AsRoute(
-			searchingproductsv1.NewSearchProductsEndpoint,
-			"product-routes",
-		),
-		route.AsRoute(
-			gettingproductbyidv1.NewGetProductByIDEndpoint,
-			"product-routes",
-		),
-		route.AsRoute(
-			deletingproductv1.NewDeleteProductEndpoint,
-			"product-routes",
-		),
-	),
-)
+	)
+}

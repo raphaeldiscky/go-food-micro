@@ -55,7 +55,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 
 	// ref: https://github.com/uber-go/fx/blob/master/app_test.go
 	appBuilder := NewCatalogsWriteTestApplicationBuilder(t)
-	appBuilder.ProvideModule(catalogs.CatalogsServiceModule)
+	appBuilder.ProvideModule(catalogs.NewCatalogsServiceModule())
 
 	appBuilder.Decorate(
 		rabbitmq.RabbitmqContainerOptionsDecorator(t, lifetimeCtx),

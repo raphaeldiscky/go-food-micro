@@ -29,6 +29,7 @@ import (
 var integrationFixture *integration.IntegrationTestSharedFixture
 
 func TestUpdateProduct(t *testing.T) {
+	t.Parallel()
 	RegisterFailHandler(Fail)
 	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
 	RunSpecs(t, "Updated Products Integration Tests")

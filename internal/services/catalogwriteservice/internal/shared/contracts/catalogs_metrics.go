@@ -1,3 +1,4 @@
+// Package contracts contains the catalogs metrics.
 package contracts
 
 import (

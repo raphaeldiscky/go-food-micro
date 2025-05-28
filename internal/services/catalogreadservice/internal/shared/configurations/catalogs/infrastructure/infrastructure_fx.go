@@ -19,25 +19,28 @@ import (
 )
 
 // https://pmihaylov.com/shared-components-go-microservices/
-var Module = fx.Module(
-	"infrastructurefx",
-	// Modules
-	core.Module,
-	customEcho.Module,
-	grpc.Module,
-	mongodb.Module,
-	redis.Module,
-	rabbitmq.ModuleFunc(
-		func(v *validator.Validate, l logger.Logger, tracer tracing.AppTracer) configurations.RabbitMQConfigurationBuilderFuc {
-			return func(builder configurations.RabbitMQConfigurationBuilder) {
-				rabbitmq2.ConfigProductsRabbitMQ(builder, l, v, tracer)
-			}
-		},
-	),
-	health.Module,
-	tracing.Module,
-	metrics.Module,
 
-	// Other provides
-	fx.Provide(validator.New),
-)
+func NewModule() fx.Option {
+	return fx.Module(
+		"infrastructurefx",
+		// Modules
+		core.Module,
+		customEcho.Module,
+		grpc.Module,
+		mongodb.Module,
+		redis.Module,
+		rabbitmq.ModuleFunc(
+			func(v *validator.Validate, l logger.Logger, tracer tracing.AppTracer) configurations.RabbitMQConfigurationBuilderFuc {
+				return func(builder configurations.RabbitMQConfigurationBuilder) {
+					rabbitmq2.ConfigProductsRabbitMQ(builder, l, v, tracer)
+				}
+			},
+		),
+		health.Module,
+		tracing.Module,
+		metrics.Module,
+
+		// Other provides
+		fx.Provide(validator.New),
+	)
+}

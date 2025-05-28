@@ -18,7 +18,7 @@ import (
 var OrderServiceModule = fx.Module(
 	"ordersfx",
 	// Shared Modules
-	config.Module,
+	config.NewModule(),
 	infrastructure.Module,
 
 	// Features Modules

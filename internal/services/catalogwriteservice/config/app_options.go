@@ -18,9 +18,9 @@ type AppOptions struct {
 }
 
 // NewAppOptions is a constructor for the AppOptions.
-func NewAppOptions(environment environment.Environment) (*AppOptions, error) {
+func NewAppOptions(env environment.Environment) (*AppOptions, error) {
 	optionName := strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[AppOptions]())
-	cfg, err := config.BindConfigKey[*AppOptions](optionName, environment)
+	cfg, err := config.BindConfigKey[*AppOptions](optionName, env)
 	if err != nil {
 		return nil, err
 	}

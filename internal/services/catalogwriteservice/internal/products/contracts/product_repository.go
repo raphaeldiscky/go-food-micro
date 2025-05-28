@@ -1,3 +1,4 @@
+// Package contracts contains the product repository contract.
 package contracts
 
 import (

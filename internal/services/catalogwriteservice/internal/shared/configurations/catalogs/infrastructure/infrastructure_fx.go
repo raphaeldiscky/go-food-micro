@@ -21,27 +21,29 @@ import (
 
 // https://pmihaylov.com/shared-components-go-microservices/
 
-// Module is a module that contains the infrastructure module.
-var Module = fx.Module(
-	"infrastructurefx",
-	// Modules
-	core.Module,
-	customEcho.Module,
-	grpc.Module,
-	postgresgorm.Module,
-	postgresmessaging.Module,
-	goose.Module,
-	rabbitmq.ModuleFunc(
-		func() configurations.RabbitMQConfigurationBuilderFuc {
-			return func(builder configurations.RabbitMQConfigurationBuilder) {
-				rabbitmq2.ConfigProductsRabbitMQ(builder)
-			}
-		},
-	),
-	health.Module,
-	tracing.Module,
-	metrics.Module,
+// NewModule is a module that contains the infrastructure module.
+func NewModule() fx.Option {
+	return fx.Module(
+		"infrastructurefx",
+		// Modules
+		core.Module,
+		customEcho.Module,
+		grpc.Module,
+		postgresgorm.Module,
+		postgresmessaging.Module,
+		goose.Module,
+		rabbitmq.ModuleFunc(
+			func() configurations.RabbitMQConfigurationBuilderFuc {
+				return func(builder configurations.RabbitMQConfigurationBuilder) {
+					rabbitmq2.ConfigProductsRabbitMQ(builder)
+				}
+			},
+		),
+		health.Module,
+		tracing.Module,
+		metrics.Module,
 
-	// Other provides
-	fx.Provide(validator.New),
-)
+		// Other provides
+		fx.Provide(validator.New),
+	)
+}

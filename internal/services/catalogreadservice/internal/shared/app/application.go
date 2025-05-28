@@ -17,10 +17,10 @@ func NewCatalogsReadApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
-	logger logger.Logger,
-	environment environment.Environment,
+	log logger.Logger,
+	env environment.Environment,
 ) *CatalogsReadApplication {
-	app := fxapp.NewApplication(providers, decorates, options, logger, environment)
+	app := fxapp.NewApplication(providers, decorates, options, log, env)
 	return &CatalogsReadApplication{
 		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(app),
 	}

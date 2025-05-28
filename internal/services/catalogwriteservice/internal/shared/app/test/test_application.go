@@ -23,16 +23,16 @@ func NewCatalogsWriteTestApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
-	logger logger.Logger,
-	environment environment.Environment,
+	log logger.Logger,
+	env environment.Environment,
 ) *CatalogsWriteTestApplication {
 	testApp := test.NewTestApplication(
 		tb,
 		providers,
 		decorates,
 		options,
-		logger,
-		environment,
+		log,
+		env,
 	)
 
 	catalogApplication := &app.CatalogsWriteApplication{

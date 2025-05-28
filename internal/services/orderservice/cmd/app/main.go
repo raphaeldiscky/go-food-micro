@@ -10,14 +10,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:              "orders-microservice",
-	Short:            "orders-microservice based on vertical slice architecture",
-	Long:             `This is a command runner or cli for api architecture in golang.`,
-	TraverseChildren: true,
-	Run: func(_ *cobra.Command, _ []string) {
-		app.NewApp().Run()
-	},
+// newRootCmd creates and returns the root command for the orders service.
+func newRootCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:              "orders-microservice",
+		Short:            "orders-microservice based on vertical slice architecture",
+		Long:             `This is a command runner or cli for api architecture in golang.`,
+		TraverseChildren: true,
+		Run: func(_ *cobra.Command, _ []string) {
+			app.NewApp().Run()
+		},
+	}
 }
 
 // https://github.com/swaggo/swag#how-to-use-it-with-gin
@@ -35,6 +38,8 @@ func main() {
 	if err != nil {
 		os.Exit(1)
 	}
+
+	rootCmd := newRootCmd()
 	err = rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

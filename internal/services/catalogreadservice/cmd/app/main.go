@@ -10,14 +10,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:              "catalogs-read-microservices",
-	Short:            "catalogs-read-microservices based on vertical slice architecture",
-	Long:             `This is a command runner or cli for api architecture in golang.`,
-	TraverseChildren: true,
-	Run: func(_ *cobra.Command, _ []string) {
-		app.NewApp().Run()
-	},
+func newRootCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:              "catalogs-read-microservices",
+		Short:            "catalogs-read-microservices based on vertical slice architecture",
+		Long:             `This is a command runner or cli for api architecture in golang.`,
+		TraverseChildren: true,
+		Run: func(_ *cobra.Command, _ []string) {
+			app.NewApp().Run()
+		},
+	}
 }
 
 // https://github.com/swaggo/swag#how-to-use-it-with-gin
@@ -36,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = rootCmd.Execute()
+	err = newRootCmd().Execute()
 	if err != nil {
 		os.Exit(1)
 	}
