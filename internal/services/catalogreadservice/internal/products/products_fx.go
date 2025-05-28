@@ -14,27 +14,29 @@ import (
 	searchProductV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/endpoints"
 )
 
-// Module is a module that contains the products module.
-var Module = fx.Module(
-	"productsfx",
+// NewModule is a module that contains the products module.
+func NewModule() fx.Option {
+	return fx.Module(
+		"productsfx",
 
-	// Other provides
-	fx.Provide(repositories.NewRedisProductRepository),
-	fx.Provide(repositories.NewMongoProductRepository),
+		// Other provides
+		fx.Provide(repositories.NewRedisProductRepository),
+		fx.Provide(repositories.NewMongoProductRepository),
 
-	fx.Provide(fx.Annotate(func(catalogsServer contracts.EchoHttpServer) *echo.Group {
-		var g *echo.Group
-		catalogsServer.RouteBuilder().RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {
-			group := v1.Group("/products")
-			g = group
-		})
+		fx.Provide(fx.Annotate(func(catalogsServer contracts.EchoHttpServer) *echo.Group {
+			var g *echo.Group
+			catalogsServer.RouteBuilder().RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {
+				group := v1.Group("/products")
+				g = group
+			})
 
-		return g
-	}, fx.ResultTags(`name:"product-echo-group"`))),
+			return g
+		}, fx.ResultTags(`name:"product-echo-group"`))),
 
-	fx.Provide(
-		route.AsRoute(getProductsV1.NewGetProductsEndpoint, "product-routes"),
-		route.AsRoute(searchProductV1.NewSearchProductsEndpoint, "product-routes"),
-		route.AsRoute(getProductByIdV1.NewGetProductByIDEndpoint, "product-routes"),
-	),
-)
+		fx.Provide(
+			route.AsRoute(getProductsV1.NewGetProductsEndpoint, "product-routes"),
+			route.AsRoute(searchProductV1.NewSearchProductsEndpoint, "product-routes"),
+			route.AsRoute(getProductByIdV1.NewGetProductByIDEndpoint, "product-routes"),
+		),
+	)
+}

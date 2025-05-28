@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+	. "github.com/smartystreets/goconvey/convey"
 
 	httpexpect "github.com/gavv/httpexpect/v2"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestGetProductById(t *testing.T) {

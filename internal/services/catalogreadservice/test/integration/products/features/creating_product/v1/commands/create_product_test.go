@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+	. "github.com/smartystreets/goconvey/convey"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/smartystreets/goconvey/convey"
+	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestCreateProduct(t *testing.T) {

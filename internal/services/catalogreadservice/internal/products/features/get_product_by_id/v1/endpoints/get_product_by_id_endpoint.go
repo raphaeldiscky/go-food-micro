@@ -1,3 +1,4 @@
+// Package endpoints contains the get product by id endpoint.
 package endpoints
 
 import (

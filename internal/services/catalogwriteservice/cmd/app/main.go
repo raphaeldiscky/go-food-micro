@@ -18,7 +18,7 @@ func newRootCmd() *cobra.Command {
 		Long:             `This is a command runner or cli for api architecture in golang.`,
 		TraverseChildren: true,
 		Run: func(_ *cobra.Command, _ []string) {
-			app.NewApp().Run()
+			app.NewCatalogWriteApp().Run()
 		},
 	}
 }

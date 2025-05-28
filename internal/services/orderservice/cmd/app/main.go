@@ -1,3 +1,4 @@
+// Package main contains the main function for the orders service.
 package main
 
 import (
@@ -18,7 +19,7 @@ func newRootCmd() *cobra.Command {
 		Long:             `This is a command runner or cli for api architecture in golang.`,
 		TraverseChildren: true,
 		Run: func(_ *cobra.Command, _ []string) {
-			app.NewApp().Run()
+			app.NewOrderApp().Run()
 		},
 	}
 }

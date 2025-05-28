@@ -1,3 +1,4 @@
+// Package commands contains the delete product command.
 package commands
 
 import (

@@ -8,15 +8,16 @@ import (
 	"testing"
 	"time"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
-
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestProductPostgresRepository(t *testing.T) {

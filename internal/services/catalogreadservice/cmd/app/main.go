@@ -1,3 +1,4 @@
+// Package main contains the main function for the catalog read service.
 package main
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app"
 )
 
+// newRootCmd creates and returns the root command for the catalog read service.
 func newRootCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:              "catalogs-read-microservices",
@@ -17,7 +19,7 @@ func newRootCmd() *cobra.Command {
 		Long:             `This is a command runner or cli for api architecture in golang.`,
 		TraverseChildren: true,
 		Run: func(_ *cobra.Command, _ []string) {
-			app.NewApp().Run()
+			app.NewCatalogReadApp().Run()
 		},
 	}
 }

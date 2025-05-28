@@ -1,3 +1,4 @@
+// Package integration contains the integration test fixture.
 package integration
 
 import (
@@ -24,8 +25,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
 )
 
-// IntegrationTestSharedFixture is a shared fixture for integration tests.
-type IntegrationTestSharedFixture struct {
+// CatalogReadIntegrationTestSharedFixture is a shared fixture for integration tests.
+type CatalogReadIntegrationTestSharedFixture struct {
 	Cfg                    *config.Config
 	Log                    logger.Logger
 	Bus                    bus.Bus
@@ -41,10 +42,10 @@ type IntegrationTestSharedFixture struct {
 	Tracer                 trace.Tracer
 }
 
-// NewIntegrationTestSharedFixture creates a new IntegrationTestSharedFixture.
-func NewIntegrationTestSharedFixture(
+// NewCatalogReadIntegrationTestSharedFixture creates a new CatalogReadIntegrationTestSharedFixture.
+func NewCatalogReadIntegrationTestSharedFixture(
 	t *testing.T,
-) *IntegrationTestSharedFixture {
+) *CatalogReadIntegrationTestSharedFixture {
 	t.Helper()
 	result := test.NewCatalogReadTestApp().Run(t)
 
@@ -70,7 +71,7 @@ func NewIntegrationTestSharedFixture(
 		t.Fatalf("Failed to create RabbitMQ management client: %v", err)
 	}
 
-	shared := &IntegrationTestSharedFixture{
+	shared := &CatalogReadIntegrationTestSharedFixture{
 		Log:                    result.Logger,
 		Container:              result.Container,
 		Cfg:                    result.Cfg,
@@ -121,7 +122,7 @@ func NewIntegrationTestSharedFixture(
 }
 
 // SetupTest sets up the test data.
-func (i *IntegrationTestSharedFixture) SetupTest(t *testing.T) {
+func (i *CatalogReadIntegrationTestSharedFixture) SetupTest(t *testing.T) {
 	t.Helper()
 
 	i.Log.Info("SetupTest started")
@@ -153,7 +154,7 @@ func (i *IntegrationTestSharedFixture) SetupTest(t *testing.T) {
 }
 
 // TearDownTest tears down the test data.
-func (i *IntegrationTestSharedFixture) TearDownTest() {
+func (i *CatalogReadIntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
 	// Stop the bus gracefully first
@@ -234,7 +235,7 @@ func seedData(
 }
 
 // cleanupRabbitmqData cleans up the rabbitmq data.
-func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
+func (i *CatalogReadIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
 	queues, err := i.RabbitmqCleaner.ListQueuesIn(
@@ -258,7 +259,7 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 }
 
 // cleanupMongoData cleans up the mongodb data.
-func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
+func (i *CatalogReadIntegrationTestSharedFixture) cleanupMongoData() error {
 	collections := []string{"products"}
 	err := cleanupCollections(
 		i.mongoClient,

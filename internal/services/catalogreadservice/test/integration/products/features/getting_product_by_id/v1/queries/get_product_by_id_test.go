@@ -7,14 +7,14 @@ import (
 	"context"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+	. "github.com/smartystreets/goconvey/convey"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestGetProductById(t *testing.T) {

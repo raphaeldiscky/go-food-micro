@@ -1,3 +1,4 @@
+// Package repositories contains the mongo product repository.
 package repositories
 
 // https://github.com/Kamva/mgm

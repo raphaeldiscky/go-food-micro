@@ -19,11 +19,11 @@ func NewCatalogsServiceModule() fx.Option {
 	return fx.Module(
 		"catalogsfx",
 		// Shared Modules
-		appconfig.Module,
+		appconfig.NewModule(),
 		infrastructure.NewModule(),
 
 		// Features Modules
-		products.Module,
+		products.NewModule(),
 
 		// Other provides
 		fx.Provide(provideCatalogsMetrics),

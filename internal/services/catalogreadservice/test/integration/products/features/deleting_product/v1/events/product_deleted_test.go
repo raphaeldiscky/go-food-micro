@@ -10,15 +10,16 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
-	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/events/integration_events/external_events"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
-
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
+	uuid "github.com/satori/go.uuid"
+
+	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/events/integration_events/external_events"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestProductDeleted(t *testing.T) {

@@ -12,16 +12,17 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
-	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
-
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
+	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/events/integrationevents/externalevents"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestProductCreatedConsumer(t *testing.T) {

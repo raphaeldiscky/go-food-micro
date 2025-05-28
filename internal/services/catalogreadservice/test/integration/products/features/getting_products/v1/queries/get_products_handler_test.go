@@ -8,13 +8,14 @@ import (
 	"testing"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/queries"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+
+	. "github.com/smartystreets/goconvey/convey"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/queries"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestGetProducts(t *testing.T) {

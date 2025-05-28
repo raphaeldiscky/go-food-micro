@@ -1,3 +1,4 @@
+// Package queries contains the get product by id query.
 package queries
 
 import (

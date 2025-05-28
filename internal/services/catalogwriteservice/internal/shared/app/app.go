@@ -9,16 +9,16 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 )
 
-// App is a struct that contains the app.
-type App struct{}
+// CatalogWriteApp is a struct that contains the app.
+type CatalogWriteApp struct{}
 
-// NewApp is a constructor for the App.
-func NewApp() *App {
-	return &App{}
+// NewCatalogWriteApp is a constructor for the CatalogWriteApp.
+func NewCatalogWriteApp() *CatalogWriteApp {
+	return &CatalogWriteApp{}
 }
 
 // Run is a method that runs the app.
-func (a *App) Run() {
+func (a *CatalogWriteApp) Run() {
 	// configure dependencies
 	appBuilder := NewCatalogsWriteApplicationBuilder()
 	appBuilder.ProvideModule(catalogs.NewCatalogsServiceModule())

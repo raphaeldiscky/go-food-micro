@@ -1,3 +1,4 @@
+// Package queries contains the search products query.
 package queries
 
 import (

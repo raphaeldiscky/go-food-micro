@@ -1,3 +1,4 @@
+// Package mediator contains the mediator configurations.
 package mediator
 
 import (

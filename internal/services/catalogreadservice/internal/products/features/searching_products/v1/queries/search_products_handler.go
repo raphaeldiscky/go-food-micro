@@ -1,3 +1,4 @@
+// Package queries contains the search products handler.
 package queries
 
 import (

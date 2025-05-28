@@ -7,13 +7,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+	. "github.com/smartystreets/goconvey/convey"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestDeleteProduct(t *testing.T) {
