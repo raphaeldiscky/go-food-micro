@@ -12,7 +12,7 @@ import (
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 )
 
-func (ic *CatalogsServiceConfigurator) seedCatalogs(
+func (ic *CatalogWriteServiceConfigurator) seedCatalogs(
 	db *gorm.DB,
 ) error {
 	err := seedDataManually(db)

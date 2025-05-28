@@ -9,19 +9,19 @@ import (
 	"go.uber.org/fx"
 )
 
-type CatalogsReadApplication struct {
-	*catalogs.CatalogsServiceConfigurator
+type CatalogReadApplication struct {
+	*catalogs.CatalogReadServiceConfigurator
 }
 
-func NewCatalogsReadApplication(
+func NewCatalogReadApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
 	log logger.Logger,
 	env environment.Environment,
-) *CatalogsReadApplication {
+) *CatalogReadApplication {
 	app := fxapp.NewApplication(providers, decorates, options, log, env)
-	return &CatalogsReadApplication{
-		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(app),
+	return &CatalogReadApplication{
+		CatalogReadServiceConfigurator: catalogs.NewCatalogReadServiceConfigurator(app),
 	}
 }

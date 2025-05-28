@@ -7,23 +7,23 @@ import (
 	"go.uber.org/fx/fxtest"
 )
 
-// CatalogsReadTestApplicationBuilder is a struct that contains the catalogs read test application builder.
-type CatalogsReadTestApplicationBuilder struct {
+// CatalogReadTestApplicationBuilder is a struct that contains the catalogs read test application builder.
+type CatalogReadTestApplicationBuilder struct {
 	contracts.ApplicationBuilder
 	tb fxtest.TB
 }
 
 // NewCatalogsReadTestApplicationBuilder is a constructor for the CatalogsReadTestApplicationBuilder.
-func NewCatalogsReadTestApplicationBuilder(tb fxtest.TB) *CatalogsReadTestApplicationBuilder {
-	return &CatalogsReadTestApplicationBuilder{
+func NewCatalogReadTestApplicationBuilder(tb fxtest.TB) *CatalogReadTestApplicationBuilder {
+	return &CatalogReadTestApplicationBuilder{
 		ApplicationBuilder: test.NewTestApplicationBuilder(tb),
 		tb:                 tb,
 	}
 }
 
 // Build is a method that builds the catalogs read test application.
-func (a *CatalogsReadTestApplicationBuilder) Build() *CatalogsReadTestApplication {
-	return NewCatalogsReadTestApplication(
+func (a *CatalogReadTestApplicationBuilder) Build() *CatalogReadTestApplication {
+	return NewCatalogReadTestApplication(
 		a.tb,
 		a.GetProvides(),
 		a.GetDecorates(),

@@ -57,7 +57,7 @@ func (a *CatalogReadTestApp) Run(t *testing.T) (result *CatalogReadTestAppResult
 	lifetimeCtx := context.Background()
 
 	// ref: https://github.com/uber-go/fx/blob/master/app_test.go
-	appBuilder := NewCatalogsReadTestApplicationBuilder(t)
+	appBuilder := NewCatalogReadTestApplicationBuilder(t)
 	appBuilder.ProvideModule(catalogs2.NewCatalogsServiceModule())
 
 	// replace real options with docker container options for testing

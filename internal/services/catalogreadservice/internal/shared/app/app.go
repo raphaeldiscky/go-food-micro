@@ -11,7 +11,7 @@ func NewApp() *App {
 
 func (a *App) Run() {
 	// configure dependencies
-	appBuilder := NewCatalogsReadApplicationBuilder()
+	appBuilder := NewCatalogReadApplicationBuilder()
 	appBuilder.ProvideModule(catalogs.NewCatalogsServiceModule())
 
 	app := appBuilder.Build()

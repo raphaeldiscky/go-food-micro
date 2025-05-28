@@ -20,19 +20,19 @@ import (
 )
 
 type getProductByIdHandlerTest struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*gettingproductbyidv1.GetProductByID, *dtos.GetProductByIDResponseDto]
 }
 
 func TestGetProductByIdHandlerUnit(t *testing.T) {
 	suite.Run(t, &getProductByIdHandlerTest{
-		UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+		CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 	})
 }
 
 func (c *getProductByIdHandlerTest) SetupTest() {
 	// call base SetupTest hook before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = gettingproductbyidv1.NewGetProductByIDHandler(
 		fxparams.ProductHandlerParams{
 			CatalogsDBContext: c.CatalogDBContext,
@@ -44,7 +44,7 @@ func (c *getProductByIdHandlerTest) SetupTest() {
 
 func (c *getProductByIdHandlerTest) TearDownTest() {
 	// call base TearDownTest hook before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_Correct_Product_By_ID() {

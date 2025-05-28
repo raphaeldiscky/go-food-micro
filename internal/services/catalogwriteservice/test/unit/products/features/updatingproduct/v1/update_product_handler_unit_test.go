@@ -25,7 +25,7 @@ import (
 )
 
 type updateProductHandlerUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*updatingoroductsv1.UpdateProduct, *mediatr.Unit]
 }
 
@@ -33,14 +33,14 @@ func TestUpdateProductHandlerUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&updateProductHandlerUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }
 
 func (c *updateProductHandlerUnitTests) SetupTest() {
 	// call base `SetupTest hook` before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = updatingoroductsv1.NewUpdateProductHandler(
 		fxparams.ProductHandlerParams{
 			CatalogsDBContext: c.CatalogDBContext,
@@ -53,7 +53,7 @@ func (c *updateProductHandlerUnitTests) SetupTest() {
 
 func (c *updateProductHandlerUnitTests) TearDownTest() {
 	// call base `TearDownTest hook` before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_Valid_Data() {

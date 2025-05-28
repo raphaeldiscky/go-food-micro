@@ -8,7 +8,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-func (ic *CatalogsServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
+func (ic *CatalogReadServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
 	// https://github.com/swaggo/swag#how-to-use-it-with-gin
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Title = "Catalogs Read-Service Api"

@@ -14,13 +14,13 @@ import (
 )
 
 type deleteProductUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestDeleteProductByIdUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&deleteProductUnitTests{UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t)},
+		&deleteProductUnitTests{CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t)},
 	)
 }
 

@@ -16,14 +16,14 @@ import (
 )
 
 type createProductUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestCreateProductUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&createProductUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }

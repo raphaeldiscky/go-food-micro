@@ -16,22 +16,22 @@ import (
 	validationpieline "github.com/raphaeldiscky/go-food-micro/internal/pkg/validation/pipeline"
 )
 
-// InfrastructureConfigurator is a struct that contains the infrastructure configurator.
-type InfrastructureConfigurator struct {
+// CatalogWriteInfraConfigurator is a struct that contains the infrastructure configurator.
+type CatalogWriteInfraConfigurator struct {
 	contracts.Application
 }
 
-// NewInfrastructureConfigurator is a constructor for the InfrastructureConfigurator.
-func NewInfrastructureConfigurator(
+// NewCatalogWriteInfraConfigurator is a constructor for the CatalogWriteInfraConfigurator.
+func NewCatalogWriteInfraConfigurator(
 	fxapp contracts.Application,
-) *InfrastructureConfigurator {
-	return &InfrastructureConfigurator{
+) *CatalogWriteInfraConfigurator {
+	return &CatalogWriteInfraConfigurator{
 		Application: fxapp,
 	}
 }
 
-// ConfigInfrastructures is a method that configures the infrastructures.
-func (ic *InfrastructureConfigurator) ConfigInfrastructures() {
+// CatalogWriteConfigInfra is a method that configures the infrastructures.
+func (ic *CatalogWriteInfraConfigurator) CatalogWriteConfigInfra() {
 	ic.ResolveFunc(
 		func(l logger.Logger, tracer tracing.AppTracer, metrics metrics.AppMetrics, db *gorm.DB) error {
 			err := mediatr.RegisterRequestPipelineBehaviors(

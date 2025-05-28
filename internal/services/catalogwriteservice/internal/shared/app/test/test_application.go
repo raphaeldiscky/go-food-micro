@@ -36,7 +36,7 @@ func NewCatalogsWriteTestApplication(
 	)
 
 	catalogApplication := &app.CatalogsWriteApplication{
-		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(testApp),
+		CatalogWriteServiceConfigurator: catalogs.NewCatalogWriteServiceConfigurator(testApp),
 	}
 
 	return &CatalogsWriteTestApplication{

@@ -19,7 +19,7 @@ import (
 
 // searchProductsHandlerUnitTests is a struct that contains the search products handler unit tests.
 type searchProductsHandlerUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*searchingproductsv1.SearchProducts, *dtos.SearchProductsResponseDto]
 }
 
@@ -29,7 +29,7 @@ func TestSearchProductsUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&searchProductsHandlerUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }
@@ -37,7 +37,7 @@ func TestSearchProductsUnit(t *testing.T) {
 // SetupTest is a method that sets up the test.
 func (c *searchProductsHandlerUnitTests) SetupTest() {
 	// call base SetupTest hook before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = searchingproductsv1.NewSearchProductsHandler(
 		fxparams.ProductHandlerParams{
 			CatalogsDBContext: c.CatalogDBContext,
@@ -50,7 +50,7 @@ func (c *searchProductsHandlerUnitTests) SetupTest() {
 // TearDownTest is a method that tears down the test.
 func (c *searchProductsHandlerUnitTests) TearDownTest() {
 	// call base TearDownTest hook before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 // Test_Handle_Should_Return_Products_Successfully is a method that tests the handle method should return products successfully.

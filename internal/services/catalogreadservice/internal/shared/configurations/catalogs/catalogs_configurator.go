@@ -14,19 +14,19 @@ import (
 	echo "github.com/labstack/echo/v4"
 )
 
-// CatalogsServiceConfigurator is a struct that contains the catalogs service configurator.
-type CatalogsServiceConfigurator struct {
+// CatalogReadServiceConfigurator is a struct that contains the catalogs service configurator.
+type CatalogReadServiceConfigurator struct {
 	contracts.Application
-	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
+	infrastructureConfigurator *infrastructure.CatalogReadInfraConfigurator
 	productsModuleConfigurator *configurations.ProductsModuleConfigurator
 }
 
-// NewCatalogsServiceConfigurator is a constructor for the CatalogsServiceConfigurator.
-func NewCatalogsServiceConfigurator(app contracts.Application) *CatalogsServiceConfigurator {
-	infraConfigurator := infrastructure.NewInfrastructureConfigurator(app)
+// NewCatalogReadServiceConfigurator is a constructor for the CatalogReadServiceConfigurator.
+func NewCatalogReadServiceConfigurator(app contracts.Application) *CatalogReadServiceConfigurator {
+	infraConfigurator := infrastructure.NewCatalogReadInfraConfigurator(app)
 	productModuleConfigurator := configurations.NewProductsModuleConfigurator(app)
 
-	return &CatalogsServiceConfigurator{
+	return &CatalogReadServiceConfigurator{
 		Application:                app,
 		infrastructureConfigurator: infraConfigurator,
 		productsModuleConfigurator: productModuleConfigurator,
@@ -34,10 +34,10 @@ func NewCatalogsServiceConfigurator(app contracts.Application) *CatalogsServiceC
 }
 
 // ConfigureCatalogs is a method that configures the catalogs.
-func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() {
+func (ic *CatalogReadServiceConfigurator) ConfigureCatalogs() {
 	// Shared
 	// Infrastructure
-	ic.infrastructureConfigurator.ConfigInfrastructures()
+	ic.infrastructureConfigurator.CatalogReadConfigInfra()
 
 	// Shared
 	// Catalogs configurations
@@ -48,7 +48,7 @@ func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() {
 }
 
 // MapCatalogsEndpoints is a method that maps the catalogs endpoints.
-func (ic *CatalogsServiceConfigurator) MapCatalogsEndpoints() {
+func (ic *CatalogReadServiceConfigurator) MapCatalogsEndpoints() {
 	// Shared
 	ic.ResolveFunc(
 		func(catalogsServer echocontracts.EchoHttpServer, cfg *config.Config) error {

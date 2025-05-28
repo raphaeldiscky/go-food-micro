@@ -14,13 +14,13 @@ import (
 )
 
 type getProductByIdUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestGetProductByIdUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&getProductByIdUnitTests{UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t)},
+		&getProductByIdUnitTests{CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t)},
 	)
 }
 

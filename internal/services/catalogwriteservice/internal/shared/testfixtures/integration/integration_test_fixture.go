@@ -26,8 +26,8 @@ import (
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
 
-// IntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
-type IntegrationTestSharedFixture struct {
+// CatalogWriteIntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
+type CatalogWriteIntegrationTestSharedFixture struct {
 	Cfg                  *config.AppOptions
 	Log                  logger.Logger
 	Bus                  bus.Bus
@@ -42,10 +42,10 @@ type IntegrationTestSharedFixture struct {
 	ProductServiceClient productsService.ProductsServiceClient
 }
 
-// NewIntegrationTestSharedFixture is a constructor for the IntegrationTestSharedFixture.
-func NewIntegrationTestSharedFixture(
+// NewCatalogWriteIntegrationTestSharedFixture is a constructor for the CatalogWriteIntegrationTestSharedFixture.
+func NewCatalogWriteIntegrationTestSharedFixture(
 	t *testing.T,
-) *IntegrationTestSharedFixture {
+) *CatalogWriteIntegrationTestSharedFixture {
 	t.Helper()
 	result := test.NewCatalogWriteTestApp().Run(t)
 
@@ -60,7 +60,7 @@ func NewIntegrationTestSharedFixture(
 		)
 	}
 
-	shared := &IntegrationTestSharedFixture{
+	shared := &CatalogWriteIntegrationTestSharedFixture{
 		Log:                  result.Logger,
 		Container:            result.Container,
 		Cfg:                  result.Cfg,
@@ -77,7 +77,7 @@ func NewIntegrationTestSharedFixture(
 }
 
 // SetupTest is a method that sets up the test.
-func (i *IntegrationTestSharedFixture) SetupTest() {
+func (i *CatalogWriteIntegrationTestSharedFixture) SetupTest() {
 	i.Log.Info("SetupTest started")
 
 	// migration will do in app configuration
@@ -91,7 +91,7 @@ func (i *IntegrationTestSharedFixture) SetupTest() {
 }
 
 // TearDownTest is a method that tears down the test.
-func (i *IntegrationTestSharedFixture) TearDownTest() {
+func (i *CatalogWriteIntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
 	// cleanup test containers with their hooks
@@ -104,7 +104,7 @@ func (i *IntegrationTestSharedFixture) TearDownTest() {
 	}
 }
 
-func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
+func (i *CatalogWriteIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
 	queues, err := i.RabbitmqCleaner.ListQueuesIn(
@@ -128,7 +128,7 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	return lastErr
 }
 
-func (i *IntegrationTestSharedFixture) cleanupPostgresData() error {
+func (i *CatalogWriteIntegrationTestSharedFixture) cleanupPostgresData() error {
 	tables := []string{"products"}
 	// Iterate over the tables and delete all records
 	for _, table := range tables {

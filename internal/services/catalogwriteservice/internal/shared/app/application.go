@@ -11,7 +11,7 @@ import (
 
 // CatalogsWriteApplication is a struct that contains the catalogs write application.
 type CatalogsWriteApplication struct {
-	*catalogs.CatalogsServiceConfigurator
+	*catalogs.CatalogWriteServiceConfigurator
 }
 
 // NewCatalogsWriteApplication is a constructor for the CatalogsWriteApplication.
@@ -25,6 +25,6 @@ func NewCatalogsWriteApplication(
 	app := fxapp.NewApplication(providers, decorates, options, log, env)
 
 	return &CatalogsWriteApplication{
-		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(app),
+		CatalogWriteServiceConfigurator: catalogs.NewCatalogWriteServiceConfigurator(app),
 	}
 }

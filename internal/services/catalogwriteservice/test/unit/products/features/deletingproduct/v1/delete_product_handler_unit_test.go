@@ -23,7 +23,7 @@ import (
 )
 
 type deleteProductHandlerUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*deletingproductv1.DeleteProduct, *mediatr.Unit]
 }
 
@@ -31,14 +31,14 @@ func TestDeleteProductHandlerUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&deleteProductHandlerUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }
 
 func (c *deleteProductHandlerUnitTests) SetupTest() {
 	// call base SetupTest hook before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = deletingproductv1.NewDeleteProductHandler(
 		fxparams.ProductHandlerParams{
 			Log:               c.Log,
@@ -51,7 +51,7 @@ func (c *deleteProductHandlerUnitTests) SetupTest() {
 
 func (c *deleteProductHandlerUnitTests) TearDownTest() {
 	// call base TearDownTest hook before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_Valid_Id() {

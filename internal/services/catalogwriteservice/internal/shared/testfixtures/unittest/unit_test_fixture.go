@@ -31,8 +31,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 )
 
-// UnitTestSharedFixture is a struct that contains the shared fixture for the unit tests.
-type UnitTestSharedFixture struct {
+// CatalogWriteUnitTestSharedFixture is a struct that contains the shared fixture for the unit tests.
+type CatalogWriteUnitTestSharedFixture struct {
 	Cfg *config.AppOptions
 	Log logger.Logger
 	suite.Suite
@@ -45,8 +45,8 @@ type UnitTestSharedFixture struct {
 	dbFileName       string
 }
 
-// NewUnitTestSharedFixture is a constructor for the UnitTestSharedFixture.
-func NewUnitTestSharedFixture(_ *testing.T) *UnitTestSharedFixture {
+// NewCatalogWriteUnitTestSharedFixture is a constructor for the CatalogWriteUnitTestSharedFixture.
+func NewCatalogWriteUnitTestSharedFixture(_ *testing.T) *CatalogWriteUnitTestSharedFixture {
 	// we could use EmptyLogger if we don't want to log anything
 	log := defaultLogger.GetLogger()
 	cfg := &config.AppOptions{}
@@ -55,7 +55,7 @@ func NewUnitTestSharedFixture(_ *testing.T) *UnitTestSharedFixture {
 	nopetracer := trace.NewNoopTracerProvider()
 	testTracer := nopetracer.Tracer("test_tracer")
 
-	unit := &UnitTestSharedFixture{
+	unit := &CatalogWriteUnitTestSharedFixture{
 		Cfg:        cfg,
 		Log:        log,
 		Tracer:     testTracer,
@@ -66,7 +66,7 @@ func NewUnitTestSharedFixture(_ *testing.T) *UnitTestSharedFixture {
 }
 
 // BeginTx is a method that begins a transaction.
-func (c *UnitTestSharedFixture) BeginTx() {
+func (c *CatalogWriteUnitTestSharedFixture) BeginTx() {
 	c.Log.Info("starting transaction")
 	// seems when we `Begin` a transaction on gorm.DB (with SQLLite in-memory) our previous gormDB before transaction will remove and the new gormDB with tx will go on the memory
 	tx := c.CatalogDBContext.DB().Begin()
@@ -75,7 +75,7 @@ func (c *UnitTestSharedFixture) BeginTx() {
 }
 
 // CommitTx is a method that commits the transaction.
-func (c *UnitTestSharedFixture) CommitTx() {
+func (c *CatalogWriteUnitTestSharedFixture) CommitTx() {
 	tx := gormextensions.GetTxFromContextIfExists(c.Ctx)
 	if tx != nil {
 		c.Log.Info("committing transaction")
@@ -84,7 +84,7 @@ func (c *UnitTestSharedFixture) CommitTx() {
 }
 
 // SetupSuite is a hook that is called before all tests in the suite have run.
-func (c *UnitTestSharedFixture) SetupSuite() {
+func (c *CatalogWriteUnitTestSharedFixture) SetupSuite() {
 	// this fix root working directory problem in our test environment inner our fixture
 	environment.FixProjectRootWorkingDirectoryPath()
 	projectRootDir := environment.GetProjectRootWorkingDirectory()
@@ -93,11 +93,11 @@ func (c *UnitTestSharedFixture) SetupSuite() {
 }
 
 // TearDownSuite is a hook that is called after all tests in the suite have run.
-func (c *UnitTestSharedFixture) TearDownSuite() {
+func (c *CatalogWriteUnitTestSharedFixture) TearDownSuite() {
 }
 
 // SetupTest is a hook that is called before each test.
-func (c *UnitTestSharedFixture) SetupTest() {
+func (c *CatalogWriteUnitTestSharedFixture) SetupTest() {
 	ctx := context.Background()
 	c.Ctx = ctx
 
@@ -110,7 +110,7 @@ func (c *UnitTestSharedFixture) SetupTest() {
 }
 
 // TearDownTest is a hook that is called after each test.
-func (c *UnitTestSharedFixture) TearDownTest() {
+func (c *CatalogWriteUnitTestSharedFixture) TearDownTest() {
 	err := c.cleanupDB()
 	c.Require().NoError(err)
 
@@ -118,7 +118,7 @@ func (c *UnitTestSharedFixture) TearDownTest() {
 }
 
 // setupBus is a method that sets up the bus.
-func (c *UnitTestSharedFixture) setupBus() {
+func (c *CatalogWriteUnitTestSharedFixture) setupBus() {
 	bus := &mocks.Bus{}
 	bus.On("PublishMessage", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 
@@ -126,7 +126,7 @@ func (c *UnitTestSharedFixture) setupBus() {
 }
 
 // setupDB is a method that sets up the database.
-func (c *UnitTestSharedFixture) setupDB() {
+func (c *CatalogWriteUnitTestSharedFixture) setupDB() {
 	dbContext := c.createSQLLiteDBContext()
 	c.CatalogDBContext = dbContext
 
@@ -134,7 +134,7 @@ func (c *UnitTestSharedFixture) setupDB() {
 }
 
 // createSQLLiteDBContext is a method that creates the SQLLite database context.
-func (c *UnitTestSharedFixture) createSQLLiteDBContext() *dbcontext.CatalogsGormDBContext {
+func (c *CatalogWriteUnitTestSharedFixture) createSQLLiteDBContext() *dbcontext.CatalogsGormDBContext {
 	// https://gorm.io/docs/connecting_to_the_database.html#SQLite
 	// https://github.com/glebarez/sqlite
 	// https://www.connectionstrings.com/sqlite/
@@ -151,7 +151,7 @@ func (c *UnitTestSharedFixture) createSQLLiteDBContext() *dbcontext.CatalogsGorm
 }
 
 // initDB is a method that initializes the database.
-func (c *UnitTestSharedFixture) initDB(dbContext *dbcontext.CatalogsGormDBContext) {
+func (c *CatalogWriteUnitTestSharedFixture) initDB(dbContext *dbcontext.CatalogsGormDBContext) {
 	// migrations for our database
 	err := migrateGorm(dbContext)
 	c.Require().NoError(err)
@@ -164,7 +164,7 @@ func (c *UnitTestSharedFixture) initDB(dbContext *dbcontext.CatalogsGormDBContex
 }
 
 // cleanupDB is a method that cleans up the database.
-func (c *UnitTestSharedFixture) cleanupDB() error {
+func (c *CatalogWriteUnitTestSharedFixture) cleanupDB() error {
 	sqldb, err := c.CatalogDBContext.DB().DB()
 	if err != nil {
 		return err

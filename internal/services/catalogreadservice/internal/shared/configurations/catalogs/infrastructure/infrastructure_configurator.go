@@ -13,22 +13,22 @@ import (
 	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
-// InfrastructureConfigurator is a struct that contains the infrastructure configurator.
-type InfrastructureConfigurator struct {
+// CatalogReadInfraConfigurator is a struct that contains the infrastructure configurator.
+type CatalogReadInfraConfigurator struct {
 	contracts.Application
 }
 
-// NewInfrastructureConfigurator is a constructor for the InfrastructureConfigurator.
-func NewInfrastructureConfigurator(
+// CatalogReadInfraConfigurator is a constructor for the CatalogReadInfraConfigurator.
+func NewCatalogReadInfraConfigurator(
 	app contracts.Application,
-) *InfrastructureConfigurator {
-	return &InfrastructureConfigurator{
+) *CatalogReadInfraConfigurator {
+	return &CatalogReadInfraConfigurator{
 		Application: app,
 	}
 }
 
-// ConfigInfrastructures is a method that configures the infrastructures.
-func (ic *InfrastructureConfigurator) ConfigInfrastructures() {
+// CatalogReadConfigInfra is a method that configures the infrastructures.
+func (ic *CatalogReadInfraConfigurator) CatalogReadConfigInfra() {
 	ic.ResolveFunc(
 		func(l logger.Logger, tracer tracing.AppTracer, metrics metrics.AppMetrics) error {
 			err := mediatr.RegisterRequestPipelineBehaviors(

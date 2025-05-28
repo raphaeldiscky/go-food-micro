@@ -18,23 +18,23 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs/infrastructure"
 )
 
-// CatalogsServiceConfigurator is a struct that contains the catalogs service configurator.
-type CatalogsServiceConfigurator struct {
+// CatalogWriteServiceConfigurator is a struct that contains the catalogs service configurator.
+type CatalogWriteServiceConfigurator struct {
 	contracts.Application
-	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
+	infrastructureConfigurator *infrastructure.CatalogWriteInfraConfigurator
 	productsModuleConfigurator *configurations.ProductsModuleConfigurator
 }
 
-// NewCatalogsServiceConfigurator is a constructor for the CatalogsServiceConfigurator.
-func NewCatalogsServiceConfigurator(
+// NewCatalogWriteServiceConfigurator is a constructor for the CatalogWriteServiceConfigurator.
+func NewCatalogWriteServiceConfigurator(
 	app contracts.Application,
-) *CatalogsServiceConfigurator {
-	infraConfigurator := infrastructure.NewInfrastructureConfigurator(app)
+) *CatalogWriteServiceConfigurator {
+	infraConfigurator := infrastructure.NewCatalogWriteInfraConfigurator(app)
 	productModuleConfigurator := configurations.NewProductsModuleConfigurator(
 		app,
 	)
 
-	return &CatalogsServiceConfigurator{
+	return &CatalogWriteServiceConfigurator{
 		Application:                app,
 		infrastructureConfigurator: infraConfigurator,
 		productsModuleConfigurator: productModuleConfigurator,
@@ -42,8 +42,8 @@ func NewCatalogsServiceConfigurator(
 }
 
 // ConfigureCatalogs is a method that configures the catalogs.
-func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
-	ic.infrastructureConfigurator.ConfigInfrastructures()
+func (ic *CatalogWriteServiceConfigurator) ConfigureCatalogs() error {
+	ic.infrastructureConfigurator.CatalogWriteConfigInfra()
 
 	// Catalogs configurations
 	ic.ResolveFunc(
@@ -72,7 +72,7 @@ func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
 }
 
 // MapCatalogsEndpoints is a method that maps the catalogs endpoints.
-func (ic *CatalogsServiceConfigurator) MapCatalogsEndpoints() error {
+func (ic *CatalogWriteServiceConfigurator) MapCatalogsEndpoints() error {
 	// Shared
 	ic.ResolveFunc(
 		func(catalogsServer echocontracts.EchoHttpServer, options *config.AppOptions) error {

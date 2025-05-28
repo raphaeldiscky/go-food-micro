@@ -18,13 +18,13 @@ import (
 )
 
 type mappingProfileUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestMappingProfileUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&mappingProfileUnitTests{UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t)},
+		&mappingProfileUnitTests{CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t)},
 	)
 }
 

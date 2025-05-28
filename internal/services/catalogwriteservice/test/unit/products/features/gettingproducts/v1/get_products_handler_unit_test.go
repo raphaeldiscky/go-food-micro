@@ -20,7 +20,7 @@ import (
 )
 
 type getProductsHandlerUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*gettingproductsv1.GetProducts, *dtos.GetProductsResponseDto]
 }
 
@@ -28,14 +28,14 @@ func TestGetProductsUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&getProductsHandlerUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }
 
 func (c *getProductsHandlerUnitTests) SetupTest() {
 	// call base SetupTest hook before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = gettingproductsv1.NewGetProductsHandler(
 		fxparams.ProductHandlerParams{
 			CatalogsDBContext: c.CatalogDBContext,
@@ -47,7 +47,7 @@ func (c *getProductsHandlerUnitTests) SetupTest() {
 
 func (c *getProductsHandlerUnitTests) TearDownTest() {
 	// call base TearDownTest hook before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 func (c *getProductsHandlerUnitTests) Test_Handle_Should_Return_Products_Successfully() {

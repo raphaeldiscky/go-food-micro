@@ -12,20 +12,20 @@ import (
 )
 
 // CatalogsReadTestApplication is a struct that contains the catalogs read test application.
-type CatalogsReadTestApplication struct {
-	*app.CatalogsReadApplication
+type CatalogReadTestApplication struct {
+	*app.CatalogReadApplication
 	tb fxtest.TB
 }
 
 // NewCatalogsReadTestApplication is a constructor for the CatalogsReadTestApplication.
-func NewCatalogsReadTestApplication(
+func NewCatalogReadTestApplication(
 	tb fxtest.TB,
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
 	log logger.Logger,
 	env environment.Environment,
-) *CatalogsReadTestApplication {
+) *CatalogReadTestApplication {
 	testApp := test.NewTestApplication(
 		tb,
 		providers,
@@ -35,12 +35,12 @@ func NewCatalogsReadTestApplication(
 		env,
 	)
 
-	catalogApplication := &app.CatalogsReadApplication{
-		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(testApp),
+	catalogApplication := &app.CatalogReadApplication{
+		CatalogReadServiceConfigurator: catalogs.NewCatalogReadServiceConfigurator(testApp),
 	}
 
-	return &CatalogsReadTestApplication{
-		CatalogsReadApplication: catalogApplication,
-		tb:                      tb,
+	return &CatalogReadTestApplication{
+		CatalogReadApplication: catalogApplication,
+		tb:                     tb,
 	}
 }

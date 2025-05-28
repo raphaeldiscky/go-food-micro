@@ -8,7 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/docs"
 )
 
-func (ic *CatalogsServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
+func (ic *CatalogWriteServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
 	// https://github.com/swaggo/swag#how-to-use-it-with-gin
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Title = "Catalogs Write-Service Api"
