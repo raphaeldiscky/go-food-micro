@@ -103,7 +103,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 	}
 
 	return &productsService.CreateProductRes{
-		ProductId: result.ProductID.String(),
+		ProductID: result.ProductID.String(),
 	}, nil
 }
 

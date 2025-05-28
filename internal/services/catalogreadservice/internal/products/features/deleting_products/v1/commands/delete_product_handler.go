@@ -13,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 )
 
+// DeleteProductCommand is a struct that contains the delete product command.
 type DeleteProductCommand struct {
 	log             logger.Logger
 	mongoRepository data.ProductRepository
@@ -20,6 +21,7 @@ type DeleteProductCommand struct {
 	tracer          tracing.AppTracer
 }
 
+// NewDeleteProductHandler creates a new DeleteProductHandler.
 func NewDeleteProductHandler(
 	log logger.Logger,
 	repository data.ProductRepository,
@@ -34,20 +36,21 @@ func NewDeleteProductHandler(
 	}
 }
 
+// Handle is a method that handles the delete product command.
 func (c *DeleteProductCommand) Handle(
 	ctx context.Context,
 	command *DeleteProduct,
 ) (*mediatr.Unit, error) {
 	product, err := c.mongoRepository.GetProductByProductId(
 		ctx,
-		command.ProductId.String(),
+		command.ProductID.String(),
 	)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			fmt.Sprintf(
 				"error in fetching product with productId %s in the mongo repository",
-				command.ProductId,
+				command.ProductID,
 			),
 		)
 	}
@@ -56,7 +59,7 @@ func (c *DeleteProductCommand) Handle(
 			err,
 			fmt.Sprintf(
 				"product with productId %s not found",
-				command.ProductId,
+				command.ProductID,
 			),
 		)
 	}
@@ -81,7 +84,7 @@ func (c *DeleteProductCommand) Handle(
 			"product with id: {%s} deleted",
 			product.ID,
 		),
-		logger.Fields{"ProductId": command.ProductId, "ID": product.ID},
+		logger.Fields{"ProductID": command.ProductID, "ID": product.ID},
 	)
 
 	return &mediatr.Unit{}, nil

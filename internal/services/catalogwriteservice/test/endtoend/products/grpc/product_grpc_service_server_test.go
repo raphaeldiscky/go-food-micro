@@ -62,7 +62,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 				res, err := integrationFixture.ProductServiceClient.CreateProduct(ctx, request)
 				Expect(err).To(BeNil())
 				Expect(res).NotTo(BeNil())
-				Expect(res.ProductId).NotTo(BeEmpty())
+				Expect(res.ProductID).NotTo(BeEmpty())
 			})
 		})
 	})
@@ -76,13 +76,13 @@ var _ = Describe("Product Grpc Service Feature", func() {
 				// Make the gRPC request to retrieve data by ID
 				res, err := integrationFixture.ProductServiceClient.GetProductByID(
 					ctx,
-					&productService.GetProductByIDReq{ProductId: id.String()},
+					&productService.GetProductByIDReq{ProductID: id.String()},
 				)
 
 				Expect(err).To(BeNil())
 				Expect(res).NotTo(BeNil())
 				Expect(res.Product).NotTo(BeNil())
-				Expect(res.Product.ProductId).To(Equal(id.String()))
+				Expect(res.Product.ProductID).To(Equal(id.String()))
 			})
 		})
 	})

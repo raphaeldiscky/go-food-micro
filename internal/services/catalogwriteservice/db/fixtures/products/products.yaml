@@ -1,5 +1,5 @@
 {{range $Product := $.Products}}
-- product_id: {{$Product.ProductId}}
+- product_id: {{$Product.ProductID}}
   name: {{$Product.Name}}
   price: 100
   description: {{$Product.Description}}

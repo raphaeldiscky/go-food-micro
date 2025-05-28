@@ -40,7 +40,7 @@ func ConfigureProductsMappings() error {
 			}
 
 			return &productsService.Product{
-				ProductId:   product.ID.String(),
+				ProductID:   product.ID.String(),
 				Name:        product.Name,
 				Description: product.Description,
 				Price:       product.Price,
@@ -56,7 +56,7 @@ func ConfigureProductsMappings() error {
 	err = mapper.CreateCustomMap(
 		func(product *models.Product) *productsService.Product {
 			return &productsService.Product{
-				ProductId:   product.ID.String(),
+				ProductID:   product.ID.String(),
 				Name:        product.Name,
 				Description: product.Description,
 				Price:       product.Price,

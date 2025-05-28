@@ -14,6 +14,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 
+// CreateProductHandler is a struct that contains the create product handler.
 type CreateProductHandler struct {
 	log             logger.Logger
 	mongoRepository data.ProductRepository
@@ -21,6 +22,7 @@ type CreateProductHandler struct {
 	tracer          tracing.AppTracer
 }
 
+// NewCreateProductHandler creates a new CreateProductHandler.
 func NewCreateProductHandler(
 	log logger.Logger,
 	mongoRepository data.ProductRepository,
@@ -35,13 +37,14 @@ func NewCreateProductHandler(
 	}
 }
 
+// Handle is a method that handles the create product command.
 func (c *CreateProductHandler) Handle(
 	ctx context.Context,
 	command *CreateProduct,
 ) (*dtos.CreateProductResponseDto, error) {
 	product := &models.Product{
 		ID:          command.ID, // we generate id ourselves because auto generate mongo string id column with type _id is not an uuid
-		ProductId:   command.ProductId,
+		ProductID:   command.ProductID,
 		Name:        command.Name,
 		Description: command.Description,
 		Price:       command.Price,
@@ -71,7 +74,7 @@ func (c *CreateProductHandler) Handle(
 			"product with id: {%s} created",
 			product.ID,
 		),
-		logger.Fields{"ProductId": command.ProductId, "ID": product.ID},
+		logger.Fields{"ProductID": command.ProductID, "ID": product.ID},
 	)
 
 	return response, nil

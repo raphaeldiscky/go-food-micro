@@ -12,7 +12,7 @@ type CatalogReadTestApplicationBuilder struct {
 	tb fxtest.TB
 }
 
-// NewCatalogsReadTestApplicationBuilder is a constructor for the CatalogsReadTestApplicationBuilder.
+// NewCatalogReadTestApplicationBuilder creates a new CatalogReadTestApplicationBuilder.
 func NewCatalogReadTestApplicationBuilder(tb fxtest.TB) *CatalogReadTestApplicationBuilder {
 	return &CatalogReadTestApplicationBuilder{
 		ApplicationBuilder: test.NewTestApplicationBuilder(tb),

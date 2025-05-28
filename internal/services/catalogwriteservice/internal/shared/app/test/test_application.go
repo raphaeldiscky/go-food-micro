@@ -17,7 +17,7 @@ type CatalogsWriteTestApplication struct {
 	tb fxtest.TB
 }
 
-// NewCatalogsWriteTestApplication is a constructor for the CatalogsWriteTestApplication.
+// NewCatalogsWriteTestApplication creates a new CatalogsWriteTestApplication.
 func NewCatalogsWriteTestApplication(
 	tb fxtest.TB,
 	providers []interface{},

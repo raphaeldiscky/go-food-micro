@@ -20,15 +20,16 @@ import (
 	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
 )
 
+// ConfigProductsMediator configures the products mediator.
 func ConfigProductsMediator(
-	logger logger.Logger,
+	log logger.Logger,
 	mongoProductRepository data.ProductRepository,
 	cacheProductRepository data.ProductCacheRepository,
 	tracer tracing.AppTracer,
 ) error {
 	err := mediatr.RegisterRequestHandler[*v1.CreateProduct, *createProductDtosV1.CreateProductResponseDto](
 		v1.NewCreateProductHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,
@@ -40,7 +41,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*deleteProductCommandV1.DeleteProduct, *mediatr.Unit](
 		deleteProductCommandV1.NewDeleteProductHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,
@@ -52,7 +53,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*updateProductCommandV1.UpdateProduct, *mediatr.Unit](
 		updateProductCommandV1.NewUpdateProductHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,
@@ -63,7 +64,7 @@ func ConfigProductsMediator(
 	}
 
 	err = mediatr.RegisterRequestHandler[*getProductsQueryV1.GetProducts, *getProductsDtoV1.GetProductsResponseDto](
-		getProductsQueryV1.NewGetProductsHandler(logger, mongoProductRepository, tracer),
+		getProductsQueryV1.NewGetProductsHandler(log, mongoProductRepository, tracer),
 	)
 	if err != nil {
 		return errors.WrapIf(err, "error while registering handlers in the mediator")
@@ -71,7 +72,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*searchProductsQueryV1.SearchProducts, *searchProductsDtosV1.SearchProductsResponseDto](
 		searchProductsQueryV1.NewSearchProductsHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			tracer,
 		),
@@ -82,7 +83,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*getProductByIdQueryV1.GetProductByID, *getProductByIdDtosV1.GetProductByIDResponseDto](
 		getProductByIdQueryV1.NewGetProductByIDHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,

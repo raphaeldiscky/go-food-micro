@@ -11,13 +11,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"
 )
 
-// CatalogsReadTestApplication is a struct that contains the catalogs read test application.
+// CatalogReadTestApplication is a struct that contains the catalogs read test application.
 type CatalogReadTestApplication struct {
 	*app.CatalogReadApplication
 	tb fxtest.TB
 }
 
-// NewCatalogsReadTestApplication is a constructor for the CatalogsReadTestApplication.
+// NewCatalogReadTestApplication creates a new CatalogReadTestApplication.
 func NewCatalogReadTestApplication(
 	tb fxtest.TB,
 	providers []interface{},

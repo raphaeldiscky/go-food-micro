@@ -14,7 +14,7 @@ type CatalogsWriteApplication struct {
 	*catalogs.CatalogWriteServiceConfigurator
 }
 
-// NewCatalogsWriteApplication is a constructor for the CatalogsWriteApplication.
+// NewCatalogsWriteApplication creates a new CatalogsWriteApplication.
 func NewCatalogsWriteApplication(
 	providers []interface{},
 	decorates []interface{},

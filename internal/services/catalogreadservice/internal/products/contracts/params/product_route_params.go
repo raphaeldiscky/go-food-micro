@@ -1,3 +1,4 @@
+// Package params contains the product route params.
 package params
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/contracts"
 )
 
+// ProductRouteParams is a struct that contains the product route params.
 type ProductRouteParams struct {
 	fx.In
 

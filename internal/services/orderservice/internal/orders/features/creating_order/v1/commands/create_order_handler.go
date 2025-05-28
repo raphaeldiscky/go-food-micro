@@ -69,7 +69,7 @@ func (c *CreateOrderHandler) Handle(
 
 	c.log.Infow(
 		fmt.Sprintf("[CreateOrderHandler.Handle] order with id: {%s} created", command.OrderId),
-		logger.Fields{"ProductId": command.OrderId},
+		logger.Fields{"ProductID": command.OrderId},
 	)
 
 	return response, nil

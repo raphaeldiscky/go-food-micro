@@ -1,6 +1,6 @@
 package consts
 
 const (
-	ProductIdIndex = "productId"
-	ProductId      = "productId"
+	ProductIDIndex = "productId"
+	ProductID      = "productId"
 )

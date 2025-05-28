@@ -18,7 +18,7 @@ type CatalogReadInfraConfigurator struct {
 	contracts.Application
 }
 
-// CatalogReadInfraConfigurator is a constructor for the CatalogReadInfraConfigurator.
+// NewCatalogReadInfraConfigurator creates a new CatalogReadInfraConfigurator.
 func NewCatalogReadInfraConfigurator(
 	app contracts.Application,
 ) *CatalogReadInfraConfigurator {

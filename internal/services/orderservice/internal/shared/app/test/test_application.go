@@ -17,7 +17,7 @@ type OrdersTestApplication struct {
 	tb fxtest.TB
 }
 
-// NewOrdersTestApplication is a constructor for the OrdersTestApplication.
+// NewOrdersTestApplication creates a new OrdersTestApplication.
 func NewOrdersTestApplication(
 	tb fxtest.TB,
 	providers []interface{},

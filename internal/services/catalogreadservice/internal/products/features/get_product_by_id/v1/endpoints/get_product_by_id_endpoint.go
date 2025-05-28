@@ -15,18 +15,21 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
 )
 
+// getProductByIDEndpoint is a struct that contains the get product by id endpoint.
 type getProductByIDEndpoint struct {
 	params.ProductRouteParams
 }
 
+// NewGetProductByIDEndpoint creates a new GetProductByIDEndpoint.
 func NewGetProductByIDEndpoint(
-	params params.ProductRouteParams,
+	p params.ProductRouteParams,
 ) route.Endpoint {
 	return &getProductByIDEndpoint{
-		ProductRouteParams: params,
+		ProductRouteParams: p,
 	}
 }
 
+// MapEndpoint maps the endpoint to the router.
 func (ep *getProductByIDEndpoint) MapEndpoint() {
 	ep.ProductsGroup.GET("/:id", ep.handler())
 }

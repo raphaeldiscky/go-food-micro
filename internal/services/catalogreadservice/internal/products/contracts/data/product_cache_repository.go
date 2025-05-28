@@ -6,6 +6,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 
+// ProductCacheRepository is a contract for the product cache repository.
 type ProductCacheRepository interface {
 	PutProduct(ctx context.Context, key string, product *models.Product) error
 	GetProductByID(ctx context.Context, key string) (*models.Product, error)

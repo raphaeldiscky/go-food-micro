@@ -1,3 +1,4 @@
+// Package commands contains the update product handler.
 package commands
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 )
 
+// UpdateProductHandler is a struct that contains the update product handler.
 type UpdateProductHandler struct {
 	log             logger.Logger
 	mongoRepository data.ProductRepository
@@ -20,6 +22,7 @@ type UpdateProductHandler struct {
 	tracer          tracing.AppTracer
 }
 
+// NewUpdateProductHandler creates a new UpdateProductHandler.
 func NewUpdateProductHandler(
 	log logger.Logger,
 	mongoRepository data.ProductRepository,
@@ -34,20 +37,21 @@ func NewUpdateProductHandler(
 	}
 }
 
+// Handle is a method that handles the update product command.
 func (c *UpdateProductHandler) Handle(
 	ctx context.Context,
 	command *UpdateProduct,
 ) (*mediatr.Unit, error) {
 	product, err := c.mongoRepository.GetProductByProductId(
 		ctx,
-		command.ProductId.String(),
+		command.ProductID.String(),
 	)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			fmt.Sprintf(
 				"error in fetching product with productId %s in the mongo repository",
-				command.ProductId,
+				command.ProductID,
 			),
 		)
 	}
@@ -57,7 +61,7 @@ func (c *UpdateProductHandler) Handle(
 			err,
 			fmt.Sprintf(
 				"product with productId %s not found",
-				command.ProductId,
+				command.ProductID,
 			),
 		)
 	}
@@ -88,7 +92,7 @@ func (c *UpdateProductHandler) Handle(
 			"product with id: {%s} updated",
 			product.ID,
 		),
-		logger.Fields{"ProductId": command.ProductId, "ID": product.ID},
+		logger.Fields{"ProductID": command.ProductID, "ID": product.ID},
 	)
 
 	return &mediatr.Unit{}, nil

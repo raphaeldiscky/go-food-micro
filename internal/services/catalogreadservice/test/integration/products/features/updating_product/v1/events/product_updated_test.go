@@ -55,13 +55,13 @@ func TestProductUpdatedConsumer(t *testing.T) {
 			t.Fatal("No test items were created during setup")
 		}
 		testProduct := integrationTestSharedFixture.Items[0]
-		if testProduct.ProductId == "" {
+		if testProduct.ProductID == "" {
 			t.Fatal("Test product ID is empty")
 		}
 		integrationTestSharedFixture.Log.Infow(
 			"Test data setup complete",
 			logger.Fields{
-				"productId": testProduct.ProductId,
+				"productId": testProduct.ProductID,
 				"name":      testProduct.Name,
 				"price":     testProduct.Price,
 			},
@@ -73,7 +73,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 			// Create a test product update event
 			fakeUpdateProduct := &externalEvents.ProductUpdatedV1{
 				Message:     types.NewMessage(uuid.NewV4().String()),
-				ProductId:   testProduct.ProductId, // Use the actual product ID from test data
+				ProductID:   testProduct.ProductID, // Use the actual product ID from test data
 				Name:        gofakeit.Name(),
 				Price:       gofakeit.Price(100, 1000),
 				Description: gofakeit.EmojiDescription(),
@@ -83,7 +83,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 			integrationTestSharedFixture.Log.Infow(
 				"Created test product update event",
 				logger.Fields{
-					"productId":   fakeUpdateProduct.ProductId,
+					"productId":   fakeUpdateProduct.ProductID,
 					"name":        fakeUpdateProduct.Name,
 					"price":       fakeUpdateProduct.Price,
 					"description": fakeUpdateProduct.Description,
@@ -113,14 +113,14 @@ func TestProductUpdatedConsumer(t *testing.T) {
 					integrationTestSharedFixture.Log.Infow(
 						"Received message",
 						logger.Fields{
-							"productId":   msg.ProductId,
+							"productId":   msg.ProductID,
 							"name":        msg.Name,
 							"price":       msg.Price,
 							"description": msg.Description,
 						},
 					)
 
-					if msg.ProductId == fakeUpdateProduct.ProductId &&
+					if msg.ProductID == fakeUpdateProduct.ProductID &&
 						msg.Name == fakeUpdateProduct.Name &&
 						msg.Price == fakeUpdateProduct.Price &&
 						msg.Description == fakeUpdateProduct.Description {
@@ -189,7 +189,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 							err = testUtils.WaitUntilConditionMet(func() bool {
 								product, dbErr = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
 									ctx,
-									fakeUpdateProduct.ProductId,
+									fakeUpdateProduct.ProductID,
 								)
 								if dbErr != nil {
 									integrationTestSharedFixture.Log.Errorw(
@@ -240,7 +240,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 							So(err, ShouldBeNil, "Database update timeout")
 							So(dbErr, ShouldBeNil, "Database error")
 							So(product, ShouldNotBeNil, "Product not found in database")
-							So(product.ProductId, ShouldEqual, fakeUpdateProduct.ProductId)
+							So(product.ProductID, ShouldEqual, fakeUpdateProduct.ProductID)
 							So(product.Name, ShouldEqual, fakeUpdateProduct.Name)
 							So(product.Description, ShouldEqual, fakeUpdateProduct.Description)
 							So(product.Price, ShouldEqual, fakeUpdateProduct.Price)

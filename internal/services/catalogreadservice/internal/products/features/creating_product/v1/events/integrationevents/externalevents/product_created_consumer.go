@@ -1,4 +1,5 @@
-package externalEvents
+// Package externalevents contains the product created consumer.
+package externalevents
 
 import (
 	"context"
@@ -19,25 +20,28 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
 )
 
-type productCreatedConsumer struct {
+// ProductCreatedConsumer is a struct that contains the product created consumer.
+type ProductCreatedConsumer struct {
 	logger    logger.Logger
 	validator *validator.Validate
 	tracer    tracing.AppTracer
 }
 
+// NewProductCreatedConsumer creates a new ProductCreatedConsumer.
 func NewProductCreatedConsumer(
-	logger logger.Logger,
-	validator *validator.Validate,
+	log logger.Logger,
+	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) consumer.ConsumerHandler {
-	return &productCreatedConsumer{
-		logger:    logger,
-		validator: validator,
+	return &ProductCreatedConsumer{
+		logger:    log,
+		validator: val,
 		tracer:    tracer,
 	}
 }
 
-func (c *productCreatedConsumer) Handle(
+// Handle is a method that handles the product created consumer.
+func (c *ProductCreatedConsumer) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
 ) error {
@@ -66,13 +70,13 @@ func (c *productCreatedConsumer) Handle(
 	}
 
 	span.SetAttributes(
-		attribute.String("productId", product.ProductId),
+		attribute.String("productId", product.ProductID),
 		attribute.String("name", product.Name),
 		attribute.Float64("price", product.Price),
 	)
 
 	command, err := v1.NewCreateProduct(
-		product.ProductId,
+		product.ProductID,
 		product.Name,
 		product.Description,
 		product.Price,
@@ -98,14 +102,14 @@ func (c *productCreatedConsumer) Handle(
 			err,
 			fmt.Sprintf(
 				"error in sending CreateProduct with id: {%s}",
-				command.ProductId,
+				command.ProductID,
 			),
 		)
 		c.logger.Errorw(
 			"Failed to send CreateProduct command",
 			logger.Fields{
 				"error":     err,
-				"productId": command.ProductId,
+				"productId": command.ProductID,
 			},
 		)
 		span.RecordError(err)
@@ -116,7 +120,7 @@ func (c *productCreatedConsumer) Handle(
 	c.logger.Infow(
 		"Product consumer handled successfully",
 		logger.Fields{
-			"productId": command.ProductId,
+			"productId": command.ProductID,
 			"traceId":   span.SpanContext().TraceID().String(),
 		},
 	)

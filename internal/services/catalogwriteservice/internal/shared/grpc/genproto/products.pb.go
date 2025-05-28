@@ -27,7 +27,7 @@ type Product struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId   string                 `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	ProductID   string                 `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 	Name        string                 `protobuf:"bytes,2,opt,name=ShortTypeName,proto3" json:"ShortTypeName,omitempty"`
 	Description string                 `protobuf:"bytes,3,opt,name=Description,proto3" json:"Description,omitempty"`
 	Price       float64                `protobuf:"fixed64,4,opt,name=Price,proto3" json:"Price,omitempty"`
@@ -69,7 +69,7 @@ func (*Product) Descriptor() ([]byte, []int) {
 
 func (x *Product) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
@@ -177,7 +177,7 @@ type CreateProductRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	ProductID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
 func (x *CreateProductRes) Reset() {
@@ -214,7 +214,7 @@ func (*CreateProductRes) Descriptor() ([]byte, []int) {
 
 func (x *CreateProductRes) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
@@ -224,7 +224,7 @@ type UpdateProductReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId   string  `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	ProductID   string  `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 	Name        string  `protobuf:"bytes,2,opt,name=ShortTypeName,proto3" json:"ShortTypeName,omitempty"`
 	Description string  `protobuf:"bytes,3,opt,name=Description,proto3" json:"Description,omitempty"`
 	Price       float64 `protobuf:"fixed64,4,opt,name=Price,proto3" json:"Price,omitempty"`
@@ -264,7 +264,7 @@ func (*UpdateProductReq) Descriptor() ([]byte, []int) {
 
 func (x *UpdateProductReq) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
@@ -333,7 +333,7 @@ type GetProductByIDReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	ProductID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
 func (x *GetProductByIDReq) Reset() {
@@ -370,7 +370,7 @@ func (*GetProductByIDReq) Descriptor() ([]byte, []int) {
 
 func (x *GetProductByIDReq) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }

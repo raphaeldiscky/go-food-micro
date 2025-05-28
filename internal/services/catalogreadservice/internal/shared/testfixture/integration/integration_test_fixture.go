@@ -24,6 +24,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
 )
 
+// IntegrationTestSharedFixture is a shared fixture for integration tests.
 type IntegrationTestSharedFixture struct {
 	Cfg                    *config.Config
 	Log                    logger.Logger
@@ -40,9 +41,11 @@ type IntegrationTestSharedFixture struct {
 	Tracer                 trace.Tracer
 }
 
+// NewIntegrationTestSharedFixture creates a new IntegrationTestSharedFixture.
 func NewIntegrationTestSharedFixture(
 	t *testing.T,
 ) *IntegrationTestSharedFixture {
+	t.Helper()
 	result := test.NewCatalogReadTestApp().Run(t)
 
 	// Log the RabbitMQ connection details for debugging
@@ -117,7 +120,10 @@ func NewIntegrationTestSharedFixture(
 	return shared
 }
 
+// SetupTest sets up the test data.
 func (i *IntegrationTestSharedFixture) SetupTest(t *testing.T) {
+	t.Helper()
+
 	i.Log.Info("SetupTest started")
 
 	// Clean up any existing data first
@@ -146,6 +152,7 @@ func (i *IntegrationTestSharedFixture) SetupTest(t *testing.T) {
 	)
 }
 
+// TearDownTest tears down the test data.
 func (i *IntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
@@ -166,6 +173,7 @@ func (i *IntegrationTestSharedFixture) TearDownTest() {
 	// This ensures we don't have race conditions between cleanup and setup
 }
 
+// seedData seeds the test data.
 func seedData(
 	db *mongo.Client,
 	databaseName string,
@@ -177,7 +185,7 @@ func seedData(
 	products := []*models.Product{
 		{
 			ID:          uuid.NewV4().String(),
-			ProductId:   uuid.NewV4().String(),
+			ProductID:   uuid.NewV4().String(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
@@ -185,7 +193,7 @@ func seedData(
 		},
 		{
 			ID:          uuid.NewV4().String(),
-			ProductId:   uuid.NewV4().String(),
+			ProductID:   uuid.NewV4().String(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
@@ -215,22 +223,6 @@ func seedData(
 		return nil, errors.WrapIf(err, "failed to decode products after seeding")
 	}
 
-	// Log all products for debugging
-	for i, p := range allProducts {
-		println(
-			"[DEBUG] Seeded Product",
-			i,
-			"ID:",
-			p.ID,
-			"ProductId:",
-			p.ProductId,
-			"Name:",
-			p.Name,
-			"Price:",
-			p.Price,
-		)
-	}
-
 	if len(allProducts) == 0 {
 		return nil, errors.New("no products found after seeding")
 	}
@@ -238,6 +230,7 @@ func seedData(
 	return allProducts, nil
 }
 
+// cleanupRabbitmqData cleans up the rabbitmq data.
 func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
@@ -261,6 +254,7 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	return nil
 }
 
+// cleanupMongoData cleans up the mongodb data.
 func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 	collections := []string{"products"}
 	err := cleanupCollections(
@@ -275,6 +269,7 @@ func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 	return nil
 }
 
+// cleanupCollections cleans up the collections.
 func cleanupCollections(
 	db *mongo.Client,
 	collections []string,

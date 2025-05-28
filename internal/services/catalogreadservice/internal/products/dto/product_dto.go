@@ -4,9 +4,10 @@ import (
 	"time"
 )
 
+// ProductDto is a struct that contains the product dto.
 type ProductDto struct {
 	ID          string    `json:"id"`
-	ProductId   string    `json:"productId"`
+	ProductID   string    `json:"productId"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Price       float64   `json:"price"`

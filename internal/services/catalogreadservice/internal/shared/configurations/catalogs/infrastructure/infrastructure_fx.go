@@ -21,6 +21,7 @@ import (
 
 // https://pmihaylov.com/shared-components-go-microservices/
 
+// NewModule creates a new module.
 func NewModule() fx.Option {
 	return fx.Module(
 		"infrastructurefx",

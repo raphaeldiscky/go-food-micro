@@ -28,7 +28,7 @@ func TestUpdateProduct(t *testing.T) {
 		// scenario
 		Convey("Updating an existing product in the database", func() {
 			Convey("Given an existing product in the system", func() {
-				productId, err := uuid.FromString(integrationTestSharedFixture.Items[0].ProductId)
+				productId, err := uuid.FromString(integrationTestSharedFixture.Items[0].ProductID)
 				So(err, ShouldBeNil)
 
 				updateProduct, err := commands.NewUpdateProduct(

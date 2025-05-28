@@ -30,7 +30,7 @@ func TestProductPostgresRepository(t *testing.T) {
 		Convey("When we create the new product in the database", func() {
 			product := &models.Product{
 				ID:          uuid.NewV4().String(),
-				ProductId:   uuid.NewV4().String(),
+				ProductID:   uuid.NewV4().String(),
 				Name:        gofakeit.Name(),
 				Description: gofakeit.AdjectiveDescriptive(),
 				Price:       gofakeit.Price(100, 1000),

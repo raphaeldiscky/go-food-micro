@@ -40,13 +40,13 @@ func TestProductDeleted(t *testing.T) {
 		Convey("Delete product in mongo database when a ProductDeleted event consumed", func() {
 			event := &externalEvents.ProductDeletedV1{
 				Message:   types.NewMessage(uuid.NewV4().String()),
-				ProductId: integrationTestSharedFixture.Items[0].ProductId,
+				ProductID: integrationTestSharedFixture.Items[0].ProductID,
 			}
 
 			// First verify the product exists
 			existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
 				ctx,
-				integrationTestSharedFixture.Items[0].ProductId,
+				integrationTestSharedFixture.Items[0].ProductID,
 			)
 			So(err, ShouldBeNil)
 			So(existingProduct, ShouldNotBeNil)
@@ -80,14 +80,14 @@ func TestProductDeleted(t *testing.T) {
 					err := testUtils.WaitUntilConditionMet(func() bool {
 						deletedProduct, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
 							ctx,
-							integrationTestSharedFixture.Items[0].ProductId,
+							integrationTestSharedFixture.Items[0].ProductID,
 						)
 						if err != nil {
 							integrationTestSharedFixture.Log.Errorw(
 								"Error checking product deletion",
 								logger.Fields{
 									"error":     err,
-									"productId": integrationTestSharedFixture.Items[0].ProductId,
+									"productId": integrationTestSharedFixture.Items[0].ProductID,
 								},
 							)
 							return false

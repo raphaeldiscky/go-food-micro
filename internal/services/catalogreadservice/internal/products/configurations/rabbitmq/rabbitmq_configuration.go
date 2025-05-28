@@ -16,10 +16,11 @@ import (
 	updateProductExternalEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/events/integration_events/external_events"
 )
 
+// ConfigProductsRabbitMQ configures the rabbitmq for the products.
 func ConfigProductsRabbitMQ(
 	builder rabbitmqConfigurations.RabbitMQConfigurationBuilder,
-	logger logger.Logger,
-	validator *validator.Validate,
+	log logger.Logger,
+	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) {
 	// add custom message type mappings
@@ -35,8 +36,8 @@ func ConfigProductsRabbitMQ(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
 						handlersBuilder.AddHandler(
 							createProductExternalEventV1.NewProductCreatedConsumer(
-								logger,
-								validator,
+								log,
+								val,
 								tracer,
 							),
 						)
@@ -50,8 +51,8 @@ func ConfigProductsRabbitMQ(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
 						handlersBuilder.AddHandler(
 							deleteProductExternalEventV1.NewProductDeletedConsumer(
-								logger,
-								validator,
+								log,
+								val,
 								tracer,
 							),
 						)
@@ -65,8 +66,8 @@ func ConfigProductsRabbitMQ(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
 						handlersBuilder.AddHandler(
 							updateProductExternalEventsV1.NewProductUpdatedConsumer(
-								logger,
-								validator,
+								log,
+								val,
 								tracer,
 							),
 						)

@@ -9,10 +9,12 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"
 )
 
+// CatalogReadApplication is a struct that contains the catalog read application.
 type CatalogReadApplication struct {
 	*catalogs.CatalogReadServiceConfigurator
 }
 
+// NewCatalogReadApplication creates a new CatalogReadApplication.
 func NewCatalogReadApplication(
 	providers []interface{},
 	decorates []interface{},

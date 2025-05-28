@@ -8,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 
+// ProductRepository is a contract for the product repository.
 type ProductRepository interface {
 	GetAllProducts(
 		ctx context.Context,

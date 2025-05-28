@@ -1,4 +1,5 @@
-package externalEvents
+// Package externalevents contains the product deleted consumer.
+package externalevents
 
 import (
 	"context"
@@ -20,25 +21,28 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
 )
 
-type productDeletedConsumer struct {
+// ProductDeletedConsumer is a struct that contains the product deleted consumer.
+type ProductDeletedConsumer struct {
 	logger    logger.Logger
 	validator *validator.Validate
 	tracer    tracing.AppTracer
 }
 
+// NewProductDeletedConsumer creates a new ProductDeletedConsumer.
 func NewProductDeletedConsumer(
-	logger logger.Logger,
-	validator *validator.Validate,
+	log logger.Logger,
+	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) consumer.ConsumerHandler {
-	return &productDeletedConsumer{
-		logger:    logger,
-		validator: validator,
+	return &ProductDeletedConsumer{
+		logger:    log,
+		validator: val,
 		tracer:    tracer,
 	}
 }
 
-func (c *productDeletedConsumer) Handle(
+// Handle is a method that handles the product deleted consumer.
+func (c *ProductDeletedConsumer) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
 ) error {
@@ -67,11 +71,11 @@ func (c *productDeletedConsumer) Handle(
 	}
 
 	span.SetAttributes(
-		attribute.String("productId", message.ProductId),
+		attribute.String("productId", message.ProductID),
 		attribute.String("message", fmt.Sprintf("%+v", message)),
 	)
 
-	productUUID, err := uuid.FromString(message.ProductId)
+	productUUID, err := uuid.FromString(message.ProductID)
 	if err != nil {
 		c.logger.WarnMsg("uuid.FromString", err)
 		badRequestErr := customErrors.NewBadRequestErrorWrap(
@@ -112,14 +116,14 @@ func (c *productDeletedConsumer) Handle(
 			err,
 			fmt.Sprintf(
 				"[deleteProductConsumer_Consume.Send] error in sending DeleteProduct with id: {%s}",
-				command.ProductId,
+				command.ProductID,
 			),
 		)
 		c.logger.Errorw(
 			"Failed to send DeleteProduct command",
 			logger.Fields{
 				"error":     err,
-				"productId": command.ProductId,
+				"productId": command.ProductID,
 			},
 		)
 		span.RecordError(err)
@@ -130,7 +134,7 @@ func (c *productDeletedConsumer) Handle(
 	c.logger.Infow(
 		"Product deleted consumer handled successfully",
 		logger.Fields{
-			"productId": command.ProductId,
+			"productId": command.ProductID,
 			"traceId":   span.SpanContext().TraceID().String(),
 		},
 	)

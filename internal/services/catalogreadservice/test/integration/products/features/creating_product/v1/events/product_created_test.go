@@ -48,7 +48,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 				MessageId: uuid.New().String(),
 				Created:   time.Now().UTC(),
 			},
-			ProductId:   uuid.New().String(),
+			ProductID:   uuid.New().String(),
 			Name:        gofakeit.Name(),
 			Description: gofakeit.Sentence(10),
 			Price:       gofakeit.Float64Range(1, 1000),
@@ -81,7 +81,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 		for i := 0; i < 5; i++ {
 			product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
 				ctx,
-				fakeProduct.ProductId,
+				fakeProduct.ProductID,
 			)
 			if err == nil && product != nil {
 				break
@@ -92,7 +92,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 		require.NotNil(t, product, "Product should be stored in database")
 
 		// Verify the product data
-		assert.Equal(t, fakeProduct.ProductId, product.ProductId)
+		assert.Equal(t, fakeProduct.ProductID, product.ProductID)
 		assert.Equal(t, fakeProduct.Name, product.Name)
 		assert.Equal(t, fakeProduct.Description, product.Description)
 		assert.Equal(t, fakeProduct.Price, product.Price)
@@ -101,14 +101,14 @@ func TestProductCreatedConsumer(t *testing.T) {
 		// Verify no duplicate products by checking if we can retrieve the product
 		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
 			ctx,
-			fakeProduct.ProductId,
+			fakeProduct.ProductID,
 		)
 		require.NoError(t, err, "Failed to get product from database")
 		require.NotNil(t, retrievedProduct, "Product should exist in database")
 		assert.Equal(
 			t,
-			fakeProduct.ProductId,
-			retrievedProduct.ProductId,
+			fakeProduct.ProductID,
+			retrievedProduct.ProductID,
 			"Should have exactly one product with the given ID",
 		)
 	})

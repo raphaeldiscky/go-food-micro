@@ -14,12 +14,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/dtos"
 )
 
+// SearchProductsHandler is a struct that contains the search products handler.
 type SearchProductsHandler struct {
 	log             logger.Logger
 	mongoRepository data.ProductRepository
 	tracer          tracing.AppTracer
 }
 
+// NewSearchProductsHandler creates a new SearchProductsHandler.
 func NewSearchProductsHandler(
 	log logger.Logger,
 	repository data.ProductRepository,
@@ -32,6 +34,7 @@ func NewSearchProductsHandler(
 	}
 }
 
+// Handle is a method that handles the search products query.
 func (c *SearchProductsHandler) Handle(
 	ctx context.Context,
 	query *SearchProducts,

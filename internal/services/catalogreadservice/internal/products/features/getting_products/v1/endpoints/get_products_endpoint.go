@@ -16,18 +16,21 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/queries"
 )
 
+// getProductsEndpoint is a struct that contains the get products endpoint.
 type getProductsEndpoint struct {
 	params.ProductRouteParams
 }
 
+// NewGetProductsEndpoint creates a new GetProductsEndpoint.
 func NewGetProductsEndpoint(
-	params params.ProductRouteParams,
+	p params.ProductRouteParams,
 ) route.Endpoint {
 	return &getProductsEndpoint{
-		ProductRouteParams: params,
+		ProductRouteParams: p,
 	}
 }
 
+// MapEndpoint maps the endpoint to the router.
 func (ep *getProductsEndpoint) MapEndpoint() {
 	ep.ProductsGroup.GET("", ep.handler())
 }

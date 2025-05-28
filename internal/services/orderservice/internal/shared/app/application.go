@@ -9,10 +9,12 @@ import (
 	"go.uber.org/fx"
 )
 
+// OrdersApplication is a struct that contains the orders application.
 type OrdersApplication struct {
 	*orders.OrdersServiceConfigurator
 }
 
+// NewOrdersApplication creates a new OrdersApplication.
 func NewOrdersApplication(
 	providers []interface{},
 	decorates []interface{},

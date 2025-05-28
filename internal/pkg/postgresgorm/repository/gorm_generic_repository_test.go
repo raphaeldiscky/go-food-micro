@@ -150,17 +150,17 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
 
 	testCases := []struct {
 		Name         string
-		ProductId    uuid.UUID
+		ProductID    uuid.UUID
 		ExpectResult *ProductGorm
 	}{
 		{
 			Name:         p.Name,
-			ProductId:    p.ID,
+			ProductID:    p.ID,
 			ExpectResult: p,
 		},
 		{
 			Name:         "NonExistingProduct",
-			ProductId:    uuid.NewV4(),
+			ProductID:    uuid.NewV4(),
 			ExpectResult: nil,
 		},
 	}
@@ -168,7 +168,7 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
 			t.Parallel()
-			res, err := c.productRepository.GetById(ctx, s.ProductId)
+			res, err := c.productRepository.GetById(ctx, s.ProductID)
 			if s.ExpectResult == nil {
 				assert.Error(t, err)
 				assert.True(t, customErrors.IsNotFoundError(err))
@@ -196,17 +196,17 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 
 	testCases := []struct {
 		Name         string
-		ProductId    uuid.UUID
+		ProductID    uuid.UUID
 		ExpectResult *Product
 	}{
 		{
 			Name:         p.Name,
-			ProductId:    p.ID,
+			ProductID:    p.ID,
 			ExpectResult: p,
 		},
 		{
 			Name:         "NonExistingProduct",
-			ProductId:    uuid.NewV4(),
+			ProductID:    uuid.NewV4(),
 			ExpectResult: nil,
 		},
 	}
@@ -216,7 +216,7 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 			t.Parallel()
 			res, err := c.productRepositoryWithDataModel.GetById(
 				ctx,
-				s.ProductId,
+				s.ProductID,
 			)
 
 			if s.ExpectResult == nil {

@@ -33,12 +33,14 @@ const (
 	productCollection = "products"
 )
 
+// mongoProductRepository is a struct that contains the mongo product repository.
 type mongoProductRepository struct {
 	log                    logger.Logger
 	mongoGenericRepository data.GenericRepository[*models.Product]
 	tracer                 tracing.AppTracer
 }
 
+// NewMongoProductRepository creates a new MongoProductRepository.
 func NewMongoProductRepository(
 	log logger.Logger,
 	db *mongo.Client,
@@ -58,6 +60,7 @@ func NewMongoProductRepository(
 	}
 }
 
+// GetAllProducts gets all products from the database.
 func (p *mongoProductRepository) GetAllProducts(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -87,6 +90,7 @@ func (p *mongoProductRepository) GetAllProducts(
 	return result, nil
 }
 
+// SearchProducts searches for products in the database.
 func (p *mongoProductRepository) SearchProducts(
 	ctx context.Context,
 	searchText string,
@@ -120,6 +124,7 @@ func (p *mongoProductRepository) SearchProducts(
 	return result, nil
 }
 
+// GetProductByID gets a product by id from the database.
 func (p *mongoProductRepository) GetProductByID(
 	ctx context.Context,
 	uuid string,
@@ -157,6 +162,7 @@ func (p *mongoProductRepository) GetProductByID(
 	return product, nil
 }
 
+// GetProductByProductId gets a product by product id from the database.
 func (p *mongoProductRepository) GetProductByProductId(
 	ctx context.Context,
 	uuid string,
@@ -166,7 +172,7 @@ func (p *mongoProductRepository) GetProductByProductId(
 		ctx,
 		"mongoProductRepository.GetProductByProductId",
 	)
-	span.SetAttributes(attribute2.String("ProductId", productId))
+	span.SetAttributes(attribute2.String("ProductID", productId))
 	defer span.End()
 
 	product, err := p.mongoGenericRepository.FirstOrDefault(
@@ -193,12 +199,13 @@ func (p *mongoProductRepository) GetProductByProductId(
 			"product with productId %s laoded",
 			productId,
 		),
-		logger.Fields{"Product": product, "ProductId": uuid},
+		logger.Fields{"Product": product, "ProductID": uuid},
 	)
 
 	return product, nil
 }
 
+// CreateProduct creates a product in the database.
 func (p *mongoProductRepository) CreateProduct(
 	ctx context.Context,
 	product *models.Product,
@@ -222,14 +229,15 @@ func (p *mongoProductRepository) CreateProduct(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' created",
-			product.ProductId,
+			product.ProductID,
 		),
-		logger.Fields{"Product": product, "ID": product.ProductId},
+		logger.Fields{"Product": product, "ID": product.ProductID},
 	)
 
 	return product, nil
 }
 
+// UpdateProduct updates a product in the database.
 func (p *mongoProductRepository) UpdateProduct(
 	ctx context.Context,
 	updateProduct *models.Product,
@@ -246,7 +254,7 @@ func (p *mongoProductRepository) UpdateProduct(
 				err,
 				fmt.Sprintf(
 					"error in updating product with id %s into the database.",
-					updateProduct.ProductId,
+					updateProduct.ProductID,
 				),
 			),
 		)
@@ -256,14 +264,15 @@ func (p *mongoProductRepository) UpdateProduct(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' updated",
-			updateProduct.ProductId,
+			updateProduct.ProductID,
 		),
-		logger.Fields{"Product": updateProduct, "ID": updateProduct.ProductId},
+		logger.Fields{"Product": updateProduct, "ID": updateProduct.ProductID},
 	)
 
 	return updateProduct, nil
 }
 
+// DeleteProductByID deletes a product by id from the database.
 func (p *mongoProductRepository) DeleteProductByID(
 	ctx context.Context,
 	uuid string,

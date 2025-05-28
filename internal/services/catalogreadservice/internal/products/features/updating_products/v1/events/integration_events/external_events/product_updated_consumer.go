@@ -1,4 +1,5 @@
-package externalEvents
+// Package externalevents contains the product updated consumer.
+package externalevents
 
 import (
 	"context"
@@ -20,24 +21,27 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
 )
 
+// productUpdatedConsumer is a struct that contains the product updated consumer.
 type productUpdatedConsumer struct {
 	logger    logger.Logger
 	validator *validator.Validate
 	tracer    tracing.AppTracer
 }
 
+// NewProductUpdatedConsumer creates a new ProductUpdatedConsumer.
 func NewProductUpdatedConsumer(
-	logger logger.Logger,
-	validator *validator.Validate,
+	log logger.Logger,
+	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) consumer.ConsumerHandler {
 	return &productUpdatedConsumer{
-		logger:    logger,
-		validator: validator,
+		logger:    log,
+		validator: val,
 		tracer:    tracer,
 	}
 }
 
+// Handle is a method that handles the product updated consumer.
 func (c *productUpdatedConsumer) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
@@ -51,7 +55,7 @@ func (c *productUpdatedConsumer) Handle(
 	span.SetAttributes(attribute.Object("Message", consumeContext.Message()))
 	defer span.End()
 
-	productUUID, err := uuid.FromString(message.ProductId)
+	productUUID, err := uuid.FromString(message.ProductID)
 	if err != nil {
 		c.logger.WarnMsg("uuid.FromString", err)
 		badRequestErr := customErrors.NewBadRequestErrorWrap(
@@ -98,10 +102,10 @@ func (c *productUpdatedConsumer) Handle(
 		c.logger.Errorw(
 			fmt.Sprintf(
 				"[updateProductConsumer_Consume.Send] id: {%s}, err: {%v}",
-				command.ProductId,
+				command.ProductID,
 				utils.TraceErrStatusFromSpan(span, err),
 			),
-			logger.Fields{"ID": command.ProductId},
+			logger.Fields{"ID": command.ProductID},
 		)
 
 		return err

@@ -16,20 +16,22 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 
-type GetProductByIdHandler struct {
+// GetProductByIDHandler is a struct that contains the get product by id handler.
+type GetProductByIDHandler struct {
 	log             logger.Logger
 	mongoRepository data.ProductRepository
 	redisRepository data.ProductCacheRepository
 	tracer          tracing.AppTracer
 }
 
+// NewGetProductByIDHandler creates a new GetProductByIDHandler.
 func NewGetProductByIDHandler(
 	log logger.Logger,
 	mongoRepository data.ProductRepository,
 	redisRepository data.ProductCacheRepository,
 	tracer tracing.AppTracer,
-) *GetProductByIdHandler {
-	return &GetProductByIdHandler{
+) *GetProductByIDHandler {
+	return &GetProductByIDHandler{
 		log:             log,
 		mongoRepository: mongoRepository,
 		redisRepository: redisRepository,
@@ -37,7 +39,8 @@ func NewGetProductByIDHandler(
 	}
 }
 
-func (q *GetProductByIdHandler) Handle(
+// Handle is a method that handles the get product by id query.
+func (q *GetProductByIDHandler) Handle(
 	ctx context.Context,
 	query *GetProductByID,
 ) (*dtos.GetProductByIDResponseDto, error) {
@@ -92,7 +95,7 @@ func (q *GetProductByIdHandler) Handle(
 			"product with id: {%s} fetched",
 			query.ID,
 		),
-		logger.Fields{"ProductId": product.ProductId, "ID": product.ID},
+		logger.Fields{"ProductID": product.ProductID, "ID": product.ID},
 	)
 
 	return &dtos.GetProductByIDResponseDto{Product: productDto}, nil
