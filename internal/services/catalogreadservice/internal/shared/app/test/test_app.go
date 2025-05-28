@@ -48,6 +48,8 @@ func NewTestApp() *TestApp {
 }
 
 func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
+	t.Helper()
+
 	lifetimeCtx := context.Background()
 
 	// ref: https://github.com/uber-go/fx/blob/master/app_test.go

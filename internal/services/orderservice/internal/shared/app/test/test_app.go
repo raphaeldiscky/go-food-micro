@@ -59,6 +59,8 @@ func NewTestApp() *TestApp {
 
 // Run is a method that runs the test app.
 func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
+	t.Helper()
+
 	lifetimeCtx := context.Background()
 
 	// ref: https://github.com/uber-go/fx/blob/master/app_test.go
