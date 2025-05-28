@@ -52,7 +52,7 @@ func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 			return badRequestErr
 		}
 
-		query, err := NewGetProductByIdWithValidation(request.ProductID)
+		query, err := NewGetProductByIDWithValidation(request.ProductID)
 		if err != nil {
 			return err
 		}

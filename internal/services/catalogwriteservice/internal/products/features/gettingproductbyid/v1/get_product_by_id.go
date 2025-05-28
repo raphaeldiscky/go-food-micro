@@ -18,8 +18,8 @@ type GetProductByID struct {
 	ProductID uuid.UUID
 }
 
-// NewGetProductById is a constructor for the GetProductByID.
-func NewGetProductById(productId uuid.UUID) *GetProductByID {
+// NewGetProductByID is a constructor for the GetProductByID.
+func NewGetProductByID(productId uuid.UUID) *GetProductByID {
 	query := &GetProductByID{
 		Query:     cqrs.NewQueryByT[GetProductByID](),
 		ProductID: productId,
@@ -28,9 +28,9 @@ func NewGetProductById(productId uuid.UUID) *GetProductByID {
 	return query
 }
 
-// NewGetProductByIdWithValidation is a constructor for the GetProductByID with validation.
-func NewGetProductByIdWithValidation(productId uuid.UUID) (*GetProductByID, error) {
-	query := NewGetProductById(productId)
+// NewGetProductByIDWithValidation is a constructor for the GetProductByID with validation.
+func NewGetProductByIDWithValidation(productId uuid.UUID) (*GetProductByID, error) {
+	query := NewGetProductByID(productId)
 	err := query.Validate()
 
 	return query, err

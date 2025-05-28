@@ -28,12 +28,14 @@ var rootCmd = &cobra.Command{
 // @version 1.0
 // @description Orders Service Api
 func main() {
-	pterm.DefaultBigText.WithLetters(
+	err := pterm.DefaultBigText.WithLetters(
 		putils.LettersFromStringWithStyle("Orders", pterm.FgLightGreen.ToStyle()),
 		putils.LettersFromStringWithStyle(" Service", pterm.FgLightMagenta.ToStyle())).
 		Render()
-
-	err := rootCmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
+	err = rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}

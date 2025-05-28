@@ -10,7 +10,7 @@ type GetProductByID struct {
 	Id uuid.UUID
 }
 
-func NewGetProductById(id uuid.UUID) (*GetProductByID, error) {
+func NewGetProductByID(id uuid.UUID) (*GetProductByID, error) {
 	product := &GetProductByID{Id: id}
 	if err := product.Validate(); err != nil {
 		return nil, err

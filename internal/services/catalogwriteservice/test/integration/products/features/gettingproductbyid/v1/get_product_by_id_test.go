@@ -79,7 +79,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 		func() {
 			Context("Given products exists in the database", func() {
 				BeforeEach(func() {
-					query, err = getProductByIdQuery.NewGetProductByIdWithValidation(id)
+					query, err = getProductByIdQuery.NewGetProductByIDWithValidation(id)
 				})
 
 				// "When" step
@@ -123,7 +123,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 				BeforeEach(func() {
 					// Generate a random UUID that does not exist in the database
 					id = uuid.NewV4()
-					query, err = getProductByIdQuery.NewGetProductByIdWithValidation(id)
+					query, err = getProductByIdQuery.NewGetProductByIDWithValidation(id)
 					Expect(err).To(BeNil())
 				})
 

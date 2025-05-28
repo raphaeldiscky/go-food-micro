@@ -31,7 +31,7 @@ func init() {
 }
 
 var (
-	rootCmd = &cobra.Command{ //nolint:gochecknoglobals
+	rootCmd = &cobra.Command{
 		Use:   "migration",
 		Short: "A tool for running migrations",
 		Run: func(cmd *cobra.Command, args []string) {
@@ -46,7 +46,7 @@ var (
 		},
 	}
 
-	cmdDown = &cobra.Command{ //nolint:gochecknoglobals
+	cmdDown = &cobra.Command{
 		Use:   "down",
 		Short: "Run a down migration",
 		Run: func(cmd *cobra.Command, _ []string) {
@@ -54,7 +54,7 @@ var (
 		},
 	}
 
-	cmdUp = &cobra.Command{ //nolint:gochecknoglobals
+	cmdUp = &cobra.Command{
 		Use:   "up",
 		Short: "Run an up migration",
 		Run: func(cmd *cobra.Command, _ []string) {
@@ -82,15 +82,18 @@ func executeMigration(cmd *cobra.Command, commandType migration.CommandType) {
 		fx.Invoke(
 			func(migrationRunner contracts.PostgresMigrationRunner, logger logger.Logger) {
 				logger.Info("Migration process started...")
+
 				switch commandType {
 				case migration.Up:
 					err = migrationRunner.Up(context.Background(), version)
 				case migration.Down:
 					err = migrationRunner.Down(context.Background(), version)
 				}
+
 				if err != nil {
 					logger.Fatalf("migration failed, err: %s", err)
 				}
+
 				logger.Info("Migration completed...")
 			},
 		),

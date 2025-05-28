@@ -10,10 +10,10 @@ import (
 // ProductDeletedV1 is a struct that contains the product deleted v1.
 type ProductDeletedV1 struct {
 	*types.Message
-	ProductId string `json:"productId,omitempty"`
+	ProductID string `json:"productId,omitempty"`
 }
 
 // NewProductDeletedV1 is a constructor for the ProductDeletedV1.
-func NewProductDeletedV1(productId string) *ProductDeletedV1 {
-	return &ProductDeletedV1{ProductId: productId, Message: types.NewMessage(uuid.NewV4().String())}
+func NewProductDeletedV1(productID string) *ProductDeletedV1 {
+	return &ProductDeletedV1{ProductID: productID, Message: types.NewMessage(uuid.NewV4().String())}
 }

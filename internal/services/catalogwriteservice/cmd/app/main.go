@@ -28,12 +28,15 @@ var rootCmd = &cobra.Command{
 // @version 1.0
 // @description Catalogs Write-Service Api.
 func main() {
-	pterm.DefaultBigText.WithLetters(
+	err := pterm.DefaultBigText.WithLetters(
 		putils.LettersFromStringWithStyle("Catalogs", pterm.FgLightGreen.ToStyle()),
 		putils.LettersFromStringWithStyle(" Write Service", pterm.FgLightMagenta.ToStyle())).
 		Render()
+	if err != nil {
+		os.Exit(1)
+	}
 
-	err := rootCmd.Execute()
+	err = rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)
 	}

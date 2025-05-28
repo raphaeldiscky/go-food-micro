@@ -21,7 +21,7 @@ type GetProductByIdHandler struct {
 	tracer          tracing.AppTracer
 }
 
-func NewGetProductByIdHandler(
+func NewGetProductByIDHandler(
 	log logger.Logger,
 	mongoRepository data.ProductRepository,
 	redisRepository data.ProductCacheRepository,

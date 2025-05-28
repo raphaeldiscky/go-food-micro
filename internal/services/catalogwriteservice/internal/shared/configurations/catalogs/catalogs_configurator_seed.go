@@ -27,6 +27,7 @@ func seedDataManually(gormDB *gorm.DB) error {
 
 	// https://gorm.io/docs/advanced_query.html#Count
 	gormDB.Model(&datamodel.ProductDataModel{}).Count(&count)
+
 	if count > 0 {
 		return nil
 	}

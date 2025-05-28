@@ -1,3 +1,4 @@
+// Package infrastructure contains the infrastructure configurator.
 package infrastructure
 
 import (

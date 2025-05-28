@@ -29,7 +29,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// UnitTestSharedFixture is a struct that contains the shared fixture for the unit tests
+// UnitTestSharedFixture is a struct that contains the shared fixture for the unit tests.
 type UnitTestSharedFixture struct {
 	Cfg *config.AppOptions
 	Log logger.Logger
@@ -43,7 +43,7 @@ type UnitTestSharedFixture struct {
 	dbFileName       string
 }
 
-// NewUnitTestSharedFixture is a constructor for the UnitTestSharedFixture
+// NewUnitTestSharedFixture is a constructor for the UnitTestSharedFixture.
 func NewUnitTestSharedFixture(_ *testing.T) *UnitTestSharedFixture {
 	// we could use EmptyLogger if we don't want to log anything
 	log := defaultLogger.GetLogger()
@@ -63,7 +63,7 @@ func NewUnitTestSharedFixture(_ *testing.T) *UnitTestSharedFixture {
 	return unit
 }
 
-// BeginTx is a method that begins a transaction
+// BeginTx is a method that begins a transaction.
 func (c *UnitTestSharedFixture) BeginTx() {
 	c.Log.Info("starting transaction")
 	// seems when we `Begin` a transaction on gorm.DB (with SQLLite in-memory) our previous gormDB before transaction will remove and the new gormDB with tx will go on the memory
@@ -160,12 +160,20 @@ func (c *UnitTestSharedFixture) initDB(dbContext *dbcontext.CatalogsGormDBContex
 }
 
 func (c *UnitTestSharedFixture) cleanupDB() error {
-	sqldb, _ := c.CatalogDBContext.DB().DB()
-	e := sqldb.Close()
-	c.Require().NoError(e)
+	sqldb, err := c.CatalogDBContext.DB().DB()
+	if err != nil {
+		return err
+	}
+	err = sqldb.Close()
+	if err != nil {
+		return err
+	}
 
 	// removing sql-lite file
-	err := os.Remove(c.dbFilePath)
+	err = os.Remove(c.dbFilePath)
+	if err != nil {
+		return err
+	}
 
 	return err
 }

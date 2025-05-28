@@ -35,7 +35,7 @@ func TestGetProductById(t *testing.T) {
 			"Returning an existing product with valid Id from the database with correct properties",
 			func() {
 				Convey("Given a product with a known ID exists in the database", func() {
-					query, err := queries.NewGetProductById(knownProductID)
+					query, err := queries.NewGetProductByID(knownProductID)
 					So(err, ShouldBeNil)
 
 					Convey(
@@ -73,7 +73,7 @@ func TestGetProductById(t *testing.T) {
 			Convey("Given a product with a unknown ID in the database", func() {
 				// Create a test context and an unknown product ID.
 
-				query, err := queries.NewGetProductById(unknownProductID)
+				query, err := queries.NewGetProductByID(unknownProductID)
 				So(err, ShouldBeNil)
 
 				Convey("When GetProductByID executed for a product with an unknown ID", func() {

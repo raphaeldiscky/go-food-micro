@@ -24,6 +24,7 @@ type searchProductsHandlerUnitTests struct {
 
 // TestSearchProductsUnit is a function that tests the search products unit.
 func TestSearchProductsUnit(t *testing.T) {
+	t.Parallel()
 	suite.Run(
 		t,
 		&searchProductsHandlerUnitTests{

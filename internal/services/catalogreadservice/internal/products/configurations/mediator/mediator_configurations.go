@@ -80,7 +80,7 @@ func ConfigProductsMediator(
 	}
 
 	err = mediatr.RegisterRequestHandler[*getProductByIdQueryV1.GetProductByID, *getProductByIdDtosV1.GetProductByIDResponseDto](
-		getProductByIdQueryV1.NewGetProductByIdHandler(
+		getProductByIdQueryV1.NewGetProductByIDHandler(
 			logger,
 			mongoProductRepository,
 			cacheProductRepository,

@@ -5,6 +5,8 @@ import (
 )
 
 // https://uber-go.github.io/fx/modules.html
+
+// Module is a module that contains the app config module.
 var Module = fx.Module("appconfigfx",
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered

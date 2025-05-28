@@ -31,7 +31,10 @@ func (p *ProductDataModel) TableName() string {
 
 // String is a method that returns the string representation of the product data model.
 func (p *ProductDataModel) String() string {
-	j, _ := json.Marshal(p)
+	j, err := json.Marshal(p)
+	if err != nil {
+		return ""
+	}
 
 	return string(j)
 }

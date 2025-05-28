@@ -48,6 +48,7 @@ func NewOrdersServiceClient(cc grpc.ClientConnInterface) OrdersServiceClient {
 func (c *ordersServiceClient) CreateOrder(ctx context.Context, in *CreateOrderReq, opts ...grpc.CallOption) (*CreateOrderRes, error) {
 	out := new(CreateOrderRes)
 	err := c.cc.Invoke(ctx, OrdersService_CreateOrder_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
@@ -57,6 +58,7 @@ func (c *ordersServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRe
 func (c *ordersServiceClient) SubmitOrder(ctx context.Context, in *SubmitOrderReq, opts ...grpc.CallOption) (*SubmitOrderRes, error) {
 	out := new(SubmitOrderRes)
 	err := c.cc.Invoke(ctx, OrdersService_SubmitOrder_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
@@ -66,6 +68,7 @@ func (c *ordersServiceClient) SubmitOrder(ctx context.Context, in *SubmitOrderRe
 func (c *ordersServiceClient) UpdateShoppingCart(ctx context.Context, in *UpdateShoppingCartReq, opts ...grpc.CallOption) (*UpdateShoppingCartRes, error) {
 	out := new(UpdateShoppingCartRes)
 	err := c.cc.Invoke(ctx, OrdersService_UpdateShoppingCart_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
@@ -75,6 +78,7 @@ func (c *ordersServiceClient) UpdateShoppingCart(ctx context.Context, in *Update
 func (c *ordersServiceClient) GetOrderByID(ctx context.Context, in *GetOrderByIDReq, opts ...grpc.CallOption) (*GetOrderByIDRes, error) {
 	out := new(GetOrderByIDRes)
 	err := c.cc.Invoke(ctx, OrdersService_GetOrderByID_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +88,7 @@ func (c *ordersServiceClient) GetOrderByID(ctx context.Context, in *GetOrderByID
 func (c *ordersServiceClient) GetOrders(ctx context.Context, in *GetOrdersReq, opts ...grpc.CallOption) (*GetOrdersRes, error) {
 	out := new(GetOrdersRes)
 	err := c.cc.Invoke(ctx, OrdersService_GetOrders_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}

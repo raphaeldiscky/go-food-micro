@@ -44,6 +44,7 @@ func NewProductsServiceClient(cc grpc.ClientConnInterface) ProductsServiceClient
 func (c *productsServiceClient) CreateProduct(ctx context.Context, in *CreateProductReq, opts ...grpc.CallOption) (*CreateProductRes, error) {
 	out := new(CreateProductRes)
 	err := c.cc.Invoke(ctx, ProductsService_CreateProduct_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
@@ -53,6 +54,7 @@ func (c *productsServiceClient) CreateProduct(ctx context.Context, in *CreatePro
 func (c *productsServiceClient) UpdateProduct(ctx context.Context, in *UpdateProductReq, opts ...grpc.CallOption) (*UpdateProductRes, error) {
 	out := new(UpdateProductRes)
 	err := c.cc.Invoke(ctx, ProductsService_UpdateProduct_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
@@ -62,6 +64,7 @@ func (c *productsServiceClient) UpdateProduct(ctx context.Context, in *UpdatePro
 func (c *productsServiceClient) GetProductByID(ctx context.Context, in *GetProductByIDReq, opts ...grpc.CallOption) (*GetProductByIDRes, error) {
 	out := new(GetProductByIDRes)
 	err := c.cc.Invoke(ctx, ProductsService_GetProductById_FullMethodName, in, out, opts...)
+
 	if err != nil {
 		return nil, err
 	}
