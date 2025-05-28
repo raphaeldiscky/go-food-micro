@@ -9,6 +9,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// ProductRepository is a contract for the product repository.
 type ProductRepository interface {
 	GetAllProducts(
 		ctx context.Context,

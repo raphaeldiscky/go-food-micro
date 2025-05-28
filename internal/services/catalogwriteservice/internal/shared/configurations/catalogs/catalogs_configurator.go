@@ -16,12 +16,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// CatalogsServiceConfigurator is a struct that contains the catalogs service configurator.
 type CatalogsServiceConfigurator struct {
 	contracts.Application
 	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
 	productsModuleConfigurator *configurations.ProductsModuleConfigurator
 }
 
+// NewCatalogsServiceConfigurator is a constructor for the CatalogsServiceConfigurator.
 func NewCatalogsServiceConfigurator(
 	app contracts.Application,
 ) *CatalogsServiceConfigurator {
@@ -37,6 +39,7 @@ func NewCatalogsServiceConfigurator(
 	}
 }
 
+// ConfigureCatalogs is a method that configures the catalogs.
 func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
 	// Shared
 	// Infrastructure
@@ -69,6 +72,7 @@ func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
 	return err
 }
 
+// MapCatalogsEndpoints is a method that maps the catalogs endpoints.
 func (ic *CatalogsServiceConfigurator) MapCatalogsEndpoints() error {
 	// Shared
 	ic.ResolveFunc(

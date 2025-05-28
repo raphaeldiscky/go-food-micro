@@ -38,7 +38,7 @@ func NewGetProductByIdHandler(
 func (q *GetProductByIdHandler) Handle(
 	ctx context.Context,
 	query *GetProductByID,
-) (*dtos.GetProductByIdResponseDto, error) {
+) (*dtos.GetProductByIDResponseDto, error) {
 	redisProduct, err := q.redisRepository.GetProductByID(
 		ctx,
 		query.Id.String(),
@@ -73,7 +73,7 @@ func (q *GetProductByIdHandler) Handle(
 		product = mongoProduct
 		err = q.redisRepository.PutProduct(ctx, product.Id, product)
 		if err != nil {
-			return new(dtos.GetProductByIdResponseDto), err
+			return new(dtos.GetProductByIDResponseDto), err
 		}
 	}
 
@@ -93,5 +93,5 @@ func (q *GetProductByIdHandler) Handle(
 		logger.Fields{"ProductId": product.ProductId, "Id": product.Id},
 	)
 
-	return &dtos.GetProductByIdResponseDto{Product: productDto}, nil
+	return &dtos.GetProductByIDResponseDto{Product: productDto}, nil
 }

@@ -9,7 +9,7 @@ type CatalogsMetrics struct {
 	CreateProductGrpcRequests     metric.Float64Counter
 	UpdateProductGrpcRequests     metric.Float64Counter
 	DeleteProductGrpcRequests     metric.Float64Counter
-	GetProductByIdGrpcRequests    metric.Float64Counter
+	GetProductByIDGrpcRequests    metric.Float64Counter
 	SearchProductGrpcRequests     metric.Float64Counter
 	SuccessRabbitMQMessages       metric.Float64Counter
 	ErrorRabbitMQMessages         metric.Float64Counter

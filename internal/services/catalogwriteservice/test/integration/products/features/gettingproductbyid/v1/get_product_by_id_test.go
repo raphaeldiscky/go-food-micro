@@ -34,7 +34,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 		ctx    context.Context
 		id     uuid.UUID
 		query  *getProductByIdQuery.GetProductByID
-		result *dtos.GetProductByIdResponseDto
+		result *dtos.GetProductByIDResponseDto
 		err    error
 	)
 
@@ -87,7 +87,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 					"the GteProductById query is executed for existing product",
 					func() {
 						BeforeEach(func() {
-							result, err = mediatr.Send[*getProductByIdQuery.GetProductByID, *dtos.GetProductByIdResponseDto](
+							result, err = mediatr.Send[*getProductByIdQuery.GetProductByID, *dtos.GetProductByIDResponseDto](
 								ctx,
 								query,
 							)
@@ -132,7 +132,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 					"the GetProductByID query is executed for non-existing product",
 					func() {
 						BeforeEach(func() {
-							result, err = mediatr.Send[*getProductByIdQuery.GetProductByID, *dtos.GetProductByIdResponseDto](
+							result, err = mediatr.Send[*getProductByIdQuery.GetProductByID, *dtos.GetProductByIDResponseDto](
 								ctx,
 								query,
 							)

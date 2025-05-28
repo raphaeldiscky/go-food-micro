@@ -18,7 +18,7 @@ type getProductByIDEndpoint struct {
 	params.ProductRouteParams
 }
 
-func NewGetProductByIdEndpoint(
+func NewGetProductByIDEndpoint(
 	params params.ProductRouteParams,
 ) route.Endpoint {
 	return &getProductByIDEndpoint{
@@ -37,7 +37,7 @@ func (ep *getProductByIDEndpoint) MapEndpoint() {
 // @Accept json
 // @Produce json
 // @Param id path string true "Product ID"
-// @Success 200 {object} dtos.GetProductByIdResponseDto
+// @Success 200 {object} dtos.GetProductByIDResponseDto
 // @Router /api/v1/products/{id} [get]
 func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -63,7 +63,7 @@ func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 			return validationErr
 		}
 
-		queryResult, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIdResponseDto](
+		queryResult, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
 			ctx,
 			query,
 		)

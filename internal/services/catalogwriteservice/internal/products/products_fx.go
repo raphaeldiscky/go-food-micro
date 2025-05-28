@@ -17,6 +17,7 @@ import (
 	"go.uber.org/fx"
 )
 
+// Module is a module that contains the products module.
 var Module = fx.Module(
 	"productsfx",
 
@@ -84,7 +85,7 @@ var Module = fx.Module(
 			"product-routes",
 		),
 		route.AsRoute(
-			gettingproductbyidv1.NewGetProductByIdEndpoint,
+			gettingproductbyidv1.NewGetProductByIDEndpoint,
 			"product-routes",
 		),
 		route.AsRoute(

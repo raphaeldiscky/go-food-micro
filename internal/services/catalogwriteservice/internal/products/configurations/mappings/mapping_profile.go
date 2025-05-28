@@ -10,6 +10,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// ConfigureProductsMappings is a function that configures the products mappings.
 func ConfigureProductsMappings() error {
 	err := mapper.CreateMap[*models.Product, *dtoV1.ProductDto]()
 	if err != nil {

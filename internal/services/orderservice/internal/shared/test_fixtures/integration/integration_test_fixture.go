@@ -78,7 +78,7 @@ func NewIntegrationTestSharedFixture(
 		mongoClient:          result.MongoClient,
 		Bus:                  result.Bus,
 		rabbitmqOptions:      result.RabbitmqOptions,
-		BaseAddress:          result.EchoHttpOptions.BasePathAddress(),
+		BaseAddress:          result.EchoHTTPOptions.BasePathAddress(),
 		OrdersServiceClient:  result.OrdersServiceClient,
 	}
 

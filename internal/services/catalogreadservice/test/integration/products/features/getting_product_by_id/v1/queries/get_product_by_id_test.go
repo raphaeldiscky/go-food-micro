@@ -37,7 +37,7 @@ func TestGetProductById(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				Convey("When we execute GetProductByID query for a product with known ID", func() {
-					result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIdResponseDto](
+					result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
 						ctx,
 						query,
 					)
@@ -68,7 +68,7 @@ func TestGetProductById(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				Convey("When GetProductByID executed for a product with an unknown ID", func() {
-					result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIdResponseDto](
+					result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
 						ctx,
 						query,
 					)

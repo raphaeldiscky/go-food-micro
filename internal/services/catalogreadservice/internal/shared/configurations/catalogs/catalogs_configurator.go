@@ -13,12 +13,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// CatalogsServiceConfigurator is a struct that contains the catalogs service configurator.
 type CatalogsServiceConfigurator struct {
 	contracts.Application
 	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
 	productsModuleConfigurator *configurations.ProductsModuleConfigurator
 }
 
+// NewCatalogsServiceConfigurator is a constructor for the CatalogsServiceConfigurator.
 func NewCatalogsServiceConfigurator(app contracts.Application) *CatalogsServiceConfigurator {
 	infraConfigurator := infrastructure.NewInfrastructureConfigurator(app)
 	productModuleConfigurator := configurations.NewProductsModuleConfigurator(app)
@@ -30,6 +32,7 @@ func NewCatalogsServiceConfigurator(app contracts.Application) *CatalogsServiceC
 	}
 }
 
+// ConfigureCatalogs is a method that configures the catalogs.
 func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() {
 	// Shared
 	// Infrastructure
@@ -43,6 +46,7 @@ func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() {
 	ic.productsModuleConfigurator.ConfigureProductsModule()
 }
 
+// MapCatalogsEndpoints is a method that maps the catalogs endpoints.
 func (ic *CatalogsServiceConfigurator) MapCatalogsEndpoints() {
 	// Shared
 	ic.ResolveFunc(

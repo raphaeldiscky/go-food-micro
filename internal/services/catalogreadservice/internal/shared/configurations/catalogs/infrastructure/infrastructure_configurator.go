@@ -12,10 +12,12 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// InfrastructureConfigurator is a struct that contains the infrastructure configurator.
 type InfrastructureConfigurator struct {
 	contracts.Application
 }
 
+// NewInfrastructureConfigurator is a constructor for the InfrastructureConfigurator.
 func NewInfrastructureConfigurator(
 	app contracts.Application,
 ) *InfrastructureConfigurator {
@@ -24,6 +26,7 @@ func NewInfrastructureConfigurator(
 	}
 }
 
+// ConfigInfrastructures is a method that configures the infrastructures.
 func (ic *InfrastructureConfigurator) ConfigInfrastructures() {
 	ic.ResolveFunc(
 		func(l logger.Logger, tracer tracing.AppTracer, metrics metrics.AppMetrics) error {

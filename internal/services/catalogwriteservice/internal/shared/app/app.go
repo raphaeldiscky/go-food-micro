@@ -7,12 +7,15 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 )
 
+// App is a struct that contains the app.
 type App struct{}
 
+// NewApp is a constructor for the App.
 func NewApp() *App {
 	return &App{}
 }
 
+// Run is a method that runs the app.
 func (a *App) Run() {
 	// configure dependencies
 	appBuilder := NewCatalogsWriteApplicationBuilder()

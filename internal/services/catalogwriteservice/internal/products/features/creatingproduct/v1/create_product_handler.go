@@ -19,10 +19,12 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// createProductHandler is a struct that contains the create product handler.
 type createProductHandler struct {
 	fxparams.ProductHandlerParams
 }
 
+// NewCreateProductHandler is a constructor for the createProductHandler.
 func NewCreateProductHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*CreateProduct, *dtos.CreateProductResponseDto] {
@@ -31,12 +33,14 @@ func NewCreateProductHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the create product handler.
 func (c *createProductHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*CreateProduct, *dtos.CreateProductResponseDto](
 		c,
 	)
 }
 
+// Handle is a method that handles the create product command.
 func (c *createProductHandler) Handle(
 	ctx context.Context,
 	command *CreateProduct,

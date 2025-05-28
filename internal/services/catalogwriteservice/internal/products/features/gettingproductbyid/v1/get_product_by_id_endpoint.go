@@ -13,11 +13,13 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// getProductByIDEndpoint is a struct that contains the get product by id endpoint.
 type getProductByIDEndpoint struct {
 	fxparams.ProductRouteParams
 }
 
-func NewGetProductByIdEndpoint(
+// NewGetProductByIDEndpoint is a constructor for the getProductByIDEndpoint.
+func NewGetProductByIDEndpoint(
 	params fxparams.ProductRouteParams,
 ) route.Endpoint {
 	return &getProductByIDEndpoint{ProductRouteParams: params}
@@ -34,7 +36,7 @@ func (ep *getProductByIDEndpoint) MapEndpoint() {
 // @Accept json
 // @Produce json
 // @Param id path string true "Product ID"
-// @Success 200 {object} dtos.GetProductByIdResponseDto
+// @Success 200 {object} dtos.GetProductByIDResponseDto
 // @Router /api/v1/products/{id} [get].
 func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
@@ -50,12 +52,12 @@ func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 			return badRequestErr
 		}
 
-		query, err := NewGetProductByIdWithValidation(request.ProductId)
+		query, err := NewGetProductByIdWithValidation(request.ProductID)
 		if err != nil {
 			return err
 		}
 
-		queryResult, err := mediatr.Send[*GetProductByID, *dtos.GetProductByIdResponseDto](
+		queryResult, err := mediatr.Send[*GetProductByID, *dtos.GetProductByIDResponseDto](
 			ctx,
 			query,
 		)

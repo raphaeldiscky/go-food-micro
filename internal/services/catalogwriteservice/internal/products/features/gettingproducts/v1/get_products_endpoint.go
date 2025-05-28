@@ -14,16 +14,19 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// getProductsEndpoint is a struct that contains the get products endpoint.
 type getProductsEndpoint struct {
 	fxparams.ProductRouteParams
 }
 
+// NewGetProductsEndpoint is a constructor for the getProductsEndpoint.
 func NewGetProductsEndpoint(
 	params fxparams.ProductRouteParams,
 ) route.Endpoint {
 	return &getProductsEndpoint{ProductRouteParams: params}
 }
 
+// MapEndpoint is a method that maps the endpoint.
 func (ep *getProductsEndpoint) MapEndpoint() {
 	ep.ProductsGroup.GET("", ep.handler())
 }
@@ -36,7 +39,7 @@ func (ep *getProductsEndpoint) MapEndpoint() {
 // @Produce json
 // @Param getProductsRequestDto query dtos.GetProductsRequestDto false "GetProductsRequestDto"
 // @Success 200 {object} dtos.GetProductsResponseDto
-// @Router /api/v1/products [get]
+// @Router /api/v1/products [get].
 func (ep *getProductsEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()

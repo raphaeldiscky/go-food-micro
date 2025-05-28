@@ -40,7 +40,7 @@ type TestAppResult struct {
 	Container            contracts.Container
 	Logger               logger.Logger
 	RabbitmqOptions      *config2.RabbitmqOptions
-	EchoHttpOptions      *config3.EchoHttpOptions
+	EchoHTTPOptions      *config3.EchoHTTPOptions
 	EventStoreDbOptions  *config4.EventStoreDbOptions
 	OrderMongoRepository repositories.OrderMongoRepository
 	OrderAggregateStore  store.AggregateStore[*aggregate.Order]
@@ -81,7 +81,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 			bus bus.RabbitmqBus,
 			logger logger.Logger,
 			rabbitmqOptions *config2.RabbitmqOptions,
-			echoOptions *config3.EchoHttpOptions,
+			echoOptions *config3.EchoHTTPOptions,
 			grpcClient grpc.GrpcClient,
 			eventStoreDbOptions *config4.EventStoreDbOptions,
 			orderMongoRepository repositories.OrderMongoRepository,
@@ -98,7 +98,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 				RabbitmqOptions:      rabbitmqOptions,
 				MongoClient:          mongoClient,
 				MongoDbOptions:       mongoDbOptions,
-				EchoHttpOptions:      echoOptions,
+				EchoHTTPOptions:      echoOptions,
 				EsdbClient:           esdbClient,
 				EventStoreDbOptions:  eventStoreDbOptions,
 				OrderMongoRepository: orderMongoRepository,

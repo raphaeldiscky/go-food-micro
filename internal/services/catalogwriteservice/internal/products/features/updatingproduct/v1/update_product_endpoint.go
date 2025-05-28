@@ -13,10 +13,12 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// updateProductEndpoint is a struct that contains the update product endpoint.
 type updateProductEndpoint struct {
 	fxparams.ProductRouteParams
 }
 
+// NewUpdateProductEndpoint is a constructor for the updateProductEndpoint.
 func NewUpdateProductEndpoint(
 	params fxparams.ProductRouteParams,
 ) route.Endpoint {

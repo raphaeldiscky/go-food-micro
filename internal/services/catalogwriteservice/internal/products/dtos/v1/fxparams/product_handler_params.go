@@ -9,6 +9,7 @@ import (
 	"go.uber.org/fx"
 )
 
+// ProductHandlerParams is a struct that contains the product handler params.
 type ProductHandlerParams struct {
 	fx.In
 

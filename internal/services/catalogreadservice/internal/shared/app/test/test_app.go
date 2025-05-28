@@ -33,7 +33,7 @@ type TestAppResult struct {
 	Container              contracts.Container
 	Logger                 logger.Logger
 	RabbitmqOptions        *config2.RabbitmqOptions
-	EchoHttpOptions        *config3.EchoHttpOptions
+	EchoHTTPOptions        *config3.EchoHTTPOptions
 	MongoDbOptions         *mongodb.MongoDbOptions
 	RedisOptions           *redis.RedisOptions
 	ProductCacheRepository data.ProductCacheRepository
@@ -73,7 +73,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 			redisOptions *redis.RedisOptions,
 			productCacheRepository data.ProductCacheRepository,
 			productRepository data.ProductRepository,
-			echoOptions *config3.EchoHttpOptions,
+			echoOptions *config3.EchoHTTPOptions,
 			mongoClient *mongo.Client,
 			tracer trace.Tracer,
 		) {
@@ -86,7 +86,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 				MongoDbOptions:         mongoOptions,
 				ProductRepository:      productRepository,
 				ProductCacheRepository: productCacheRepository,
-				EchoHttpOptions:        echoOptions,
+				EchoHTTPOptions:        echoOptions,
 				MongoClient:            mongoClient,
 				RedisOptions:           redisOptions,
 				Tracer:                 tracer,

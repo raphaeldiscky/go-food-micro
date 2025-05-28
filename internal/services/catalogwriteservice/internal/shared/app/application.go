@@ -9,10 +9,12 @@ import (
 	"go.uber.org/fx"
 )
 
+// CatalogsWriteApplication is a struct that contains the catalogs write application.
 type CatalogsWriteApplication struct {
 	*catalogs.CatalogsServiceConfigurator
 }
 
+// NewCatalogsWriteApplication is a constructor for the CatalogsWriteApplication.
 func NewCatalogsWriteApplication(
 	providers []interface{},
 	decorates []interface{},

@@ -21,9 +21,10 @@ import (
 	"gopkg.in/khaiql/dbcleaner.v2"
 	"gorm.io/gorm"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // postgres driver
 )
 
+// IntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
 type IntegrationTestSharedFixture struct {
 	Cfg                  *config.AppOptions
 	Log                  logger.Logger
@@ -39,6 +40,7 @@ type IntegrationTestSharedFixture struct {
 	ProductServiceClient productsService.ProductsServiceClient
 }
 
+// NewIntegrationTestSharedFixture is a constructor for the IntegrationTestSharedFixture.
 func NewIntegrationTestSharedFixture(
 	t *testing.T,
 ) *IntegrationTestSharedFixture {
@@ -64,13 +66,14 @@ func NewIntegrationTestSharedFixture(
 		Bus:                  result.Bus,
 		rabbitmqOptions:      result.RabbitmqOptions,
 		Gorm:                 result.Gorm,
-		BaseAddress:          result.EchoHttpOptions.BasePathAddress(),
+		BaseAddress:          result.EchoHTTPOptions.BasePathAddress(),
 		ProductServiceClient: result.ProductServiceClient,
 	}
 
 	return shared
 }
 
+// SetupTest is a method that sets up the test.
 func (i *IntegrationTestSharedFixture) SetupTest() {
 	i.Log.Info("SetupTest started")
 
@@ -84,6 +87,7 @@ func (i *IntegrationTestSharedFixture) SetupTest() {
 	i.Items = res
 }
 
+// TearDownTest is a method that tears down the test.
 func (i *IntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 

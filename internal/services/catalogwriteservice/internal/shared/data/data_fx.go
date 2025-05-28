@@ -1,3 +1,4 @@
+// Package data contains the data module.
 package data
 
 import (

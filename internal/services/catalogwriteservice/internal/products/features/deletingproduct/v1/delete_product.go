@@ -8,18 +8,19 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// DeleteProduct is a struct that contains the delete product command.
 type DeleteProduct struct {
 	ProductID uuid.UUID
 }
 
-// NewDeleteProduct delete a product
+// NewDeleteProduct is a constructor for the DeleteProduct.
 func NewDeleteProduct(productID uuid.UUID) *DeleteProduct {
 	command := &DeleteProduct{ProductID: productID}
 
 	return command
 }
 
-// NewDeleteProductWithValidation delete a product with inline validation - for defensive programming and ensuring validation even without using middleware
+// NewDeleteProductWithValidation is a constructor for the DeleteProduct with validation.
 func NewDeleteProductWithValidation(productID uuid.UUID) (*DeleteProduct, error) {
 	command := NewDeleteProduct(productID)
 	err := command.Validate()
@@ -27,6 +28,7 @@ func NewDeleteProductWithValidation(productID uuid.UUID) (*DeleteProduct, error)
 	return command, err
 }
 
+// Validate is a method that validates the delete product command.
 func (c *DeleteProduct) Validate() error {
 	err := validation.ValidateStruct(
 		c,

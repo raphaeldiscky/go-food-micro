@@ -15,7 +15,7 @@ type EchoHttpServer interface {
 	ApplyVersioningFromHeader()
 	GetEchoInstance() *echo.Echo
 	Logger() logger.Logger
-	Cfg() *config.EchoHttpOptions
+	Cfg() *config.EchoHTTPOptions
 	SetupDefaultMiddlewares()
 	RouteBuilder() *RouteBuilder
 	AddMiddlewares(middlewares ...echo.MiddlewareFunc)

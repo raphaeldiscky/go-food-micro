@@ -21,7 +21,7 @@ import (
 
 type getProductByIdHandlerTest struct {
 	*unittest.UnitTestSharedFixture
-	handler cqrs.RequestHandlerWithRegisterer[*gettingproductbyidv1.GetProductByID, *dtos.GetProductByIdResponseDto]
+	handler cqrs.RequestHandlerWithRegisterer[*gettingproductbyidv1.GetProductByID, *dtos.GetProductByIDResponseDto]
 }
 
 func TestGetProductByIdHandlerUnit(t *testing.T) {

@@ -35,7 +35,7 @@ type TestAppResult struct {
 	Container               fxcontracts.Container
 	Logger                  logger.Logger
 	RabbitmqOptions         *config2.RabbitmqOptions
-	EchoHttpOptions         *config3.EchoHttpOptions
+	EchoHTTPOptions         *config3.EchoHTTPOptions
 	GormOptions             *gormPostgres.GormOptions
 	Gorm                    *gorm2.DB
 	ProductServiceClient    productsService.ProductsServiceClient
@@ -82,7 +82,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 			gormOptions *gormPostgres.GormOptions,
 			gorm *gorm2.DB,
 			catalogsDBContext *dbcontext.CatalogsGormDBContext,
-			echoOptions *config3.EchoHttpOptions,
+			echoOptions *config3.EchoHTTPOptions,
 			grpcClient grpc.GrpcClient,
 			postgresMigrationRunner contracts2.PostgresMigrationRunner,
 		) {
@@ -97,7 +97,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 				GormOptions:             gormOptions,
 				Gorm:                    gorm,
 				CatalogsDBContext:       catalogsDBContext,
-				EchoHttpOptions:         echoOptions,
+				EchoHTTPOptions:         echoOptions,
 				PostgresMigrationRunner: postgresMigrationRunner,
 				ProductServiceClient: productsService.NewProductsServiceClient(
 					grpcConnection,

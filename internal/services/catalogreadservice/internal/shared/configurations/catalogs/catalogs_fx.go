@@ -121,7 +121,7 @@ func provideCatalogsMetrics(
 
 	return &contracts.CatalogsMetrics{
 		CreateProductRabbitMQMessages: createProductRabbitMQMessages,
-		GetProductByIdGrpcRequests:    getProductByIDGrpcRequests,
+		GetProductByIDGrpcRequests:    getProductByIDGrpcRequests,
 		CreateProductGrpcRequests:     createProductGrpcRequests,
 		DeleteProductRabbitMQMessages: deleteProductRabbitMQMessages,
 		DeleteProductGrpcRequests:     deleteProductGrpcRequests,

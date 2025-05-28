@@ -23,14 +23,14 @@ import (
 
 type echoHttpServer struct {
 	echo         *echo.Echo
-	config       *config.EchoHttpOptions
+	config       *config.EchoHTTPOptions
 	log          logger.Logger
 	meter        metric.Meter
 	routeBuilder *contracts.RouteBuilder
 }
 
 func NewEchoHttpServer(
-	config *config.EchoHttpOptions,
+	config *config.EchoHTTPOptions,
 	logger logger.Logger,
 	meter metric.Meter,
 ) contracts.EchoHttpServer {
@@ -68,7 +68,7 @@ func (s *echoHttpServer) Logger() logger.Logger {
 	return s.log
 }
 
-func (s *echoHttpServer) Cfg() *config.EchoHttpOptions {
+func (s *echoHttpServer) Cfg() *config.EchoHTTPOptions {
 	return s.config
 }
 

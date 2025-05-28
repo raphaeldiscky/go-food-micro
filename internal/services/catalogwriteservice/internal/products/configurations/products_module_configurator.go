@@ -12,10 +12,12 @@ import (
 	googleGrpc "google.golang.org/grpc"
 )
 
+// ProductsModuleConfigurator is a struct that contains the products module configurator.
 type ProductsModuleConfigurator struct {
 	fxcontracts.Application
 }
 
+// NewProductsModuleConfigurator is a constructor for the ProductsModuleConfigurator.
 func NewProductsModuleConfigurator(
 	fxapp fxcontracts.Application,
 ) *ProductsModuleConfigurator {
@@ -24,6 +26,7 @@ func NewProductsModuleConfigurator(
 	}
 }
 
+// ConfigureProductsModule is a method that configures the products module.
 func (c *ProductsModuleConfigurator) ConfigureProductsModule() error {
 	// config products mappings
 	err := mappings.ConfigureProductsMappings()
@@ -40,6 +43,7 @@ func (c *ProductsModuleConfigurator) ConfigureProductsModule() error {
 	return nil
 }
 
+// MapProductsEndpoints is a method that maps the products endpoints.
 func (c *ProductsModuleConfigurator) MapProductsEndpoints() error {
 	// config endpoints
 	c.ResolveFuncWithParamTag(

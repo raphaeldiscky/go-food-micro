@@ -10,10 +10,12 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 )
 
+// ProductsModuleConfigurator is a struct that contains the products module configurator.
 type ProductsModuleConfigurator struct {
 	contracts.Application
 }
 
+// NewProductsModuleConfigurator is a constructor for the ProductsModuleConfigurator.
 func NewProductsModuleConfigurator(
 	app contracts.Application,
 ) *ProductsModuleConfigurator {
@@ -22,6 +24,7 @@ func NewProductsModuleConfigurator(
 	}
 }
 
+// ConfigureProductsModule is a method that configures the products module.
 func (c *ProductsModuleConfigurator) ConfigureProductsModule() {
 	c.ResolveFunc(
 		func(logger logger2.Logger, mongoRepository data.ProductRepository, cacheRepository data.ProductCacheRepository, tracer tracing.AppTracer) error {
@@ -46,6 +49,7 @@ func (c *ProductsModuleConfigurator) ConfigureProductsModule() {
 	)
 }
 
+// MapProductsEndpoints is a method that maps the products endpoints.
 func (c *ProductsModuleConfigurator) MapProductsEndpoints() {
 	// config Products Http Endpoints
 	c.ResolveFuncWithParamTag(func(endpoints []route.Endpoint) {

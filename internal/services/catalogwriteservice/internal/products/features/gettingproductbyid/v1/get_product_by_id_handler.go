@@ -18,28 +18,32 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// GetProductByIDHandler is a struct that contains the get product by id handler.
 type GetProductByIDHandler struct {
 	fxparams.ProductHandlerParams
 }
 
+// NewGetProductByIDHandler is a constructor for the GetProductByIDHandler.
 func NewGetProductByIDHandler(
 	params fxparams.ProductHandlerParams,
-) cqrs.RequestHandlerWithRegisterer[*GetProductByID, *dtos.GetProductByIdResponseDto] {
+) cqrs.RequestHandlerWithRegisterer[*GetProductByID, *dtos.GetProductByIDResponseDto] {
 	return &GetProductByIDHandler{
 		ProductHandlerParams: params,
 	}
 }
 
+// RegisterHandler is a method that registers the get product by id handler.
 func (c *GetProductByIDHandler) RegisterHandler() error {
-	return mediatr.RegisterRequestHandler[*GetProductByID, *dtos.GetProductByIdResponseDto](
+	return mediatr.RegisterRequestHandler[*GetProductByID, *dtos.GetProductByIDResponseDto](
 		c,
 	)
 }
 
+// Handle is a method that handles the get product by id query.
 func (c *GetProductByIDHandler) Handle(
 	ctx context.Context,
 	query *GetProductByID,
-) (*dtos.GetProductByIdResponseDto, error) {
+) (*dtos.GetProductByIDResponseDto, error) {
 	product, err := gormdbcontext.FindModelByID[*datamodels.ProductDataModel, *models.Product](
 		ctx,
 		c.CatalogsDBContext,
@@ -65,5 +69,5 @@ func (c *GetProductByIDHandler) Handle(
 		logger.Fields{"Id": query.ProductID.String()},
 	)
 
-	return &dtos.GetProductByIdResponseDto{Product: productDto}, nil
+	return &dtos.GetProductByIDResponseDto{Product: productDto}, nil
 }

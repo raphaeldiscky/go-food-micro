@@ -49,7 +49,7 @@ var (
 	cmdDown = &cobra.Command{ //nolint:gochecknoglobals
 		Use:   "down",
 		Short: "Run a down migration",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, _ []string) {
 			executeMigration(cmd, migration.Down)
 		},
 	}
@@ -57,7 +57,7 @@ var (
 	cmdUp = &cobra.Command{ //nolint:gochecknoglobals
 		Use:   "up",
 		Short: "Run an up migration",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(cmd *cobra.Command, _ []string) {
 			executeMigration(cmd, migration.Up)
 		},
 	}

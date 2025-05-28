@@ -6,6 +6,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 )
 
+// ConfigureProductsMappings is a function that configures the products mappings.
 func ConfigureProductsMappings() error {
 	err := mapper.CreateMap[*models.Product, *dto.ProductDto]()
 	if err != nil {

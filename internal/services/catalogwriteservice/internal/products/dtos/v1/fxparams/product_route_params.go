@@ -9,6 +9,7 @@ import (
 	"go.uber.org/fx"
 )
 
+// ProductRouteParams is a struct that contains the product route params.
 type ProductRouteParams struct {
 	fx.In
 

@@ -15,10 +15,12 @@ import (
 	"github.com/mehdihadeli/go-mediatr"
 )
 
+// deleteProductHandler is a struct that contains the delete product handler.
 type deleteProductHandler struct {
 	fxparams.ProductHandlerParams
 }
 
+// NewDeleteProductHandler is a constructor for the deleteProductHandler.
 func NewDeleteProductHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*DeleteProduct, *mediatr.Unit] {
@@ -27,12 +29,14 @@ func NewDeleteProductHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the delete product handler.
 func (c *deleteProductHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*DeleteProduct, *mediatr.Unit](
 		c,
 	)
 }
 
+// Handle is a method that handles the delete product command.
 func (c *deleteProductHandler) Handle(
 	ctx context.Context,
 	command *DeleteProduct,

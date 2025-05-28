@@ -20,6 +20,7 @@ import (
 
 // https://pmihaylov.com/shared-components-go-microservices/
 
+// Module is a module that contains the infrastructure module.
 var Module = fx.Module(
 	"infrastructurefx",
 	// Modules

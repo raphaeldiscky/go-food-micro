@@ -11,9 +11,9 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-var optionName = strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[EchoHttpOptions]())
+var optionName = strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[EchoHTTPOptions]())
 
-type EchoHttpOptions struct {
+type EchoHTTPOptions struct {
 	Port                string   `mapstructure:"port"                validate:"required" env:"TcpPort"`
 	Development         bool     `mapstructure:"development"                             env:"Development"`
 	BasePath            string   `mapstructure:"basePath"            validate:"required" env:"BasePath"`
@@ -24,11 +24,11 @@ type EchoHttpOptions struct {
 	Name                string   `mapstructure:"name"                                    env:"ShortTypeName"`
 }
 
-func (c *EchoHttpOptions) Address() string {
+func (c *EchoHTTPOptions) Address() string {
 	return fmt.Sprintf("%s%s", c.Host, c.Port)
 }
 
-func (c *EchoHttpOptions) BasePathAddress() string {
+func (c *EchoHTTPOptions) BasePathAddress() string {
 	path, err := url.JoinPath(c.Address(), c.BasePath)
 	if err != nil {
 		return ""
@@ -36,6 +36,6 @@ func (c *EchoHttpOptions) BasePathAddress() string {
 	return path
 }
 
-func ProvideConfig(environment environment.Environment) (*EchoHttpOptions, error) {
-	return config.BindConfigKey[*EchoHttpOptions](optionName, environment)
+func ProvideConfig(environment environment.Environment) (*EchoHTTPOptions, error) {
+	return config.BindConfigKey[*EchoHTTPOptions](optionName, environment)
 }

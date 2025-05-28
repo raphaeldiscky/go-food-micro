@@ -8,5 +8,5 @@ import uuid "github.com/satori/go.uuid"
 
 // GetProductByIDRequestDto is a struct that contains the get product by id request dto.
 type GetProductByIDRequestDto struct {
-	ProductId uuid.UUID `param:"id" json:"-"`
+	ProductID uuid.UUID `param:"id" json:"-"`
 }

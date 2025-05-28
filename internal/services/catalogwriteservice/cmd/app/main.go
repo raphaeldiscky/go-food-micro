@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Short:            "catalogs-write-microservice based on vertical slice architecture",
 	Long:             `This is a command runner or cli for api architecture in golang.`,
 	TraverseChildren: true,
-	Run: func(cmd *cobra.Command, args []string) {
+	Run: func(_ *cobra.Command, _ []string) {
 		app.NewApp().Run()
 	},
 }

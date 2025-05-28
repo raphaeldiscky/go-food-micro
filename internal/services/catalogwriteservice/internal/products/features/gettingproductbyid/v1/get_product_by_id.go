@@ -12,11 +12,13 @@ import (
 // https://echo.labstack.com/guide/request/
 // https://github.com/go-playground/validator
 
+// GetProductByID is a struct that contains the get product by id query.
 type GetProductByID struct {
 	cqrs.Query
 	ProductID uuid.UUID
 }
 
+// NewGetProductById is a constructor for the GetProductByID.
 func NewGetProductById(productId uuid.UUID) *GetProductByID {
 	query := &GetProductByID{
 		Query:     cqrs.NewQueryByT[GetProductByID](),
@@ -26,6 +28,7 @@ func NewGetProductById(productId uuid.UUID) *GetProductByID {
 	return query
 }
 
+// NewGetProductByIdWithValidation is a constructor for the GetProductByID with validation.
 func NewGetProductByIdWithValidation(productId uuid.UUID) (*GetProductByID, error) {
 	query := NewGetProductById(productId)
 	err := query.Validate()
@@ -33,6 +36,7 @@ func NewGetProductByIdWithValidation(productId uuid.UUID) (*GetProductByID, erro
 	return query, err
 }
 
+// Validate is a method that validates the get product by id query.
 func (p *GetProductByID) Validate() error {
 	err := validation.ValidateStruct(
 		p,
