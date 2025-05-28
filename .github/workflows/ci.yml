@@ -46,15 +46,22 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Install Project Dependencies
+      - name: Install Development Tools
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
         run: |
-          task install_dependencies
+          # Install linting tools
+          go install github.com/mgechev/revive@latest
+          go install honnef.co/go/tools/cmd/staticcheck@latest
           go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+          go install github.com/kisielk/errcheck@latest
 
-      - name: Lint Code
+      - name: Install Project Dependencies
+        if: steps.go-mod-cache.outputs.cache-hit != 'true'
+        run: task install_dependencies
+
+      - name: Lint
         run: task lint
-        continue-on-error: false # Fail if linting fails
+        continue-on-error: false
 
       - name: Build Project
         run: task build
