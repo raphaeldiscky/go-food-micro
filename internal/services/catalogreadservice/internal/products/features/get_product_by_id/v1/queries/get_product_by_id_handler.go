@@ -39,49 +39,77 @@ func NewGetProductByIDHandler(
 	}
 }
 
+// getProductFromCache attempts to retrieve the product from Redis cache.
+func (q *GetProductByIDHandler) getProductFromCache(
+	ctx context.Context,
+	id string,
+) (*models.Product, error) {
+	redisProduct, err := q.redisRepository.GetProductByID(ctx, id)
+	if err != nil {
+		return nil, customErrors.NewApplicationErrorWrap(
+			err,
+			fmt.Sprintf("error in getting product with id %s in the redis repository", id),
+		)
+	}
+
+	return redisProduct, nil
+}
+
+// getProductFromMongo retrieves the product from MongoDB with fallback to ProductID.
+func (q *GetProductByIDHandler) getProductFromMongo(
+	ctx context.Context,
+	id string,
+) (*models.Product, error) {
+	mongoProduct, err := q.mongoRepository.GetProductByID(ctx, id)
+	if err != nil {
+		return nil, customErrors.NewApplicationErrorWrap(
+			err,
+			fmt.Sprintf("error in getting product with id %s in the mongo repository", id),
+		)
+	}
+
+	if mongoProduct == nil {
+		mongoProduct, err = q.mongoRepository.GetProductByProductID(ctx, id)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return mongoProduct, nil
+}
+
+// cacheProduct stores the product in Redis cache.
+func (q *GetProductByIDHandler) cacheProduct(ctx context.Context, product *models.Product) error {
+	return q.redisRepository.PutProduct(ctx, product.ID, product)
+}
+
 // Handle is a method that handles the get product by id query.
 func (q *GetProductByIDHandler) Handle(
 	ctx context.Context,
 	query *GetProductByID,
 ) (*dtos.GetProductByIDResponseDto, error) {
-	redisProduct, err := q.redisRepository.GetProductByID(
-		ctx,
-		query.ID.String(),
-	)
+	id := query.ID.String()
+
+	// Try to get from cache first
+	product, err := q.getProductFromCache(ctx, id)
 	if err != nil {
-		return nil, customErrors.NewApplicationErrorWrap(
-			err,
-			fmt.Sprintf(
-				"error in getting product with id %d in the redis repository",
-				query.ID,
-			),
-		)
+		return nil, err
 	}
 
-	var product *models.Product
-
-	if redisProduct != nil {
-		product = redisProduct
-	} else {
-		var mongoProduct *models.Product
-		mongoProduct, err = q.mongoRepository.GetProductByID(ctx, query.ID.String())
-		if err != nil {
-			return nil, customErrors.NewApplicationErrorWrap(err, fmt.Sprintf("error in getting product with id %d in the mongo repository", query.ID))
-		}
-		if mongoProduct == nil {
-			mongoProduct, err = q.mongoRepository.GetProductByProductId(ctx, query.ID.String())
-		}
+	// If not in cache, get from MongoDB
+	if product == nil {
+		product, err = q.getProductFromMongo(ctx, id)
 		if err != nil {
 			return nil, err
 		}
 
-		product = mongoProduct
-		err = q.redisRepository.PutProduct(ctx, product.ID, product)
-		if err != nil {
+		// Cache the product for future requests
+		if err := q.cacheProduct(ctx, product); err != nil {
 			return new(dtos.GetProductByIDResponseDto), err
 		}
 	}
 
+	// Map to DTO
 	productDto, err := mapper.Map[*dto.ProductDto](product)
 	if err != nil {
 		return nil, customErrors.NewApplicationErrorWrap(
@@ -91,10 +119,7 @@ func (q *GetProductByIDHandler) Handle(
 	}
 
 	q.log.Infow(
-		fmt.Sprintf(
-			"product with id: {%s} fetched",
-			query.ID,
-		),
+		fmt.Sprintf("product with id: {%s} fetched", id),
 		logger.Fields{"ProductID": product.ProductID, "ID": product.ID},
 	)
 

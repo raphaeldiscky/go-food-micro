@@ -1,3 +1,4 @@
+// Package dto contains the product dto.
 package dto
 
 import (

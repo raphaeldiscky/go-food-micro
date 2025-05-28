@@ -1,3 +1,4 @@
+// Package models contains the product model.
 package models
 
 import (

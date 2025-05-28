@@ -1,3 +1,4 @@
+// Package queries contains the get products handler.
 package queries
 
 import (

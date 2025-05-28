@@ -162,17 +162,17 @@ func (p *mongoProductRepository) GetProductByID(
 	return product, nil
 }
 
-// GetProductByProductId gets a product by product id from the database.
-func (p *mongoProductRepository) GetProductByProductId(
+// GetProductByProductID gets a product by product id from the database.
+func (p *mongoProductRepository) GetProductByProductID(
 	ctx context.Context,
 	uuid string,
 ) (*models.Product, error) {
-	productId := uuid
+	productID := uuid
 	ctx, span := p.tracer.Start(
 		ctx,
-		"mongoProductRepository.GetProductByProductId",
+		"mongoProductRepository.GetProductByProductID",
 	)
-	span.SetAttributes(attribute2.String("ProductID", productId))
+	span.SetAttributes(attribute2.String("ProductID", productID))
 	defer span.End()
 
 	product, err := p.mongoGenericRepository.FirstOrDefault(
@@ -197,7 +197,7 @@ func (p *mongoProductRepository) GetProductByProductId(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with productId %s laoded",
-			productId,
+			productID,
 		),
 		logger.Fields{"Product": product, "ProductID": uuid},
 	)

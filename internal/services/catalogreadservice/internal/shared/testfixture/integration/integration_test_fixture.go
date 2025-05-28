@@ -217,7 +217,10 @@ func seedData(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to find products after seeding")
 	}
-	defer cursor.Close(ctx)
+	err = cursor.Close(ctx)
+	if err != nil {
+		return nil, errors.WrapIf(err, "failed to close cursor")
+	}
 
 	if err := cursor.All(ctx, &allProducts); err != nil {
 		return nil, errors.WrapIf(err, "failed to decode products after seeding")
@@ -241,11 +244,11 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 		return err
 	}
 
-	// clear each queue
-	for _, queue := range queues {
+	// clear each queue using index-based iteration
+	for idx := range queues {
 		_, err = i.RabbitmqCleaner.PurgeQueue(
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
-			queue.Name,
+			queues[idx].Name,
 		)
 
 		return err

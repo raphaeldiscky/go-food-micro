@@ -1,3 +1,4 @@
+// Package data contains the product cache repository contract.
 package data
 
 import (

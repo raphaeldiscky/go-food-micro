@@ -52,7 +52,7 @@ func TestDeleteProduct(t *testing.T) {
 							Convey(
 								"And the product should no longer exist in the system",
 								func() {
-									deletedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+									deletedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 										ctx,
 										productId.String(),
 									)

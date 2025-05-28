@@ -1,3 +1,4 @@
+// Package queries contains the get products query.
 package queries
 
 import "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"

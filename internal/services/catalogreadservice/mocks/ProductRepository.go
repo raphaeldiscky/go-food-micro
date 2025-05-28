@@ -233,8 +233,8 @@ func (_c *ProductRepository_GetProductById_Call) RunAndReturn(run func(context.C
 	return _c
 }
 
-// GetProductByProductId provides a mock function with given fields: ctx, uuid
-func (_m *ProductRepository) GetProductByProductId(ctx context.Context, uuid string) (*models.Product, error) {
+// GetProductByProductID provides a mock function with given fields: ctx, uuid
+func (_m *ProductRepository) GetProductByProductID(ctx context.Context, uuid string) (*models.Product, error) {
 	ret := _m.Called(ctx, uuid)
 
 	var r0 *models.Product
@@ -259,16 +259,16 @@ func (_m *ProductRepository) GetProductByProductId(ctx context.Context, uuid str
 	return r0, r1
 }
 
-// ProductRepository_GetProductByProductId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProductByProductId'
+// ProductRepository_GetProductByProductId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProductByProductID'
 type ProductRepository_GetProductByProductId_Call struct {
 	*mock.Call
 }
 
-// GetProductByProductId is a helper method to define mock.On call
+// GetProductByProductID is a helper method to define mock.On call
 //   - ctx context.Context
 //   - uuid string
-func (_e *ProductRepository_Expecter) GetProductByProductId(ctx interface{}, uuid interface{}) *ProductRepository_GetProductByProductId_Call {
-	return &ProductRepository_GetProductByProductId_Call{Call: _e.mock.On("GetProductByProductId", ctx, uuid)}
+func (_e *ProductRepository_Expecter) GetProductByProductID(ctx interface{}, uuid interface{}) *ProductRepository_GetProductByProductId_Call {
+	return &ProductRepository_GetProductByProductId_Call{Call: _e.mock.On("GetProductByProductID", ctx, uuid)}
 }
 
 func (_c *ProductRepository_GetProductByProductId_Call) Run(run func(ctx context.Context, uuid string)) *ProductRepository_GetProductByProductId_Call {

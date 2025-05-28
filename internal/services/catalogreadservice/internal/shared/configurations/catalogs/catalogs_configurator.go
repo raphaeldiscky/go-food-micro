@@ -36,15 +36,7 @@ func NewCatalogReadServiceConfigurator(app contracts.Application) *CatalogReadSe
 
 // ConfigureCatalogs is a method that configures the catalogs.
 func (ic *CatalogReadServiceConfigurator) ConfigureCatalogs() {
-	// Shared
-	// Infrastructure
 	ic.infrastructureConfigurator.CatalogReadConfigInfra()
-
-	// Shared
-	// Catalogs configurations
-
-	// Modules
-	// Product module
 	ic.productsModuleConfigurator.ConfigureProductsModule()
 }
 

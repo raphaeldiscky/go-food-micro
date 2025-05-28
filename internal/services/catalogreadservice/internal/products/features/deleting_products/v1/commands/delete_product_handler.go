@@ -41,7 +41,7 @@ func (c *DeleteProductCommand) Handle(
 	ctx context.Context,
 	command *DeleteProduct,
 ) (*mediatr.Unit, error) {
-	product, err := c.mongoRepository.GetProductByProductId(
+	product, err := c.mongoRepository.GetProductByProductID(
 		ctx,
 		command.ProductID.String(),
 	)

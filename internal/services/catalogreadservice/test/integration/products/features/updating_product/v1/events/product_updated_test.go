@@ -187,7 +187,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 							var product *models.Product
 							var dbErr error
 							err = testUtils.WaitUntilConditionMet(func() bool {
-								product, dbErr = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+								product, dbErr = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 									ctx,
 									fakeUpdateProduct.ProductID,
 								)

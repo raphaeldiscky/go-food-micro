@@ -79,7 +79,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 		// Wait for the product to be created in the database with retries
 		var product *models.Product
 		for i := 0; i < 5; i++ {
-			product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+			product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 				ctx,
 				fakeProduct.ProductID,
 			)
@@ -99,7 +99,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 		assert.Equal(t, fakeProduct.CreatedAt.Unix(), product.CreatedAt.Unix())
 
 		// Verify no duplicate products by checking if we can retrieve the product
-		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 			ctx,
 			fakeProduct.ProductID,
 		)

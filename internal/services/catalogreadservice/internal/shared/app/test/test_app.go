@@ -3,7 +3,6 @@ package test
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 
@@ -111,7 +110,6 @@ func (a *CatalogReadTestApp) Run(t *testing.T) (result *CatalogReadTestAppResult
 	err := testApp.Start(startCtx)
 	if err != nil {
 		t.Errorf("Error starting, err: %v", err)
-		os.Exit(1)
 	}
 
 	t.Cleanup(func() {

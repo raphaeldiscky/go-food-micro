@@ -42,7 +42,7 @@ func (c *UpdateProductHandler) Handle(
 	ctx context.Context,
 	command *UpdateProduct,
 ) (*mediatr.Unit, error) {
-	product, err := c.mongoRepository.GetProductByProductId(
+	product, err := c.mongoRepository.GetProductByProductID(
 		ctx,
 		command.ProductID.String(),
 	)

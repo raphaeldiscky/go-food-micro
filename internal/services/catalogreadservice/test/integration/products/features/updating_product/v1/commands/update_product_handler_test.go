@@ -54,7 +54,7 @@ func TestUpdateProduct(t *testing.T) {
 							"And the updated product details should be reflected in the system",
 							func() {
 								// Fetch the updated product from the database.
-								updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+								updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 									ctx,
 									productId.String(),
 								)

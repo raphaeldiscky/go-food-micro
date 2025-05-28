@@ -1,3 +1,4 @@
+// Package v1 contains the create product command.
 package v1
 
 import (
@@ -20,7 +21,7 @@ type CreateProduct struct {
 
 // NewCreateProduct creates a new CreateProduct.
 func NewCreateProduct(
-	productId string,
+	productID string,
 	name string,
 	description string,
 	price float64,
@@ -28,7 +29,7 @@ func NewCreateProduct(
 ) (*CreateProduct, error) {
 	command := &CreateProduct{
 		ID:          uuid.NewV4().String(),
-		ProductID:   productId,
+		ProductID:   productID,
 		Name:        name,
 		Description: description,
 		Price:       price,

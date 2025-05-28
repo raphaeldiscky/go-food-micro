@@ -44,7 +44,7 @@ func TestProductDeleted(t *testing.T) {
 			}
 
 			// First verify the product exists
-			existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+			existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 				ctx,
 				integrationTestSharedFixture.Items[0].ProductID,
 			)
@@ -78,7 +78,7 @@ func TestProductDeleted(t *testing.T) {
 					// Wait for the product to be deleted with a more robust condition
 					var deletedProduct *models.Product
 					err := testUtils.WaitUntilConditionMet(func() bool {
-						deletedProduct, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+						deletedProduct, err = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 							ctx,
 							integrationTestSharedFixture.Items[0].ProductID,
 						)

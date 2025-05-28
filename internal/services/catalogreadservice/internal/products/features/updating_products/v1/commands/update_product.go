@@ -21,13 +21,13 @@ type UpdateProduct struct {
 
 // NewUpdateProduct creates a new UpdateProduct.
 func NewUpdateProduct(
-	productId uuid.UUID,
+	productID uuid.UUID,
 	name string,
 	description string,
 	price float64,
 ) (*UpdateProduct, error) {
 	product := &UpdateProduct{
-		ProductID:   productId,
+		ProductID:   productID,
 		Name:        name,
 		Description: description,
 		Price:       price,
