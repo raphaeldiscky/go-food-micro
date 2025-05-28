@@ -31,34 +31,43 @@ func TestGetProductById(t *testing.T) {
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario
-		Convey("Returning an existing product with valid Id from the database with correct properties", func() {
-			Convey("Given a product with a known ID exists in the database", func() {
-				query, err := queries.NewGetProductById(knownProductID)
-				So(err, ShouldBeNil)
+		Convey(
+			"Returning an existing product with valid Id from the database with correct properties",
+			func() {
+				Convey("Given a product with a known ID exists in the database", func() {
+					query, err := queries.NewGetProductById(knownProductID)
+					So(err, ShouldBeNil)
 
-				Convey("When we execute GetProductByID query for a product with known ID", func() {
-					result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
-						ctx,
-						query,
+					Convey(
+						"When we execute GetProductByID query for a product with known ID",
+						func() {
+							result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
+								ctx,
+								query,
+							)
+
+							Convey("Then it should retrieve product successfully", func() {
+								So(result, ShouldNotBeNil)
+								So(result.Product, ShouldNotBeNil)
+								So(err, ShouldBeNil)
+
+								Convey(
+									"And the retrieved product should have the correct ID",
+									func() {
+										// Assert that the retrieved product's ID matches the known ID.
+										So(result.Product.Id, ShouldEqual, knownProductID.String())
+									},
+								)
+
+								Convey("And other product properties should be correct", func() {
+									// Assert other properties of the retrieved product as needed.
+								})
+							})
+						},
 					)
-
-					Convey("Then it should retrieve product successfully", func() {
-						So(result, ShouldNotBeNil)
-						So(result.Product, ShouldNotBeNil)
-						So(err, ShouldBeNil)
-
-						Convey("And the retrieved product should have the correct ID", func() {
-							// Assert that the retrieved product's ID matches the known ID.
-							So(result.Product.Id, ShouldEqual, knownProductID.String())
-						})
-
-						Convey("And other product properties should be correct", func() {
-							// Assert other properties of the retrieved product as needed.
-						})
-					})
 				})
-			})
-		})
+			},
+		)
 
 		Convey("Returning a NotFound error when product with specific id does not exist", func() {
 			Convey("Given a product with a unknown ID in the database", func() {

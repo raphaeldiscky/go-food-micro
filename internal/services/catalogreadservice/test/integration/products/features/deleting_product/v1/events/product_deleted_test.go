@@ -24,7 +24,11 @@ import (
 func TestProductDeleted(t *testing.T) {
 	// Setup and initialization code here.
 	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
-	require.NotNil(t, integrationTestSharedFixture, "Integration test shared fixture should not be nil")
+	require.NotNil(
+		t,
+		integrationTestSharedFixture,
+		"Integration test shared fixture should not be nil",
+	)
 
 	Convey("Product Deleted Feature", t, func() {
 		ctx := context.Background()

@@ -167,86 +167,93 @@ func TestProductUpdatedConsumer(t *testing.T) {
 				}
 				So(publishErr, ShouldBeNil)
 
-				Convey("Then it should consume the ProductUpdated event and update the database", func() {
-					integrationTestSharedFixture.Log.Info("Waiting for message consumption...")
-					// Wait for message consumption with timeout
-					select {
-					case err := <-messageError:
-						integrationTestSharedFixture.Log.Errorw(
-							"Message consumption failed",
-							logger.Fields{"error": err},
-						)
-						t.Fatalf("Error consuming message: %v", err)
-					case <-messageConsumed:
-						integrationTestSharedFixture.Log.Info(
-							"Message consumed successfully, waiting for database update...",
-						)
-						// Message was consumed, now wait for database update
-						var product *models.Product
-						var dbErr error
-						err = testUtils.WaitUntilConditionMet(func() bool {
-							product, dbErr = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
-								ctx,
-								fakeUpdateProduct.ProductId,
-							)
-							if dbErr != nil {
-								integrationTestSharedFixture.Log.Errorw(
-									"Error getting product from database",
-									logger.Fields{"error": dbErr},
-								)
-								return false
-							}
-
-							if product == nil {
-								integrationTestSharedFixture.Log.Info("Product not found in database yet")
-								return false
-							}
-
-							matches := product.Name == fakeUpdateProduct.Name &&
-								product.Description == fakeUpdateProduct.Description &&
-								product.Price == fakeUpdateProduct.Price
-
-							if !matches {
-								integrationTestSharedFixture.Log.Infow(
-									"Product in database doesn't match expected values",
-									logger.Fields{
-										"expected": fakeUpdateProduct,
-										"actual":   product,
-									},
-								)
-							} else {
-								integrationTestSharedFixture.Log.Info("Product in database matches expected values")
-							}
-
-							return matches
-						}, 45*time.Second) // Increased timeout for database update
-						if err != nil {
+				Convey(
+					"Then it should consume the ProductUpdated event and update the database",
+					func() {
+						integrationTestSharedFixture.Log.Info("Waiting for message consumption...")
+						// Wait for message consumption with timeout
+						select {
+						case err := <-messageError:
 							integrationTestSharedFixture.Log.Errorw(
-								"Database update timeout",
+								"Message consumption failed",
 								logger.Fields{"error": err},
 							)
-						}
-						if dbErr != nil {
-							integrationTestSharedFixture.Log.Errorw(
-								"Database error",
-								logger.Fields{"error": dbErr},
+							t.Fatalf("Error consuming message: %v", err)
+						case <-messageConsumed:
+							integrationTestSharedFixture.Log.Info(
+								"Message consumed successfully, waiting for database update...",
+							)
+							// Message was consumed, now wait for database update
+							var product *models.Product
+							var dbErr error
+							err = testUtils.WaitUntilConditionMet(func() bool {
+								product, dbErr = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+									ctx,
+									fakeUpdateProduct.ProductId,
+								)
+								if dbErr != nil {
+									integrationTestSharedFixture.Log.Errorw(
+										"Error getting product from database",
+										logger.Fields{"error": dbErr},
+									)
+									return false
+								}
+
+								if product == nil {
+									integrationTestSharedFixture.Log.Info(
+										"Product not found in database yet",
+									)
+									return false
+								}
+
+								matches := product.Name == fakeUpdateProduct.Name &&
+									product.Description == fakeUpdateProduct.Description &&
+									product.Price == fakeUpdateProduct.Price
+
+								if !matches {
+									integrationTestSharedFixture.Log.Infow(
+										"Product in database doesn't match expected values",
+										logger.Fields{
+											"expected": fakeUpdateProduct,
+											"actual":   product,
+										},
+									)
+								} else {
+									integrationTestSharedFixture.Log.Info("Product in database matches expected values")
+								}
+
+								return matches
+							}, 45*time.Second) // Increased timeout for database update
+							if err != nil {
+								integrationTestSharedFixture.Log.Errorw(
+									"Database update timeout",
+									logger.Fields{"error": err},
+								)
+							}
+							if dbErr != nil {
+								integrationTestSharedFixture.Log.Errorw(
+									"Database error",
+									logger.Fields{"error": dbErr},
+								)
+							}
+
+							So(err, ShouldBeNil, "Database update timeout")
+							So(dbErr, ShouldBeNil, "Database error")
+							So(product, ShouldNotBeNil, "Product not found in database")
+							So(product.ProductId, ShouldEqual, fakeUpdateProduct.ProductId)
+							So(product.Name, ShouldEqual, fakeUpdateProduct.Name)
+							So(product.Description, ShouldEqual, fakeUpdateProduct.Description)
+							So(product.Price, ShouldEqual, fakeUpdateProduct.Price)
+						case <-time.After(45 * time.Second): // Increased timeout for message consumption
+							integrationTestSharedFixture.Log.Error(
+								"Message consumption timeout - the event was not consumed within the expected time",
+							)
+							t.Fatal(
+								"Message consumption timeout - the event was not consumed within the expected time",
 							)
 						}
-
-						So(err, ShouldBeNil, "Database update timeout")
-						So(dbErr, ShouldBeNil, "Database error")
-						So(product, ShouldNotBeNil, "Product not found in database")
-						So(product.ProductId, ShouldEqual, fakeUpdateProduct.ProductId)
-						So(product.Name, ShouldEqual, fakeUpdateProduct.Name)
-						So(product.Description, ShouldEqual, fakeUpdateProduct.Description)
-						So(product.Price, ShouldEqual, fakeUpdateProduct.Price)
-					case <-time.After(45 * time.Second): // Increased timeout for message consumption
-						integrationTestSharedFixture.Log.Error(
-							"Message consumption timeout - the event was not consumed within the expected time",
-						)
-						t.Fatal("Message consumption timeout - the event was not consumed within the expected time")
-					}
-				})
+					},
+				)
 			})
 		})
 

@@ -40,27 +40,36 @@ func TestUpdateProduct(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				Convey("When a UpdateProduct command executed for a existing product", func() {
-					result, err := mediatr.Send[*commands.UpdateProduct, *mediatr.Unit](ctx, updateProduct)
+					result, err := mediatr.Send[*commands.UpdateProduct, *mediatr.Unit](
+						ctx,
+						updateProduct,
+					)
 
 					Convey("Then the product should be updated successfully", func() {
 						// Assert that the error is nil (indicating success).
 						So(err, ShouldBeNil)
 						So(result, ShouldNotBeNil)
 
-						Convey("And the updated product details should be reflected in the system", func() {
-							// Fetch the updated product from the database.
-							updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
-								ctx,
-								productId.String(),
-							)
+						Convey(
+							"And the updated product details should be reflected in the system",
+							func() {
+								// Fetch the updated product from the database.
+								updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+									ctx,
+									productId.String(),
+								)
 
-							Convey("And the product's properties should match the updated data", func() {
-								// Assert that the product properties match the updated data.
-								So(updatedProduct.Name, ShouldEqual, updatedProduct.Name)
-								So(updatedProduct.Price, ShouldEqual, updatedProduct.Price)
-								// Add more assertions as needed for other properties.
-							})
-						})
+								Convey(
+									"And the product's properties should match the updated data",
+									func() {
+										// Assert that the product properties match the updated data.
+										So(updatedProduct.Name, ShouldEqual, updatedProduct.Name)
+										So(updatedProduct.Price, ShouldEqual, updatedProduct.Price)
+										// Add more assertions as needed for other properties.
+									},
+								)
+							},
+						)
 					})
 				})
 			})

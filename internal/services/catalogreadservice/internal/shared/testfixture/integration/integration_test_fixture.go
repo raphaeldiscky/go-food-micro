@@ -215,7 +215,18 @@ func seedData(
 
 	// Log all products for debugging
 	for i, p := range allProducts {
-		println("[DEBUG] Seeded Product", i, "Id:", p.Id, "ProductId:", p.ProductId, "Name:", p.Name, "Price:", p.Price)
+		println(
+			"[DEBUG] Seeded Product",
+			i,
+			"Id:",
+			p.Id,
+			"ProductId:",
+			p.ProductId,
+			"Name:",
+			p.Name,
+			"Price:",
+			p.Price,
+		)
 	}
 
 	if len(allProducts) == 0 {

@@ -118,11 +118,9 @@ func (c *UnitTestSharedFixture) TearDownTest() {
 }
 
 func (c *UnitTestSharedFixture) setupBus() {
-	// create new mocks
 	bus := &mocks.Bus{}
+	bus.On("PublishMessage", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 
-	bus.On("PublishMessage", mock.Anything, mock.Anything, mock.Anything).
-		Return(nil)
 	c.Bus = bus
 }
 

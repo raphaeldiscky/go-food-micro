@@ -27,7 +27,11 @@ import (
 func TestProductCreatedConsumer(t *testing.T) {
 	// Initialize the shared fixture for integration tests
 	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
-	require.NotNil(t, integrationTestSharedFixture, "Integration test shared fixture should not be nil")
+	require.NotNil(
+		t,
+		integrationTestSharedFixture,
+		"Integration test shared fixture should not be nil",
+	)
 
 	// Start the RabbitMQ bus manually to ensure it's running before the test
 	err := integrationTestSharedFixture.Bus.Start(context.Background())
@@ -58,7 +62,12 @@ func TestProductCreatedConsumer(t *testing.T) {
 		// Assert - Wait for the message to be consumed with retries
 		var consumed bool
 		for i := 0; i < 5; i++ {
-			consumed, err = messaging.ShouldConsume(ctx, integrationTestSharedFixture.Bus, fakeProduct, 5*time.Second)
+			consumed, err = messaging.ShouldConsume(
+				ctx,
+				integrationTestSharedFixture.Bus,
+				fakeProduct,
+				5*time.Second,
+			)
 			if consumed && err == nil {
 				break
 			}
