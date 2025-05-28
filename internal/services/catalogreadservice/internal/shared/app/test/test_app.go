@@ -26,9 +26,11 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
-type TestApp struct{}
+// CatalogReadTestApp is a test application for the Catalog Read service.
+type CatalogReadTestApp struct{}
 
-type TestAppResult struct {
+// CatalogReadTestAppResult is a struct that contains the result of the Catalog Read test application.
+type CatalogReadTestAppResult struct {
 	Cfg                    *config.Config
 	Bus                    bus.RabbitmqBus
 	Container              contracts.Container
@@ -43,11 +45,13 @@ type TestAppResult struct {
 	Tracer                 trace.Tracer
 }
 
-func NewTestApp() *TestApp {
-	return &TestApp{}
+// NewCatalogReadTestApp creates a new Catalog Read test application.
+func NewCatalogReadTestApp() *CatalogReadTestApp {
+	return &CatalogReadTestApp{}
 }
 
-func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
+// Run runs the Catalog Read test application.
+func (a *CatalogReadTestApp) Run(t *testing.T) (result *CatalogReadTestAppResult) {
 	t.Helper()
 
 	lifetimeCtx := context.Background()
@@ -80,7 +84,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 			mongoClient *mongo.Client,
 			tracer trace.Tracer,
 		) {
-			result = &TestAppResult{
+			result = &CatalogReadTestAppResult{
 				Bus:                    bus,
 				Cfg:                    cfg,
 				Container:              testApp,

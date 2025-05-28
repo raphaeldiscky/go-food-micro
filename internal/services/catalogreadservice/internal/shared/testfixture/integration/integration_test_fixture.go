@@ -42,7 +42,7 @@ type IntegrationTestSharedFixture struct {
 func NewIntegrationTestSharedFixture(
 	t *testing.T,
 ) *IntegrationTestSharedFixture {
-	result := test.NewTestApp().Run(t)
+	result := test.NewCatalogReadTestApp().Run(t)
 
 	// Log the RabbitMQ connection details for debugging
 	result.Logger.Infow(

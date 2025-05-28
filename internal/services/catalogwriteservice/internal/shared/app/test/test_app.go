@@ -26,11 +26,11 @@ import (
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
 
-// TestApp is a struct that contains the test app.
-type TestApp struct{}
+// CatalogWriteTestApp is a struct that contains the test app.
+type CatalogWriteTestApp struct{}
 
-// TestAppResult is a struct that contains the test app result.
-type TestAppResult struct {
+// CatalogWriteTestAppResult is a struct that contains the test app result.
+type CatalogWriteTestAppResult struct {
 	Cfg                     *config.AppOptions
 	Bus                     bus.RabbitmqBus
 	Container               fxcontracts.Container
@@ -45,13 +45,13 @@ type TestAppResult struct {
 	CatalogsDBContext       *dbcontext.CatalogsGormDBContext
 }
 
-// NewTestApp is a constructor for the TestApp.
-func NewTestApp() *TestApp {
-	return &TestApp{}
+// NewCatalogWriteTestApp is a constructor for the CatalogWriteTestApp.
+func NewCatalogWriteTestApp() *CatalogWriteTestApp {
+	return &CatalogWriteTestApp{}
 }
 
 // Run is a method that runs the test app.
-func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
+func (a *CatalogWriteTestApp) Run(t *testing.T) (result *CatalogWriteTestAppResult) {
 	t.Helper()
 
 	lifetimeCtx := context.Background()
@@ -91,7 +91,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 		) {
 			grpcConnection := grpcClient.GetGrpcConnection()
 
-			result = &TestAppResult{
+			result = &CatalogWriteTestAppResult{
 				Bus:                     bus,
 				Cfg:                     cfg,
 				Container:               testApp,

@@ -47,7 +47,7 @@ func NewIntegrationTestSharedFixture(
 	t *testing.T,
 ) *IntegrationTestSharedFixture {
 	t.Helper()
-	result := test.NewTestApp().Run(t)
+	result := test.NewCatalogWriteTestApp().Run(t)
 
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
