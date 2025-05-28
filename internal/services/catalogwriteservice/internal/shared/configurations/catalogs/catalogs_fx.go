@@ -14,6 +14,8 @@ import (
 )
 
 // https://pmihaylov.com/shared-components-go-microservices/
+
+// CatalogsServiceModule is a module that contains the catalogs service module.
 var CatalogsServiceModule = fx.Module(
 	"catalogsfx",
 	// Shared Modules
@@ -61,7 +63,7 @@ func provideCatalogsMetrics(
 		return nil, err
 	}
 
-	getProductByIdGrpcRequests, err := meter.Float64Counter(
+	getProductByIDGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf(
 			"%s_get_product_by_id_grpc_requests_total",
 			cfg.ServiceName,
@@ -149,7 +151,7 @@ func provideCatalogsMetrics(
 
 	return &contracts.CatalogsMetrics{
 		CreateProductRabbitMQMessages: createProductRabbitMQMessages,
-		GetProductByIdGrpcRequests:    getProductByIdGrpcRequests,
+		GetProductByIdGrpcRequests:    getProductByIDGrpcRequests,
 		CreateProductGrpcRequests:     createProductGrpcRequests,
 		DeleteProductRabbitMQMessages: deleteProductRabbitMQMessages,
 		DeleteProductGrpcRequests:     deleteProductGrpcRequests,

@@ -29,6 +29,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// UnitTestSharedFixture is a struct that contains the shared fixture for the unit tests
 type UnitTestSharedFixture struct {
 	Cfg *config.AppOptions
 	Log logger.Logger
@@ -42,7 +43,8 @@ type UnitTestSharedFixture struct {
 	dbFileName       string
 }
 
-func NewUnitTestSharedFixture(t *testing.T) *UnitTestSharedFixture {
+// NewUnitTestSharedFixture is a constructor for the UnitTestSharedFixture
+func NewUnitTestSharedFixture(_ *testing.T) *UnitTestSharedFixture {
 	// we could use EmptyLogger if we don't want to log anything
 	log := defaultLogger.GetLogger()
 	cfg := &config.AppOptions{}
@@ -61,6 +63,7 @@ func NewUnitTestSharedFixture(t *testing.T) *UnitTestSharedFixture {
 	return unit
 }
 
+// BeginTx is a method that begins a transaction
 func (c *UnitTestSharedFixture) BeginTx() {
 	c.Log.Info("starting transaction")
 	// seems when we `Begin` a transaction on gorm.DB (with SQLLite in-memory) our previous gormDB before transaction will remove and the new gormDB with tx will go on the memory
@@ -69,6 +72,7 @@ func (c *UnitTestSharedFixture) BeginTx() {
 	c.Ctx = gormContext
 }
 
+// CommitTx is a method that commits the transaction
 func (c *UnitTestSharedFixture) CommitTx() {
 	tx := gormextensions.GetTxFromContextIfExists(c.Ctx)
 	if tx != nil {
@@ -79,6 +83,7 @@ func (c *UnitTestSharedFixture) CommitTx() {
 
 /// Shared Hooks
 
+// SetupSuite is a hook that is called before all tests in the suite have run
 func (c *UnitTestSharedFixture) SetupSuite() {
 	// this fix root working directory problem in our test environment inner our fixture
 	environment.FixProjectRootWorkingDirectoryPath()
@@ -87,9 +92,11 @@ func (c *UnitTestSharedFixture) SetupSuite() {
 	c.dbFilePath = filepath.Join(projectRootDir, c.dbFileName)
 }
 
+// TearDownSuite is a hook that is called after all tests in the suite have run
 func (c *UnitTestSharedFixture) TearDownSuite() {
 }
 
+// SetupTest is a hook that is called before each test
 func (c *UnitTestSharedFixture) SetupTest() {
 	ctx := context.Background()
 	c.Ctx = ctx
@@ -102,6 +109,7 @@ func (c *UnitTestSharedFixture) SetupTest() {
 	c.Require().NoError(err)
 }
 
+// TearDownTest is a hook that is called after each test
 func (c *UnitTestSharedFixture) TearDownTest() {
 	err := c.cleanupDB()
 	c.Require().NoError(err)

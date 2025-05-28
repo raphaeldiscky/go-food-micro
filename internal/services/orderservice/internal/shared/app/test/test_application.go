@@ -11,11 +11,13 @@ import (
 	"go.uber.org/fx/fxtest"
 )
 
+// OrdersTestApplication is a struct that contains the orders test application.
 type OrdersTestApplication struct {
 	*app.OrdersApplication
 	tb fxtest.TB
 }
 
+// NewOrdersTestApplication is a constructor for the OrdersTestApplication.
 func NewOrdersTestApplication(
 	tb fxtest.TB,
 	providers []interface{},

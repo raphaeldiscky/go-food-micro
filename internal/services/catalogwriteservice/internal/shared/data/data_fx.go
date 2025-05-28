@@ -6,7 +6,7 @@ import (
 	"go.uber.org/fx"
 )
 
-// https://uber-go.github.io/fx/modules.html
+// Module is a module that contains the data module
 var Module = fx.Module(
 	"datafx",
 	// - order is not important in provide

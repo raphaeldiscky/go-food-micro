@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// Product is a struct that contains the product.
 type Product struct {
 	// we generate id ourselves because auto generate mongo string id column with type _id is not an uuid
 	Id          string    `json:"id"                    bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
@@ -15,6 +16,7 @@ type Product struct {
 	UpdatedAt   time.Time `json:"updatedAt,omitempty"   bson:"updatedAt,omitempty"`
 }
 
+// ProductsList is a struct that contains the products list.
 type ProductsList struct {
 	TotalCount int64      `json:"totalCount" bson:"totalCount"`
 	TotalPages int64      `json:"totalPages" bson:"totalPages"`

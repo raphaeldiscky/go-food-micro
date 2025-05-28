@@ -25,8 +25,10 @@ import (
 	gorm2 "gorm.io/gorm"
 )
 
+// TestApp is a struct that contains the test app.
 type TestApp struct{}
 
+// TestAppResult is a struct that contains the test app result.
 type TestAppResult struct {
 	Cfg                     *config.AppOptions
 	Bus                     bus.RabbitmqBus
@@ -42,10 +44,12 @@ type TestAppResult struct {
 	CatalogsDBContext       *dbcontext.CatalogsGormDBContext
 }
 
+// NewTestApp is a constructor for the TestApp.
 func NewTestApp() *TestApp {
 	return &TestApp{}
 }
 
+// Run is a method that runs the test app.
 func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 	lifetimeCtx := context.Background()
 

@@ -28,6 +28,7 @@ var grpcMetricsAttr = api.WithAttributes(
 	attribute2.Key("MetricsType").String("Http"),
 )
 
+// ProductGrpcServiceServer is a struct that contains the ProductGrpcServiceServer
 type ProductGrpcServiceServer struct {
 	catalogsMetrics *contracts.CatalogsMetrics
 	logger          logger.Logger
@@ -35,6 +36,7 @@ type ProductGrpcServiceServer struct {
 	// product_service_client.UnimplementedProductsServiceServer
 }
 
+// NewProductGrpcService is a constructor for the ProductGrpcServiceServer
 func NewProductGrpcService(
 	catalogsMetrics *contracts.CatalogsMetrics,
 	logger logger.Logger,
@@ -97,6 +99,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 	}, nil
 }
 
+// UpdateProduct is a method that updates a product
 func (s *ProductGrpcServiceServer) UpdateProduct(
 	ctx context.Context,
 	req *productsService.UpdateProductReq,
@@ -159,6 +162,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 	return &productsService.UpdateProductRes{}, nil
 }
 
+// GetProductByID is a method that gets a product by id
 func (s *ProductGrpcServiceServer) GetProductByID(
 	ctx context.Context,
 	req *productsService.GetProductByIDReq,

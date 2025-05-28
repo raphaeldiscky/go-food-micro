@@ -6,7 +6,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-// Product model
+// Product is a struct that contains the product.
 type Product struct {
 	Id          uuid.UUID
 	Name        string

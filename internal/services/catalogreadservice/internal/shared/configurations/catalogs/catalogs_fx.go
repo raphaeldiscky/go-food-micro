@@ -63,7 +63,7 @@ func provideCatalogsMetrics(
 		return nil, err
 	}
 
-	getProductByIdGrpcRequests, err := meter.Float64Counter(
+	getProductByIDGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_product_by_id_grpc_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of get product by id grpc requests"),
 	)
@@ -121,7 +121,7 @@ func provideCatalogsMetrics(
 
 	return &contracts.CatalogsMetrics{
 		CreateProductRabbitMQMessages: createProductRabbitMQMessages,
-		GetProductByIdGrpcRequests:    getProductByIdGrpcRequests,
+		GetProductByIdGrpcRequests:    getProductByIDGrpcRequests,
 		CreateProductGrpcRequests:     createProductGrpcRequests,
 		DeleteProductRabbitMQMessages: deleteProductRabbitMQMessages,
 		DeleteProductGrpcRequests:     deleteProductGrpcRequests,

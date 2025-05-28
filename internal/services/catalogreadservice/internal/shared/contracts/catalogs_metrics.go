@@ -4,6 +4,7 @@ import (
 	"go.opentelemetry.io/otel/metric"
 )
 
+// CatalogsMetrics is a struct that contains the catalogs metrics
 type CatalogsMetrics struct {
 	CreateProductGrpcRequests     metric.Float64Counter
 	UpdateProductGrpcRequests     metric.Float64Counter
