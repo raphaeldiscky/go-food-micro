@@ -13,7 +13,7 @@ import (
 	gorm2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/gorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 
-	"github.com/brianvoe/gofakeit/v6"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"

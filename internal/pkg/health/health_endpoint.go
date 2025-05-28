@@ -6,7 +6,7 @@ import (
 	contracts2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 )
 
 type HealthCheckEndpoint struct {

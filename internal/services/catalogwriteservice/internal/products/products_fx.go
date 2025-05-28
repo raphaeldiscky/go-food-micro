@@ -4,6 +4,10 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+	"go.uber.org/fx"
+
+	echo "github.com/labstack/echo/v4"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/repositories"
 	creatingproductv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1"
 	deletingproductv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1"
@@ -12,9 +16,6 @@ import (
 	searchingproductsv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/searchingproduct/v1"
 	updatingoroductsv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc"
-
-	"github.com/labstack/echo/v4"
-	"go.uber.org/fx"
 )
 
 // Module is a module that contains the products module.

@@ -16,7 +16,7 @@ import (
 	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
 
 	"emperror.dev/errors"
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 func ConfigProductsMediator(

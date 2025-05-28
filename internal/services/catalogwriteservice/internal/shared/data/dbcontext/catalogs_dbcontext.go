@@ -1,9 +1,9 @@
+// Package dbcontext contains the catalogs dbcontext.
 package dbcontext
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
-
 	"gorm.io/gorm"
 )
 

@@ -16,7 +16,7 @@ import (
 	problemdetail "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/problem_detail"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.opentelemetry.io/otel/metric"
 )

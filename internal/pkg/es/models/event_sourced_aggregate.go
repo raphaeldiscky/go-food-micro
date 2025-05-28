@@ -13,7 +13,7 @@ import (
 	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
 
 	"emperror.dev/errors"
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	uuid "github.com/satori/go.uuid"
 )
 

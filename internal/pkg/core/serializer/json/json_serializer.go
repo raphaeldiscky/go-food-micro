@@ -6,7 +6,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 
 	"github.com/TylerBrock/colorjson"
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	"github.com/mitchellh/mapstructure"
 )
 

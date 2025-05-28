@@ -6,7 +6,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 )
 
 type EchoHttpServer interface {

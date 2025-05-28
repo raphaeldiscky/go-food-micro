@@ -1,3 +1,4 @@
+// Package unittest contains the unit test fixture.
 package unittest
 
 import (
@@ -7,26 +8,27 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
+	"github.com/glebarez/sqlite"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/mocks"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/gromlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/mappings"
-	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
-
-	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/glebarez/sqlite"
-	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	"go.opentelemetry.io/otel/trace"
 	"gorm.io/gorm"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/mappings"
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 )
 
 // UnitTestSharedFixture is a struct that contains the shared fixture for the unit tests.
@@ -72,7 +74,7 @@ func (c *UnitTestSharedFixture) BeginTx() {
 	c.Ctx = gormContext
 }
 
-// CommitTx is a method that commits the transaction
+// CommitTx is a method that commits the transaction.
 func (c *UnitTestSharedFixture) CommitTx() {
 	tx := gormextensions.GetTxFromContextIfExists(c.Ctx)
 	if tx != nil {
@@ -81,9 +83,7 @@ func (c *UnitTestSharedFixture) CommitTx() {
 	}
 }
 
-/// Shared Hooks
-
-// SetupSuite is a hook that is called before all tests in the suite have run
+// SetupSuite is a hook that is called before all tests in the suite have run.
 func (c *UnitTestSharedFixture) SetupSuite() {
 	// this fix root working directory problem in our test environment inner our fixture
 	environment.FixProjectRootWorkingDirectoryPath()
@@ -92,11 +92,11 @@ func (c *UnitTestSharedFixture) SetupSuite() {
 	c.dbFilePath = filepath.Join(projectRootDir, c.dbFileName)
 }
 
-// TearDownSuite is a hook that is called after all tests in the suite have run
+// TearDownSuite is a hook that is called after all tests in the suite have run.
 func (c *UnitTestSharedFixture) TearDownSuite() {
 }
 
-// SetupTest is a hook that is called before each test
+// SetupTest is a hook that is called before each test.
 func (c *UnitTestSharedFixture) SetupTest() {
 	ctx := context.Background()
 	c.Ctx = ctx
@@ -109,7 +109,7 @@ func (c *UnitTestSharedFixture) SetupTest() {
 	c.Require().NoError(err)
 }
 
-// TearDownTest is a hook that is called after each test
+// TearDownTest is a hook that is called after each test.
 func (c *UnitTestSharedFixture) TearDownTest() {
 	err := c.cleanupDB()
 	c.Require().NoError(err)
@@ -117,6 +117,7 @@ func (c *UnitTestSharedFixture) TearDownTest() {
 	mapper.ClearMappings()
 }
 
+// setupBus is a method that sets up the bus.
 func (c *UnitTestSharedFixture) setupBus() {
 	bus := &mocks.Bus{}
 	bus.On("PublishMessage", mock.Anything, mock.Anything, mock.Anything).Return(nil)
@@ -124,6 +125,7 @@ func (c *UnitTestSharedFixture) setupBus() {
 	c.Bus = bus
 }
 
+// setupDB is a method that sets up the database.
 func (c *UnitTestSharedFixture) setupDB() {
 	dbContext := c.createSQLLiteDBContext()
 	c.CatalogDBContext = dbContext
@@ -131,6 +133,7 @@ func (c *UnitTestSharedFixture) setupDB() {
 	c.initDB(dbContext)
 }
 
+// createSQLLiteDBContext is a method that creates the SQLLite database context.
 func (c *UnitTestSharedFixture) createSQLLiteDBContext() *dbcontext.CatalogsGormDBContext {
 	// https://gorm.io/docs/connecting_to_the_database.html#SQLite
 	// https://github.com/glebarez/sqlite
@@ -147,6 +150,7 @@ func (c *UnitTestSharedFixture) createSQLLiteDBContext() *dbcontext.CatalogsGorm
 	return dbContext
 }
 
+// initDB is a method that initializes the database.
 func (c *UnitTestSharedFixture) initDB(dbContext *dbcontext.CatalogsGormDBContext) {
 	// migrations for our database
 	err := migrateGorm(dbContext)
@@ -159,6 +163,7 @@ func (c *UnitTestSharedFixture) initDB(dbContext *dbcontext.CatalogsGormDBContex
 	c.Products = items
 }
 
+// cleanupDB is a method that cleans up the database.
 func (c *UnitTestSharedFixture) cleanupDB() error {
 	sqldb, err := c.CatalogDBContext.DB().DB()
 	if err != nil {
@@ -178,6 +183,7 @@ func (c *UnitTestSharedFixture) cleanupDB() error {
 	return err
 }
 
+// migrateGorm is a method that migrates the Gorm database.
 func migrateGorm(dbContext *dbcontext.CatalogsGormDBContext) error {
 	err := dbContext.DB().AutoMigrate(&datamodel.ProductDataModel{})
 	if err != nil {
@@ -187,6 +193,7 @@ func migrateGorm(dbContext *dbcontext.CatalogsGormDBContext) error {
 	return nil
 }
 
+// seedDataManually is a method that seeds the database with data.
 func seedDataManually(
 	dbContext *dbcontext.CatalogsGormDBContext,
 ) ([]*datamodel.ProductDataModel, error) {

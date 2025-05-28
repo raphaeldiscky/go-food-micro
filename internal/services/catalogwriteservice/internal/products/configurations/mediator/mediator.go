@@ -1,3 +1,4 @@
+// Package mediator contains the products mediator.
 package mediator
 
 import "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"

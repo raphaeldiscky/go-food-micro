@@ -3,12 +3,13 @@ package catalogs
 import (
 	"time"
 
-	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
-
 	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 )
 
 func (ic *CatalogsServiceConfigurator) seedCatalogs(

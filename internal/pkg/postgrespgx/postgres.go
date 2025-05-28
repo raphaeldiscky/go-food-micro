@@ -8,8 +8,8 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/Masterminds/squirrel"
-	"github.com/doug-martin/goqu/v9"
-	"github.com/jackc/pgx/v4"
+	goqu "github.com/doug-martin/goqu/v9"
+	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/log/zapadapter"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgx/v4/stdlib"

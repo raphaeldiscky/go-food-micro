@@ -2,9 +2,10 @@ package integrationevents
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	dto "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 
 	uuid "github.com/satori/go.uuid"
+
+	dto "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 )
 
 // ProductUpdatedV1 is a struct that contains the product updated v1.

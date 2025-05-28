@@ -46,7 +46,7 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Install Linting Tools
+      - name: Install Formatting and Linting Tools
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
@@ -54,24 +54,12 @@ jobs:
           go install honnef.co/go/tools/cmd/staticcheck@latest
           go install github.com/kisielk/errcheck@latest
 
-      - name: Install Formatting Tools
-        run: |
-          go install github.com/segmentio/golines@latest
-          go install github.com/incu6us/goimports-reviser@latest
-          go install github.com/gci-go/gci@latest
-          go install github.com/gofumpt/gofumpt@latest
-          go install github.com/gofmt/gofmt@latest
-
       - name: Install Project Dependencies
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
         run: task install_dependencies
 
-      - name: Format Code
+      - name: Format and Lint Code
         run: task format
-        continue-on-error: false
-
-      - name: Lint Code
-        run: task lint
         continue-on-error: false
 
       - name: Build Project

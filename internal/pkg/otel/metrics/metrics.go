@@ -13,7 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
 	"emperror.dev/errors"
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/samber/lo"
 	"go.opentelemetry.io/otel"

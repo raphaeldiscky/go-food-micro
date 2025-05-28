@@ -13,7 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 
-	"github.com/brianvoe/gofakeit/v6"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 
 	. "github.com/onsi/ginkgo"
@@ -85,7 +85,10 @@ var _ = Describe("Product Repository Suite", func() {
 		// "When" step
 		When("CreateProduct function of ProductRepository executed", func() {
 			BeforeEach(func() {
-				createdProduct, err = integrationFixture.ProductRepository.CreateProduct(ctx, product)
+				createdProduct, err = integrationFixture.ProductRepository.CreateProduct(
+					ctx,
+					product,
+				)
 			})
 
 			// "Then" step
@@ -215,7 +218,10 @@ var _ = Describe("Product Repository Suite", func() {
 			BeforeEach(func() {
 				// Use a random UUID that does not exist in the database
 				nonexistentID := uuid.NewV4()
-				existingProduct, err = integrationFixture.ProductRepository.GetProductByID(ctx, nonexistentID)
+				existingProduct, err = integrationFixture.ProductRepository.GetProductByID(
+					ctx,
+					nonexistentID,
+				)
 			})
 
 			// "Then" step
@@ -235,7 +241,10 @@ var _ = Describe("Product Repository Suite", func() {
 		// "When" step
 		When("GetAllProducts function of ProductRepository executed", func() {
 			It("should not return an error and return the correct number of products", func() {
-				res, err := integrationFixture.ProductRepository.GetAllProducts(ctx, utils.NewListQuery(10, 1))
+				res, err := integrationFixture.ProductRepository.GetAllProducts(
+					ctx,
+					utils.NewListQuery(10, 1),
+				)
 				Expect(err).To(BeNil())
 				Expect(res).NotTo(BeNil())
 				Expect(len(res.Items)).To(Equal(2)) // Replace with the expected number of products

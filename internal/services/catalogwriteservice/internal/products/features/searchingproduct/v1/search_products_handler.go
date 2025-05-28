@@ -6,21 +6,22 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/iancoleman/strcase"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"gorm.io/gorm"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	dto "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/searchingproduct/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"github.com/iancoleman/strcase"
-	"github.com/mehdihadeli/go-mediatr"
-	"gorm.io/gorm"
 )
 
 // searchProductsHandler is a struct that contains the search products handler.

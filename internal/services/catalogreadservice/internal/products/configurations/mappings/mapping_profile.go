@@ -1,3 +1,4 @@
+// Package mappings contains the products mappings.
 package mappings
 
 import (

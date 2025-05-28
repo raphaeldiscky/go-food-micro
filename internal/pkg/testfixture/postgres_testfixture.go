@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/go-testfixtures/testfixtures/v3"
+	testfixtures "github.com/go-testfixtures/testfixtures/v3"
 )
 
 func RunPostgresFixture(db *sql.DB, fixturePaths []string, data map[string]interface{}) error {

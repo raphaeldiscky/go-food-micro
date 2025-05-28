@@ -12,7 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/projections"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"go.uber.org/fx"
 )
 

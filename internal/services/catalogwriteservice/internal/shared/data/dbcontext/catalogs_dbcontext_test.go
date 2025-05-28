@@ -22,7 +22,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 
 	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"
@@ -117,10 +117,16 @@ func (s *DBContextTestSuite) Test_DeleteProductByID() {
 	var allCount int64
 
 	// https://gorm.io/docs/advanced_query.html#Count
-	s.dbContext.DB().Model(&datamodel.ProductDataModel{}).Scopes(scopes.FilterAllItemsWithSoftDeleted).Count(&allCount)
+	s.dbContext.DB().
+		Model(&datamodel.ProductDataModel{}).
+		Scopes(scopes.FilterAllItemsWithSoftDeleted).
+		Count(&allCount)
 	s.Equal(allCount, int64(2))
 
-	s.dbContext.DB().Model(&datamodel.ProductDataModel{}).Scopes(scopes.SoftDeleted).Count(&deletedCount)
+	s.dbContext.DB().
+		Model(&datamodel.ProductDataModel{}).
+		Scopes(scopes.SoftDeleted).
+		Count(&deletedCount)
 	s.Equal(deletedCount, int64(1))
 }
 

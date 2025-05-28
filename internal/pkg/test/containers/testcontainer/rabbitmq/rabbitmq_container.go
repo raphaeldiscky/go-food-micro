@@ -14,8 +14,8 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
 	rabbithole "github.com/michaelklishin/rabbit-hole"
-	"github.com/rabbitmq/amqp091-go"
-	"github.com/testcontainers/testcontainers-go"
+	amqp091 "github.com/rabbitmq/amqp091-go"
+	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 

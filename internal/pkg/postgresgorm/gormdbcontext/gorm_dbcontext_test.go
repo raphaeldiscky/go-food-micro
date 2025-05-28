@@ -19,8 +19,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/scopes"
 
 	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/goccy/go-json"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	json "github.com/goccy/go-json"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/fx"

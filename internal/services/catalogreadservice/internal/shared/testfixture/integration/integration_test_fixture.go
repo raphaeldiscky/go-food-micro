@@ -16,7 +16,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
 
 	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
 	rabbithole "github.com/michaelklishin/rabbit-hole"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/mongo"

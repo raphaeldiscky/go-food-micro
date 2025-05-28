@@ -14,7 +14,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/go-playground/validator"
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	"go.opentelemetry.io/otel/attribute"
 )
 

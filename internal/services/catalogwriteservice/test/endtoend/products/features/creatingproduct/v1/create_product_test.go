@@ -11,8 +11,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/gavv/httpexpect/v2"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	httpexpect "github.com/gavv/httpexpect/v2"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

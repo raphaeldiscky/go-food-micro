@@ -6,7 +6,7 @@ import (
 
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 
-	"github.com/goccy/go-reflect"
+	reflect "github.com/goccy/go-reflect"
 	"github.com/stretchr/testify/assert"
 )
 

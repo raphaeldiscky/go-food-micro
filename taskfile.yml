@@ -129,20 +129,17 @@ tasks:
       - sh ./scripts/test.sh orderservice e2e
 
   format:
-    desc: Format codebase
+    desc: Run formatters and linters
     cmds:
-      - sh ./scripts/format.sh catalogwriteservice
-      - sh ./scripts/format.sh catalogreadservice
-      - sh ./scripts/format.sh orderservice
-      - sh ./scripts/format.sh pkg
+      - sh ./scripts/format-lint.sh catalogwriteservice
+      - sh ./scripts/format-lint.sh catalogreadservice
+      - sh ./scripts/format-lint.sh orderservice
+      - sh ./scripts/format-lint.sh pkg
 
   lint:
-    desc: Run linters
+    desc: Run formatters and linters
     cmds:
-      - sh ./scripts/lint.sh catalogwriteservice
-      - sh ./scripts/lint.sh catalogreadservice
-      - sh ./scripts/lint.sh orderservice
-      - sh ./scripts/lint.sh pkg
+      - task: format
 
   pkg_mocks:
     desc: Generate package mocks

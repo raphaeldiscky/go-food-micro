@@ -6,14 +6,15 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
+	"gorm.io/gorm"
+
+	echo "github.com/labstack/echo/v4"
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	migrationcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs/infrastructure"
-
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
 // CatalogsServiceConfigurator is a struct that contains the catalogs service configurator.
@@ -41,11 +42,8 @@ func NewCatalogsServiceConfigurator(
 
 // ConfigureCatalogs is a method that configures the catalogs.
 func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
-	// Shared
-	// Infrastructure
 	ic.infrastructureConfigurator.ConfigInfrastructures()
 
-	// Shared
 	// Catalogs configurations
 	ic.ResolveFunc(
 		func(db *gorm.DB, postgresMigrationRunner migrationcontracts.PostgresMigrationRunner) error {

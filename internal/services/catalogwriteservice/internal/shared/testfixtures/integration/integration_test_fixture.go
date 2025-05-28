@@ -4,24 +4,25 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
-	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"gorm.io/gorm"
+
+	_ "github.com/lib/pq" // postgres driver
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	rabbithole "github.com/michaelklishin/rabbit-hole"
+	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	uuid "github.com/satori/go.uuid"
+	dbcleaner "gopkg.in/khaiql/dbcleaner.v2"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-
-	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	rabbithole "github.com/michaelklishin/rabbit-hole"
-	uuid "github.com/satori/go.uuid"
-	"gopkg.in/khaiql/dbcleaner.v2"
-	"gorm.io/gorm"
-
-	_ "github.com/lib/pq" // postgres driver
 )
 
 // IntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
@@ -110,18 +111,19 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	if err != nil {
 		return err
 	}
-
 	// clear each queue
-	for _, queue := range queues {
-		_, err = i.RabbitmqCleaner.PurgeQueue(
+	var lastErr error
+	for idx := range queues {
+		_, err := i.RabbitmqCleaner.PurgeQueue(
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
-			queue.Name,
+			queues[idx].Name,
 		)
-
-		return err
+		if err != nil {
+			lastErr = err
+		}
 	}
 
-	return nil
+	return lastErr
 }
 
 func (i *IntegrationTestSharedFixture) cleanupPostgresData() error {

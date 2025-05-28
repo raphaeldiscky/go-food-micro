@@ -4,20 +4,21 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
-	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/repository"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
+	"gorm.io/gorm"
 
-	"emperror.dev/errors"
+	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	uuid "github.com/satori/go.uuid"
 	attribute2 "go.opentelemetry.io/otel/attribute"
-	"gorm.io/gorm"
+
+	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 )
 
 // postgresProductRepository is a struct that contains the postgres product repository.
@@ -34,6 +35,7 @@ func NewPostgresProductRepository(
 	tracer tracing.AppTracer,
 ) data2.ProductRepository {
 	gormRepository := repository.NewGenericGormRepository[*models.Product](db)
+
 	return &postgresProductRepository{
 		log:                   log,
 		gormGenericRepository: gormRepository,

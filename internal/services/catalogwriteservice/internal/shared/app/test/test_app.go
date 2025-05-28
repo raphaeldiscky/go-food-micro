@@ -2,27 +2,27 @@ package test
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 
-	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
-	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	contracts2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
-	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/gorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
+	"github.com/stretchr/testify/require"
+
+	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
+	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
+	contracts2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
+	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
+	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	gorm2 "gorm.io/gorm"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-
-	"github.com/stretchr/testify/require"
-	gorm2 "gorm.io/gorm"
 )
 
 // TestApp is a struct that contains the test app.
@@ -115,8 +115,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 
 	err = testApp.Start(startCtx)
 	if err != nil {
-		t.Errorf("Error starting, err: %v", err)
-		os.Exit(1)
+		t.Fatalf("Error starting, err: %v", err)
 	}
 
 	// waiting for grpc endpoint becomes ready in the given timeout
@@ -132,5 +131,5 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 		require.NoError(t, err)
 	})
 
-	return
+	return result
 }

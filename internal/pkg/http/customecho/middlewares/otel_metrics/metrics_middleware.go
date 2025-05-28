@@ -10,7 +10,7 @@ package otelmetrics
 import (
 	"time"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 )
 
 // HTTPMetrics is a middleware for adding  otel metrics for a given request

@@ -14,7 +14,7 @@ import (
 
 	"github.com/docker/go-connections/nat"
 	"github.com/stretchr/testify/assert"
-	"github.com/testcontainers/testcontainers-go"
+	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.uber.org/fx"

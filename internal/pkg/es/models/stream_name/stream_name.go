@@ -6,7 +6,7 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
 
-	"github.com/goccy/go-reflect"
+	reflect "github.com/goccy/go-reflect"
 	uuid "github.com/satori/go.uuid"
 )
 

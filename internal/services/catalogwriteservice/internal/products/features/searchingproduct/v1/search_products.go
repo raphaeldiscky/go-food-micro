@@ -1,10 +1,10 @@
 package v1
 
 import (
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 
 	validation "github.com/go-ozzo/ozzo-validation"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 // SearchProducts is a struct that contains the search products query.
@@ -24,7 +24,10 @@ func NewSearchProducts(searchText string, query *utils.ListQuery) *SearchProduct
 }
 
 // NewSearchProductsWithValidation is a constructor for the SearchProducts with validation.
-func NewSearchProductsWithValidation(searchText string, query *utils.ListQuery) (*SearchProducts, error) {
+func NewSearchProductsWithValidation(
+	searchText string,
+	query *utils.ListQuery,
+) (*SearchProducts, error) {
 	searchProductQuery := NewSearchProducts(searchText, query)
 
 	err := searchProductQuery.Validate()

@@ -4,11 +4,11 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
-
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 )
 
 // CatalogsWriteTestApplication is a struct that contains the catalogs write test application.

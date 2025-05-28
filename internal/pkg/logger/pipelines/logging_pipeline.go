@@ -8,7 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type requestLoggerPipeline struct {

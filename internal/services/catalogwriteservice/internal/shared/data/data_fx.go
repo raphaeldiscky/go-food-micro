@@ -2,12 +2,12 @@
 package data
 
 import (
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 )
 
-// Module is a module that contains the data module
+// Module is a module that contains the data module.
 var Module = fx.Module(
 	"datafx",
 	// - order is not important in provide

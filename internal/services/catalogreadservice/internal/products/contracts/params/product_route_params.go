@@ -5,7 +5,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/contracts"
 
 	"github.com/go-playground/validator"
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"go.uber.org/fx"
 )
 

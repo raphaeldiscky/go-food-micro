@@ -16,7 +16,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
 
 	"emperror.dev/errors"
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
@@ -67,7 +67,11 @@ func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_V
 
 	c.Require().NoError(err)
 
-	p, err := gormdbcontext.FindDataModelByID[*datamodels.ProductDataModel](c.Ctx, c.CatalogDBContext, id)
+	p, err := gormdbcontext.FindDataModelByID[*datamodels.ProductDataModel](
+		c.Ctx,
+		c.CatalogDBContext,
+		id,
+	)
 
 	c.Require().Nil(p)
 	c.Require().Error(err)

@@ -12,7 +12,7 @@ import (
 	migration "github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
 
-	"github.com/pressly/goose/v3"
+	goose "github.com/pressly/goose/v3"
 )
 
 type goosePostgresMigrator struct {

@@ -43,8 +43,9 @@ linters:
     - unconvert
     - unparam
     - unused
-    - wsl
     - whitespace
+  disable:
+    - wsl
 
   settings:
     dupl:

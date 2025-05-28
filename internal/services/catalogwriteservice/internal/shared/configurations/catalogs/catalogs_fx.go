@@ -3,14 +3,14 @@ package catalogs
 import (
 	"fmt"
 
+	"go.opentelemetry.io/otel/metric"
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs/infrastructure"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data"
-
-	"go.opentelemetry.io/otel/metric"
-	"go.uber.org/fx"
 )
 
 // https://pmihaylov.com/shared-components-go-microservices/
@@ -31,6 +31,7 @@ var CatalogsServiceModule = fx.Module(
 )
 
 // ref: https://github.com/open-telemetry/opentelemetry-go/blob/main/example/prometheus/main.go
+// provideCatalogsMetrics is a function that provides the catalogs metrics.
 func provideCatalogsMetrics(
 	cfg *config.AppOptions,
 	meter metric.Meter,

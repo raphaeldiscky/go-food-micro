@@ -9,7 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type InfrastructureConfigurator struct {

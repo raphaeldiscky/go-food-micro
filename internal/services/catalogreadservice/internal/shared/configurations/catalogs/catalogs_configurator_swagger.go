@@ -4,7 +4,7 @@ import (
 	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/docs"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 

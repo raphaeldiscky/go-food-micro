@@ -1,3 +1,4 @@
+// Package dtos contains the get product by id request dto.
 package dtos
 
 import uuid "github.com/satori/go.uuid"

@@ -8,7 +8,7 @@ import (
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 
 	"emperror.dev/errors"
-	"github.com/rabbitmq/amqp091-go"
+	amqp091 "github.com/rabbitmq/amqp091-go"
 )
 
 type internalConnection struct {

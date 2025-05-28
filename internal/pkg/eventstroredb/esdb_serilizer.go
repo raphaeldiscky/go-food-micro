@@ -17,7 +17,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	"github.com/gofrs/uuid"
 	uuid2 "github.com/satori/go.uuid"
 )

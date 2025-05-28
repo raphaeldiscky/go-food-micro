@@ -7,17 +7,18 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/goose"
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
-	appconfig "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
-
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
+
+	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
+
+	appconfig "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 )
 
 func init() {

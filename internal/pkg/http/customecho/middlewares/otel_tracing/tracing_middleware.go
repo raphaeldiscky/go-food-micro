@@ -10,7 +10,7 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
 	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"

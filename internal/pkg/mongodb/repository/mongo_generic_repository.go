@@ -14,7 +14,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 
 	"emperror.dev/errors"
-	"github.com/goccy/go-reflect"
+	reflect "github.com/goccy/go-reflect"
 	"github.com/iancoleman/strcase"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"

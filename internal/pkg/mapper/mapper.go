@@ -11,7 +11,7 @@ import (
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
 
 	"emperror.dev/errors"
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	"github.com/iancoleman/strcase"
 )
 

@@ -3,7 +3,7 @@ package problemdetail
 import (
 	problemDetails "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 

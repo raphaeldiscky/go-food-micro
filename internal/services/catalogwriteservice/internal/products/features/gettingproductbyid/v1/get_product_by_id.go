@@ -1,11 +1,11 @@
 package v1
 
 import (
+	"github.com/go-ozzo/ozzo-validation/is"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 
 	validation "github.com/go-ozzo/ozzo-validation"
-	"github.com/go-ozzo/ozzo-validation/is"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -19,18 +19,18 @@ type GetProductByID struct {
 }
 
 // NewGetProductByID is a constructor for the GetProductByID.
-func NewGetProductByID(productId uuid.UUID) *GetProductByID {
+func NewGetProductByID(productID uuid.UUID) *GetProductByID {
 	query := &GetProductByID{
 		Query:     cqrs.NewQueryByT[GetProductByID](),
-		ProductID: productId,
+		ProductID: productID,
 	}
 
 	return query
 }
 
 // NewGetProductByIDWithValidation is a constructor for the GetProductByID with validation.
-func NewGetProductByIDWithValidation(productId uuid.UUID) (*GetProductByID, error) {
-	query := NewGetProductByID(productId)
+func NewGetProductByIDWithValidation(productID uuid.UUID) (*GetProductByID, error) {
+	query := NewGetProductByID(productID)
 	err := query.Validate()
 
 	return query, err

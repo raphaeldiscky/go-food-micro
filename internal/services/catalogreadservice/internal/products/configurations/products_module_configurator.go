@@ -1,3 +1,4 @@
+// Package configurations contains the products module configurator.
 package configurations
 
 import (

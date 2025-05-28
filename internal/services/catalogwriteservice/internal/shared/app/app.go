@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 )
 

@@ -1,3 +1,4 @@
+// Package endpoints contains the products endpoints.
 package endpoints
 
 import (

@@ -1,10 +1,10 @@
 package infrastructure
 
 import (
+	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health"
-	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/goose"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
@@ -12,10 +12,11 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresmessaging"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
-	rabbitmq2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/rabbitmq"
-
-	"github.com/go-playground/validator"
 	"go.uber.org/fx"
+
+	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
+
+	rabbitmq2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/rabbitmq"
 )
 
 // https://pmihaylov.com/shared-components-go-microservices/

@@ -17,7 +17,7 @@ import (
 	updateOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/updating_shopping_card/v1/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/value_objects"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 	uuid "github.com/satori/go.uuid"
 )
 

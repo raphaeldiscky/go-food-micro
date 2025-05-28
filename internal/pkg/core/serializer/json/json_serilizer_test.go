@@ -6,7 +6,7 @@ package json
 import (
 	"testing"
 
-	"github.com/goccy/go-reflect"
+	reflect "github.com/goccy/go-reflect"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -14,8 +14,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/gavv/httpexpect/v2"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	httpexpect "github.com/gavv/httpexpect/v2"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

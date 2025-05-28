@@ -12,8 +12,8 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/docker/go-connections/nat"
-	"github.com/redis/go-redis/v9"
-	"github.com/testcontainers/testcontainers-go"
+	redis "github.com/redis/go-redis/v9"
+	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 

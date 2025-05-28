@@ -1,6 +1,6 @@
 package types
 
-import "github.com/rabbitmq/amqp091-go"
+import amqp091 "github.com/rabbitmq/amqp091-go"
 
 type ExchangeType string
 

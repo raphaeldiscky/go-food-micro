@@ -13,7 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 
 	"emperror.dev/errors"
-	"github.com/redis/go-redis/v9"
+	redis "github.com/redis/go-redis/v9"
 	attribute2 "go.opentelemetry.io/otel/attribute"
 )
 

@@ -1,6 +1,6 @@
 package utils
 
-import "github.com/goccy/go-reflect"
+import reflect "github.com/goccy/go-reflect"
 
 func Contains[T any](arr []T, x T) bool {
 	for _, v := range arr {

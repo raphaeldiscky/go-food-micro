@@ -4,9 +4,10 @@ package datamodels
 import (
 	"time"
 
-	"github.com/goccy/go-json"
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
+
+	json "github.com/goccy/go-json"
+	uuid "github.com/satori/go.uuid"
 )
 
 // https://gorm.io/docs/conventions.html

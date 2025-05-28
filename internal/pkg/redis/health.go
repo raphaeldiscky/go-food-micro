@@ -5,7 +5,7 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 
-	"github.com/redis/go-redis/v9"
+	redis "github.com/redis/go-redis/v9"
 )
 
 type RedisHealthChecker struct {

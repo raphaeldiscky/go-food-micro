@@ -4,9 +4,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 )
 
 // CatalogsWriteApplication is a struct that contains the catalogs write application.
@@ -23,6 +23,7 @@ func NewCatalogsWriteApplication(
 	environment environment.Environment,
 ) *CatalogsWriteApplication {
 	app := fxapp.NewApplication(providers, decorates, options, logger, environment)
+
 	return &CatalogsWriteApplication{
 		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(app),
 	}

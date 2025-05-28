@@ -4,10 +4,18 @@ import (
 	"context"
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
+	"go.opentelemetry.io/otel/trace"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+	api "go.opentelemetry.io/otel/metric"
+
 	createProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1"
 	createProductDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
 	getProductByIdQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1"
@@ -15,13 +23,6 @@ import (
 	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/contracts"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-
-	"emperror.dev/errors"
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-	attribute2 "go.opentelemetry.io/otel/attribute"
-	api "go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/trace"
 )
 
 var grpcMetricsAttr = api.WithAttributes(
@@ -72,6 +73,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 				validationErr,
 			),
 		)
+
 		return nil, validationErr
 	}
 
@@ -92,6 +94,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 			),
 			logger.Fields{"Id": command.ProductID},
 		)
+
 		return nil, err
 	}
 
@@ -121,6 +124,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 				badRequestErr,
 			),
 		)
+
 		return nil, badRequestErr
 	}
 
@@ -141,6 +145,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 				validationErr,
 			),
 		)
+
 		return nil, validationErr
 	}
 
@@ -157,6 +162,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 			),
 			logger.Fields{"Id": command.ProductID},
 		)
+
 		return nil, err
 	}
 
@@ -188,6 +194,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 				badRequestErr,
 			),
 		)
+
 		return nil, badRequestErr
 	}
 
@@ -203,6 +210,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 				validationErr,
 			),
 		)
+
 		return nil, validationErr
 	}
 
@@ -223,6 +231,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 			),
 			logger.Fields{"Id": query.ProductID},
 		)
+
 		return nil, err
 	}
 
@@ -232,6 +241,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 			err,
 			"[ProductGrpcServiceServer_GetProductById.Map] error in mapping product",
 		)
+
 		return nil, err
 	}
 
