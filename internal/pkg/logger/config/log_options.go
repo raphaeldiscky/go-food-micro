@@ -1,4 +1,4 @@
-// Package logger provides a logger for the application.
+// Package config provides a logger for the application.
 package config
 
 import (

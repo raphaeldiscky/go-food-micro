@@ -37,7 +37,7 @@ func NewEchoHTTPServer(
 	config *config.EchoHTTPOptions,
 	logger logger.Logger,
 	meter metric.Meter,
-) contracts.EchoHttpServer {
+) contracts.EchoHTTPServer {
 	e := echo.New()
 	e.HideBanner = true
 

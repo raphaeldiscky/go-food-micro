@@ -63,7 +63,7 @@ func NewCatalogReadIntegrationTestSharedFixture(
 
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
-		result.RabbitmqOptions.RabbitmqHostOptions.HttpEndPoint(),
+		result.RabbitmqOptions.RabbitmqHostOptions.HTTPEndPoint(),
 		result.RabbitmqOptions.RabbitmqHostOptions.UserName,
 		result.RabbitmqOptions.RabbitmqHostOptions.Password)
 	if err != nil {

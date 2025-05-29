@@ -47,7 +47,7 @@ var (
 // we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,
-	echoServer contracts.EchoHttpServer,
+	echoServer contracts.EchoHTTPServer,
 	logger logger.Logger,
 ) {
 	lc.Append(fx.Hook{
@@ -65,7 +65,7 @@ func registerHooks(
 				) {
 					// do a fatal for going to OnStop process
 					logger.Fatalf(
-						"(EchoHttpServer.RunHTTPServer) error in running server: {%v}",
+						"(EchoHTTPServer.RunHTTPServer) error in running server: {%v}",
 						err,
 					)
 				}

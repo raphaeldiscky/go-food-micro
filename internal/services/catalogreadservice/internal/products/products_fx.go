@@ -23,7 +23,7 @@ func NewModule() fx.Option {
 		fx.Provide(repositories.NewRedisProductRepository),
 		fx.Provide(repositories.NewMongoProductRepository),
 
-		fx.Provide(fx.Annotate(func(catalogsServer contracts.EchoHttpServer) *echo.Group {
+		fx.Provide(fx.Annotate(func(catalogsServer contracts.EchoHTTPServer) *echo.Group {
 			var g *echo.Group
 			catalogsServer.RouteBuilder().RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {
 				group := v1.Group("/products")

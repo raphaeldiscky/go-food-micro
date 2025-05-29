@@ -57,7 +57,7 @@ func NewAggregateRootWithID(id uuid.UUID, aggregateType string) *AggregateRoot {
 	aggregate := &AggregateRoot{
 		originalVersion: newAggregateVersion,
 	}
-	aggregate.Entity = NewEntityWithId(id, aggregateType)
+	aggregate.Entity = NewEntityWithID(id, aggregateType)
 
 	return aggregate
 }

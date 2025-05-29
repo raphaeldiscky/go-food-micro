@@ -40,7 +40,7 @@ func NewOrdersModuleConfigurator(
 func (c *OrdersModuleConfigurator) ConfigureOrdersModule() {
 	c.ResolveFunc(
 		func(logger logger.Logger,
-			_ echocontracts.EchoHttpServer,
+			_ echocontracts.EchoHTTPServer,
 			orderRepository repositories.OrderMongoRepository,
 			orderAggregateStore store.AggregateStore[*aggregate.Order],
 			tracer tracing.AppTracer,

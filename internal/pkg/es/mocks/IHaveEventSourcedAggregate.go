@@ -490,20 +490,20 @@ func (_c *IHaveEventSourcedAggregate_SetEntityType_Call) RunAndReturn(run func(s
 	return _c
 }
 
-// SetId provides a mock function with given fields: id
-func (_m *IHaveEventSourcedAggregate) SetId(id uuid.UUID) {
+// SetID provides a mock function with given fields: id
+func (_m *IHaveEventSourcedAggregate) SetID(id uuid.UUID) {
 	_m.Called(id)
 }
 
-// IHaveEventSourcedAggregate_SetId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SetId'
+// IHaveEventSourcedAggregate_SetId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SetID'
 type IHaveEventSourcedAggregate_SetId_Call struct {
 	*mock.Call
 }
 
-// SetId is a helper method to define mock.On call
+// SetID is a helper method to define mock.On call
 //   - id uuid.UUID
-func (_e *IHaveEventSourcedAggregate_Expecter) SetId(id interface{}) *IHaveEventSourcedAggregate_SetId_Call {
-	return &IHaveEventSourcedAggregate_SetId_Call{Call: _e.mock.On("SetId", id)}
+func (_e *IHaveEventSourcedAggregate_Expecter) SetID(id interface{}) *IHaveEventSourcedAggregate_SetId_Call {
+	return &IHaveEventSourcedAggregate_SetId_Call{Call: _e.mock.On("SetID", id)}
 }
 
 func (_c *IHaveEventSourcedAggregate_SetId_Call) Run(run func(id uuid.UUID)) *IHaveEventSourcedAggregate_SetId_Call {

@@ -57,7 +57,7 @@ func NewOrder(
 ) (*Order, error) {
 	order := &Order{}
 	order.NewEmptyAggregate()
-	order.SetId(id)
+	order.SetID(id)
 
 	if len(shopItems) == 0 {
 		return nil, domainExceptions.NewOrderShopItemsRequiredError(
@@ -138,7 +138,7 @@ func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) er
 	o.deliveryAddress = evt.DeliveryAddress
 	o.deliveredTime = evt.DeliveredTime
 	o.createdAt = evt.CreatedAt
-	o.SetId(evt.GetAggregateID())
+	o.SetID(evt.GetAggregateID())
 
 	return nil
 }

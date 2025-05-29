@@ -41,7 +41,7 @@ func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 	var dataSourceName string
 
 	if cfg.DBName == "" {
-		return nil, errors.New("dbName is required in the config.")
+		return nil, errors.New("dbname is required in the config.")
 	}
 
 	err := createDB(cfg)

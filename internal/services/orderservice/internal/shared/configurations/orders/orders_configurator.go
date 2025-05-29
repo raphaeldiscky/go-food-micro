@@ -46,7 +46,7 @@ func (ic *OrderServiceConfigurator) ConfigureOrders() {
 func (ic *OrderServiceConfigurator) MapOrdersEndpoints() {
 	// Shared
 	ic.ResolveFunc(
-		func(ordersServer echocontracts.EchoHttpServer, cfg *config.Config) error {
+		func(ordersServer echocontracts.EchoHTTPServer, cfg *config.Config) error {
 			ordersServer.SetupDefaultMiddlewares()
 
 			// config orders root endpoint

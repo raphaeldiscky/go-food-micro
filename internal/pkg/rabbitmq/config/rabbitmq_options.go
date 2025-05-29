@@ -38,8 +38,8 @@ func (h *RabbitmqHostOptions) AmqpEndPoint() string {
 	return fmt.Sprintf("amqp://%s:%s@%s:%d", h.UserName, h.Password, h.HostName, h.Port)
 }
 
-// HttpEndPoint returns the http endpoint.
-func (h *RabbitmqHostOptions) HttpEndPoint() string {
+// HTTPEndPoint returns the http endpoint.
+func (h *RabbitmqHostOptions) HTTPEndPoint() string {
 	return fmt.Sprintf("http://%s:%d", h.HostName, h.HttpPort)
 }
 

@@ -75,7 +75,7 @@ func (ic *CatalogWriteServiceConfigurator) ConfigureCatalogs() error {
 func (ic *CatalogWriteServiceConfigurator) MapCatalogsEndpoints() error {
 	// Shared
 	ic.ResolveFunc(
-		func(catalogsServer echocontracts.EchoHttpServer, options *config.AppOptions) error {
+		func(catalogsServer echocontracts.EchoHTTPServer, options *config.AppOptions) error {
 			catalogsServer.SetupDefaultMiddlewares()
 
 			// config catalogs root endpoint

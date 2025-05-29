@@ -2,6 +2,7 @@
 package empty
 
 import (
+	"log"
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
@@ -14,7 +15,8 @@ var EmptyLogger logger.Logger = &emptyLogger{}
 type emptyLogger struct{}
 
 // Configure configures the logger.
-func (e emptyLogger) Configure(cfg func(internalLog interface{})) {
+func (e emptyLogger) Configure(_ func(internalLog interface{})) {
+	log.Println("Configure")
 }
 
 // Debug logs a debug message.

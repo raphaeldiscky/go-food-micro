@@ -11,7 +11,7 @@ import (
 // IDomainEvent is a domain event.
 type IDomainEvent interface {
 	events.IEvent
-	GetAggregateId() uuid.UUID
+	GetAggregateID() uuid.UUID
 	GetAggregateSequenceNumber() int64
 	WithAggregate(aggregateID uuid.UUID, aggregateSequenceNumber int64) *DomainEvent
 }
@@ -34,8 +34,8 @@ func NewDomainEvent(eventType string) *DomainEvent {
 	return domainEvent
 }
 
-// GetAggregateId gets the aggregate id.
-func (d *DomainEvent) GetAggregateId() uuid.UUID {
+// GetAggregateID gets the aggregate id.
+func (d *DomainEvent) GetAggregateID() uuid.UUID {
 	return d.AggregateId
 }
 

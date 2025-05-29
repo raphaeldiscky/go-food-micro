@@ -13,13 +13,13 @@ import (
 // HealthCheckEndpoint is a struct that represents a health check endpoint.
 type HealthCheckEndpoint struct {
 	service    contracts2.HealthService
-	echoServer contracts.EchoHttpServer
+	echoServer contracts.EchoHTTPServer
 }
 
 // NewHealthCheckEndpoint is a function that creates a new health check endpoint.
 func NewHealthCheckEndpoint(
 	service contracts2.HealthService,
-	server contracts.EchoHttpServer,
+	server contracts.EchoHTTPServer,
 ) *HealthCheckEndpoint {
 	return &HealthCheckEndpoint{service: service, echoServer: server}
 }

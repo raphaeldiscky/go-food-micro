@@ -236,7 +236,7 @@ func IsConnectableWithContext(
 
 		// Test HTTP connection
 		rmqc, err := rabbithole.NewClient(
-			options.HttpEndPoint(),
+			options.HTTPEndPoint(),
 			options.UserName,
 			options.Password,
 		)
@@ -254,7 +254,7 @@ func IsConnectableWithContext(
 		if err != nil {
 			logger.Errorf(
 				"Error in creating rabbitmq connection with http host: %s",
-				options.HttpEndPoint(),
+				options.HTTPEndPoint(),
 			)
 			connChan <- false
 

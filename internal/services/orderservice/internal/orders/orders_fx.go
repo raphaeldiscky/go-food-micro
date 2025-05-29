@@ -28,7 +28,7 @@ func Module() fx.Option {
 		fx.Provide(repositories.NewElasticOrderReadRepository),
 
 		fx.Provide(eventstoredb.NewEventStoreAggregateStore[*aggregate.Order]),
-		fx.Provide(fx.Annotate(func(catalogsServer echocontracts.EchoHttpServer) *echo.Group {
+		fx.Provide(fx.Annotate(func(catalogsServer echocontracts.EchoHTTPServer) *echo.Group {
 			var g *echo.Group
 			catalogsServer.RouteBuilder().RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {
 				group := v1.Group("/orders")

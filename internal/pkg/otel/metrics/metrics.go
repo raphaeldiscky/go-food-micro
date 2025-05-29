@@ -297,7 +297,7 @@ func (o *OtelMetrics) configExporters() ([]metric.Reader, error) {
 // RegisterMetricsEndpoint registers the metrics endpoint.
 // we could also use our existing server app port and a new /metrics endpoint instead of a new server with different port for our app metrics.
 func (o *OtelMetrics) RegisterMetricsEndpoint(
-	server contracts.EchoHttpServer,
+	server contracts.EchoHTTPServer,
 ) {
 	if o.config.UseOTLP {
 		return

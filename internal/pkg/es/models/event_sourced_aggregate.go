@@ -119,7 +119,7 @@ func NewEventSourcedAggregateRootWithID(
 		when:            when,
 	}
 
-	aggregate.Entity = domain.NewEntityWithId(id, aggregateType)
+	aggregate.Entity = domain.NewEntityWithID(id, aggregateType)
 
 	return aggregate
 }

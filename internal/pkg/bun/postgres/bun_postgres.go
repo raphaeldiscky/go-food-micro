@@ -16,7 +16,7 @@ import (
 // NewBunDB creates a new bun db.
 func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {
 	if cfg.DBName == "" {
-		return nil, errors.New("dbName is required in the config.")
+		return nil, errors.New("dbname is required in the config.")
 	}
 
 	err := createDB(cfg)

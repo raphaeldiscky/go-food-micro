@@ -44,7 +44,7 @@ func (ic *CatalogReadServiceConfigurator) ConfigureCatalogs() {
 func (ic *CatalogReadServiceConfigurator) MapCatalogsEndpoints() {
 	// Shared
 	ic.ResolveFunc(
-		func(catalogsServer echocontracts.EchoHttpServer, cfg *config.Config) error {
+		func(catalogsServer echocontracts.EchoHTTPServer, cfg *config.Config) error {
 			catalogsServer.SetupDefaultMiddlewares()
 
 			// config catalogs root endpoint

@@ -29,7 +29,7 @@ func NewModule() fx.Option {
 		fx.Provide(grpc.NewProductGrpcService),
 
 		fx.Provide(
-			fx.Annotate(func(catalogsServer contracts.EchoHttpServer) *echo.Group {
+			fx.Annotate(func(catalogsServer contracts.EchoHTTPServer) *echo.Group {
 				var g *echo.Group
 				catalogsServer.RouteBuilder().
 					RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {

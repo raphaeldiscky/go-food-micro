@@ -34,8 +34,8 @@ func (h *RabbitMQContainerOptions) AmqpEndPoint() string {
 	)
 }
 
-// HttpEndPoint returns the http endpoint.
-func (h *RabbitMQContainerOptions) HttpEndPoint() string {
+// HTTPEndPoint returns the http endpoint.
+func (h *RabbitMQContainerOptions) HTTPEndPoint() string {
 	return fmt.Sprintf("http://%s:%d", h.Host, h.HttpPort)
 }
 

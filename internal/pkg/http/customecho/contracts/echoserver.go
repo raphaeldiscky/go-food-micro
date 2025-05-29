@@ -10,8 +10,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
-// EchoHttpServer is an interface that represents a echo http server.
-type EchoHttpServer interface {
+// EchoHTTPServer is an interface that represents a echo http server.
+type EchoHTTPServer interface {
 	RunHTTPServer(configEcho ...func(echo *echo.Echo)) error
 	GracefulShutdown(ctx context.Context) error
 	ApplyVersioningFromHeader()

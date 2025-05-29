@@ -128,7 +128,7 @@ func (e *elasticOrderProjection) onShoppingCartUpdated(
 	}
 
 	// Get existing order
-	order, err := e.elasticOrderReadRepository.GetOrderByID(ctx, evt.GetAggregateId())
+	order, err := e.elasticOrderReadRepository.GetOrderByID(ctx, evt.GetAggregateID())
 	if err != nil {
 		return utils.TraceStatusFromSpan(
 			span,

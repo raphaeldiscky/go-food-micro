@@ -44,8 +44,8 @@ func (e *EventStoreDbOptions) TCPEndPoint() string {
 // https://developers.eventstore.com/server/v20.10/networking.html#http-configuration
 // https://developers.eventstore.com/clients/http-api/v5
 
-// HttpEndPoint returns the http end point.
-func (e *EventStoreDbOptions) HttpEndPoint() string {
+// HTTPEndPoint returns the http end point.
+func (e *EventStoreDbOptions) HTTPEndPoint() string {
 	return fmt.Sprintf("http://%s:%d", e.Host, e.HttpPort)
 }
 

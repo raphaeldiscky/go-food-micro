@@ -37,7 +37,7 @@ var (
 	// metricsInvokes is a module for the metrics.
 	metricsInvokes = fx.Options( //nolint:gochecknoglobals
 		fx.Invoke(registerHooks),
-		fx.Invoke(func(m *OtelMetrics, server contracts.EchoHttpServer) {
+		fx.Invoke(func(m *OtelMetrics, server contracts.EchoHTTPServer) {
 			m.RegisterMetricsEndpoint(server)
 		}),
 	)
