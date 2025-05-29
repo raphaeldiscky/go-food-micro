@@ -24,11 +24,13 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// EsdbSerializer is a struct that represents a event store db serializer.
 type EsdbSerializer struct {
 	metadataSerializer serializer.MetadataSerializer
 	eventSerializer    serializer.EventSerializer
 }
 
+// NewEsdbSerializer creates a new event store db serializer.
 func NewEsdbSerializer(
 	metadataSerializer serializer.MetadataSerializer,
 	eventSerializer serializer.EventSerializer,
@@ -39,6 +41,7 @@ func NewEsdbSerializer(
 	}
 }
 
+// StreamEventToEventData converts a stream event to a event data.
 func (e *EsdbSerializer) StreamEventToEventData(
 	streamEvent *models.StreamEvent,
 ) (esdb.EventData, error) {
@@ -75,6 +78,7 @@ func (e *EsdbSerializer) StreamEventToEventData(
 	}, nil
 }
 
+// ExpectedStreamVersionToEsdbExpectedRevision converts a expected stream version to a event store db expected revision.
 func (e *EsdbSerializer) ExpectedStreamVersionToEsdbExpectedRevision(
 	expectedVersion expectedStreamVersion.ExpectedStreamVersion,
 ) esdb.ExpectedRevision {
@@ -91,6 +95,7 @@ func (e *EsdbSerializer) ExpectedStreamVersionToEsdbExpectedRevision(
 	return esdb.StreamRevision{Value: uint64(expectedVersion.Value())}
 }
 
+// StreamReadPositionToStreamPosition converts a stream read position to a stream position.
 func (e *EsdbSerializer) StreamReadPositionToStreamPosition(
 	readPosition readPosition.StreamReadPosition,
 ) esdb.StreamPosition {
@@ -104,12 +109,14 @@ func (e *EsdbSerializer) StreamReadPositionToStreamPosition(
 	return esdb.Revision(1)
 }
 
+// StreamTruncatePositionToInt64 converts a stream truncate position to a int64.
 func (e *EsdbSerializer) StreamTruncatePositionToInt64(
 	truncatePosition truncatePosition.StreamTruncatePosition,
 ) uint64 {
 	return uint64(truncatePosition.Value())
 }
 
+// EsdbReadStreamToResolvedEvents converts a event store db read stream to a resolved events.
 func (e *EsdbSerializer) EsdbReadStreamToResolvedEvents(
 	stream *esdb.ReadStream,
 ) ([]*esdb.ResolvedEvent, error) {
@@ -133,12 +140,14 @@ func (e *EsdbSerializer) EsdbReadStreamToResolvedEvents(
 	return events, nil
 }
 
+// EsdbPositionToStreamReadPosition converts a event store db position to a stream read position.
 func (e *EsdbSerializer) EsdbPositionToStreamReadPosition(
 	position esdb.Position,
 ) readPosition.StreamReadPosition {
 	return readPosition.FromInt64(int64(position.Commit))
 }
 
+// ResolvedEventToStreamEvent converts a resolved event to a stream event.
 func (e *EsdbSerializer) ResolvedEventToStreamEvent(
 	resolveEvent *esdb.ResolvedEvent,
 ) (*models.StreamEvent, error) {
@@ -170,6 +179,7 @@ func (e *EsdbSerializer) ResolvedEventToStreamEvent(
 	}, nil
 }
 
+// ResolvedEventsToStreamEvents converts a resolved events to a stream events.
 func (e *EsdbSerializer) ResolvedEventsToStreamEvents(
 	resolveEvents []*esdb.ResolvedEvent,
 ) ([]*models.StreamEvent, error) {
@@ -189,12 +199,14 @@ func (e *EsdbSerializer) ResolvedEventsToStreamEvents(
 	return streamEvents, nil
 }
 
+// EsdbWriteResultToAppendEventResult converts a event store db write result to a append event result.
 func (e *EsdbSerializer) EsdbWriteResultToAppendEventResult(
 	writeResult *esdb.WriteResult,
 ) *appendResult.AppendEventsResult {
 	return appendResult.From(writeResult.CommitPosition, writeResult.NextExpectedVersion)
 }
 
+// Serialize serializes a domain event.
 func (e *EsdbSerializer) Serialize(
 	data domain.IDomainEvent,
 	meta metadata.Metadata,
@@ -223,6 +235,7 @@ func (e *EsdbSerializer) Serialize(
 	}, nil
 }
 
+// SerializeObject serializes a object.
 func (e *EsdbSerializer) SerializeObject(
 	data interface{},
 	meta metadata.Metadata,
@@ -251,6 +264,7 @@ func (e *EsdbSerializer) SerializeObject(
 	}, nil
 }
 
+// Deserialize deserializes a resolved event.
 func (e *EsdbSerializer) Deserialize(
 	resolveEvent *esdb.ResolvedEvent,
 ) (domain.IDomainEvent, metadata.Metadata, error) {
@@ -275,6 +289,7 @@ func (e *EsdbSerializer) Deserialize(
 	return payload, meta, nil
 }
 
+// DeserializeObject deserializes a resolved event.
 func (e *EsdbSerializer) DeserializeObject(
 	resolveEvent *esdb.ResolvedEvent,
 ) (interface{}, metadata.Metadata, error) {
@@ -299,6 +314,7 @@ func (e *EsdbSerializer) DeserializeObject(
 	return payload, meta, nil
 }
 
+// DomainEventToStreamEvent converts a domain event to a stream event.
 func (e *EsdbSerializer) DomainEventToStreamEvent(
 	domainEvent domain.IDomainEvent,
 	meta metadata.Metadata,

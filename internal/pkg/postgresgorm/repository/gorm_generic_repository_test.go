@@ -1,3 +1,4 @@
+// Package repository provides the gorm generic repository.
 package repository
 
 import (
@@ -39,10 +40,12 @@ type ProductGorm struct {
 	IsAvailable bool      `gorm:"column:is_available"`
 }
 
+// TableName returns the table name.
 func (v *ProductGorm) TableName() string {
 	return "products_gorm"
 }
 
+// GormGenericRepositoryTestSuite is the test suite for the gorm generic repository.
 type gormGenericRepositoryTest struct {
 	suite.Suite
 	DB                             *gorm.DB
@@ -51,6 +54,7 @@ type gormGenericRepositoryTest struct {
 	products                       []*ProductGorm
 }
 
+// TestGormGenericRepository tests the gorm generic repository.
 func TestGormGenericRepository(t *testing.T) {
 	suite.Run(
 		t,
@@ -58,6 +62,7 @@ func TestGormGenericRepository(t *testing.T) {
 	)
 }
 
+// SetupSuite sets up the test suite.
 func (c *gormGenericRepositoryTest) SetupSuite() {
 	opts, err := gorm2.NewGormTestContainers(defaultLogger.GetLogger()).
 		PopulateContainerOptions(context.Background(), c.T())
@@ -86,18 +91,21 @@ func (c *gormGenericRepositoryTest) SetupSuite() {
 	}
 }
 
+// SetupTest sets up the test.
 func (c *gormGenericRepositoryTest) SetupTest() {
 	p, err := seedData(context.Background(), c.DB)
 	c.Require().NoError(err)
 	c.products = p
 }
 
+// TearDownTest tears down the test.
 func (c *gormGenericRepositoryTest) TearDownTest() {
 	err := c.cleanupPostgresData()
 	c.Require().NoError(err)
 }
 
-func (c *gormGenericRepositoryTest) Test_Add() {
+// TestAdd tests the add.
+func (c *gormGenericRepositoryTest) TestAdd() {
 	ctx := context.Background()
 
 	product := &ProductGorm{
@@ -119,7 +127,8 @@ func (c *gormGenericRepositoryTest) Test_Add() {
 	c.Assert().Equal(product.ID, p.ID)
 }
 
-func (c *gormGenericRepositoryTest) Test_Add_With_Data_Model() {
+// TestAddWithDataModel tests the add with data model.
+func (c *gormGenericRepositoryTest) TestAddWithDataModel() {
 	ctx := context.Background()
 
 	product := &Product{
@@ -141,7 +150,8 @@ func (c *gormGenericRepositoryTest) Test_Add_With_Data_Model() {
 	c.Assert().Equal(product.ID, p.ID)
 }
 
-func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
+// TestGetById tests the get by id.
+func (c *gormGenericRepositoryTest) TestGetById() {
 	ctx := context.Background()
 
 	all, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -183,7 +193,8 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id() {
 	}
 }
 
-func (c *gormGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
+// TestGetByIdWithDataModel tests the get by id with data model.
+func (c *gormGenericRepositoryTest) TestGetByIdWithDataModel() {
 	ctx := context.Background()
 
 	all, err := c.productRepositoryWithDataModel.GetAll(
@@ -233,7 +244,8 @@ func (c *gormGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 	}
 }
 
-func (c *gormGenericRepositoryTest) Test_Get_All() {
+// TestGetAll tests the get all.
+func (c *gormGenericRepositoryTest) TestGetAll() {
 	ctx := context.Background()
 
 	models, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -242,7 +254,8 @@ func (c *gormGenericRepositoryTest) Test_Get_All() {
 	c.Assert().NotEmpty(models.Items)
 }
 
-func (c *gormGenericRepositoryTest) Test_Get_All_With_Data_Model() {
+// TestGetAllWithDataModel tests the get all with data model.
+func (c *gormGenericRepositoryTest) TestGetAllWithDataModel() {
 	ctx := context.Background()
 
 	models, err := c.productRepositoryWithDataModel.GetAll(
@@ -254,7 +267,8 @@ func (c *gormGenericRepositoryTest) Test_Get_All_With_Data_Model() {
 	c.Assert().NotEmpty(models.Items)
 }
 
-func (c *gormGenericRepositoryTest) Test_Search() {
+// TestSearch tests the search.
+func (c *gormGenericRepositoryTest) TestSearch() {
 	ctx := context.Background()
 
 	models, err := c.productRepository.Search(
@@ -268,7 +282,8 @@ func (c *gormGenericRepositoryTest) Test_Search() {
 	c.Assert().Equal(len(models.Items), 1)
 }
 
-func (c *gormGenericRepositoryTest) Test_Search_With_Data_Model() {
+// TestSearchWithDataModel tests the search with data model.
+func (c *gormGenericRepositoryTest) TestSearchWithDataModel() {
 	ctx := context.Background()
 
 	models, err := c.productRepositoryWithDataModel.Search(
@@ -282,7 +297,8 @@ func (c *gormGenericRepositoryTest) Test_Search_With_Data_Model() {
 	c.Assert().Equal(len(models.Items), 1)
 }
 
-func (c *gormGenericRepositoryTest) Test_Where() {
+// TestWhere tests the where.
+func (c *gormGenericRepositoryTest) TestWhere() {
 	ctx := context.Background()
 
 	models, err := c.productRepository.GetByFilter(
@@ -295,7 +311,8 @@ func (c *gormGenericRepositoryTest) Test_Where() {
 	c.Assert().Equal(len(models), 1)
 }
 
-func (c *gormGenericRepositoryTest) Test_Where_With_Data_Model() {
+// TestWhereWithDataModel tests the where with data model.
+func (c *gormGenericRepositoryTest) TestWhereWithDataModel() {
 	ctx := context.Background()
 
 	models, err := c.productRepositoryWithDataModel.GetByFilter(
@@ -308,7 +325,8 @@ func (c *gormGenericRepositoryTest) Test_Where_With_Data_Model() {
 	c.Assert().Equal(len(models), 1)
 }
 
-func (c *gormGenericRepositoryTest) Test_Update() {
+// TestUpdate tests the update.
+func (c *gormGenericRepositoryTest) TestUpdate() {
 	ctx := context.Background()
 
 	products, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -327,7 +345,8 @@ func (c *gormGenericRepositoryTest) Test_Update() {
 	c.Assert().Equal("product2_updated", single.Name)
 }
 
-func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
+// TestUpdateWithDataModel tests the update with data model.
+func (c *gormGenericRepositoryTest) TestUpdateWithDataModel() {
 	ctx := context.Background()
 
 	products, err := c.productRepositoryWithDataModel.GetAll(
@@ -349,7 +368,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 	c.Assert().Equal("product2_updated", single.Name)
 }
 
-// func Test_Delete(t *testing.T) {
+// func TestDelete(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepository(ctx, t)
 //
@@ -368,7 +387,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Nil(t, single)
 //}
 //
-// func Test_Delete_With_Data_Model(t *testing.T) {
+// func TestDeleteWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepositoryWithDataModel(ctx, t)
 //
@@ -387,7 +406,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Nil(t, single)
 //}
 //
-// func Test_Count(t *testing.T) {
+// func TestCount(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepository(ctx, t)
 //	if err != nil {
@@ -399,7 +418,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, count, int64(2))
 //}
 //
-// func Test_Count_With_Data_Model(t *testing.T) {
+// func TestCountWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepositoryWithDataModel(ctx, t)
 //	if err != nil {
@@ -411,7 +430,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, count, int64(2))
 //}
 //
-// func Test_Find(t *testing.T) {
+// func TestFind(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepository(ctx, t)
 //	if err != nil {
@@ -431,7 +450,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, len(entities), 1)
 //}
 //
-// func Test_Find_With_Data_Model(t *testing.T) {
+// func TestFindWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepositoryWithDataModel(ctx, t)
 //	if err != nil {
@@ -451,6 +470,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, len(entities), 1)
 //}
 
+// cleanupPostgresData cleans up the postgres data.
 func (c *gormGenericRepositoryTest) cleanupPostgresData() error {
 	tables := []string{"products_gorm"}
 	// Iterate over the tables and delete all records
@@ -463,6 +483,7 @@ func (c *gormGenericRepositoryTest) cleanupPostgresData() error {
 	return nil
 }
 
+// migrationDatabase migrates the database.
 func migrationDatabase(db *gorm.DB) error {
 	err := db.AutoMigrate(ProductGorm{})
 	if err != nil {
@@ -472,6 +493,7 @@ func migrationDatabase(db *gorm.DB) error {
 	return nil
 }
 
+// seedData seeds the data.
 func seedData(ctx context.Context, db *gorm.DB) ([]*ProductGorm, error) {
 	seedProducts := []*ProductGorm{
 		{

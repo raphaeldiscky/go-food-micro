@@ -5,16 +5,19 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/projection"
 )
 
+// projectionsBuilder is a struct that represents a projections builder.
 type projectionsBuilder struct {
 	projectionConfiguration *ProjectionsConfigurations
 }
 
+// NewProjectionsBuilder creates a new projections builder.
 func NewProjectionsBuilder() ProjectionsBuilder {
 	return &projectionsBuilder{
 		projectionConfiguration: &ProjectionsConfigurations{},
 	}
 }
 
+// AddProjection adds a projection to the projections builder.
 func (p *projectionsBuilder) AddProjection(projection projection.IProjection) ProjectionsBuilder {
 	p.projectionConfiguration.Projections = append(
 		p.projectionConfiguration.Projections,
@@ -24,6 +27,7 @@ func (p *projectionsBuilder) AddProjection(projection projection.IProjection) Pr
 	return p
 }
 
+// AddProjections adds a projections to the projections builder.
 func (p *projectionsBuilder) AddProjections(
 	projections []projection.IProjection,
 ) ProjectionsBuilder {
@@ -34,6 +38,7 @@ func (p *projectionsBuilder) AddProjections(
 	return p
 }
 
+// Build builds the projections builder.
 func (p *projectionsBuilder) Build() *ProjectionsConfigurations {
 	return p.projectionConfiguration
 }

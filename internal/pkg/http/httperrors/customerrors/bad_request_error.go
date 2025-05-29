@@ -7,6 +7,7 @@ import (
 	"emperror.dev/errors"
 )
 
+// NewBadRequestError creates a new bad request error.
 func NewBadRequestError(message string) BadRequestError {
 	// `NewPlain` doesn't add stack-trace at all
 	badRequestErrMessage := errors.NewPlain("bad request error")
@@ -20,6 +21,7 @@ func NewBadRequestError(message string) BadRequestError {
 	return badRequestError
 }
 
+// NewBadRequestErrorWrap creates a new bad request error wrap.
 func NewBadRequestErrorWrap(err error, message string) BadRequestError {
 	if err == nil {
 		return NewBadRequestError(message)
@@ -37,10 +39,12 @@ func NewBadRequestErrorWrap(err error, message string) BadRequestError {
 	return badRequestError
 }
 
+// badRequestError is a struct that represents a bad request error.
 type badRequestError struct {
 	CustomError
 }
 
+// BadRequestError is a contract that represents a bad request error.
 type BadRequestError interface {
 	CustomError
 	isBadRequestError()
@@ -49,6 +53,7 @@ type BadRequestError interface {
 func (b *badRequestError) isBadRequestError() {
 }
 
+// IsBadRequestError checks if the error is a bad request error.
 func IsBadRequestError(err error) bool {
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested bad-request error, and we should use errors.As for traversing errors in all levels

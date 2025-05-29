@@ -48,7 +48,8 @@ func (c *getProductByIdHandlerTest) TearDownTest() {
 	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
-func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_Correct_Product_By_ID() {
+// TestHandleShouldReturnCorrectProductById tests the handle should return correct product by id.
+func (c *getProductByIdHandlerTest) TestHandleShouldReturnCorrectProductById() {
 	product := c.Products[0]
 
 	query, err := gettingproductbyidv1.NewGetProductByIDWithValidation(product.ID)
@@ -62,7 +63,8 @@ func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_Correct_Product_By
 	c.Assert().Equal(dto.Product.Name, product.Name)
 }
 
-func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_NotFound_Error_For_NotFound_Item() {
+// TestHandleShouldReturnNotFoundErrorForNotFoundItem tests the handle should return not found error for not found item.
+func (c *getProductByIdHandlerTest) TestHandleShouldReturnNotFoundErrorForNotFoundItem() {
 	id := uuid.NewV4()
 
 	query, err := gettingproductbyidv1.NewGetProductByIDWithValidation(id)
@@ -81,7 +83,8 @@ func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_NotFound_Error_For
 	c.Nil(dto)
 }
 
-func (c *getProductByIdHandlerTest) Test_Handle_Should_Return_Error_For_Error_In_Mapping() {
+// TestHandleShouldReturnErrorForErrorInMapping tests the handle should return error for error in mapping.
+func (c *getProductByIdHandlerTest) TestHandleShouldReturnErrorForErrorInMapping() {
 	mapper.ClearMappings()
 
 	product := c.Products[0]

@@ -1,3 +1,4 @@
+// Package rabbitmq provides a rabbitmq docker test.
 package rabbitmq
 
 import (
@@ -16,12 +17,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// rabbitmqDockerTest is a struct that represents a rabbitmq docker test.
 type rabbitmqDockerTest struct {
 	resource       *dockertest.Resource
 	defaultOptions *contracts.RabbitMQContainerOptions
 	logger         logger.Logger
 }
 
+// NewRabbitMQDockerTest creates a new rabbitmq docker test.
 func NewRabbitMQDockerTest(logger logger.Logger) contracts.RabbitMQContainer {
 	return &rabbitmqDockerTest{
 		defaultOptions: &contracts.RabbitMQContainerOptions{
@@ -38,6 +41,7 @@ func NewRabbitMQDockerTest(logger logger.Logger) contracts.RabbitMQContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -114,10 +118,12 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	return rabbitmqoptions, nil
 }
 
+// Cleanup cleans up the rabbitmq docker test.
 func (g *rabbitmqDockerTest) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *rabbitmqDockerTest) getRunOptions(
 	opts ...*contracts.RabbitMQContainerOptions,
 ) *dockertest.RunOptions {

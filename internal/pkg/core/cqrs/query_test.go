@@ -10,7 +10,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
-func Test_Query(t *testing.T) {
+// TestQuery tests the query.
+func TestQuery(t *testing.T) {
 	query := &GetProductByID{
 		Query:     NewQueryByT[*GetProductByID](),
 		ProductID: uuid.NewV4(),
@@ -38,6 +39,7 @@ func Test_Query(t *testing.T) {
 	assert.Equal(t, query.FullTypeName(), "*cqrs.GetProductByID")
 }
 
+// GetProductByID is a struct that represents a get product by id.
 type GetProductByID struct {
 	Query
 

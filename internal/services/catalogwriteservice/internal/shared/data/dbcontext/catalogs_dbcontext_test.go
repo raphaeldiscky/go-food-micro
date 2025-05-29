@@ -46,7 +46,8 @@ func TestDBContextTestSuite(t *testing.T) {
 	suite.Run(t, new(DBContextTestSuite))
 }
 
-func (s *DBContextTestSuite) Test_FindProductByID() {
+// TestFindProductByID tests the find product by id.
+func (s *DBContextTestSuite) TestFindProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -62,7 +63,8 @@ func (s *DBContextTestSuite) Test_FindProductByID() {
 	s.Assert().Equal(p.ID, id)
 }
 
-func (s *DBContextTestSuite) Test_ExistsProductByID() {
+// TestExistsProductByID tests the exists product by id.
+func (s *DBContextTestSuite) TestExistsProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -75,7 +77,8 @@ func (s *DBContextTestSuite) Test_ExistsProductByID() {
 	s.Require().True(exist)
 }
 
-func (s *DBContextTestSuite) Test_NoneExistsProductByID() {
+// TestNoneExistsProductByID tests the none exists product by id.
+func (s *DBContextTestSuite) TestNoneExistsProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := uuid.NewV4()
@@ -89,7 +92,8 @@ func (s *DBContextTestSuite) Test_NoneExistsProductByID() {
 	s.Require().False(exist)
 }
 
-func (s *DBContextTestSuite) Test_DeleteProductByID() {
+// TestDeleteProductByID tests the delete product by id.
+func (s *DBContextTestSuite) TestDeleteProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -131,7 +135,8 @@ func (s *DBContextTestSuite) Test_DeleteProductByID() {
 	s.Equal(deletedCount, int64(1))
 }
 
-func (s *DBContextTestSuite) Test_CreateProduct() {
+// TestCreateProduct tests the create product.
+func (s *DBContextTestSuite) TestCreateProduct() {
 	s.Require().NotNil(s.dbContext)
 
 	item := &models.Product{
@@ -160,7 +165,8 @@ func (s *DBContextTestSuite) Test_CreateProduct() {
 	s.Assert().Equal(p.ID, res.ID)
 }
 
-func (s *DBContextTestSuite) Test_UpdateProduct() {
+// TestUpdateProduct tests the update product.
+func (s *DBContextTestSuite) TestUpdateProduct() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -194,8 +200,7 @@ func (s *DBContextTestSuite) Test_UpdateProduct() {
 	s.Assert().Equal(res.Name, p2.Name)
 }
 
-// TestSuite Hooks
-
+// SetupTest sets up the test.
 func (s *DBContextTestSuite) SetupTest() {
 	err := mappings.ConfigureProductsMappings()
 	s.Require().NoError(err)

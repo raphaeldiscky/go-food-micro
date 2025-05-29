@@ -49,6 +49,7 @@ type messaging struct {
 	Operation       string
 }
 
+// exceptions constants.
 type exceptions struct {
 	EventName  string
 	Type       string
@@ -56,12 +57,15 @@ type exceptions struct {
 	Stacktrace string
 }
 
+// general constants.
 type general struct{}
 
+// grpc constants.
 // https://opentelemetry.io/docs/specs/otel/trace/semantic_conventions/rpc/
 type grpc struct{}
 
-type netHttp struct {
+// netHTTP constants.
+type netHTTP struct {
 	Transport string
 	PeerIp    string
 	PeerPort  string
@@ -71,6 +75,7 @@ type netHttp struct {
 	HostName  string
 }
 
+// app constants.
 var App = app{
 	DefaultSourceName: "app",
 	Consumer:          "app.consumer",
@@ -103,6 +108,7 @@ var App = app{
 	MessageType:       "app.message_type",
 }
 
+// exceptions constants.
 var Exceptions = exceptions{
 	EventName:  "exception",
 	Type:       "exception.type",
@@ -110,10 +116,13 @@ var Exceptions = exceptions{
 	Stacktrace: "exception.stacktrace",
 }
 
+// general constants.
 var General = general{}
 
+// grpc constants.
 var Grpc = grpc{}
 
+// messaging constants.
 var Messaging = messaging{
 	System:          "messaging.system",
 	Destination:     "messaging.destination",
@@ -126,7 +135,8 @@ var Messaging = messaging{
 	Operation:       "messaging.operation",
 }
 
-var NetHttp = netHttp{
+// netHTTP constants.
+var NetHTTP = netHTTP{
 	Transport: "net.transport",
 	PeerIp:    "net.peer.ip",
 	PeerPort:  "net.peer.port",

@@ -9,7 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_StackTraceWithErrors(t *testing.T) {
+// TestStackTraceWithErrors tests the stack trace with errors.
+func TestStackTraceWithErrors(t *testing.T) {
 	err := errors.WithMessage(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -17,7 +18,8 @@ func Test_StackTraceWithErrors(t *testing.T) {
 	fmt.Println(res)
 }
 
-func Test_StackTrace(t *testing.T) {
+// TestStackTrace tests the stack trace.
+func TestStackTrace(t *testing.T) {
 	err := errors.WithMessage(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -25,7 +27,8 @@ func Test_StackTrace(t *testing.T) {
 	fmt.Println(res)
 }
 
-func Test_RootStackTrace(t *testing.T) {
+// TestRootStackTrace tests the root stack trace.
+func TestRootStackTrace(t *testing.T) {
 	err := errors.WithMessage(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -33,7 +36,8 @@ func Test_RootStackTrace(t *testing.T) {
 	fmt.Println(res)
 }
 
-func Test_All_Level_Stack_Trace(t *testing.T) {
+// TestAllLevelStackTrace tests the all level stack trace.
+func TestAllLevelStackTrace(t *testing.T) {
 	err := errors.WrapIf(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -41,7 +45,8 @@ func Test_All_Level_Stack_Trace(t *testing.T) {
 	fmt.Println(res)
 }
 
-func Test_Errors_Without_Stack_Trace(t *testing.T) {
+// TestErrorsWithoutStackTrace tests the errors without stack trace.
+func TestErrorsWithoutStackTrace(t *testing.T) {
 	err := errors.WrapIf(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 

@@ -16,12 +16,14 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// esdbSubscriptionCheckpointRepository is a struct that represents a event store db subscription checkpoint repository.
 type esdbSubscriptionCheckpointRepository struct {
 	client        *esdb.Client
 	log           logger.Logger
 	esdbSerilizer *EsdbSerializer
 }
 
+// CheckpointStored is a struct that represents a checkpoint stored.
 type CheckpointStored struct {
 	Position       uint64
 	SubscriptionId string
@@ -29,6 +31,7 @@ type CheckpointStored struct {
 	*events.Event
 }
 
+// NewEsdbSubscriptionCheckpointRepository creates a new event store db subscription checkpoint repository.
 func NewEsdbSubscriptionCheckpointRepository(
 	client *esdb.Client,
 	logger logger.Logger,
@@ -41,6 +44,7 @@ func NewEsdbSubscriptionCheckpointRepository(
 	}
 }
 
+// Load loads a subscription checkpoint.
 func (e *esdbSubscriptionCheckpointRepository) Load(
 	subscriptionId string,
 	ctx context.Context,
@@ -87,6 +91,7 @@ func (e *esdbSubscriptionCheckpointRepository) Load(
 	return v.Position, nil
 }
 
+// Store stores a subscription checkpoint.
 func (e *esdbSubscriptionCheckpointRepository) Store(
 	subscriptionId string,
 	position uint64,
@@ -144,6 +149,7 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 	return nil
 }
 
+// getCheckpointStreamName gets a checkpoint stream name.
 func getCheckpointStreamName(subscriptionId string) string {
 	return fmt.Sprintf("$cehckpoint_stream_%s", subscriptionId)
 }

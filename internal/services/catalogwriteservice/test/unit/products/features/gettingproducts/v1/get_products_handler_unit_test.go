@@ -51,7 +51,8 @@ func (c *getProductsHandlerUnitTests) TearDownTest() {
 	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
-func (c *getProductsHandlerUnitTests) Test_Handle_Should_Return_Products_Successfully() {
+// TestHandleShouldReturnProductsSuccessfully tests the handle should return products successfully.
+func (c *getProductsHandlerUnitTests) TestHandleShouldReturnProductsSuccessfully() {
 	query, err := gettingproductsv1.NewGetProducts(utils.NewListQuery(10, 1))
 	c.Require().NoError(err)
 
@@ -62,7 +63,8 @@ func (c *getProductsHandlerUnitTests) Test_Handle_Should_Return_Products_Success
 	c.Equal(len(c.Products), len(res.Products.Items))
 }
 
-func (c *getProductsHandlerUnitTests) Test_Handle_Should_Return_Error_For_Mapping_List_Result() {
+// TestHandleShouldReturnErrorForMappingListResult tests the handle should return error for mapping list result.
+func (c *getProductsHandlerUnitTests) TestHandleShouldReturnErrorForMappingListResult() {
 	query, err := gettingproductsv1.NewGetProducts(utils.NewListQuery(10, 1))
 	c.Require().NoError(err)
 

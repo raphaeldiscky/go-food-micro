@@ -35,6 +35,7 @@ func (p *PersonPrivate) Age() int {
 
 // TestFieldValuesForExportedFieldsAndAddressableStruct tests the field values for exported fields and addressable struct.
 func TestFieldValuesForExportedFieldsAndAddressableStruct(t *testing.T) {
+	t.Parallel()
 	p := &PersonPublic{Name: "John", Age: 30}
 
 	assert.Equal(t, "John", GetFieldValueByIndex(p, 0))
@@ -43,6 +44,8 @@ func TestFieldValuesForExportedFieldsAndAddressableStruct(t *testing.T) {
 
 // TestFieldValuesForExportedFieldsAndUnAddressableStruct tests the field values for exported fields and unaddressable struct.
 func TestFieldValuesForExportedFieldsAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := PersonPublic{Name: "John", Age: 30}
 
 	assert.Equal(t, "John", GetFieldValueByIndex(p, 0))
@@ -51,6 +54,8 @@ func TestFieldValuesForExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 // TestFieldValuesForUnExportedFieldsAndAddressableStruct tests the field values for unexported fields and addressable struct.
 func TestFieldValuesForUnExportedFieldsAndAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := &PersonPrivate{name: "John", age: 30}
 
 	assert.Equal(t, "John", GetFieldValueByIndex(p, 0))
@@ -59,6 +64,8 @@ func TestFieldValuesForUnExportedFieldsAndAddressableStruct(t *testing.T) {
 
 // TestFieldValuesForUnExportedFieldsAndUnAddressableStruct tests the field values for unexported fields and unaddressable struct.
 func TestFieldValuesForUnExportedFieldsAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := PersonPrivate{name: "John", age: 30}
 
 	assert.Equal(t, "John", GetFieldValueByIndex(p, 0))
@@ -67,6 +74,8 @@ func TestFieldValuesForUnExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 // TestSetFieldValueForExportedFieldsAndAddressableStruct tests the set field value for exported fields and addressable struct.
 func TestSetFieldValueForExportedFieldsAndAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := &PersonPublic{}
 
 	SetFieldValueByIndex(p, 0, "John")
@@ -78,6 +87,8 @@ func TestSetFieldValueForExportedFieldsAndAddressableStruct(t *testing.T) {
 
 // TestSetFieldValueForExportedFieldsAndUnAddressableStruct tests the set field value for exported fields and unaddressable struct.
 func TestSetFieldValueForExportedFieldsAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := PersonPublic{}
 
 	SetFieldValueByIndex(&p, 0, "John")
@@ -89,6 +100,8 @@ func TestSetFieldValueForExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 // TestSetFieldValueForUnExportedFieldsAndUnAddressableStruct tests the set field value for unexported fields and unaddressable struct.
 func TestSetFieldValueForUnExportedFieldsAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := PersonPrivate{}
 
 	SetFieldValueByIndex(&p, 0, "John")
@@ -100,6 +113,8 @@ func TestSetFieldValueForUnExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 // TestGetFieldValueForExportedFieldsAndAddressableStruct tests the get field value for exported fields and addressable struct.
 func TestGetFieldValueForExportedFieldsAndAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := &PersonPublic{Name: "John", Age: 20}
 
 	// field by name only work on struct not pointer type so we should get Elem()
@@ -113,6 +128,8 @@ func TestGetFieldValueForExportedFieldsAndAddressableStruct(t *testing.T) {
 
 // TestGetFieldValueForUnExportedFieldsAndAddressableStruct tests the get field value for unexported fields and addressable struct.
 func TestGetFieldValueForUnExportedFieldsAndAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := &PersonPrivate{name: "John", age: 30}
 
 	// field by name only work on struct not pointer type so we should get Elem()
@@ -126,6 +143,8 @@ func TestGetFieldValueForUnExportedFieldsAndAddressableStruct(t *testing.T) {
 
 // TestGetFieldValueForExportedFieldsAndUnAddressableStruct tests the get field value for exported fields and unaddressable struct.
 func TestGetFieldValueForExportedFieldsAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := PersonPublic{Name: "John", Age: 20}
 
 	// field by name only work on struct not pointer type so we should get Elem()
@@ -139,6 +158,8 @@ func TestGetFieldValueForExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 // TestGetFieldValueForUnExportedFieldsAndUnAddressableStruct tests the get field value for unexported fields and unaddressable struct.
 func TestGetFieldValueForUnExportedFieldsAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := PersonPrivate{name: "John", age: 20}
 
 	// field by name only work on struct not pointer type so we should get Elem()
@@ -152,6 +173,8 @@ func TestGetFieldValueForUnExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 // TestGetFieldValueFromMethodAndAddressableStruct tests the get field value from method and addressable struct.
 func TestGetFieldValueFromMethodAndAddressableStruct(t *testing.T) {
+	t.Parallel()
+
 	p := &PersonPrivate{name: "John", age: 20}
 	name := GetFieldValueFromMethodAndObject(p, "ShortTypeName")
 
@@ -160,6 +183,7 @@ func TestGetFieldValueFromMethodAndAddressableStruct(t *testing.T) {
 
 // TestGetFieldValueFromMethodAndUnAddressableStruct tests the get field value from method and unaddressable struct.
 func TestGetFieldValueFromMethodAndUnAddressableStruct(t *testing.T) {
+	t.Parallel()
 	p := PersonPrivate{name: "John", age: 20}
 	name := GetFieldValueFromMethodAndObject(p, "ShortTypeName")
 
@@ -168,6 +192,8 @@ func TestGetFieldValueFromMethodAndUnAddressableStruct(t *testing.T) {
 
 // TestConvertNoPointerTypeToPointerTypeWithAddr tests the convert no pointer type to pointer type with addr.
 func TestConvertNoPointerTypeToPointerTypeWithAddr(t *testing.T) {
+	t.Parallel()
+
 	// https://www.geeksforgeeks.org/reflect-addr-function-in-golang-with-examples/
 
 	p := PersonPrivate{name: "John", age: 20}

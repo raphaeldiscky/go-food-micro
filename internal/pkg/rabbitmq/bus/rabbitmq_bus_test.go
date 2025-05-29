@@ -1,3 +1,4 @@
+// Package bus provides the rabbitmq bus.
 package bus
 
 import (
@@ -27,7 +28,8 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
-func Test_AddRabbitMQ(t *testing.T) {
+// TestAddRabbitMQ tests the add rabbitmq.
+func TestAddRabbitMQ(t *testing.T) {
 	testUtils.SkipCI(t)
 	ctx := context.Background()
 
@@ -136,11 +138,13 @@ func Test_AddRabbitMQ(t *testing.T) {
 	b.Stop()
 }
 
+// ProducerConsumerMessage is the message for the producer consumer.
 type ProducerConsumerMessage struct {
 	*types3.Message
 	Data string
 }
 
+// NewProducerConsumerMessage creates a new producer consumer message.
 func NewProducerConsumerMessage(data string) *ProducerConsumerMessage {
 	return &ProducerConsumerMessage{
 		Data:    data,
@@ -148,13 +152,15 @@ func NewProducerConsumerMessage(data string) *ProducerConsumerMessage {
 	}
 }
 
-// /////////// ConsumerHandlerT.
+// TestMessageHandler is the test message handler.
 type TestMessageHandler struct{}
 
+// NewTestMessageHandler creates a new test message handler.
 func NewTestMessageHandler() *TestMessageHandler {
 	return &TestMessageHandler{}
 }
 
+// Handle handles the message.
 func (t *TestMessageHandler) Handle(
 	ctx context.Context,
 	consumeContext types3.MessageConsumeContext,
@@ -165,8 +171,10 @@ func (t *TestMessageHandler) Handle(
 	return nil
 }
 
+// TestMessageHandler2 is the test message handler 2.
 type TestMessageHandler2 struct{}
 
+// Handle handles the message.
 func (t *TestMessageHandler2) Handle(
 	ctx context.Context,
 	consumeContext types3.MessageConsumeContext,
@@ -177,17 +185,20 @@ func (t *TestMessageHandler2) Handle(
 	return nil
 }
 
+// NewTestMessageHandler2 creates a new test message handler 2.
 func NewTestMessageHandler2() *TestMessageHandler2 {
 	return &TestMessageHandler2{}
 }
 
-// /////////////// ConsumerPipeline.
+// Pipeline1 is the pipeline 1.
 type Pipeline1 struct{}
 
+// NewPipeline1 creates a new pipeline 1.
 func NewPipeline1() pipeline2.ConsumerPipeline {
 	return &Pipeline1{}
 }
 
+// Handle handles the message.
 func (p *Pipeline1) Handle(
 	ctx context.Context,
 	consumerContext types3.MessageConsumeContext,

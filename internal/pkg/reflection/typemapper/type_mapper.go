@@ -19,7 +19,7 @@ var (
 	packages map[string]map[string][]reflect.Type
 )
 
-// discoverTypes initializes types and packages.
+// init initializes types and packages.
 func init() {
 	types = make(map[string][]reflect.Type)
 	packages = make(map[string]map[string][]reflect.Type)
@@ -27,7 +27,7 @@ func init() {
 	discoverTypes()
 }
 
-// discoverTypes discovers types.
+// discoverTypes discovers types and packages.
 func discoverTypes() {
 	typ := reflect.TypeOf(0)
 	sections, offset := typelinks2()
@@ -82,23 +82,23 @@ func discoverTypes() {
 	}
 }
 
-// RegisterType registers a type.
+// RegisterType registers a type and its package.
 func RegisterType(typ reflect.Type) {
 	types[GetFullTypeName(typ)] = append(types[GetFullTypeName(typ)], typ)
 	types[GetTypeName(typ)] = append(types[GetTypeName(typ)], typ)
 }
 
-// RegisterTypeWithKey registers a type with a key.
+// RegisterTypeWithKey registers a type with a key and its package.
 func RegisterTypeWithKey(key string, typ reflect.Type) {
 	types[key] = append(types[key], typ)
 }
 
-// GetAllRegisteredTypes gets all registered types.
+// GetAllRegisteredTypes gets all registered types and their packages.
 func GetAllRegisteredTypes() map[string][]reflect.Type {
 	return types
 }
 
-// TypeByName return the type by its name.
+// TypeByName returns the type by its name.
 func TypeByName(typeName string) reflect.Type {
 	if typ, ok := types[typeName]; ok {
 		return typ[0]
@@ -107,7 +107,7 @@ func TypeByName(typeName string) reflect.Type {
 	return nil
 }
 
-// TypesByName gets types by name.
+// TypesByName gets types by name and their packages.
 func TypesByName(typeName string) []reflect.Type {
 	if types, ok := types[typeName]; ok {
 		return types
@@ -116,7 +116,7 @@ func TypesByName(typeName string) []reflect.Type {
 	return nil
 }
 
-// TypeByNameAndImplementedInterface gets a type by name and implemented interface.
+// TypeByNameAndImplementedInterface gets a type by name and implemented interface and its package.
 func TypeByNameAndImplementedInterface[TInterface interface{}](
 	typeName string,
 ) reflect.Type {
@@ -133,7 +133,7 @@ func TypeByNameAndImplementedInterface[TInterface interface{}](
 	return nil
 }
 
-// TypesImplementedInterfaceWithFilterTypes gets types implemented interface with filter types.
+// TypesImplementedInterfaceWithFilterTypes gets types implemented interface with filter types and their packages.
 func TypesImplementedInterfaceWithFilterTypes[TInterface interface{}](
 	types []reflect.Type,
 ) []reflect.Type {
@@ -150,7 +150,7 @@ func TypesImplementedInterfaceWithFilterTypes[TInterface interface{}](
 	return res
 }
 
-// TypesImplementedInterface gets types implemented interface.
+// TypesImplementedInterface gets types implemented interface and their packages.
 func TypesImplementedInterface[TInterface interface{}]() []reflect.Type {
 	// https://stackoverflow.com/questions/7132848/how-to-get-the-reflect-type-of-an-interface
 	implementedInterface := GetGenericTypeByT[TInterface]()
@@ -167,7 +167,7 @@ func TypesImplementedInterface[TInterface interface{}]() []reflect.Type {
 	return res
 }
 
-// GetFullTypeName returns the full name of the type by its package name.
+// GetFullTypeName returns the full name of the type by its package name and its package.
 func GetFullTypeName(input interface{}) string {
 	if input == nil {
 		return ""
@@ -204,6 +204,7 @@ func GetTypeName(input interface{}) string {
 	return fmt.Sprintf("*%s", t.Elem().Name())
 }
 
+// GetSnakeTypeName returns the snake case type name.
 func GetSnakeTypeName(input interface{}) string {
 	if input == nil {
 		return ""
@@ -217,6 +218,7 @@ func GetSnakeTypeName(input interface{}) string {
 	return strcase.ToSnake(t.Elem().Name())
 }
 
+// GetKebabTypeName returns the kebab case type name.
 func GetKebabTypeName(input interface{}) string {
 	if input == nil {
 		return ""
@@ -230,6 +232,7 @@ func GetKebabTypeName(input interface{}) string {
 	return strcase.ToKebab(t.Elem().Name())
 }
 
+// GetGenericTypeNameByT returns the generic type name.
 func GetGenericTypeNameByT[T any]() string {
 	t := reflect.TypeOf((*T)(nil)).Elem()
 	if t.Kind() != reflect.Ptr {
@@ -239,6 +242,7 @@ func GetGenericTypeNameByT[T any]() string {
 	return fmt.Sprintf("*%s", t.Elem().Name())
 }
 
+// GetGenericNonePointerTypeNameByT returns the generic none pointer type name.
 func GetGenericNonePointerTypeNameByT[T any]() string {
 	t := reflect.TypeOf((*T)(nil)).Elem()
 	if t.Kind() != reflect.Ptr {
@@ -262,6 +266,7 @@ func GetNonePointerTypeName(input interface{}) string {
 	return t.Elem().Name()
 }
 
+// GetTypeNameByType returns the type name by type.
 func GetTypeNameByType(typ reflect.Type) string {
 	if typ == nil {
 		return ""
@@ -283,6 +288,7 @@ func TypeByPackageName(pkgPath string, name string) reflect.Type {
 	return nil
 }
 
+// GetPackageName returns the package name.
 func GetPackageName(value interface{}) string {
 	inputType := reflect.TypeOf(value)
 	if inputType.Kind() == reflect.Ptr {
@@ -296,6 +302,7 @@ func GetPackageName(value interface{}) string {
 	return parts[len(parts)-1]
 }
 
+// TypesByPackageName returns the types by package name and their packages.
 func TypesByPackageName(pkgPath string, name string) []reflect.Type {
 	if pkgTypes, ok := packages[pkgPath]; ok {
 		return pkgTypes[name]
@@ -304,12 +311,14 @@ func TypesByPackageName(pkgPath string, name string) []reflect.Type {
 	return nil
 }
 
+// GetGenericTypeByT returns the generic type.
 func GetGenericTypeByT[T interface{}]() reflect.Type {
 	res := reflect.TypeOf((*T)(nil)).Elem()
 
 	return res
 }
 
+// GetBaseType returns the base type.
 func GetBaseType(value interface{}) interface{} {
 	if reflect.ValueOf(value).Kind() == reflect.Pointer {
 		return reflect.ValueOf(value).Elem().Interface()
@@ -318,6 +327,7 @@ func GetBaseType(value interface{}) interface{} {
 	return value
 }
 
+// GetReflectType returns the reflect type.
 func GetReflectType(value interface{}) reflect.Type {
 	if reflect.TypeOf(value).Kind() == reflect.Pointer &&
 		reflect.TypeOf(value).Elem().Kind() == reflect.Interface {
@@ -329,6 +339,7 @@ func GetReflectType(value interface{}) reflect.Type {
 	return res
 }
 
+// GetBaseReflectType returns the base reflect type.
 func GetBaseReflectType(value interface{}) reflect.Type {
 	if reflect.ValueOf(value).Kind() == reflect.Pointer {
 		return reflect.TypeOf(reflect.ValueOf(value).Elem().Interface())
@@ -337,6 +348,7 @@ func GetBaseReflectType(value interface{}) reflect.Type {
 	return reflect.TypeOf(value)
 }
 
+// GenericInstanceByT returns the generic instance by t.
 func GenericInstanceByT[T any]() T {
 	// https://stackoverflow.com/questions/7132848/how-to-get-the-reflect-type-of-an-interface
 	typ := GetGenericTypeByT[T]()
@@ -344,6 +356,7 @@ func GenericInstanceByT[T any]() T {
 	return getInstanceFromType(typ).(T)
 }
 
+// InstanceByType returns the instance by type.
 func InstanceByType(typ reflect.Type) interface{} {
 	return getInstanceFromType(typ)
 }
@@ -357,6 +370,7 @@ func InstanceByTypeName(name string) interface{} {
 	return getInstanceFromType(typ)
 }
 
+// EmptyInstanceByTypeNameAndImplementedInterface returns an empty instance of the type by its name and implemented interface and its package.
 func EmptyInstanceByTypeNameAndImplementedInterface[TInterface interface{}](
 	name string,
 ) interface{} {
@@ -365,6 +379,7 @@ func EmptyInstanceByTypeNameAndImplementedInterface[TInterface interface{}](
 	return getInstanceFromType(typ)
 }
 
+// EmptyInstanceByTypeAndImplementedInterface returns an empty instance of the type by its type and implemented interface and its package.
 func EmptyInstanceByTypeAndImplementedInterface[TInterface interface{}](
 	typ reflect.Type,
 ) interface{} {
@@ -374,7 +389,7 @@ func EmptyInstanceByTypeAndImplementedInterface[TInterface interface{}](
 	return EmptyInstanceByTypeNameAndImplementedInterface[TInterface](typeName)
 }
 
-// InstancePointerByTypeName return an empty pointer instance of the type by its name
+// InstancePointerByTypeName returns an empty pointer instance of the type by its name
 // If the type is a pointer type, it will return a pointer instance of the type and
 // if the type is a struct type, it will return a pointer to the struct.
 func InstancePointerByTypeName(name string) interface{} {
@@ -388,7 +403,7 @@ func InstancePointerByTypeName(name string) interface{} {
 	return reflect.New(typ).Interface()
 }
 
-// InstanceByPackageName return an empty instance of the type by its name and package name
+// InstanceByPackageName returns an empty instance of the type by its name and package name
 // If the type is a pointer type, it will return a pointer instance of the type and
 // if the type is a struct type, it will return an empty struct.
 func InstanceByPackageName(pkgPath string, name string) interface{} {
@@ -397,6 +412,7 @@ func InstanceByPackageName(pkgPath string, name string) interface{} {
 	return getInstanceFromType(typ)
 }
 
+// getInstanceFromType returns an instance from a type.
 func getInstanceFromType(typ reflect.Type) interface{} {
 	if typ.Kind() == reflect.Ptr {
 		res := reflect.New(typ.Elem()).Interface()
@@ -408,6 +424,7 @@ func getInstanceFromType(typ reflect.Type) interface{} {
 	// return reflect.New(typ).Elem().Interface()
 }
 
+// GetGenericImplementInterfaceTypesT returns the generic implement interface types.
 func GetGenericImplementInterfaceTypesT[T any]() map[string][]reflect.Type {
 	result := make(map[string][]reflect.Type)
 
@@ -434,6 +451,7 @@ func GetGenericImplementInterfaceTypesT[T any]() map[string][]reflect.Type {
 	return result
 }
 
+// ImplementedInterfaceT returns if the object implements the interface.
 func ImplementedInterfaceT[T any](obj interface{}) bool {
 	// Get the interface type
 	interfaceType := reflect.TypeOf((*T)(nil)).Elem()

@@ -19,6 +19,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// esdbSubscriptionAllWorker is a struct that represents a event store db subscription all worker.
 type esdbSubscriptionAllWorker struct {
 	db                               *esdb.Client
 	cfg                              *config.EventStoreDbOptions
@@ -30,6 +31,7 @@ type esdbSubscriptionAllWorker struct {
 	projectionPublisher              projection.IProjectionPublisher
 }
 
+// EsdbSubscriptionAllWorker is a interface that represents a event store db subscription all worker.
 type EsdbSubscriptionAllWorker interface {
 	SubscribeAll(
 		ctx context.Context,
@@ -37,6 +39,7 @@ type EsdbSubscriptionAllWorker interface {
 	) error
 }
 
+// EventStoreDBSubscriptionToAllOptions is a struct that represents a event store db subscription to all options.
 type EventStoreDBSubscriptionToAllOptions struct {
 	SubscriptionId              string
 	FilterOptions               *esdb.SubscriptionFilter
@@ -46,6 +49,7 @@ type EventStoreDBSubscriptionToAllOptions struct {
 	Prefix                      string
 }
 
+// NewEsdbSubscriptionAllWorker creates a new event store db subscription all worker.
 func NewEsdbSubscriptionAllWorker(
 	log logger.Logger,
 	db *esdb.Client,
@@ -71,6 +75,7 @@ func NewEsdbSubscriptionAllWorker(
 	}
 }
 
+// SubscribeAll subscribes to all.
 func (s *esdbSubscriptionAllWorker) SubscribeAll(
 	ctx context.Context,
 	subscriptionOption *EventStoreDBSubscriptionToAllOptions,
@@ -171,6 +176,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 	}
 }
 
+// handleEvent handles an event.
 func (s *esdbSubscriptionAllWorker) handleEvent(
 	ctx context.Context,
 	resolvedEvent *esdb.ResolvedEvent,
@@ -211,6 +217,7 @@ func (s *esdbSubscriptionAllWorker) handleEvent(
 	return nil
 }
 
+// isEventWithEmptyData checks if an event has empty data.
 func (s *esdbSubscriptionAllWorker) isEventWithEmptyData(resolvedEvent *esdb.ResolvedEvent) bool {
 	if len(resolvedEvent.Event.Data) != 0 {
 		return false
@@ -221,6 +228,7 @@ func (s *esdbSubscriptionAllWorker) isEventWithEmptyData(resolvedEvent *esdb.Res
 	return true
 }
 
+// isCheckpointEvent checks if an event is a checkpoint event.
 func (s *esdbSubscriptionAllWorker) isCheckpointEvent(resolvedEvent *esdb.ResolvedEvent) bool {
 	name := typeMapper.GetFullTypeName(CheckpointStored{})
 	if resolvedEvent.Event.EventType != name {

@@ -1,3 +1,4 @@
+// Package mongo provides the mongo container test.
 package mongo
 
 import (
@@ -17,7 +18,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 )
 
-func Test_Mongo_Container(t *testing.T) {
+// TestMongoContainer tests the mongo container.
+func TestMongoContainer(t *testing.T) {
 	ctx := context.Background()
 	var mongoClient *mongo.Client
 

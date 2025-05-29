@@ -29,7 +29,8 @@ func TestCreateProductUnit(t *testing.T) {
 	)
 }
 
-func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_No_Error_For_Valid_Input() {
+// TestNewCreateProductShouldReturnNoErrorForValidInput tests the new create product should return no error for valid input.
+func (c *createProductUnitTests) TestNewCreateProductShouldReturnNoErrorForValidInput() {
 	name := gofakeit.Name()
 	description := gofakeit.EmojiDescription()
 	price := gofakeit.Price(150, 6000)
@@ -52,7 +53,8 @@ func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_No_Error_
 	c.Require().NoError(err)
 }
 
-func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For_Invalid_Price() {
+// TestNewCreateProductShouldReturnErrorForInvalidPrice tests the new create product should return error for invalid price.
+func (c *createProductUnitTests) TestNewCreateProductShouldReturnErrorForInvalidPrice() {
 	command, err := createProductCommand.NewCreateProductWithValidation(
 		gofakeit.Name(),
 		gofakeit.EmojiDescription(),
@@ -64,7 +66,8 @@ func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For
 	c.Equal(0.0, command.Price)
 }
 
-func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For_Empty_Name() {
+// TestNewCreateProductShouldReturnErrorForEmptyName tests the new create product should return error for empty name.
+func (c *createProductUnitTests) TestNewCreateProductShouldReturnErrorForEmptyName() {
 	command, err := createProductCommand.NewCreateProductWithValidation(
 		"",
 		gofakeit.EmojiDescription(),
@@ -76,7 +79,8 @@ func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For
 	c.Empty(command.Name)
 }
 
-func (c *createProductUnitTests) Test_New_Create_Product_Should_Return_Error_For_Empty_Description() {
+// TestNewCreateProductShouldReturnErrorForEmptyDescription tests the new create product should return error for empty description.
+func (c *createProductUnitTests) TestNewCreateProductShouldReturnErrorForEmptyDescription() {
 	command, err := createProductCommand.NewCreateProductWithValidation(
 		gofakeit.Name(),
 		"",

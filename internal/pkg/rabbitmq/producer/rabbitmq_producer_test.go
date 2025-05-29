@@ -1,3 +1,4 @@
+// Package producer provides the rabbitmq producer.
 package producer
 
 import (
@@ -19,7 +20,8 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
-func Test_Publish_Message(t *testing.T) {
+// TestPublishMessage tests the publish message.
+func TestPublishMessage(t *testing.T) {
 	testUtils.SkipCI(t)
 
 	eventSerializer := json.NewDefaultMessageJsonSerializer(
@@ -78,11 +80,13 @@ func Test_Publish_Message(t *testing.T) {
 	require.NoError(t, err)
 }
 
+// ProducerMessage is the message for the producer.
 type ProducerMessage struct {
 	*types2.Message
 	Data string
 }
 
+// NewProducerMessage creates a new producer message.
 func NewProducerMessage(data string) *ProducerMessage {
 	return &ProducerMessage{
 		Data:    data,

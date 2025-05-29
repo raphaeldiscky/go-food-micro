@@ -1,6 +1,4 @@
-//go:build unit
-// +build unit
-
+// Package gormdbcontext provides the gorm db context.
 package gormdbcontext
 
 import (
@@ -8,6 +6,16 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+	"gorm.io/gorm"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	json "github.com/goccy/go-json"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
@@ -17,18 +25,9 @@ import (
 	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/scopes"
-
-	"emperror.dev/errors"
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	json "github.com/goccy/go-json"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
-	"gorm.io/gorm"
 )
 
-// ProductDataModel data model
+// ProductDataModel is the data model for the product.
 type ProductDataModel struct {
 	ID          uuid.UUID `gorm:"primaryKey"`
 	Name        string
@@ -45,13 +44,14 @@ func (p *ProductDataModel) TableName() string {
 	return "products"
 }
 
+// String returns the string representation of the product data model.
 func (p *ProductDataModel) String() string {
 	j, _ := json.Marshal(p)
 
 	return string(j)
 }
 
-// Product model
+// Product is the model for the product.
 type Product struct {
 	ID          uuid.UUID
 	Name        string
@@ -61,7 +61,7 @@ type Product struct {
 	UpdatedAt   time.Time
 }
 
-// Define the suite
+// GormDBContextTestSuite is the test suite for the gorm db context.
 type GormDBContextTestSuite struct {
 	suite.Suite
 	items      []*ProductDataModel
@@ -71,12 +71,13 @@ type GormDBContextTestSuite struct {
 }
 
 // In order for 'go test' to run this suite, we need to create
-// a normal test function and pass our suite to suite.Run
+// a normal test function and pass our suite to suite.Run.
 func TestGormDBContext(t *testing.T) {
 	suite.Run(t, new(GormDBContextTestSuite))
 }
 
-func (s *GormDBContextTestSuite) Test_FindProductByID() {
+// TestFindProductByID tests the find product by id.
+func (s *GormDBContextTestSuite) TestFindProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -92,7 +93,8 @@ func (s *GormDBContextTestSuite) Test_FindProductByID() {
 	s.Assert().Equal(p.ID, id)
 }
 
-func (s *GormDBContextTestSuite) Test_ExistsProductByID() {
+// TestExistsProductByID tests the exists product by id.
+func (s *GormDBContextTestSuite) TestExistsProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -106,7 +108,8 @@ func (s *GormDBContextTestSuite) Test_ExistsProductByID() {
 	s.Require().True(exist)
 }
 
-func (s *GormDBContextTestSuite) Test_NoneExistsProductByID() {
+// TestNoneExistsProductByID tests the none exists product by id.
+func (s *GormDBContextTestSuite) TestNoneExistsProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := uuid.NewV4()
@@ -120,7 +123,8 @@ func (s *GormDBContextTestSuite) Test_NoneExistsProductByID() {
 	s.Require().False(exist)
 }
 
-func (s *GormDBContextTestSuite) Test_DeleteProductByID() {
+// TestDeleteProductByID tests the delete product by id.
+func (s *GormDBContextTestSuite) TestDeleteProductByID() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -149,14 +153,18 @@ func (s *GormDBContextTestSuite) Test_DeleteProductByID() {
 	var allCount int64
 
 	// https://gorm.io/docs/advanced_query.html#Count
-	s.dbContext.DB().Model(&ProductDataModel{}).Scopes(scopes.FilterAllItemsWithSoftDeleted).Count(&allCount)
+	s.dbContext.DB().
+		Model(&ProductDataModel{}).
+		Scopes(scopes.FilterAllItemsWithSoftDeleted).
+		Count(&allCount)
 	s.Equal(allCount, int64(2))
 
 	s.dbContext.DB().Model(&ProductDataModel{}).Scopes(scopes.SoftDeleted).Count(&deletedCount)
 	s.Equal(deletedCount, int64(1))
 }
 
-func (s *GormDBContextTestSuite) Test_CreateProduct() {
+// TestCreateProduct tests the create product.
+func (s *GormDBContextTestSuite) TestCreateProduct() {
 	s.Require().NotNil(s.dbContext)
 
 	item := &Product{
@@ -181,7 +189,8 @@ func (s *GormDBContextTestSuite) Test_CreateProduct() {
 	s.Assert().Equal(p.ID, res.ID)
 }
 
-func (s *GormDBContextTestSuite) Test_UpdateProduct() {
+// TestUpdateProduct tests the update product.
+func (s *GormDBContextTestSuite) TestUpdateProduct() {
 	s.Require().NotNil(s.dbContext)
 
 	id := s.items[0].ID
@@ -211,8 +220,7 @@ func (s *GormDBContextTestSuite) Test_UpdateProduct() {
 	s.Assert().Equal(res.Name, p2.Name)
 }
 
-// TestSuite Hooks
-
+// SetupTest sets up the test.
 func (s *GormDBContextTestSuite) SetupTest() {
 	err := ConfigureProductsMappings()
 	s.Require().NoError(err)
@@ -246,6 +254,7 @@ func (s *GormDBContextTestSuite) SetupTest() {
 	s.initDB()
 }
 
+// TearDownTest tears down the test.
 func (s *GormDBContextTestSuite) TearDownTest() {
 	err := s.cleanupDB()
 	s.Require().NoError(err)
@@ -255,6 +264,7 @@ func (s *GormDBContextTestSuite) TearDownTest() {
 	s.app.RequireStop()
 }
 
+// initDB initializes the database.
 func (s *GormDBContextTestSuite) initDB() {
 	err := migrateGorm(s.dbContext.DB())
 	s.Require().NoError(err)
@@ -265,6 +275,7 @@ func (s *GormDBContextTestSuite) initDB() {
 	s.items = products
 }
 
+// cleanupDB cleans up the database.
 func (s *GormDBContextTestSuite) cleanupDB() error {
 	sqldb, _ := s.dbContext.DB().DB()
 	e := sqldb.Close()
@@ -276,6 +287,7 @@ func (s *GormDBContextTestSuite) cleanupDB() error {
 	return err
 }
 
+// migrateGorm migrates the gorm.
 func migrateGorm(db *gorm.DB) error {
 	err := db.AutoMigrate(&ProductDataModel{})
 	if err != nil {
@@ -285,6 +297,7 @@ func migrateGorm(db *gorm.DB) error {
 	return nil
 }
 
+// seedData seeds the data.
 func seedData(gormDB *gorm.DB) ([]*ProductDataModel, error) {
 	products := []*ProductDataModel{
 		{
@@ -312,6 +325,7 @@ func seedData(gormDB *gorm.DB) ([]*ProductDataModel, error) {
 	return products, nil
 }
 
+// ConfigureProductsMappings configures the products mappings.
 func ConfigureProductsMappings() error {
 	err := mapper.CreateMap[*ProductDataModel, *Product]()
 	if err != nil {

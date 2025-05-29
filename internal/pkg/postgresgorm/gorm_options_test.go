@@ -1,3 +1,4 @@
+// Package postgresgorm provides the gorm options.
 package postgresgorm
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Options_Name(t *testing.T) {
+// TestOptionsName tests the options name.
+func TestOptionsName(t *testing.T) {
 	assert.Equal(t, "gormOptions", optionName)
 }

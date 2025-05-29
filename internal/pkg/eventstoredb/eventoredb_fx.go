@@ -43,6 +43,7 @@ var (
 	eventstoreInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
 )
 
+// registerHooks registers hooks for the event store db.
 // we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,

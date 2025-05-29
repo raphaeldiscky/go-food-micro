@@ -13,26 +13,32 @@ const (
 	StreamExists ExpectedStreamVersion = -3
 )
 
+// FromInt64 returns a expected stream version from an int64.
 func FromInt64(expectedVersion int64) ExpectedStreamVersion {
 	return ExpectedStreamVersion(expectedVersion)
 }
 
+// Next returns the next expected stream version.
 func (e ExpectedStreamVersion) Next() ExpectedStreamVersion {
 	return e + 1
 }
 
+// Value returns the value of the expected stream version.
 func (e ExpectedStreamVersion) Value() int64 {
 	return int64(e)
 }
 
+// IsNoStream returns true if the expected stream version is no stream.
 func (e ExpectedStreamVersion) IsNoStream() bool {
 	return e == NoStream
 }
 
+// IsAny returns true if the expected stream version is any.
 func (e ExpectedStreamVersion) IsAny() bool {
 	return e == Any
 }
 
+// IsStreamExists returns true if the expected stream version is stream exists.
 func (e ExpectedStreamVersion) IsStreamExists() bool {
 	return e == StreamExists
 }

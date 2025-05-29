@@ -1,3 +1,4 @@
+// Package cqrs provides the cqrs implementation.
 package cqrs
 
 import (
@@ -12,7 +13,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
-func Test_Command(t *testing.T) {
+// TestCommand tests the command.
+func TestCommand(t *testing.T) {
 	command := &CreateProductTest{
 		Command:     NewCommandByT[*CreateProductTest](),
 		ProductID:   uuid.NewV4(),
@@ -44,6 +46,7 @@ func Test_Command(t *testing.T) {
 	assert.Equal(t, command.FullTypeName(), "*cqrs.CreateProductTest")
 }
 
+// CreateProductTest is a struct that represents a create product test.
 type CreateProductTest struct {
 	Command
 

@@ -31,7 +31,8 @@ func TestMappingProfileUnit(t *testing.T) {
 	)
 }
 
-func (m *mappingProfileUnitTests) Test_Mappings() {
+// TestMappings tests the mappings.
+func (m *mappingProfileUnitTests) TestMappings() {
 	productModel := &models.Product{
 		ID:          uuid.NewV4(),
 		Name:        gofakeit.Name(),

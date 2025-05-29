@@ -57,7 +57,8 @@ func (c *updateProductHandlerUnitTests) TearDownTest() {
 	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
-func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_Valid_Data() {
+// TestHandleShouldUpdateProductWithValidData tests the handle should update product with valid data.
+func (c *updateProductHandlerUnitTests) TestHandleShouldUpdateProductWithValidData() {
 	existing := c.Products[0]
 
 	updateProductCommand, err := updatingoroductsv1.NewUpdateProductWithValidation(
@@ -86,7 +87,8 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_V
 	c.Bus.AssertNumberOfCalls(c.T(), "PublishMessage", 1)
 }
 
-func (c *updateProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_NotFound_Item() {
+// TestHandleShouldReturnErrorForNotFoundItem tests the handle should return error for not found item.
+func (c *updateProductHandlerUnitTests) TestHandleShouldReturnErrorForNotFoundItem() {
 	id := uuid.NewV4()
 
 	command, err := updatingoroductsv1.NewUpdateProductWithValidation(
@@ -109,7 +111,8 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_NotF
 	)
 }
 
-func (c *updateProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Error_In_Bus() {
+// TestHandleShouldReturnErrorForErrorInBus tests the handle should return error for error in bus.
+func (c *updateProductHandlerUnitTests) TestHandleShouldReturnErrorForErrorInBus() {
 	existing := c.Products[0]
 
 	updateProductCommand, err := updatingoroductsv1.NewUpdateProductWithValidation(

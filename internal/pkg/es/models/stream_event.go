@@ -1,3 +1,4 @@
+// Package models provides a stream event.
 package models
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 )
 
+// StreamEvent is a struct that represents a stream event.
 type StreamEvent struct {
 	EventID  uuid.UUID
 	Version  int64

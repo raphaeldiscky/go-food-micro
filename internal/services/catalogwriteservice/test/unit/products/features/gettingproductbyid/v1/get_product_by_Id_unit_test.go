@@ -27,7 +27,8 @@ func TestGetProductByIdUnit(t *testing.T) {
 	)
 }
 
-func (c *getProductByIdUnitTests) Test_New_Get_Product_By_Id_Should_Return_No_Error_For_Valid_Input() {
+// TestNewGetProductByIdShouldReturnNoErrorForValidInput tests the new get product by id should return no error for valid input.
+func (c *getProductByIdUnitTests) TestNewGetProductByIdShouldReturnNoErrorForValidInput() {
 	id := uuid.NewV4()
 
 	query, err := getProductByIdQuery.NewGetProductByIDWithValidation(id)
@@ -37,7 +38,8 @@ func (c *getProductByIdUnitTests) Test_New_Get_Product_By_Id_Should_Return_No_Er
 	c.Require().NoError(err)
 }
 
-func (c *getProductByIdUnitTests) Test_New_Get_Product_By_Id_Should_Return_Error_For_Invalid_Id() {
+// TestNewGetProductByIdShouldReturnErrorForInvalidId tests the new get product by id should return error for invalid id.
+func (c *getProductByIdUnitTests) TestNewGetProductByIdShouldReturnErrorForInvalidId() {
 	query, err := getProductByIdQuery.NewGetProductByIDWithValidation(uuid.Nil)
 
 	c.Require().Error(err)

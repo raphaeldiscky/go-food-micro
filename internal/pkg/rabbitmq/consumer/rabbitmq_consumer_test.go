@@ -1,3 +1,4 @@
+// Package consumer provides the rabbitmq consumer.
 package consumer
 
 import (
@@ -26,7 +27,8 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
-func Test_Consumer_With_Fake_Message(t *testing.T) {
+// TestConsumerWithFakeMessage tests the consumer with fake message.
+func TestConsumerWithFakeMessage(t *testing.T) {
 	testUtils.SkipCI(t)
 
 	ctx := context.Background()
@@ -114,11 +116,13 @@ func Test_Consumer_With_Fake_Message(t *testing.T) {
 	require.NoError(t, err)
 }
 
+// ProducerConsumerMessage is the message for the producer consumer.
 type ProducerConsumerMessage struct {
 	*types3.Message
 	Data string
 }
 
+// NewProducerConsumerMessage creates a new producer consumer message.
 func NewProducerConsumerMessage(data string) *ProducerConsumerMessage {
 	return &ProducerConsumerMessage{
 		Data:    data,
@@ -126,9 +130,10 @@ func NewProducerConsumerMessage(data string) *ProducerConsumerMessage {
 	}
 }
 
-// /////////// ConsumerHandlerT.
+// TestMessageHandler is the test message handler.
 type TestMessageHandler struct{}
 
+// Handle handles the message.
 func (t *TestMessageHandler) Handle(
 	ctx context.Context,
 	consumeContext types3.MessageConsumeContext,
@@ -139,12 +144,15 @@ func (t *TestMessageHandler) Handle(
 	return nil
 }
 
+// NewTestMessageHandler creates a new test message handler.
 func NewTestMessageHandler() *TestMessageHandler {
 	return &TestMessageHandler{}
 }
 
+// TestMessageHandler2 is the test message handler 2.
 type TestMessageHandler2 struct{}
 
+// Handle handles the message.
 func (t *TestMessageHandler2) Handle(
 	ctx context.Context,
 	consumeContext types3.MessageConsumeContext,
@@ -155,17 +163,20 @@ func (t *TestMessageHandler2) Handle(
 	return nil
 }
 
+// NewTestMessageHandler2 creates a new test message handler 2.
 func NewTestMessageHandler2() *TestMessageHandler2 {
 	return &TestMessageHandler2{}
 }
 
-// /////////////// ConsumerPipeline.
+// Pipeline1 is the pipeline 1.
 type Pipeline1 struct{}
 
+// NewPipeline1 creates a new pipeline 1.
 func NewPipeline1() pipeline.ConsumerPipeline {
 	return &Pipeline1{}
 }
 
+// Handle handles the message.
 func (p Pipeline1) Handle(
 	ctx context.Context,
 	consumerContext types3.MessageConsumeContext,

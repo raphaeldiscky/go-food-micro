@@ -28,7 +28,8 @@ func TestUpdateProductUnit(t *testing.T) {
 	)
 }
 
-func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_No_Error_For_Valid_Input() {
+// TestNewUpdateProductShouldReturnNoErrorForValidInput tests the new update product should return no error for valid input.
+func (c *updateProductUnitTests) TestNewUpdateProductShouldReturnNoErrorForValidInput() {
 	id := uuid.NewV4()
 	name := gofakeit.Name()
 	description := gofakeit.EmojiDescription()
@@ -44,7 +45,8 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_No_Error_
 	c.Require().NoError(err)
 }
 
-func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Invalid_Price() {
+// TestNewUpdateProductShouldReturnErrorForInvalidPrice tests the new update product should return error for invalid price.
+func (c *updateProductUnitTests) TestNewUpdateProductShouldReturnErrorForInvalidPrice() {
 	command, err := v1.NewUpdateProductWithValidation(
 		uuid.NewV4(),
 		gofakeit.Name(),
@@ -57,7 +59,8 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For
 	c.Equal(0.0, command.Price)
 }
 
-func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Empty_Name() {
+// TestNewUpdateProductShouldReturnErrorForEmptyName tests the new update product should return error for empty name.
+func (c *updateProductUnitTests) TestNewUpdateProductShouldReturnErrorForEmptyName() {
 	command, err := v1.NewUpdateProductWithValidation(
 		uuid.NewV4(),
 		"",
@@ -70,7 +73,8 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For
 	c.Empty(command.Name)
 }
 
-func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Empty_Description() {
+// TestNewUpdateProductShouldReturnErrorForEmptyDescription tests the new update product should return error for empty description.
+func (c *updateProductUnitTests) TestNewUpdateProductShouldReturnErrorForEmptyDescription() {
 	command, err := v1.NewUpdateProductWithValidation(uuid.NewV4(), gofakeit.Name(), "", 120)
 
 	c.Require().Error(err)

@@ -1,6 +1,4 @@
-//go:build unit
-// +build unit
-
+// Package messagepersistence provides the postgres message service.
 package messagepersistence
 
 import (
@@ -8,6 +6,14 @@ import (
 	"os"
 	"testing"
 	"time"
+
+	"emperror.dev/errors"
+	"github.com/stretchr/testify/suite"
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+	"gorm.io/gorm"
+
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
@@ -20,15 +26,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
-
-	"emperror.dev/errors"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
-	"gorm.io/gorm"
 )
 
+// postgresMessageServiceTest is the test suite for the postgres message service.
 type postgresMessageServiceTest struct {
 	suite.Suite
 	DB                  *gorm.DB
@@ -41,6 +41,7 @@ type postgresMessageServiceTest struct {
 	app                 *fxtest.App
 }
 
+// TestPostgresMessageService tests the postgres message service.
 func TestPostgresMessageService(t *testing.T) {
 	suite.Run(
 		t,
@@ -48,7 +49,7 @@ func TestPostgresMessageService(t *testing.T) {
 	)
 }
 
-//func (c *postgresMessageServiceTest) SetupSuite() {
+// func (c *postgresMessageServiceTest) SetupSuite() {
 //	opts, err := gorm2.NewGormTestContainers(defaultLogger.GetLogger()).
 //		PopulateContainerOptions(context.Background(), c.T())
 //	c.Require().NoError(err)
@@ -67,6 +68,7 @@ func TestPostgresMessageService(t *testing.T) {
 //	)
 //}
 
+// SetupTest sets up the test.
 func (c *postgresMessageServiceTest) SetupTest() {
 	var gormDBContext *PostgresMessagePersistenceDBContext
 	var gormOptions *postgresgorm.GormOptions
@@ -98,6 +100,7 @@ func (c *postgresMessageServiceTest) SetupTest() {
 	c.initDB()
 }
 
+// TearDownTest tears down the test.
 func (c *postgresMessageServiceTest) TearDownTest() {
 	err := c.cleanupDB()
 	c.Require().NoError(err)
@@ -107,7 +110,7 @@ func (c *postgresMessageServiceTest) TearDownTest() {
 	c.app.RequireStop()
 }
 
-//func (c *postgresMessageServiceTest) SetupTest() {
+// func (c *postgresMessageServiceTest) SetupTest() {
 //	ctx := context.Background()
 //	c.ctx = ctx
 //	p, err := seedData(context.Background(), c.DB)
@@ -115,11 +118,12 @@ func (c *postgresMessageServiceTest) TearDownTest() {
 //	c.storeMessages = p
 //}
 //
-//func (c *postgresMessageServiceTest) TearDownTest() {
+// func (c *postgresMessageServiceTest) TearDownTest() {
 //	err := c.cleanupPostgresData()
 //	c.Require().NoError(err)
 //}
 
+// BeginTx begins the transaction.
 func (c *postgresMessageServiceTest) BeginTx() {
 	c.logger.Info("starting transaction")
 	tx := c.dbContext.DB().Begin()
@@ -127,6 +131,7 @@ func (c *postgresMessageServiceTest) BeginTx() {
 	c.ctx = gormContext
 }
 
+// CommitTx commits the transaction.
 func (c *postgresMessageServiceTest) CommitTx() {
 	tx := gormextensions.GetTxFromContextIfExists(c.ctx)
 	if tx != nil {
@@ -135,7 +140,8 @@ func (c *postgresMessageServiceTest) CommitTx() {
 	}
 }
 
-func (c *postgresMessageServiceTest) Test_Add() {
+// TestAdd tests the add.
+func (c *postgresMessageServiceTest) TestAdd() {
 	message := &persistmessage.StoreMessage{
 		ID:            uuid.NewV4(),
 		MessageStatus: persistmessage.Processed,
@@ -160,6 +166,7 @@ func (c *postgresMessageServiceTest) Test_Add() {
 	c.Assert().Equal(message.ID, m.ID)
 }
 
+// initDB initializes the database.
 func (c *postgresMessageServiceTest) initDB() {
 	err := migrateGorm(c.dbContext.DB())
 	c.Require().NoError(err)
@@ -170,6 +177,7 @@ func (c *postgresMessageServiceTest) initDB() {
 	c.storeMessages = storeMessages
 }
 
+// cleanupDB cleans up the database.
 func (c *postgresMessageServiceTest) cleanupDB() error {
 	sqldb, _ := c.dbContext.DB().DB()
 	e := sqldb.Close()
@@ -181,6 +189,7 @@ func (c *postgresMessageServiceTest) cleanupDB() error {
 	return err
 }
 
+// migrateGorm migrates the gorm.
 func migrateGorm(db *gorm.DB) error {
 	err := db.AutoMigrate(&persistmessage.StoreMessage{})
 	if err != nil {
@@ -190,6 +199,7 @@ func migrateGorm(db *gorm.DB) error {
 	return nil
 }
 
+// seedData seeds the data.
 func seedData(
 	db *gorm.DB,
 ) ([]*persistmessage.StoreMessage, error) {

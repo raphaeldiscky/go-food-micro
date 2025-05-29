@@ -237,6 +237,7 @@ func GrpcTraceErrFromSpanWithCode(span trace.Span, err error, code int) error {
 	return err
 }
 
+// GetParentSpanContext gets the parent span context.
 func GetParentSpanContext(span trace.Span) trace.SpanContext {
 	readWriteSpan, ok := span.(trace2.ReadWriteSpan)
 	if !ok {
@@ -246,6 +247,7 @@ func GetParentSpanContext(span trace.Span) trace.SpanContext {
 	return readWriteSpan.Parent()
 }
 
+// ContextWithParentSpan creates a context with a parent span.
 func ContextWithParentSpan(
 	parent context.Context,
 	span trace.Span,
@@ -253,6 +255,7 @@ func ContextWithParentSpan(
 	return context.WithValue(parent, parentSpanKey, span)
 }
 
+// ParentSpanFromContext gets the parent span from a context.
 func ParentSpanFromContext(ctx context.Context) trace.Span {
 	_, nopSpan := trace.NewNoopTracerProvider().Tracer("").Start(ctx, "")
 	if ctx == nil {
@@ -266,6 +269,7 @@ func ParentSpanFromContext(ctx context.Context) trace.Span {
 	return nopSpan
 }
 
+// CopyFromParentSpanAttribute copies a parent span attribute to a span.
 func CopyFromParentSpanAttribute(
 	ctx context.Context,
 	span trace.Span,
@@ -282,6 +286,7 @@ func CopyFromParentSpanAttribute(
 	)
 }
 
+// CopyFromParentSpanAttributeIfNotSet copies a parent span attribute to a span if it is not set.
 func CopyFromParentSpanAttributeIfNotSet(
 	ctx context.Context,
 	span trace.Span,
@@ -297,6 +302,7 @@ func CopyFromParentSpanAttributeIfNotSet(
 	CopyFromParentSpanAttribute(ctx, span, attributeName, parentAttributeName)
 }
 
+// GetParentSpanAttribute gets the parent span attribute.
 func GetParentSpanAttribute(
 	ctx context.Context,
 	parentAttributeName string,
@@ -312,6 +318,7 @@ func GetParentSpanAttribute(
 	return att.(attribute.KeyValue)
 }
 
+// GetSpanAttributeFromCurrentContext gets the span attribute from the current context.
 func GetSpanAttributeFromCurrentContext(
 	ctx context.Context,
 	attributeName string,
@@ -327,6 +334,7 @@ func GetSpanAttributeFromCurrentContext(
 	return att.(attribute.KeyValue)
 }
 
+// GetSpanAttribute gets the span attribute.
 func GetSpanAttribute(
 	span trace.Span,
 	attributeName string,
@@ -342,6 +350,7 @@ func GetSpanAttribute(
 	return att.(attribute.KeyValue)
 }
 
+// MapsToAttributes maps a maps to attributes.
 func MapsToAttributes(maps map[string]interface{}) []attribute.KeyValue {
 	var att []attribute.KeyValue
 
@@ -367,6 +376,7 @@ func MapsToAttributes(maps map[string]interface{}) []attribute.KeyValue {
 	return att
 }
 
+// MetadataToSet converts a metadata to a set.
 func MetadataToSet(meta metadata.Metadata) attribute.Set {
 	var keyValue []attribute.KeyValue
 	for key, val := range meta {

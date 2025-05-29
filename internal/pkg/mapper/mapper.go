@@ -70,10 +70,11 @@ func Configure(config *MapperConfig) {
 	mapperConfig = config
 }
 
-// ClearMappings is a function that clears the mappings.
+// ClearMappings clears all registered mappings and profiles.
+// This is primarily used for testing purposes.
 func ClearMappings() {
-	profiles = map[string][][2]string{}
-	maps = map[mappingsEntry]interface{}{}
+	maps = make(map[mappingsEntry]interface{})
+	profiles = make(map[string][][2]string)
 }
 
 // CreateMap is a function that creates a map.

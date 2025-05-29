@@ -43,7 +43,6 @@ func GetTxFromContextIfExists(ctx context.Context) *gorm.DB {
 func SetTxToContext(ctx context.Context, tx *gorm.DB) *contracts.GormContext {
 	newCtx := context.WithValue(ctx, constants.TxKey, tx)
 	gormContext := &contracts.GormContext{Tx: tx, Context: newCtx}
-	ctx = gormContext
 
 	return gormContext
 }

@@ -55,7 +55,8 @@ func (c *deleteProductHandlerUnitTests) TearDownTest() {
 	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
-func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_Valid_Id() {
+// TestHandleShouldDeleteProductWithValidId tests the handle should delete product with valid id.
+func (c *deleteProductHandlerUnitTests) TestHandleShouldDeleteProductWithValidId() {
 	id := c.Products[0].ID
 
 	deleteProduct := &deletingproductv1.DeleteProduct{
@@ -80,7 +81,8 @@ func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_V
 	c.Bus.AssertNumberOfCalls(c.T(), "PublishMessage", 1)
 }
 
-func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_NotFound_Error_When_Id_Is_Invalid() {
+// TestHandleShouldReturnNotFoundErrorWhenIdIsInvalid tests the handle should return not found error when id is invalid.
+func (c *deleteProductHandlerUnitTests) TestHandleShouldReturnNotFoundErrorWhenIdIsInvalid() {
 	id := uuid.NewV4()
 
 	deleteProduct := &deletingproductv1.DeleteProduct{
@@ -98,7 +100,8 @@ func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_NotFound_Error
 	c.Bus.AssertNumberOfCalls(c.T(), "PublishMessage", 0)
 }
 
-func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Error_In_Bus() {
+// TestHandleShouldReturnErrorForErrorInBus tests the handle should return error for error in bus.
+func (c *deleteProductHandlerUnitTests) TestHandleShouldReturnErrorForErrorInBus() {
 	id := c.Products[0].ID
 
 	deleteProduct := &deletingproductv1.DeleteProduct{

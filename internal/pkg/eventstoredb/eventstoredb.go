@@ -7,6 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 )
 
+// NewEventStoreDB creates a new event store db.
 func NewEventStoreDB(cfg *config.EventStoreDbOptions) (*esdb.Client, error) {
 	settings, err := esdb.ParseConnectionString(cfg.GrpcEndPoint())
 	if err != nil {

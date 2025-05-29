@@ -53,8 +53,8 @@ func (c *searchProductsHandlerUnitTests) TearDownTest() {
 	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
-// Test_Handle_Should_Return_Products_Successfully is a method that tests the handle method should return products successfully.
-func (c *searchProductsHandlerUnitTests) Test_Handle_Should_Return_Products_Successfully() {
+// TestHandleShouldReturnProductsSuccessfully is a method that tests the handle method should return products successfully.
+func (c *searchProductsHandlerUnitTests) TestHandleShouldReturnProductsSuccessfully() {
 	query, err := searchingproductsv1.NewSearchProductsWithValidation(
 		c.Products[0].Name,
 		utils.NewListQuery(10, 1),
@@ -68,8 +68,8 @@ func (c *searchProductsHandlerUnitTests) Test_Handle_Should_Return_Products_Succ
 	c.Equal(len(res.Products.Items), 1)
 }
 
-// Test_Handle_Should_Return_Error_For_Mapping_List_Result is a method that tests the handle method should return error for mapping list result.
-func (c *searchProductsHandlerUnitTests) Test_Handle_Should_Return_Error_For_Mapping_List_Result() {
+// TestHandleShouldReturnErrorForMappingListResult is a method that tests the handle method should return error for mapping list result.
+func (c *searchProductsHandlerUnitTests) TestHandleShouldReturnErrorForMappingListResult() {
 	query, err := searchingproductsv1.NewSearchProductsWithValidation(
 		c.Products[0].Name,
 		utils.NewListQuery(10, 1),

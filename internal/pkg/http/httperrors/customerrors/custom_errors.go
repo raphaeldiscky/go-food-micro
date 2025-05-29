@@ -10,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
 )
 
+// customError is a struct that represents a custom error.
 // https://klotzandrew.com/blog/error-handling-in-golang
 // https://banzaicloud.com/blog/error-handling-go/
 // https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully
@@ -24,6 +25,7 @@ type customError struct {
 	error
 }
 
+// CustomError is a contract that represents a custom error.
 type CustomError interface {
 	error
 	contracts.Wrapper
@@ -34,6 +36,7 @@ type CustomError interface {
 	Message() string
 }
 
+// NewCustomError creates a new custom error.
 func NewCustomError(err error, code int, message string) CustomError {
 	m := &customError{
 		statusCode: code,
@@ -44,9 +47,11 @@ func NewCustomError(err error, code int, message string) CustomError {
 	return m
 }
 
+// isCustomError checks if the error is a custom error.
 func (e *customError) isCustomError() {
 }
 
+// Error returns the error message.
 func (e *customError) Error() string {
 	if e.error != nil {
 		return e.error.Error()
@@ -55,22 +60,27 @@ func (e *customError) Error() string {
 	return e.message
 }
 
+// Message returns the error message.
 func (e *customError) Message() string {
 	return e.message
 }
 
+// Status returns the error status code.
 func (e *customError) Status() int {
 	return e.statusCode
 }
 
+// Cause returns the error cause.
 func (e *customError) Cause() error {
 	return e.error
 }
 
+// Unwrap returns the error unwrap.
 func (e *customError) Unwrap() error {
 	return e.error
 }
 
+// Format formats the error.
 func (e *customError) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
@@ -92,6 +102,7 @@ func (e *customError) Format(s fmt.State, verb rune) {
 	}
 }
 
+// GetCustomError gets the custom error.
 func GetCustomError(err error) CustomError {
 	if IsCustomError(err) {
 		var internalErr CustomError
@@ -103,6 +114,7 @@ func GetCustomError(err error) CustomError {
 	return nil
 }
 
+// IsCustomError checks if the error is a custom error.
 func IsCustomError(err error) bool {
 	var customErr CustomError
 

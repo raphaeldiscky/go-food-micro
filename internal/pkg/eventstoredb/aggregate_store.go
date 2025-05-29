@@ -29,6 +29,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// esdbAggregateStore is a struct that represents a event store aggregate store.
 type esdbAggregateStore[T models.IHaveEventSourcedAggregate] struct {
 	log        logger.Logger
 	eventStore store.EventStore
@@ -36,6 +37,7 @@ type esdbAggregateStore[T models.IHaveEventSourcedAggregate] struct {
 	tracer     trace.Tracer
 }
 
+// NewEventStoreAggregateStore creates a new event store aggregate store.
 func NewEventStoreAggregateStore[T models.IHaveEventSourcedAggregate](
 	log logger.Logger,
 	eventStore store.EventStore,
@@ -50,6 +52,7 @@ func NewEventStoreAggregateStore[T models.IHaveEventSourcedAggregate](
 	}
 }
 
+// StoreWithVersion stores an aggregate with a version.
 func (a *esdbAggregateStore[T]) StoreWithVersion(
 	aggregate T,
 	metadata metadata.Metadata,
@@ -128,6 +131,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 	return streamAppendResult, nil
 }
 
+// Store stores an aggregate.
 func (a *esdbAggregateStore[T]) Store(
 	aggregate T,
 	metadata metadata.Metadata,
@@ -160,6 +164,7 @@ func (a *esdbAggregateStore[T]) Store(
 	return streamAppendResult, nil
 }
 
+// Load loads an aggregate.
 func (a *esdbAggregateStore[T]) Load(
 	ctx context.Context,
 	aggregateId uuid.UUID,
@@ -172,6 +177,7 @@ func (a *esdbAggregateStore[T]) Load(
 	return a.LoadWithReadPosition(ctx, aggregateId, position)
 }
 
+// LoadWithReadPosition loads an aggregate with a read position.
 func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 	ctx context.Context,
 	aggregateId uuid.UUID,
@@ -261,6 +267,7 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 	return aggregate, nil
 }
 
+// Exists checks if an aggregate exists.
 func (a *esdbAggregateStore[T]) Exists(
 	ctx context.Context,
 	aggregateId uuid.UUID,
@@ -275,6 +282,7 @@ func (a *esdbAggregateStore[T]) Exists(
 	return a.eventStore.StreamExists(streamId, ctx)
 }
 
+// getStreamEvents gets stream events.
 func (a *esdbAggregateStore[T]) getStreamEvents(
 	streamId streamName.StreamName,
 	position readPosition.StreamReadPosition,

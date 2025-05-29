@@ -27,7 +27,8 @@ func TestDeleteProductByIdUnit(t *testing.T) {
 	)
 }
 
-func (c *deleteProductUnitTests) Test_New_Delete_Product_Should_Return_No_Error_For_Valid_Input() {
+// TestNewDeleteProductShouldReturnNoErrorForValidInput tests the new delete product should return no error for valid input.
+func (c *deleteProductUnitTests) TestNewDeleteProductShouldReturnNoErrorForValidInput() {
 	id := uuid.NewV4()
 
 	command, err := v1.NewDeleteProductWithValidation(id)
@@ -37,7 +38,8 @@ func (c *deleteProductUnitTests) Test_New_Delete_Product_Should_Return_No_Error_
 	c.Require().NoError(err)
 }
 
-func (c *deleteProductUnitTests) Test_New_Delete_Product_Should_Return_Error_For_Invalid_Id() {
+// TestNewDeleteProductShouldReturnErrorForInvalidId tests the new delete product should return error for invalid id.
+func (c *deleteProductUnitTests) TestNewDeleteProductShouldReturnErrorForInvalidId() {
 	command, err := v1.NewDeleteProductWithValidation(uuid.Nil)
 
 	c.Require().Error(err)

@@ -56,7 +56,8 @@ func (c *createProductHandlerUnitTests) TearDownTest() {
 	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
-func (c *createProductHandlerUnitTests) Test_Handle_Should_Create_New_Product_With_Valid_Data() {
+// TestHandleShouldCreateNewProductWithValidData tests the handle should create new product with valid data.
+func (c *createProductHandlerUnitTests) TestHandleShouldCreateNewProductWithValidData() {
 	id := uuid.NewV4()
 
 	createProduct := &creatingproductv1.CreateProduct{
@@ -85,7 +86,8 @@ func (c *createProductHandlerUnitTests) Test_Handle_Should_Create_New_Product_Wi
 	c.Assert().Equal(res.ID, createProduct.ProductID)
 }
 
-func (c *createProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Duplicate_Item() {
+// TestHandleShouldReturnErrorForDuplicateItem tests the handle should return error for duplicate item.
+func (c *createProductHandlerUnitTests) TestHandleShouldReturnErrorForDuplicateItem() {
 	id := uuid.NewV4()
 
 	createProduct := &creatingproductv1.CreateProduct{
@@ -112,7 +114,8 @@ func (c *createProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Dupl
 	c.Nil(dto)
 }
 
-func (c *createProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Error_In_Bus() {
+// TestHandleShouldReturnErrorForErrorInBus tests the handle should return error for error in bus.
+func (c *createProductHandlerUnitTests) TestHandleShouldReturnErrorForErrorInBus() {
 	id := uuid.NewV4()
 
 	createProduct := &creatingproductv1.CreateProduct{
@@ -145,7 +148,8 @@ func (c *createProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Erro
 	c.Nil(dto)
 }
 
-func (c *createProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Error_In_Mapping() {
+// TestHandleShouldReturnErrorForErrorInMapping tests the handle should return error for error in mapping.
+func (c *createProductHandlerUnitTests) TestHandleShouldReturnErrorForErrorInMapping() {
 	id := uuid.NewV4()
 
 	createProduct := &creatingproductv1.CreateProduct{

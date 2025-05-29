@@ -5,6 +5,7 @@ import (
 	"emperror.dev/errors"
 )
 
+// NewApiError creates a new api error.
 func NewApiError(message string, code int) ApiError {
 	// `NewPlain` doesn't add stack-trace at all
 	apiErrMessage := errors.NewPlain("api error")
@@ -18,6 +19,7 @@ func NewApiError(message string, code int) ApiError {
 	return apiError
 }
 
+// NewApiErrorWrap creates a new api error wrap.
 func NewApiErrorWrap(err error, code int, message string) ApiError {
 	if err == nil {
 		return NewApiError(message, code)
@@ -35,10 +37,12 @@ func NewApiErrorWrap(err error, code int, message string) ApiError {
 	return apiError
 }
 
+// apiError is a struct that represents a api error.
 type apiError struct {
 	CustomError
 }
 
+// ApiError is a contract that represents a api error.
 type ApiError interface {
 	CustomError
 	isAPIError()
@@ -47,6 +51,7 @@ type ApiError interface {
 func (a *apiError) isAPIError() {
 }
 
+// IsApiError checks if the error is a api error.
 func IsApiError(err error, code int) bool {
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested api error, and we should use errors.As for traversing errors in all levels

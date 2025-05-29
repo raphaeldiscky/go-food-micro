@@ -7,6 +7,7 @@ import (
 	"emperror.dev/errors"
 )
 
+// NewConflictError creates a new conflict error.
 func NewConflictError(message string) ConflictError {
 	// `NewPlain` doesn't add stack-trace at all
 	conflictErrMessage := errors.NewPlain("conflict error")
@@ -20,6 +21,7 @@ func NewConflictError(message string) ConflictError {
 	return conflictError
 }
 
+// NewConflictErrorWrap creates a new conflict error wrap.
 func NewConflictErrorWrap(err error, message string) ConflictError {
 	if err == nil {
 		return NewConflictError(message)
@@ -37,10 +39,12 @@ func NewConflictErrorWrap(err error, message string) ConflictError {
 	return conflictError
 }
 
+// conflictError is a struct that represents a conflict error.
 type conflictError struct {
 	CustomError
 }
 
+// ConflictError is a contract that represents a conflict error.
 type ConflictError interface {
 	CustomError
 	isConflictError()
@@ -49,6 +53,7 @@ type ConflictError interface {
 func (c *conflictError) isConflictError() {
 }
 
+// IsConflictError checks if the error is a conflict error.
 func IsConflictError(err error) bool {
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested notfound error, and we should use errors.As for traversing errors in all levels

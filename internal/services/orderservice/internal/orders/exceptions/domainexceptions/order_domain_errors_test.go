@@ -9,27 +9,31 @@ import (
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
-func Test_Order_Shop_Items_Required_Error(t *testing.T) {
+// TestOrderShopItemsRequiredError tests the order shop items required error.
+func TestOrderShopItemsRequiredError(t *testing.T) {
 	t.Parallel()
 	err := NewOrderShopItemsRequiredError("order items required")
 	assert.True(t, IsOrderShopItemsRequiredError(err))
 }
 
-func Test_Order_Not_Found_Error(t *testing.T) {
+// TestOrderNotFoundError tests the order not found error.
+func TestOrderNotFoundError(t *testing.T) {
 	t.Parallel()
 
 	err := NewOrderNotFoundError(1)
 	assert.True(t, IsOrderNotFoundError(err))
 }
 
-func Test_Invalid_Delivery_Address_Error(t *testing.T) {
+// TestInvalidDeliveryAddressError tests the invalid delivery address error.
+func TestInvalidDeliveryAddressError(t *testing.T) {
 	t.Parallel()
 
 	err := NewInvalidDeliveryAddressError("address is not valid")
 	assert.True(t, IsInvalidDeliveryAddressError(err))
 }
 
-func Test_Is_Not_Invalid_Delivery_Address_Error(
+// TestIsNotInvalidDeliveryAddressError tests the is not invalid delivery address error.
+func TestIsNotInvalidDeliveryAddressError(
 	t *testing.T,
 ) {
 	t.Parallel()
@@ -38,14 +42,16 @@ func Test_Is_Not_Invalid_Delivery_Address_Error(
 	assert.False(t, IsInvalidDeliveryAddressError(err))
 }
 
-func Test_InvalidEmail_Address_Error(t *testing.T) {
+// TestInvalidEmailAddressError tests the invalid email address error.
+func TestInvalidEmailAddressError(t *testing.T) {
 	t.Parallel()
 
 	err := NewInvalidEmailAddressError("email address is not valid")
 	assert.True(t, IsInvalidEmailAddressError(err))
 }
 
-func Test_Is_Not_InvalidEmail_Address_Error(t *testing.T) {
+// TestIsNotInvalidEmailAddressError tests the is not invalid email address error.
+func TestIsNotInvalidEmailAddressError(t *testing.T) {
 	t.Parallel()
 
 	err := customErrors.NewBadRequestError("email address is not valid")

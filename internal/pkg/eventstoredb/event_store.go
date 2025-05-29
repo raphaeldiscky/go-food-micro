@@ -26,6 +26,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 )
 
+// eventStoreDbEventStore is a struct that represents a event store db event store.
 // https://developers.eventstore.com/clients/grpc/reading-events.html#reading-from-a-stream
 // https://developers.eventstore.com/clients/grpc/appending-events.html#append-your-first-event
 type eventStoreDbEventStore struct {
@@ -35,6 +36,7 @@ type eventStoreDbEventStore struct {
 	tracer     trace.Tracer
 }
 
+// NewEventStoreDbEventStore creates a new event store db event store.
 func NewEventStoreDbEventStore(
 	log logger.Logger,
 	client *esdb.Client,
@@ -49,6 +51,7 @@ func NewEventStoreDbEventStore(
 	}
 }
 
+// StreamExists checks if a stream exists.
 func (e *eventStoreDbEventStore) StreamExists(
 	streamName streamName.StreamName,
 	ctx context.Context,
@@ -80,6 +83,7 @@ func (e *eventStoreDbEventStore) StreamExists(
 	return stream != nil, nil
 }
 
+// AppendEvents appends events to a stream.
 func (e *eventStoreDbEventStore) AppendEvents(
 	streamName streamName.StreamName,
 	expectedVersion expectedStreamVersion.ExpectedStreamVersion,
@@ -138,6 +142,7 @@ func (e *eventStoreDbEventStore) AppendEvents(
 	return appendEventsResult, nil
 }
 
+// AppendNewEvents appends new events to a stream.
 func (e *eventStoreDbEventStore) AppendNewEvents(
 	streamName streamName.StreamName,
 	events []*models.StreamEvent,
@@ -176,6 +181,7 @@ func (e *eventStoreDbEventStore) AppendNewEvents(
 	return appendEventsResult, nil
 }
 
+// ReadEvents reads events from a stream.
 func (e *eventStoreDbEventStore) ReadEvents(
 	streamName streamName.StreamName,
 	readPosition readPosition.StreamReadPosition,
@@ -236,6 +242,7 @@ func (e *eventStoreDbEventStore) ReadEvents(
 	return events, nil
 }
 
+// ReadEventsWithMaxCount reads events from a stream with a max count.
 func (e *eventStoreDbEventStore) ReadEventsWithMaxCount(
 	streamName streamName.StreamName,
 	readPosition readPosition.StreamReadPosition,
@@ -251,6 +258,7 @@ func (e *eventStoreDbEventStore) ReadEventsWithMaxCount(
 	return e.ReadEvents(streamName, readPosition, uint64(math.MaxUint64), ctx)
 }
 
+// ReadEventsFromStart reads events from a stream from the start.
 func (e *eventStoreDbEventStore) ReadEventsFromStart(
 	streamName streamName.StreamName,
 	count uint64,
@@ -266,6 +274,7 @@ func (e *eventStoreDbEventStore) ReadEventsFromStart(
 	return e.ReadEvents(streamName, readPosition.Start, count, ctx)
 }
 
+// ReadEventsBackwards reads events from a stream backwards.
 func (e *eventStoreDbEventStore) ReadEventsBackwards(
 	streamName streamName.StreamName,
 	readPosition readPosition.StreamReadPosition,
@@ -329,6 +338,7 @@ func (e *eventStoreDbEventStore) ReadEventsBackwards(
 	return events, nil
 }
 
+// ReadEventsBackwardsWithMaxCount reads events from a stream backwards with a max count.
 func (e *eventStoreDbEventStore) ReadEventsBackwardsWithMaxCount(
 	streamName streamName.StreamName,
 	readPosition readPosition.StreamReadPosition,
@@ -349,6 +359,7 @@ func (e *eventStoreDbEventStore) ReadEventsBackwardsWithMaxCount(
 	)
 }
 
+// ReadEventsBackwardsFromEnd reads events from a stream backwards from the end.
 func (e *eventStoreDbEventStore) ReadEventsBackwardsFromEnd(
 	streamName streamName.StreamName,
 	count uint64,

@@ -263,14 +263,14 @@ func (l *zapLogger) Sync() error {
 // GrpcMiddlewareAccessLogger logs a grpc middleware access message.
 func (l *zapLogger) GrpcMiddlewareAccessLogger(
 	method string,
-	time time.Duration,
+	t time.Duration,
 	metaData map[string][]string,
 	err error,
 ) {
 	l.Info(
 		constants.GRPC,
 		zap.String(constants.METHOD, method),
-		zap.Duration(constants.TIME, time),
+		zap.Duration(constants.TIME, t),
 		zap.Any(constants.METADATA, metaData),
 		zap.Error(err),
 	)

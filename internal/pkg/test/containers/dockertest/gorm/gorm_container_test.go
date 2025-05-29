@@ -1,3 +1,4 @@
+// Package gorm provides the gorm container test.
 package gorm
 
 import (
@@ -17,7 +18,8 @@ import (
 	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 )
 
-func Test_Gorm_Container(t *testing.T) {
+// TestGormContainer tests the gorm container.
+func TestGormContainer(t *testing.T) {
 	ctx := context.Background()
 	var gorm *gorm.DB
 

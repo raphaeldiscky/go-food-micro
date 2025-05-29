@@ -9,7 +9,8 @@ import (
 )
 
 // TestGetTypeNameByT tests the get type name by t.
-func Test_GetTypeNameByT(t *testing.T) {
+func TestGetTypeNameByT(t *testing.T) {
+	t.Parallel()
 	pointerTypeName := GetGenericTypeNameByT[*Test]()
 	nonePointerTypeName := GetGenericTypeNameByT[Test]()
 
@@ -39,7 +40,8 @@ func TestTypeByName(t *testing.T) {
 	assert.NotNil(t, s4)
 }
 
-func Test_GetTypeName(t *testing.T) {
+// TestGetTypeName tests the get type name.
+func TestGetTypeName(t *testing.T) {
 	t1 := Test{A: 10}
 	t2 := &Test{A: 10}
 
@@ -50,7 +52,8 @@ func Test_GetTypeName(t *testing.T) {
 	assert.Equal(t, "*Test", typeName2)
 }
 
-func Test_GetFullTypeName(t *testing.T) {
+// TestGetFullTypeName tests the get full type name.
+func TestGetFullTypeName(t *testing.T) {
 	t1 := Test{A: 10}
 	t2 := &Test{A: 10}
 
@@ -65,7 +68,8 @@ func Test_GetFullTypeName(t *testing.T) {
 	assert.Equal(t, "typemapper.Test", typeName4)
 }
 
-func Test_InstanceByTypeName(t *testing.T) {
+// TestInstanceByTypeName tests the instance by type name.
+func TestInstanceByTypeName(t *testing.T) {
 	s1 := InstanceByTypeName("typemapper.Test").(Test)
 	s1.A = 100
 	assert.NotNil(t, s1)
@@ -83,7 +87,8 @@ func Test_InstanceByTypeName(t *testing.T) {
 	assert.NotNil(t, s4)
 }
 
-func Test_InstancePointerByTypeName(t *testing.T) {
+// TestInstancePointerByTypeName tests the instance pointer by type name.
+func TestInstancePointerByTypeName(t *testing.T) {
 	s1 := InstancePointerByTypeName("*typemapper.Test").(*Test)
 	s2 := InstancePointerByTypeName("typemapper.Test").(*Test)
 	s3 := InstancePointerByTypeName("*Test").(*Test)
@@ -95,7 +100,8 @@ func Test_InstancePointerByTypeName(t *testing.T) {
 	assert.NotNil(t, s4)
 }
 
-func Test_GetTypeFromGeneric(t *testing.T) {
+// TestGetTypeFromGeneric tests the get type from generic.
+func TestGetTypeFromGeneric(t *testing.T) {
 	s1 := GetGenericTypeByT[Test]()
 	s2 := GetGenericTypeByT[*Test]()
 	s3 := GetGenericTypeByT[ITest]()
@@ -105,7 +111,9 @@ func Test_GetTypeFromGeneric(t *testing.T) {
 	assert.NotNil(t, s3)
 }
 
-func Test_GenericInstanceByT(t *testing.T) {
+// TestGenericInstanceByT tests the generic instance by t.
+func TestGenericInstanceByT(t *testing.T) {
+	t.Parallel()
 	s1 := GenericInstanceByT[*Test]()
 	s2 := GenericInstanceByT[Test]()
 
@@ -113,19 +121,25 @@ func Test_GenericInstanceByT(t *testing.T) {
 	assert.NotNil(t, s2)
 }
 
-func Test_TypeByNameAndImplementedInterface(t *testing.T) {
+// TestTypeByNameAndImplementedInterface tests the type by name and implemented interface.
+func TestTypeByNameAndImplementedInterface(t *testing.T) {
+	t.Parallel()
 	s1 := TypeByNameAndImplementedInterface[ITest]("*typemapper.Test")
 
 	assert.NotNil(t, s1)
 }
 
-func Test_EmptyInstanceByTypeNameAndImplementedInterface(t *testing.T) {
+// TestEmptyInstanceByTypeNameAndImplementedInterface tests the empty instance by type name and implemented interface.
+func TestEmptyInstanceByTypeNameAndImplementedInterface(t *testing.T) {
+	t.Parallel()
 	s1 := EmptyInstanceByTypeNameAndImplementedInterface[ITest]("*typemapper.Test")
 
 	assert.NotNil(t, s1)
 }
 
-func Test_GetReflectType(t *testing.T) {
+// TestGetReflectType tests the get reflect type.
+func TestGetReflectType(t *testing.T) {
+	t.Parallel()
 	s1 := GetReflectType(Test{})
 	s2 := GetReflectType(&Test{})
 	s3 := GetReflectType((*ITest)(nil))
@@ -135,7 +149,9 @@ func Test_GetReflectType(t *testing.T) {
 	assert.NotNil(t, s3)
 }
 
-func Test_GetPackageName(t *testing.T) {
+// TestGetPackageName tests the get package name.
+func TestGetPackageName(t *testing.T) {
+	t.Parallel()
 	pkName := GetPackageName(&Test{})
 	pkName2 := GetPackageName(Test{})
 

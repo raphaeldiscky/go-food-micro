@@ -13,7 +13,9 @@ import (
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 )
 
-func Test_Domain_Err(t *testing.T) {
+// TestDomainErr tests the domain error.
+func TestDomainErr(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewDomainErrorWrap(
 		nil,
 		"domain_events event already exists in event registry",
@@ -61,7 +63,9 @@ func Test_Domain_Err(t *testing.T) {
 	}
 }
 
-func Test_Application_Err(t *testing.T) {
+// TestApplicationErr tests the application error.
+func TestApplicationErr(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewApplicationErrorWrap(
 		nil,
 		"domain_events event already exists in event registry",
@@ -111,7 +115,9 @@ func Test_Application_Err(t *testing.T) {
 	}
 }
 
-func Test_Api_Err(t *testing.T) {
+// TestApiErr tests the api error.
+func TestApiErr(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewApiErrorWrap(
 		nil,
 		http.StatusBadRequest,
@@ -162,7 +168,9 @@ func Test_Api_Err(t *testing.T) {
 	}
 }
 
-func Test_BadRequest_Err(t *testing.T) {
+// TestBadRequestErr tests the bad request error.
+func TestBadRequestErr(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewBadRequestErrorWrap(
 		nil,
 		"domain_events event already exists in event registry",
@@ -210,7 +218,9 @@ func Test_BadRequest_Err(t *testing.T) {
 	}
 }
 
-func Test_NotFound_Err(t *testing.T) {
+// TestNotFoundErr tests the not found error.
+func TestNotFoundErr(t *testing.T) {
+	t.Parallel()
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
 	rootErr := errors.NewPlain("handling not found errorUtils")
 	notFoundErr := NewNotFoundErrorWrap(rootErr, "this is a not found errorUtils")
@@ -251,7 +261,9 @@ func Test_NotFound_Err(t *testing.T) {
 	}
 }
 
-func Test_Internal_Server_Error(t *testing.T) {
+// TestInternalServerError tests the internal server error.
+func TestInternalServerError(t *testing.T) {
+	t.Parallel()
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
 	rootErr := errors.NewPlain("handling internal server errorUtils")
 	internalServerErr := NewInternalServerErrorWrap(rootErr, "this is a internal server errorUtils")
@@ -286,7 +298,9 @@ func Test_Internal_Server_Error(t *testing.T) {
 	}
 }
 
-func Test_Forbidden_Error(t *testing.T) {
+// TestForbiddenError tests the forbidden error.
+func TestForbiddenError(t *testing.T) {
+	t.Parallel()
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
 	rootErr := errors.NewPlain("handling forbidden errorUtils")
 	forbiddenError := NewForbiddenErrorWrap(rootErr, "this is a forbidden errorUtils")
@@ -321,7 +335,9 @@ func Test_Forbidden_Error(t *testing.T) {
 	}
 }
 
-func Test_Marshaling_Error(t *testing.T) {
+// TestMarshalingError tests the marshaling error.
+func TestMarshalingError(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewMarshalingErrorWrap(
 		nil,
 		"domain_events event already exists in event registry",
@@ -365,7 +381,9 @@ func Test_Marshaling_Error(t *testing.T) {
 	}
 }
 
-func Test_Validation_Error(t *testing.T) {
+// TestValidationError tests the validation error.
+func TestValidationError(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewValidationErrorWrap(
 		nil,
 		"domain_events event already exists in event registry",
@@ -412,7 +430,9 @@ func Test_Validation_Error(t *testing.T) {
 	}
 }
 
-func Test_Conflict_Error(t *testing.T) {
+// TestConflictErr tests the conflict error.
+func TestConflictErr(t *testing.T) {
+	t.Parallel()
 	rootErr2 := NewConflictErrorWrap(
 		nil,
 		"domain_events event already exists in event registry",

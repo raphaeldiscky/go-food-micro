@@ -1,3 +1,4 @@
+// Package repository provides the mongodb generic repository.
 package repository
 
 import (
@@ -29,6 +30,7 @@ type Product struct {
 	IsAvailable bool
 }
 
+// ProductMongo is the model for the product.
 type ProductMongo struct {
 	ID          string `json:"id"          bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
 	Name        string `json:"name"        bson:"name"`
@@ -36,6 +38,7 @@ type ProductMongo struct {
 	IsAvailable bool   `json:"isAvailable" bson:"isAvailable"`
 }
 
+// mongoGenericRepositoryTest is the test suite for the mongodb generic repository.
 type mongoGenericRepositoryTest struct {
 	suite.Suite
 	databaseName                   string
@@ -46,6 +49,7 @@ type mongoGenericRepositoryTest struct {
 	products                       []*ProductMongo
 }
 
+// TestMongoGenericRepository tests the mongodb generic repository.
 func TestMongoGenericRepository(t *testing.T) {
 	suite.Run(
 		t,
@@ -56,6 +60,7 @@ func TestMongoGenericRepository(t *testing.T) {
 	)
 }
 
+// SetupSuite sets up the test suite.
 func (c *mongoGenericRepositoryTest) SetupSuite() {
 	opts, err := mongocontainer.NewMongoTestContainers(defaultLogger.GetLogger()).
 		PopulateContainerOptions(context.Background(), c.T())
@@ -83,18 +88,21 @@ func (c *mongoGenericRepositoryTest) SetupSuite() {
 	c.Require().NoError(err)
 }
 
+// SetupTest sets up the test.
 func (c *mongoGenericRepositoryTest) SetupTest() {
 	p, err := c.seedData(context.Background())
 	c.Require().NoError(err)
 	c.products = p
 }
 
+// TearDownTest tears down the test.
 func (c *mongoGenericRepositoryTest) TearDownTest() {
 	err := c.cleanupMongoData()
 	c.Require().NoError(err)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Add() {
+// TestAdd tests the add.
+func (c *mongoGenericRepositoryTest) TestAdd() {
 	ctx := context.Background()
 
 	product := &ProductMongo{
@@ -118,7 +126,8 @@ func (c *mongoGenericRepositoryTest) Test_Add() {
 	c.Assert().Equal(product.ID, p.ID)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Add_With_Data_Model() {
+// TestAddWithDataModel tests the add with data model.
+func (c *mongoGenericRepositoryTest) TestAddWithDataModel() {
 	ctx := context.Background()
 
 	product := &ProductMongo{
@@ -142,7 +151,8 @@ func (c *mongoGenericRepositoryTest) Test_Add_With_Data_Model() {
 	c.Assert().Equal(product.ID, p.ID)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Get_By_Id() {
+// TestGetById tests the get by id.
+func (c *mongoGenericRepositoryTest) TestGetById() {
 	ctx := context.Background()
 
 	all, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -187,7 +197,8 @@ func (c *mongoGenericRepositoryTest) Test_Get_By_Id() {
 	}
 }
 
-func (c *mongoGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
+// TestGetByIdWithDataModel tests the get by id with data model.
+func (c *mongoGenericRepositoryTest) TestGetByIdWithDataModel() {
 	ctx := context.Background()
 
 	all, err := c.productRepositoryWithDataModel.GetAll(
@@ -238,7 +249,8 @@ func (c *mongoGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 	}
 }
 
-func (c *mongoGenericRepositoryTest) Test_First_Or_Default() {
+// TestFirstOrDefault tests the first or default.
+func (c *mongoGenericRepositoryTest) TestFirstOrDefault() {
 	ctx := context.Background()
 
 	all, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -254,7 +266,8 @@ func (c *mongoGenericRepositoryTest) Test_First_Or_Default() {
 	c.Assert().NotNil(single)
 }
 
-func (c *mongoGenericRepositoryTest) Test_First_Or_Default_With_Data_Model() {
+// TestFirstOrDefaultWithDataModel tests the first or default with data model.
+func (c *mongoGenericRepositoryTest) TestFirstOrDefaultWithDataModel() {
 	ctx := context.Background()
 
 	all, err := c.productRepositoryWithDataModel.GetAll(
@@ -274,7 +287,8 @@ func (c *mongoGenericRepositoryTest) Test_First_Or_Default_With_Data_Model() {
 	c.Assert().NotNil(single)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Get_All() {
+// TestGetAll tests the get all.
+func (c *mongoGenericRepositoryTest) TestGetAll() {
 	ctx := context.Background()
 
 	models, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -283,7 +297,8 @@ func (c *mongoGenericRepositoryTest) Test_Get_All() {
 	c.Assert().NotEmpty(models.Items)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Get_All_With_Data_Model() {
+// TestGetAllWithDataModel tests the get all with data model.
+func (c *mongoGenericRepositoryTest) TestGetAllWithDataModel() {
 	ctx := context.Background()
 
 	models, err := c.productRepositoryWithDataModel.GetAll(
@@ -295,7 +310,8 @@ func (c *mongoGenericRepositoryTest) Test_Get_All_With_Data_Model() {
 	c.Assert().NotEmpty(models.Items)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Search() {
+// TestSearch tests the search.
+func (c *mongoGenericRepositoryTest) TestSearch() {
 	ctx := context.Background()
 
 	models, err := c.productRepository.Search(
@@ -309,7 +325,8 @@ func (c *mongoGenericRepositoryTest) Test_Search() {
 	c.Assert().Equal(len(models.Items), 1)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Search_With_Data_Model() {
+// TestSearchWithDataModel tests the search with data model.
+func (c *mongoGenericRepositoryTest) TestSearchWithDataModel() {
 	ctx := context.Background()
 
 	models, err := c.productRepositoryWithDataModel.Search(
@@ -323,7 +340,8 @@ func (c *mongoGenericRepositoryTest) Test_Search_With_Data_Model() {
 	c.Assert().Equal(len(models.Items), 1)
 }
 
-func (c *mongoGenericRepositoryTest) Test_GetByFilter() {
+// TestGetByFilter tests the get by filter.
+func (c *mongoGenericRepositoryTest) TestGetByFilter() {
 	ctx := context.Background()
 
 	models, err := c.productRepository.GetByFilter(
@@ -336,7 +354,8 @@ func (c *mongoGenericRepositoryTest) Test_GetByFilter() {
 	c.Assert().Equal(len(models), 1)
 }
 
-func (c *mongoGenericRepositoryTest) Test_GetByFilter_With_Data_Model() {
+// TestGetByFilterWithDataModel tests the get by filter with data model.
+func (c *mongoGenericRepositoryTest) TestGetByFilterWithDataModel() {
 	ctx := context.Background()
 
 	models, err := c.productRepositoryWithDataModel.GetByFilter(
@@ -349,7 +368,8 @@ func (c *mongoGenericRepositoryTest) Test_GetByFilter_With_Data_Model() {
 	c.Assert().Equal(len(models), 1)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Update() {
+// TestUpdate tests the update.
+func (c *mongoGenericRepositoryTest) TestUpdate() {
 	ctx := context.Background()
 
 	products, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -371,7 +391,8 @@ func (c *mongoGenericRepositoryTest) Test_Update() {
 	c.Assert().Equal("product2_updated", single.Name)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Update_With_Data_Model() {
+// TestUpdateWithDataModel tests the update with data model.
+func (c *mongoGenericRepositoryTest) TestUpdateWithDataModel() {
 	ctx := context.Background()
 
 	products, err := c.productRepositoryWithDataModel.GetAll(
@@ -396,7 +417,8 @@ func (c *mongoGenericRepositoryTest) Test_Update_With_Data_Model() {
 	c.Assert().Equal("product2_updated", single.Name)
 }
 
-func (c *mongoGenericRepositoryTest) Test_Delete() {
+// TestDelete tests the delete.
+func (c *mongoGenericRepositoryTest) TestDelete() {
 	ctx := context.Background()
 
 	products, err := c.productRepository.GetAll(ctx, utils.NewListQuery(10, 1))
@@ -415,7 +437,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 	c.Assert().Nil(single)
 }
 
-// func Test_Delete_With_Data_Model(t *testing.T) {
+// func TestDeleteWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
 //
@@ -439,7 +461,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Nil(t, single)
 //}
 //
-// func Test_Count(t *testing.T) {
+// func TestCount(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepository(ctx, t)
 //	if err != nil {
@@ -450,7 +472,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Equal(t, count, int64(2))
 //}
 //
-// func Test_Count_With_Data_Model(t *testing.T) {
+// func TestCountWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
 //	if err != nil {
@@ -461,7 +483,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Equal(t, count, int64(2))
 //}
 //
-// func Test_Skip_Take(t *testing.T) {
+// func TestSkipTake(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepository(ctx, t)
 //	if err != nil {
@@ -476,7 +498,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Equal(t, len(entities), 1)
 //}
 //
-// func Test_Skip_Take_With_Data_Model(t *testing.T) {
+// func TestSkipTakeWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
 //	if err != nil {
@@ -491,7 +513,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Equal(t, len(entities), 1)
 //}
 //
-// func Test_Find(t *testing.T) {
+// func TestFind(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepository(ctx, t)
 //	if err != nil {
@@ -511,7 +533,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Equal(t, len(entities), 1)
 //}
 //
-// func Test_Find_With_Data_Model(t *testing.T) {
+// func TestFindWithDataModel(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
 //	if err != nil {
@@ -553,6 +575,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	), nil
 //}
 
+// cleanupMongoData cleans up the mongo data.
 func (c *mongoGenericRepositoryTest) cleanupMongoData() error {
 	collections := []string{c.collectionName}
 	err := cleanupCollections(
@@ -564,6 +587,7 @@ func (c *mongoGenericRepositoryTest) cleanupMongoData() error {
 	return err
 }
 
+// cleanupCollections cleans up the collections.
 func cleanupCollections(
 	db *mongo.Client,
 	collections []string,
@@ -585,6 +609,7 @@ func cleanupCollections(
 	return nil
 }
 
+// seedData seeds the data.
 func (c *mongoGenericRepositoryTest) seedData(
 	ctx context.Context,
 ) ([]*ProductMongo, error) {

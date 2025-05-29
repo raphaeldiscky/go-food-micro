@@ -1,23 +1,25 @@
-//go:build unit
-// +build unit
-
+// Package json provides the json serializer.
 package json
 
 import (
 	"testing"
 
-	reflect "github.com/goccy/go-reflect"
 	"github.com/stretchr/testify/assert"
+
+	reflect "github.com/goccy/go-reflect"
 )
 
+// person is a struct that represents a person.
 type person struct {
 	Name string
 	Age  int
 }
 
+// currentSerializer is the current serializer.
 var currentSerializer = NewDefaultJsonSerializer()
 
-func Test_Deserialize_Unstructured_Data_Into_Empty_Interface(t *testing.T) {
+// TestDeserializeUnstructuredDataIntoEmptyInterface tests the deserialize unstructured data into empty interface.
+func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
 	// https://www.sohamkamani.com/golang/json/#decoding-json-to-maps---unstructured-data
 	// https://developpaper.com/mapstructure-of-go/
 	// https://pkg.go.dev/encoding/json#Unmarshal
@@ -48,7 +50,8 @@ func Test_Deserialize_Unstructured_Data_Into_Empty_Interface(t *testing.T) {
 	assert.True(t, jsonMap.(map[string]interface{})["Age"] == float64(30))
 }
 
-func Test_Deserialize_Unstructured_Data_Into_Map(t *testing.T) {
+// TestDeserializeUnstructuredDataIntoMap tests the deserialize unstructured data into map.
+func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 	// https://www.sohamkamani.com/golang/json/#decoding-json-to-maps---unstructured-data
 	// https://developpaper.com/mapstructure-of-go/
 	// https://pkg.go.dev/encoding/json#Unmarshal
@@ -79,12 +82,13 @@ func Test_Deserialize_Unstructured_Data_Into_Map(t *testing.T) {
 	assert.True(t, jsonMap["Age"] == float64(30))
 }
 
-func Test_Deserialize_Structured_Data_Struct(t *testing.T) {
+// TestDeserializeStructuredDataStruct tests the deserialize structured data into struct.
+func TestDeserializeStructuredDataStruct(t *testing.T) {
 	// https://pkg.go.dev/encoding/json#Unmarshal
 	// when we assign object to explicit struct type, defaultLogger unmarshaler can deserialize it to the struct
 
 	// To unmarshal JSON into a struct, Unmarshal matches incoming object keys to the keys used by Marshal (either the struct field name or its tag), preferring an exact match but also accepting a case-insensitive match.
-	var jsonMap person = person{}
+	jsonMap := person{}
 	v := reflect.ValueOf(&jsonMap)
 	if v.Elem().Kind() == reflect.Interface && v.NumMethod() == 0 {
 		t.Log("deserialize to map[string]interface{}")
@@ -109,7 +113,8 @@ func Test_Deserialize_Structured_Data_Struct(t *testing.T) {
 	assert.Equal(t, serializedObj, jsonMap)
 }
 
-func Test_Deserialize_Structured_Data_Struct2(t *testing.T) {
+// TestDeserializeStructuredDataStruct2 tests the deserialize structured data into struct.
+func TestDeserializeStructuredDataStruct2(t *testing.T) {
 	// https://pkg.go.dev/encoding/json#Unmarshal
 	// when we assign object to explicit struct type, defaultLogger unmarshaler can deserialize it to the struct
 
@@ -132,12 +137,13 @@ func Test_Deserialize_Structured_Data_Struct2(t *testing.T) {
 	assert.True(t, reflect.TypeOf(jsonMap).Elem() == reflect.TypeOf(person{}))
 }
 
-func Test_Deserialize_Structured_Data_Pointer(t *testing.T) {
+// TestDeserializeStructuredDataPointer tests the deserialize structured data into pointer.
+func TestDeserializeStructuredDataPointer(t *testing.T) {
 	// https://pkg.go.dev/encoding/json#Unmarshal
 	// when we assign object to explicit struct type, defaultLogger unmarshaler can deserialize it to the struct
 
 	// To unmarshal JSON into a pointer, Unmarshal first handles the case of the JSON being the JSON literal null. In that case, Unmarshal sets the pointer to nil. Otherwise, Unmarshal unmarshals the JSON into the value pointed at by the pointer. If the pointer is nil, Unmarshal allocates a new value for it to point to.To unmarshal JSON into a struct, Unmarshal matches incoming object keys to the keys used by Marshal (either the struct field name or its tag), preferring an exact match but also accepting a case-insensitive match.
-	var jsonMap *person = &person{}
+	jsonMap := &person{}
 	// var jsonMap *person = nil
 
 	serializedObj := person{Name: "John", Age: 30}
@@ -156,7 +162,8 @@ func Test_Deserialize_Structured_Data_Pointer(t *testing.T) {
 	assert.True(t, reflect.TypeOf(jsonMap).Elem() == reflect.TypeOf(person{}))
 }
 
-func Test_Decode_To_Map(t *testing.T) {
+// TestDecodeToMap tests the decode to map.
+func TestDecodeToMap(t *testing.T) {
 	var jsonMap map[string]interface{}
 
 	serializedObj := person{Name: "John", Age: 30}

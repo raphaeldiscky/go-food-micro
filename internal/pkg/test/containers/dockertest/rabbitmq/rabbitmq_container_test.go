@@ -1,3 +1,4 @@
+// Package rabbitmq provides a rabbitmq docker test.
 package rabbitmq
 
 import (
@@ -27,7 +28,8 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
-func Test_RabbitMQ_Container(t *testing.T) {
+// TestRabbitMQContainer tests the rabbitmq container.
+func TestRabbitMQContainer(t *testing.T) {
 	ctx := context.Background()
 	fakeConsumer := consumer.NewRabbitMQFakeTestConsumerHandler[*ProducerConsumerMessage]()
 
@@ -89,6 +91,7 @@ func Test_RabbitMQ_Container(t *testing.T) {
 	}
 }
 
+// ProducerConsumerMessage is a struct that represents a producer consumer message.
 type ProducerConsumerMessage struct {
 	*types.Message
 	Data string

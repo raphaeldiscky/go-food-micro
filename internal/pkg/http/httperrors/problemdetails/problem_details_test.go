@@ -11,7 +11,8 @@ import (
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
-func Test_Domain_Err(t *testing.T) {
+// TestDomainErr tests the domain error.
+func TestDomainErr(t *testing.T) {
 	domainErr := NewDomainProblemDetail(
 		http.StatusBadRequest,
 		"Order with id '1' already completed",
@@ -25,7 +26,8 @@ func Test_Domain_Err(t *testing.T) {
 	assert.Equal(t, 400, domainErr.GetStatus())
 }
 
-func Test_Application_Err(t *testing.T) {
+// TestApplicationErr tests the application error.
+func TestApplicationErr(t *testing.T) {
 	applicationErr := NewApplicationProblemDetail(
 		http.StatusBadRequest,
 		"application_exceptions error",
@@ -39,7 +41,8 @@ func Test_Application_Err(t *testing.T) {
 	assert.Equal(t, 400, applicationErr.GetStatus())
 }
 
-func Test_BadRequest_Err(t *testing.T) {
+// TestBadRequestErr tests the bad request error.
+func TestBadRequestErr(t *testing.T) {
 	badRequestError := NewBadRequestProblemDetail("bad-request error", "stack")
 
 	assert.Equal(t, "bad-request error", badRequestError.GetDetail())
@@ -49,7 +52,8 @@ func Test_BadRequest_Err(t *testing.T) {
 	assert.Equal(t, 400, badRequestError.GetStatus())
 }
 
-func Test_Parse_Error(t *testing.T) {
+// TestParseError tests the parse error.
+func TestParseError(t *testing.T) {
 	// Bad-Request ProblemDetail
 	badRequestError := errors.WrapIf(
 		customErrors.NewBadRequestError("bad-request error"),
@@ -66,6 +70,7 @@ func Test_Parse_Error(t *testing.T) {
 	assert.Equal(t, notfoundPrb.GetStatus(), 404)
 }
 
+// TestMap tests the map.
 func TestMap(t *testing.T) {
 	Map[customErrors.BadRequestError](func(err customErrors.BadRequestError) ProblemDetailErr {
 		return NewBadRequestProblemDetail(err.Message(), err.Error())

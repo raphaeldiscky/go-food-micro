@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 
 echo "Running go migrate command..."
 while getopts ":p:c:n:o:" opt; do
