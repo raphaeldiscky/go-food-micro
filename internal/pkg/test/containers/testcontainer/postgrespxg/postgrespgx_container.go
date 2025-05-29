@@ -149,7 +149,7 @@ func (g *postgresPgxTestContainers) getRunOptions(
 	// if err != nil {
 	//	log.Fatal(err)
 	//}
-	//g.defaultOptions.HostPort = hostFreePort
+	// g.defaultOptions.HostPort = hostFreePort
 
 	containerReq := testcontainers.ContainerRequest{
 		Image:        fmt.Sprintf("%s:%s", g.defaultOptions.ImageName, g.defaultOptions.Tag),

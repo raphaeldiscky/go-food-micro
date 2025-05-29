@@ -1,3 +1,4 @@
+// Package metrics provides a module for the metrics.
 package metrics
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Module is a module for the metrics.
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
@@ -21,6 +23,7 @@ var (
 		metricsInvokes,
 	)
 
+	// metricsProviders is a module for the metrics.
 	metricsProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
 		ProvideMetricsConfig,
 		NewOtelMetrics,
@@ -31,6 +34,7 @@ var (
 			fx.As(new(metric.Meter))),
 	))
 
+	// metricsInvokes is a module for the metrics.
 	metricsInvokes = fx.Options( //nolint:gochecknoglobals
 		fx.Invoke(registerHooks),
 		fx.Invoke(func(m *OtelMetrics, server contracts.EchoHttpServer) {
@@ -39,10 +43,12 @@ var (
 	)
 )
 
+// provideMeter provides a meter.
 func provideMeter(otelMetrics *OtelMetrics) AppMetrics {
 	return otelMetrics.appMetrics
 }
 
+// registerHooks registers hooks for the metrics.
 // we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,

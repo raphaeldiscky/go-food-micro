@@ -1,3 +1,4 @@
+// Package logrous provides a logger for the application.
 package logrous
 
 import (
@@ -15,13 +16,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
 )
 
+// logrusLogger is a logrus logger.
 type logrusLogger struct {
 	level      string
 	logger     *logrus.Logger
 	logOptions *config2.LogOptions
 }
 
-// For mapping config logger.
+// loggerLevelMap is a map of logger levels.
 var loggerLevelMap = map[string]logrus.Level{
 	"debug": logrus.DebugLevel,
 	"info":  logrus.InfoLevel,
@@ -81,6 +83,7 @@ func (l *logrusLogger) initLogger(env environment.Environment) {
 	l.logger = logrusLogger
 }
 
+// GetLoggerLevel gets the logger level.
 func (l *logrusLogger) GetLoggerLevel() logrus.Level {
 	level, exist := loggerLevelMap[l.level]
 	if !exist {
@@ -90,85 +93,105 @@ func (l *logrusLogger) GetLoggerLevel() logrus.Level {
 	return level
 }
 
+// LogType returns the log type.
 func (l *logrusLogger) LogType() models.LogType {
 	return models.Logrus
 }
 
+// Configure configures the logger.
 func (l *logrusLogger) Configure(cfg func(internalLog interface{})) {
 	cfg(l.logger)
 }
 
+// Debug logs a debug message.
 func (l *logrusLogger) Debug(args ...interface{}) {
 	l.logger.Debug(args...)
 }
 
+// Debugf logs a debug message with a format.
 func (l *logrusLogger) Debugf(template string, args ...interface{}) {
 	l.logger.Debugf(template, args...)
 }
 
+// Debugw logs a debug message with fields.
 func (l *logrusLogger) Debugw(msg string, fields logger.Fields) {
 	entry := l.mapToFields(fields)
 	entry.Debug(msg)
 }
 
+// Info logs an info message.
 func (l *logrusLogger) Info(args ...interface{}) {
 	l.logger.Info(args...)
 }
 
+// Infof logs an info message with a format.
 func (l *logrusLogger) Infof(template string, args ...interface{}) {
 	l.logger.Infof(template, args...)
 }
 
+// Infow logs an info message with fields.
 func (l *logrusLogger) Infow(msg string, fields logger.Fields) {
 	entry := l.mapToFields(fields)
 	entry.Info(msg)
 }
 
+// Warn logs a warning message.
 func (l *logrusLogger) Warn(args ...interface{}) {
 	l.logger.Warn(args...)
 }
 
+// Warnf logs a warning message with a format.
 func (l *logrusLogger) Warnf(template string, args ...interface{}) {
 	l.logger.Warnf(template, args...)
 }
 
+// WarnMsg logs a warning message with an error.
 func (l *logrusLogger) WarnMsg(msg string, err error) {
 	l.logger.Warn(msg, logrus.WithField("error", err.Error()))
 }
 
+// Error logs an error message.
 func (l *logrusLogger) Error(args ...interface{}) {
 	l.logger.Error(args...)
 }
 
+// Errorw logs an error message with fields.
 func (l *logrusLogger) Errorw(msg string, fields logger.Fields) {
 	entry := l.mapToFields(fields)
 	entry.Error(msg)
 }
 
+// Errorf logs an error message with a format.
 func (l *logrusLogger) Errorf(template string, args ...interface{}) {
 	l.logger.Errorf(template, args...)
 }
 
+// Err logs an error message with an error.
 func (l *logrusLogger) Err(msg string, err error) {
 	l.logger.Error(msg, logrus.WithField("error", err.Error()))
 }
 
+// Fatal logs a fatal message.
 func (l *logrusLogger) Fatal(args ...interface{}) {
 	l.logger.Fatal(args...)
 }
 
+// Fatalf logs a fatal message with a format.
 func (l *logrusLogger) Fatalf(template string, args ...interface{}) {
 	l.logger.Fatalf(template, args...)
 }
 
+// Printf logs a message with a format.
 func (l *logrusLogger) Printf(template string, args ...interface{}) {
 	l.logger.Printf(template, args...)
 }
 
+// WithName logs a message with a name.
 func (l *logrusLogger) WithName(name string) {
 	l.logger.WithField(constants.NAME, name)
 }
 
+// GrpcMiddlewareAccessLogger logs a grpc middleware access message.
 func (l *logrusLogger) GrpcMiddlewareAccessLogger(
 	method string,
 	time time.Duration,
@@ -184,6 +207,7 @@ func (l *logrusLogger) GrpcMiddlewareAccessLogger(
 	)
 }
 
+// GrpcClientInterceptorLogger logs a grpc client interceptor message.
 func (l *logrusLogger) GrpcClientInterceptorLogger(
 	method string,
 	req interface{},
@@ -203,6 +227,7 @@ func (l *logrusLogger) GrpcClientInterceptorLogger(
 	)
 }
 
+// mapToFields maps fields to logrus fields.
 func (l *logrusLogger) mapToFields(
 	fields map[string]interface{},
 ) *logrus.Entry {

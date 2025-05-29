@@ -1,3 +1,4 @@
+// Package fxapp provides a module for the fxapp.
 package fxapp
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 )
 
+// CreateFxApp creates a new fx app.
 func CreateFxApp(
 	app *application,
 ) *fx.App {
@@ -42,7 +44,7 @@ func CreateFxApp(
 
 	duration := 30 * time.Second
 
-	// build phase of container will do in this stage, containing provides and invokes but app not started yet and will be started in the future with `fxApp.Register`
+	// build phase of container will do in this stage, containing provides and invokes but app not started yet and will be started in the future with `fxApp.Register`.
 	fxApp := fx.New(
 		fx.StartTimeout(duration),
 		config.ModuleFunc(app.environment),

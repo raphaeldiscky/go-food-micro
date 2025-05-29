@@ -1,3 +1,4 @@
+// Package tracing provides options for the tracing.
 package tracing
 
 import (
@@ -8,6 +9,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// OTLPProvider is a provider for the otlp.
 type OTLPProvider struct {
 	Name         string            `mapstructure:"name"`
 	Enabled      bool              `mapstructure:"enabled"`
@@ -15,6 +17,7 @@ type OTLPProvider struct {
 	OTLPHeaders  map[string]string `mapstructure:"otlpHeaders"`
 }
 
+// TracingOptions is a config for the tracing.
 type TracingOptions struct {
 	Enabled                   bool                   `mapstructure:"enabled"`
 	ServiceName               string                 `mapstructure:"serviceName"`
@@ -33,10 +36,12 @@ type TracingOptions struct {
 	OTLPProviders             []OTLPProvider         `mapstructure:"otlpProviders"`
 }
 
+// ZipkinExporterOptions is a config for the zipkin exporter.
 type ZipkinExporterOptions struct {
 	Url string `mapstructure:"url"`
 }
 
+// ProvideTracingConfig provides a tracing config.
 func ProvideTracingConfig(
 	environment environment.Environment,
 ) (*TracingOptions, error) {

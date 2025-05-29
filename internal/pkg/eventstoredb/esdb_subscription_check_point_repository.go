@@ -1,4 +1,5 @@
-package eventstroredb
+// Package eventstoredb provides a serializer for EventStoreDB.
+package eventstoredb
 
 import (
 	"context"

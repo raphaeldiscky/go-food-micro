@@ -1,3 +1,4 @@
+// Package pipelines provides a messaging metrics pipeline.
 package pipelines
 
 import (
@@ -16,11 +17,13 @@ import (
 	attribute2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 )
 
+// messagingMetricsPipeline is a messaging metrics pipeline.
 type messagingMetricsPipeline struct {
 	config *config
 	meter  metrics.AppMetrics
 }
 
+// NewMessagingMetricsPipeline creates a new messaging metrics pipeline.
 func NewMessagingMetricsPipeline(
 	appMetrics metrics.AppMetrics,
 	opts ...Option,
@@ -36,6 +39,7 @@ func NewMessagingMetricsPipeline(
 	}
 }
 
+// Handle handles a request.
 func (m *messagingMetricsPipeline) Handle(
 	ctx context.Context,
 	consumerContext types2.MessageConsumeContext,
@@ -105,12 +109,12 @@ func (m *messagingMetricsPipeline) Handle(
 		return err
 	}
 
-	// Start recording the duration
+	// start recording the duration
 	startTime := time.Now()
 
 	err = next(ctx)
 
-	// Calculate the duration
+	// calculate the duration
 	duration := time.Since(startTime).Milliseconds()
 
 	opt := metric.WithAttributes(
@@ -119,7 +123,7 @@ func (m *messagingMetricsPipeline) Handle(
 		attribute2.Object(telemetrytags.App.Message, message),
 	)
 
-	// Record metrics
+	// record metrics
 	totalRequestsCounter.Add(ctx, 1, opt)
 
 	if err == nil {

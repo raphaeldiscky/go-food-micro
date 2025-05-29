@@ -1,4 +1,5 @@
-package postgres
+// Package postgrespgx provides a PostgreSQL client.
+package postgrespgx
 
 import (
 	"context"
@@ -13,8 +14,6 @@ import (
 	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/uptrace/bun/driver/pgdriver"
 	"go.uber.org/zap"
-
-	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
 
 	goqu "github.com/doug-martin/goqu/v9"
 	pgx "github.com/jackc/pgx/v4"
@@ -38,6 +37,7 @@ type txCtx struct{}
 // connCtx key.
 type connCtx struct{}
 
+// Pgx is a PostgreSQL client.
 type Pgx struct {
 	ConnPool        *pgxpool.Pool
 	DB              *sql.DB

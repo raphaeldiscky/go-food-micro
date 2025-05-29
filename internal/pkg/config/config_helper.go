@@ -1,3 +1,4 @@
+// Package config provides a module for the config.
 package config
 
 import (
@@ -17,10 +18,12 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// BindConfig binds the config.
 func BindConfig[T any](environments ...environment.Environment) (T, error) {
 	return BindConfigKey[T]("", environments...)
 }
 
+// BindConfigKey binds the config key.
 func BindConfigKey[T any](
 	configKey string,
 	environments ...environment.Environment,
@@ -93,7 +96,7 @@ func BindConfigKey[T any](
 	return cfg, nil
 }
 
-// searchForConfigFileDir searches for the first directory within the specified root directory and its subdirectories
+// searchForConfigFileDir searches for the first directory within the specified root directory and its subdirectories.
 // that contains a file named "config.%s.json" where "%s" is replaced with the provided environment string.
 // It returns the path of the first directory that contains the config file or an error if no such directory is found.
 //

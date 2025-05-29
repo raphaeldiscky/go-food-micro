@@ -1,3 +1,4 @@
+// Package utils provides a module for the utils.
 package utils
 
 import (
@@ -22,11 +23,12 @@ import (
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 )
 
+// traceContextKeyType is a type for the trace context key.
 type traceContextKeyType int
 
 const parentSpanKey traceContextKeyType = iota + 1
 
-// HttpTraceStatusFromSpan create an error span if we have an error and a successful span when error is nil.
+// HttpTraceStatusFromSpan creates an error span if we have an error and a successful span when error is nil.
 func HttpTraceStatusFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
@@ -74,6 +76,7 @@ func HttpTraceStatusFromSpan(span trace.Span, err error) error {
 	return err
 }
 
+// TraceStatusFromSpan creates a trace status from a span.
 func TraceStatusFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
@@ -105,6 +108,7 @@ func TraceStatusFromSpan(span trace.Span, err error) error {
 	return err
 }
 
+// TraceErrStatusFromSpan creates a trace error status from a span.
 func TraceErrStatusFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
@@ -124,7 +128,7 @@ func TraceErrStatusFromSpan(span trace.Span, err error) error {
 	return err
 }
 
-// HttpTraceStatusFromSpanWithCode create an error span with specific status code if we have an error and a successful span when error is nil with a specific status.
+// HttpTraceStatusFromSpanWithCode creates an error span with specific status code if we have an error and a successful span when error is nil with a specific status.
 func HttpTraceStatusFromSpanWithCode(
 	span trace.Span,
 	err error,
@@ -156,7 +160,7 @@ func HttpTraceStatusFromSpanWithCode(
 	return err
 }
 
-// HttpTraceStatusFromContext create an error span if we have an error and a successful span when error is nil.
+// HttpTraceStatusFromContext creates an error span if we have an error and a successful span when error is nil.
 func HttpTraceStatusFromContext(ctx context.Context, err error) error {
 	// https://opentelemetry.io/docs/instrumentation/go/manual/#record-errors
 	span := trace.SpanFromContext(ctx)
@@ -166,6 +170,7 @@ func HttpTraceStatusFromContext(ctx context.Context, err error) error {
 	return HttpTraceStatusFromSpan(span, err)
 }
 
+// TraceStatusFromContext creates a trace status from a context.
 func TraceStatusFromContext(ctx context.Context, err error) error {
 	// https://opentelemetry.io/docs/instrumentation/go/manual/#record-errors
 	span := trace.SpanFromContext(ctx)
@@ -175,6 +180,7 @@ func TraceStatusFromContext(ctx context.Context, err error) error {
 	return TraceStatusFromSpan(span, err)
 }
 
+// TraceErrStatusFromContext creates a trace error status from a context.
 func TraceErrStatusFromContext(ctx context.Context, err error) error {
 	// https://opentelemetry.io/docs/instrumentation/go/manual/#record-errors
 	span := trace.SpanFromContext(ctx)
@@ -184,7 +190,7 @@ func TraceErrStatusFromContext(ctx context.Context, err error) error {
 	return TraceErrStatusFromSpan(span, err)
 }
 
-// GrpcTraceErrFromSpan setting span with status error with error message.
+// GrpcTraceErrFromSpan sets span with status error with error message.
 func GrpcTraceErrFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
@@ -211,7 +217,7 @@ func GrpcTraceErrFromSpan(span trace.Span, err error) error {
 	return err
 }
 
-// GrpcTraceErrFromSpanWithCode setting span with status error with error message.
+// GrpcTraceErrFromSpanWithCode sets span with status error with error message.
 func GrpcTraceErrFromSpanWithCode(span trace.Span, err error, code int) error {
 	isError := err != nil
 

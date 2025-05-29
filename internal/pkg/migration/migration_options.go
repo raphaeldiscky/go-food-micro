@@ -1,3 +1,4 @@
+// Package migration provides a migration runner.
 package migration
 
 import (
@@ -8,13 +9,16 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// CommandType is a command type.
 type CommandType string
 
+// CommandType constants.
 const (
 	Up   CommandType = "up"
 	Down CommandType = "down"
 )
 
+// MigrationOptions is a migration options.
 type MigrationOptions struct {
 	Host          string `mapstructure:"host"`
 	Port          int    `mapstructure:"port"`
@@ -27,6 +31,7 @@ type MigrationOptions struct {
 	SkipMigration bool   `mapstructure:"skipMigration"`
 }
 
+// ProvideConfig provides a migration config.
 func ProvideConfig(environment environment.Environment) (*MigrationOptions, error) {
 	optionName := strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[MigrationOptions]())
 

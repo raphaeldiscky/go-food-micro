@@ -1,3 +1,4 @@
+// Package fxlog provides a logger for the application.
 package fxlog
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// FxLogger is a logger for the application.
 var FxLogger = fx.WithLogger(func(logger logger.Logger) fxevent.Logger {
 	return NewCustomFxLogger(logger)
 },
@@ -16,15 +18,17 @@ var FxLogger = fx.WithLogger(func(logger logger.Logger) fxevent.Logger {
 
 // Ref: https://articles.wesionary.team/logging-interfaces-in-go-182c28be3d18
 
+// FxCustomLogger is a custom logger for the application.
 type FxCustomLogger struct {
 	logger.Logger
 }
 
+// NewCustomFxLogger creates a new custom logger for the application.
 func NewCustomFxLogger(logger logger.Logger) fxevent.Logger {
 	return &FxCustomLogger{Logger: logger}
 }
 
-// Printf prits go-fxlog logs.
+// Printf prints go-fxlog logs.
 func (l FxCustomLogger) Printf(str string, args ...interface{}) {
 	if len(args) > 0 {
 		l.Debugf(str, args)

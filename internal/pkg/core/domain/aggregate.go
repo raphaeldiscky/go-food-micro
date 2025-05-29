@@ -1,3 +1,4 @@
+// Package domain provides a module for the domain.
 package domain
 
 import (
@@ -21,11 +22,13 @@ type AggregateRoot struct {
 	uncommittedEvents []IDomainEvent
 }
 
+// AggregateDataModel is a aggregate data model.
 type AggregateDataModel struct {
 	*EntityDataModel
 	OriginalVersion int64 `json:"originalVersion" bson:"originalVersion,omitempty"`
 }
 
+// IAggregateRoot is a aggregate root.
 type IAggregateRoot interface {
 	IEntity
 
@@ -49,6 +52,7 @@ type IAggregateRoot interface {
 	String() string
 }
 
+// NewAggregateRootWithId creates a new aggregate root with id.
 func NewAggregateRootWithId(id uuid.UUID, aggregateType string) *AggregateRoot {
 	aggregate := &AggregateRoot{
 		originalVersion: newAggregateVersion,
@@ -58,6 +62,7 @@ func NewAggregateRootWithId(id uuid.UUID, aggregateType string) *AggregateRoot {
 	return aggregate
 }
 
+// NewAggregateRoot creates a new aggregate root.
 func NewAggregateRoot(aggregateType string) *AggregateRoot {
 	aggregate := &AggregateRoot{
 		originalVersion: newAggregateVersion,
@@ -67,6 +72,7 @@ func NewAggregateRoot(aggregateType string) *AggregateRoot {
 	return aggregate
 }
 
+// AddDomainEvent adds a new domain event to the aggregate's uncommitted events.
 func (a *AggregateRoot) AddDomainEvent(event IDomainEvent) error {
 	exists := linq.From(a.uncommittedEvents).Contains(event)
 	if exists {
@@ -77,10 +83,12 @@ func (a *AggregateRoot) AddDomainEvent(event IDomainEvent) error {
 	return nil
 }
 
+// OriginalVersion gets the original version.
 func (a *AggregateRoot) OriginalVersion() int64 {
 	return a.originalVersion
 }
 
+// AddDomainEvents adds a new domain event to the aggregate's uncommitted events.
 func (a *AggregateRoot) AddDomainEvents(event IDomainEvent) {
 	if linq.From(a.uncommittedEvents).Contains(event) {
 		return

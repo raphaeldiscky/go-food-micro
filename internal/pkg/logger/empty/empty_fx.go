@@ -1,3 +1,4 @@
+// Package empty provides an empty logger for the application.
 package empty
 
 import (
@@ -7,8 +8,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
 )
 
-// Module provided to fxlog
 // https://uber-go.github.io/fx/modules.html
+
+// Module is a module for the empty logger.
 var Module = fx.Module("emptyfx",
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered

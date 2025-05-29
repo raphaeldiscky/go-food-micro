@@ -1,4 +1,5 @@
-package postgres
+// Package postgrespgx provides a PostgreSQL client.
+package postgrespgx
 
 import (
 	"context"

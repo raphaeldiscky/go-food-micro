@@ -387,7 +387,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Nil(t, single)
 //}
 //
-//func Test_Count(t *testing.T) {
+// func Test_Count(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepository(ctx, t)
 //	if err != nil {
@@ -399,7 +399,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, count, int64(2))
 //}
 //
-//func Test_Count_With_Data_Model(t *testing.T) {
+// func Test_Count_With_Data_Model(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepositoryWithDataModel(ctx, t)
 //	if err != nil {
@@ -411,7 +411,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, count, int64(2))
 //}
 //
-//func Test_Find(t *testing.T) {
+// func Test_Find(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepository(ctx, t)
 //	if err != nil {

@@ -1,3 +1,4 @@
+// Package tracing provides a module for the tracing.
 package tracing
 
 // https://opentelemetry.io/docs/reference/specification/
@@ -33,6 +34,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 )
 
+// TracingOpenTelemetry is a tracing open telemetry.
 type TracingOpenTelemetry struct {
 	config      *TracingOptions
 	environment environment.Environment
@@ -40,9 +42,9 @@ type TracingOpenTelemetry struct {
 	provider    *tracesdk.TracerProvider
 }
 
+// NewOtelTracing creates a new otel tracing.
 // Create one tracer per package
-// NOTE: You only need a tracer if you are creating your own spans
-
+// NOTE: You only need a tracer if you are creating your own spans.
 func NewOtelTracing(
 	config *TracingOptions,
 	environment environment.Environment,

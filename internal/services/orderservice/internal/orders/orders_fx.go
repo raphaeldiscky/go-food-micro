@@ -4,7 +4,7 @@ package orders
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb"
 	"go.uber.org/fx"
 
 	echo "github.com/labstack/echo/v4"
@@ -27,7 +27,7 @@ func Module() fx.Option {
 		fx.Provide(fx.Annotate(repositories.NewMongoOrderReadRepository)),
 		fx.Provide(repositories.NewElasticOrderReadRepository),
 
-		fx.Provide(eventstroredb.NewEventStoreAggregateStore[*aggregate.Order]),
+		fx.Provide(eventstoredb.NewEventStoreAggregateStore[*aggregate.Order]),
 		fx.Provide(fx.Annotate(func(catalogsServer echocontracts.EchoHttpServer) *echo.Group {
 			var g *echo.Group
 			catalogsServer.RouteBuilder().RegisterGroupFunc("/api/v1", func(v1 *echo.Group) {

@@ -1,3 +1,4 @@
+// Package metrics provides a test for the metrics.
 package metrics_test
 
 import (
@@ -19,6 +20,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
 )
 
+// TestHealth tests the health of the metrics.
 func TestHealth(t *testing.T) {
 	RegisterFailHandler(Fail)
 

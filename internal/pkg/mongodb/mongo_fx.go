@@ -1,3 +1,4 @@
+// Package mongodb provides a module for the mongodb.
 package mongodb
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Module is a module for the mongodb.
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
@@ -21,6 +23,7 @@ var (
 		mongoInvokes,
 	)
 
+	// mongoProviders is a module for the mongodb.
 	mongoProviders = fx.Provide( //nolint:gochecknoglobals
 		provideConfig,
 		NewMongoDB,
@@ -34,6 +37,7 @@ var (
 	mongoInvokes = fx.Invoke(registerHooks) //nolint:gochecknoglobals
 )
 
+// registerHooks registers hooks for the mongodb.
 func registerHooks(
 	lc fx.Lifecycle,
 	client *mongo.Client,

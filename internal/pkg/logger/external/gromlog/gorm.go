@@ -1,3 +1,4 @@
+// Package gromlog provides a logger for the application.
 package gromlog
 
 import (
@@ -10,20 +11,22 @@ import (
 )
 
 // Ref: https://articles.wesionary.team/logging-interfaces-in-go-182c28be3d18
-// implement gorm logger Interface
+// implement gorm logger Interface.
 
+// GormCustomLogger is a custom logger for the application.
 type GormCustomLogger struct {
 	logger.Logger
 	gormlogger.Config
 }
 
+// NewGormCustomLogger creates a new custom logger for the application.
 func NewGormCustomLogger(logger logger.Logger) *GormCustomLogger {
 	// cfg, err := config.ProvideLogConfig()
 	//
 	// var logger logger.logger
-	//if cfg.LogType == datamodels.Logrus && err != nil {
+	// if cfg.LogType == datamodels.Logrus && err != nil {
 	//	logger = logrous.NewLogrusLogger(cfg, constants.Dev)
-	//} else {
+	// } else {
 	//	if err != nil {
 	//		cfg = &config.LogOptions{LogLevel: "info", LogType: datamodels.Zap}
 	//	}
@@ -38,7 +41,7 @@ func NewGormCustomLogger(logger logger.Logger) *GormCustomLogger {
 	}
 }
 
-// LogMode set log mode.
+// LogMode sets log mode.
 func (l *GormCustomLogger) LogMode(level gormlogger.LogLevel) gormlogger.Interface {
 	newlogger := *l
 	newlogger.LogLevel = level
@@ -46,7 +49,7 @@ func (l *GormCustomLogger) LogMode(level gormlogger.LogLevel) gormlogger.Interfa
 	return &newlogger
 }
 
-// Info prints info.
+// Info prints info messages.
 func (l GormCustomLogger) Info(ctx context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Info {
 		l.Debugf(str, args...)

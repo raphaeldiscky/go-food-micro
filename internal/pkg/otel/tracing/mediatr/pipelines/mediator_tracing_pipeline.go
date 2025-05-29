@@ -1,3 +1,4 @@
+// Package pipelines provides a mediator tracing pipeline.
 package pipelines
 
 import (
@@ -17,11 +18,13 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// mediatorTracingPipeline is a mediator tracing pipeline.
 type mediatorTracingPipeline struct {
 	config *config
 	tracer tracing.AppTracer
 }
 
+// NewMediatorTracingPipeline creates a new mediator tracing pipeline.
 func NewMediatorTracingPipeline(
 	appTracer tracing.AppTracer,
 	opts ...Option,
@@ -37,6 +40,7 @@ func NewMediatorTracingPipeline(
 	}
 }
 
+// Handle handles a request.
 func (r *mediatorTracingPipeline) Handle(
 	ctx context.Context,
 	request interface{},
@@ -77,7 +81,7 @@ func (r *mediatorTracingPipeline) Handle(
 		componentName,
 		operationName,
 		requestName,
-	) // by convention
+	) // by convention, we use this format to identify the span name
 
 	// https://golang.org/pkg/context/#Context
 	newCtx, span := r.tracer.Start(ctx, spanName)

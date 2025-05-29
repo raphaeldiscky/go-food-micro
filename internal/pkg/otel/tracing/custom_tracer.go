@@ -1,3 +1,4 @@
+// Package tracing provides a custom tracer.
 package tracing
 
 import (
@@ -9,14 +10,17 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 )
 
+// AppTracer is a custom tracer.
 type AppTracer interface {
 	trace.Tracer
 }
 
+// appTracer is a custom tracer.
 type appTracer struct {
 	trace.Tracer
 }
 
+// Start starts a new span.
 func (c *appTracer) Start(
 	ctx context.Context,
 	spanName string,
@@ -30,6 +34,7 @@ func (c *appTracer) Start(
 	return c.Tracer.Start(ctx, spanName, opts...)
 }
 
+// NewAppTracer creates a new custom tracer.
 func NewAppTracer(name string, options ...trace.TracerOption) AppTracer {
 	// without registering `NewOtelTracing` it uses global empty (NoopTracer) TraceProvider but after using `NewOtelTracing`, global TraceProvider will be replaced
 	tracer := otel.Tracer(name, options...)

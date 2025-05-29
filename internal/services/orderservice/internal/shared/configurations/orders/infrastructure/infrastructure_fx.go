@@ -5,7 +5,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/elasticsearch"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
@@ -33,9 +33,9 @@ func Module() fx.Option {
 		grpc.Module,
 		mongodb.Module,
 		elasticsearch.Module,
-		eventstroredb.ModuleFunc(
-			func(params params.OrderProjectionParams) eventstroredb.ProjectionBuilderFuc {
-				return func(builder eventstroredb.ProjectionsBuilder) {
+		eventstoredb.ModuleFunc(
+			func(params params.OrderProjectionParams) eventstoredb.ProjectionBuilderFuc {
+				return func(builder eventstoredb.ProjectionsBuilder) {
 					builder.AddProjections(params.Projections)
 				}
 			},

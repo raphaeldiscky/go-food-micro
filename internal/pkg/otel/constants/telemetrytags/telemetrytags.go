@@ -1,5 +1,7 @@
+// Package telemetrytags provides constants for the telemetry tags.
 package telemetrytags
 
+// app constants.
 type app struct {
 	DefaultSourceName string
 	Consumer          string
@@ -33,6 +35,8 @@ type app struct {
 }
 
 // https://opentelemetry.io/docs/specs/otel/trace/semantic_conventions/messaging/
+
+// messaging constants.
 type messaging struct {
 	System          string
 	Destination     string

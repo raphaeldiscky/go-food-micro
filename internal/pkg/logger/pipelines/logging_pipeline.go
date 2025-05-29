@@ -1,3 +1,4 @@
+// Package loggingpipelines provides a logging pipeline for the application.
 package loggingpipelines
 
 import (
@@ -11,14 +12,17 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// requestLoggerPipeline is a request logger pipeline.
 type requestLoggerPipeline struct {
 	logger logger.Logger
 }
 
+// NewMediatorLoggingPipeline creates a new mediator logging pipeline.
 func NewMediatorLoggingPipeline(l logger.Logger) mediatr.PipelineBehavior {
 	return &requestLoggerPipeline{logger: l}
 }
 
+// Handle handles a request.
 func (r *requestLoggerPipeline) Handle(
 	ctx context.Context,
 	request interface{},

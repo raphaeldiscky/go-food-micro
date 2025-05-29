@@ -1,3 +1,4 @@
+// Package environment provides a module for the environment.
 package environment
 
 import (
@@ -13,6 +14,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 )
 
+// Environment is a type for the environment.
 type Environment string
 
 var (
@@ -21,6 +23,7 @@ var (
 	Production  = Environment(constants.Production)
 )
 
+// ConfigAppEnv configures the application environment.
 func ConfigAppEnv(environments ...Environment) Environment {
 	environment := Environment("")
 	if len(environments) > 0 {
@@ -52,22 +55,27 @@ func ConfigAppEnv(environments ...Environment) Environment {
 	return environment
 }
 
+// IsDevelopment checks if the environment is development.
 func (env Environment) IsDevelopment() bool {
 	return env == Development
 }
 
+// IsProduction checks if the environment is production.
 func (env Environment) IsProduction() bool {
 	return env == Production
 }
 
+// IsTest checks if the environment is test.
 func (env Environment) IsTest() bool {
 	return env == Test
 }
 
+// GetEnvironmentName gets the environment name.
 func (env Environment) GetEnvironmentName() string {
 	return string(env)
 }
 
+// EnvString gets the environment string.
 func EnvString(key, fallback string) string {
 	if value, ok := syscall.Getenv(key); ok {
 		return value
@@ -76,6 +84,7 @@ func EnvString(key, fallback string) string {
 	return fallback
 }
 
+// loadEnvFilesRecursive loads the environment files recursively.
 func loadEnvFilesRecursive() error {
 	// Start from the current working directory
 	dir, err := os.Getwd()
@@ -106,6 +115,7 @@ func loadEnvFilesRecursive() error {
 	return errors.New(".env file not found in the project hierarchy")
 }
 
+// setRootWorkingDirectoryEnvironment sets the root working directory environment.
 func setRootWorkingDirectoryEnvironment() {
 	absoluteRootWorkingDirectory := GetProjectRootWorkingDirectory()
 

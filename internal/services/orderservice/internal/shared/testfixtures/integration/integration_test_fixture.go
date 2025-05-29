@@ -18,7 +18,7 @@ import (
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	rabbithole "github.com/michaelklishin/rabbit-hole"
-	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"

@@ -1,3 +1,4 @@
+// Package logger provides a logger for the application.
 package config
 
 import (
@@ -11,6 +12,7 @@ import (
 
 var optionName = strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[LogOptions]())
 
+// LogOptions is a log options.
 type LogOptions struct {
 	LogLevel      string         `mapstructure:"level"`
 	LogType       models.LogType `mapstructure:"logType"`
@@ -18,6 +20,7 @@ type LogOptions struct {
 	EnableTracing bool           `mapstructure:"enableTracing" default:"true"`
 }
 
+// ProvideLogConfig provides a log config.
 func ProvideLogConfig(env environment.Environment) (*LogOptions, error) {
 	return config.BindConfigKey[*LogOptions](optionName, env)
 }

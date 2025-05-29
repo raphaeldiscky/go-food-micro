@@ -1,3 +1,4 @@
+// Package cqrs provides a module for the cqrs.
 package cqrs
 
 import (
@@ -6,9 +7,9 @@ import (
 	"go.uber.org/fx"
 )
 
-// when we register multiple handlers with output type `mediatr.RequestHandler` we get exception `type already provided`, so we should use tags annotation
+// when we register multiple handlers with output type `mediatr.RequestHandler` we get exception `type already provided`, so we should use tags annotation.
 
-// AsHandler annotates the given constructor to state that
+// AsHandler annotates the given constructor to state that it provides a handler to the "handlers" group.
 // it provides a handler to the "handlers" group.
 func AsHandler(handler interface{}, handlerGroupName string) interface{} {
 	return fx.Annotate(

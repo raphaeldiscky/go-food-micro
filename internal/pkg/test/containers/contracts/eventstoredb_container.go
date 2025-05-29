@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 )
 
 type EventstoreDBContainerOptions struct {

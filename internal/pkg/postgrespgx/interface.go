@@ -1,4 +1,5 @@
-package postgres
+// Package postgrespgx provides a PostgreSQL client.
+package postgrespgx
 
 // Ref:https://github.com/henvic/pgxtutorial/blob/668784624474abea3619433c6e45510f4d156649/internal/database/interface.go
 import (

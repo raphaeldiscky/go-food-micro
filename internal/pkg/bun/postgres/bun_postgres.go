@@ -1,3 +1,4 @@
+// Package postgres provides a module for the postgres.
 package postgres
 
 import (
@@ -12,6 +13,7 @@ import (
 	bun2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/bun"
 )
 
+// NewBunDB creates a new bun db.
 func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {
 	if cfg.DBName == "" {
 		return nil, errors.New("DBName is required in the config.")
@@ -55,6 +57,7 @@ func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {
 	return db, nil
 }
 
+// createDB creates a new database.
 func createDB(cfg *bun2.BunConfig) error {
 	// we should choose a default database in the connection, but because we don't have a database yet we specify postgres default database 'postgres'
 	datasource := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",

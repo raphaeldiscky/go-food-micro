@@ -1,4 +1,5 @@
-package eventstroredb
+// Package eventstoredb provides a serializer for EventStoreDB.
+package eventstoredb
 
 import (
 	"context"
@@ -7,7 +8,7 @@ import (
 	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"go.uber.org/fx"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 

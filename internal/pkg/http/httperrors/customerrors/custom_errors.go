@@ -77,8 +77,8 @@ func (e *customError) Format(s fmt.State, verb rune) {
 		if s.Flag('+') {
 			// %s	error messages separated by a colon and a space (": ")
 			// %q	double-quoted error messages separated by a colon and a space (": ")
-			//%v	one error message per line
-			//%+v	one error message per line and stack trace (if any)
+			// %v	one error message per line
+			// %+v	one error message per line and stack trace (if any)
 
 			// if we have a call-stacked error, +v shows callstack for this error
 			fmt.Fprintf(s, "%+v", e.Cause())

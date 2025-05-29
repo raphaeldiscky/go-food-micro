@@ -1,9 +1,11 @@
+// Package consumer provides a module for the consumer.
 package consumer
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 )
 
+// ConsumerConnector is a consumer connector.
 type ConsumerConnector interface {
 	// ConnectConsumerHandler Add handler to existing consumer. creates new consumer if not exist
 	ConnectConsumerHandler(messageType types.IMessage, consumerHandler ConsumerHandler) error

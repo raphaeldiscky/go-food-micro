@@ -1,3 +1,4 @@
+// Package defaultlogger provides a default logger for the application.
 package defaultLogger
 
 import (
@@ -13,6 +14,7 @@ import (
 
 var l logger.Logger
 
+// initLogger initializes the logger.
 func initLogger() {
 	logType := os.Getenv("LogConfig_LogType")
 
@@ -31,6 +33,7 @@ func initLogger() {
 	}
 }
 
+// GetLogger gets the logger.
 func GetLogger() logger.Logger {
 	if l == nil {
 		initLogger()

@@ -1,3 +1,4 @@
+// Package domain provides a module for the domain.
 package domain
 
 import (
@@ -6,6 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// Entity is a entity.
 type Entity struct {
 	id         uuid.UUID
 	entityType string
@@ -13,6 +15,7 @@ type Entity struct {
 	updatedAt  time.Time
 }
 
+// EntityDataModel is a entity data model.
 type EntityDataModel struct {
 	ID         uuid.UUID `json:"id"          bson:"id,omitempty"`
 	EntityType string    `json:"entity_type" bson:"entity_type,omitempty"`
@@ -20,6 +23,7 @@ type EntityDataModel struct {
 	UpdatedAt  time.Time `json:"updated_at"  bson:"updated_at"`
 }
 
+// IEntity is a entity.
 type IEntity interface {
 	ID() uuid.UUID
 	CreatedAt() time.Time
@@ -29,7 +33,7 @@ type IEntity interface {
 	SetId(id uuid.UUID)
 }
 
-// NewEntityWithId creates a new Entity with an id.
+// NewEntityWithId creates a new entity with an id.
 func NewEntityWithId(id uuid.UUID, entityType string) *Entity {
 	return &Entity{
 		id:         id,
@@ -38,7 +42,7 @@ func NewEntityWithId(id uuid.UUID, entityType string) *Entity {
 	}
 }
 
-// NewEntity creates a new Entity.
+// NewEntity creates a new entity.
 func NewEntity(entityType string) *Entity {
 	return &Entity{
 		createdAt:  time.Now(),
@@ -46,34 +50,42 @@ func NewEntity(entityType string) *Entity {
 	}
 }
 
+// ID gets the id.
 func (e *Entity) ID() uuid.UUID {
 	return e.id
 }
 
+// CreatedAt gets the created at.
 func (e *Entity) CreatedAt() time.Time {
 	return e.createdAt
 }
 
+// UpdatedAt gets the updated at.
 func (e *Entity) UpdatedAt() time.Time {
 	return e.updatedAt
 }
 
+// EntityType gets the entity type.
 func (e *Entity) EntityType() string {
 	return e.entityType
 }
 
+// SetUpdatedAt sets the updated at.
 func (e *Entity) SetUpdatedAt(updatedAt time.Time) {
 	e.updatedAt = updatedAt
 }
 
+// SetEntityType sets the entity type.
 func (e *Entity) SetEntityType(entityType string) {
 	e.entityType = entityType
 }
 
+// SetId sets the id.
 func (e *Entity) SetId(id uuid.UUID) {
 	e.id = id
 }
 
+// ToDataModel converts the entity to a data model.
 func (e *Entity) ToDataModel() *EntityDataModel {
 	return &EntityDataModel{
 		ID:         e.id,

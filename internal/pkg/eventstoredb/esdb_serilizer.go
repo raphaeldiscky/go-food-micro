@@ -1,4 +1,5 @@
-package eventstroredb
+// Package eventstoredb provides a serializer for EventStoreDB.
+package eventstoredb
 
 import (
 	"io"
@@ -19,7 +20,7 @@ import (
 	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/readposition"
 	truncatePosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/truncateposition"
 	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
-	esErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/errors"
+	esErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/errors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 

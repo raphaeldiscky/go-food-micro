@@ -1,3 +1,4 @@
+// Package zap provides a logger for the application.
 package zap
 
 import (
@@ -7,8 +8,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
 )
 
-// Module provided to fxlog
 // https://uber-go.github.io/fx/modules.html
+
+// Module is a module for the zap logger.
 var Module = fx.Module("zapfx",
 
 	// - order is not important in provide
@@ -23,6 +25,7 @@ var Module = fx.Module("zapfx",
 	),
 )
 
+// ModuleFunc is a function that returns a module for the zap logger.
 var ModuleFunc = func(l logger.Logger) fx.Option {
 	return fx.Module(
 		"zapfx",

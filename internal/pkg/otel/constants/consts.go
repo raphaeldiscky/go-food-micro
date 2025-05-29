@@ -1,5 +1,7 @@
+// Package constants provides constants for the otel.
 package constants
 
+// constants for the otel.
 const (
 	TraceId      = "general.trace-id"
 	SpanId       = "general.span-id"

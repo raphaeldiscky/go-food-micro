@@ -1,3 +1,4 @@
+// Package metrics provides a module for the metrics.
 package metrics
 
 // https://github.com/riferrei/otel-with-golang/blob/main/main.go
@@ -27,6 +28,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// OtelMetrics is a metrics.
 type OtelMetrics struct {
 	config      *MetricsOptions
 	logger      logger.Logger
@@ -66,10 +68,12 @@ func NewOtelMetrics(
 	return otelMetrics, nil
 }
 
+// Shutdown shuts down the metrics.
 func (o *OtelMetrics) Shutdown(ctx context.Context) error {
 	return o.provider.Shutdown(ctx)
 }
 
+// newResource creates a new resource.
 func (o *OtelMetrics) newResource() (*resource.Resource, error) {
 	// https://github.com/uptrace/uptrace-go/blob/master/example/otlp-traces/main.go#L49C1-L56C5
 	resource, err := resource.New(
@@ -90,6 +94,7 @@ func (o *OtelMetrics) newResource() (*resource.Resource, error) {
 	return resource, err
 }
 
+// initMetrics initializes the metrics.
 func (o *OtelMetrics) initMetrics(
 	resource *resource.Resource,
 ) (AppMetrics, error) {
@@ -125,6 +130,7 @@ func (o *OtelMetrics) initMetrics(
 	return appMeter, nil
 }
 
+// configExporters configures the exporters.
 func (o *OtelMetrics) configExporters() ([]metric.Reader, error) {
 	ctx := context.Background()
 
@@ -288,8 +294,8 @@ func (o *OtelMetrics) configExporters() ([]metric.Reader, error) {
 	return exporters, nil
 }
 
-// we could also use our existing server app port and a new /metrics endpoint instead of a new server with different port for our app metrics
-
+// RegisterMetricsEndpoint registers the metrics endpoint.
+// we could also use our existing server app port and a new /metrics endpoint instead of a new server with different port for our app metrics.
 func (o *OtelMetrics) RegisterMetricsEndpoint(
 	server contracts.EchoHttpServer,
 ) {

@@ -1,3 +1,4 @@
+// Package tracing provides a module for the tracing.
 package tracing
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Module is a module for the tracing.
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
@@ -18,6 +20,7 @@ var (
 		tracingInvokes,
 	)
 
+	// tracingProviders is a module for the tracing.
 	tracingProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
 		ProvideTracingConfig,
 		NewOtelTracing,
@@ -29,17 +32,20 @@ var (
 		),
 	))
 
+	// tracingInvokes is a module for the tracing.
 	tracingInvokes = fx.Options(
 		fx.Invoke(registerHooks),
 	)
 )
 
+// provideTracer provides a tracer.
 func provideTracer(
 	tracingOtel *TracingOpenTelemetry,
 ) AppTracer {
 	return tracingOtel.appTracer
 }
 
+// registerHooks registers hooks for the tracing.
 // we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,

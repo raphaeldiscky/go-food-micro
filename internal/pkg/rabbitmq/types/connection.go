@@ -92,7 +92,7 @@ func (c *internalConnection) Channel() (*amqp091.Channel, error) {
 	// go func() {
 	//	<-notifyChannelClose //Listen to notifyChannelClose
 	//	c.errChannelChan <- errors.New("Channel Closed")
-	//}()
+	// }()
 
 	return ch, err
 }

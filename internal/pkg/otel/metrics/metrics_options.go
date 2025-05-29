@@ -1,3 +1,4 @@
+// Package metrics provides options for the metrics.
 package metrics
 
 import (
@@ -8,6 +9,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// OTLPProvider is a provider for the otlp.
 type OTLPProvider struct {
 	Name         string            `mapstructure:"name"`
 	Enabled      bool              `mapstructure:"enabled"`
@@ -15,6 +17,7 @@ type OTLPProvider struct {
 	OTLPHeaders  map[string]string `mapstructure:"otlpHeaders"`
 }
 
+// MetricsOptions is a config for the metrics.
 type MetricsOptions struct {
 	Host                      string         `mapstructure:"host"`
 	Port                      string         `mapstructure:"port"`
@@ -31,6 +34,7 @@ type MetricsOptions struct {
 	SignozExporterOptions     *OTLPProvider  `mapstructure:"signozExporterOptions"`
 }
 
+// ProvideMetricsConfig provides a metrics config.
 func ProvideMetricsConfig(
 	environment environment.Environment,
 ) (*MetricsOptions, error) {

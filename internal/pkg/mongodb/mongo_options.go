@@ -1,3 +1,4 @@
+// Package mongodb provides options for the mongodb.
 package mongodb
 
 import (
@@ -8,6 +9,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// MongoDbOptions is a mongodb options.
 type MongoDbOptions struct {
 	Host          string `mapstructure:"host"`
 	Port          int    `mapstructure:"port"`
@@ -18,6 +20,7 @@ type MongoDbOptions struct {
 	EnableTracing bool   `mapstructure:"enableTracing" default:"true"`
 }
 
+// provideConfig provides a mongodb config.
 func provideConfig(
 	environment environment.Environment,
 ) (*MongoDbOptions, error) {

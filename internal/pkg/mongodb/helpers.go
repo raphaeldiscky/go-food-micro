@@ -1,3 +1,4 @@
+// Package mongodb provides helpers for the mongodb.
 package mongodb
 
 import (
@@ -13,6 +14,7 @@ import (
 
 // https://stackoverflow.com/a/23650312/581476
 
+// Paginate paginates the mongodb.
 func Paginate[T any](
 	ctx context.Context,
 	listQuery *utils.ListQuery,

@@ -1,5 +1,7 @@
+// Package bun provides a module for the bun.
 package bun
 
+// BunConfig is a bun config.
 type BunConfig struct {
 	Host     string `mapstructure:"host"`
 	Port     int    `mapstructure:"port"`

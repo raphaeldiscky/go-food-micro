@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"

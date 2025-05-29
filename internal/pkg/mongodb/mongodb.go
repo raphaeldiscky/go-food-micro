@@ -1,3 +1,4 @@
+// Package mongodb provides a module for the mongodb.
 package mongodb
 
 import (
@@ -14,6 +15,7 @@ import (
 	mgm "github.com/kamva/mgm/v3"
 )
 
+// constants for the mongodb.
 const (
 	connectTimeout  = 60 * time.Second
 	maxConnIdleTime = 3 * time.Minute
@@ -21,7 +23,7 @@ const (
 	maxPoolSize     = 300
 )
 
-// NewMongoDB Create new MongoDB client.
+// NewMongoDB creates a new mongodb client.
 func NewMongoDB(cfg *MongoDbOptions) (*mongo.Client, error) {
 	uriAddress := fmt.Sprintf(
 		"mongodb://%s:%s@%s:%d",
@@ -49,7 +51,7 @@ func NewMongoDB(cfg *MongoDbOptions) (*mongo.Client, error) {
 	}
 
 	if cfg.EnableTracing {
-		// add tracing
+		// add tracing to the mongodb client
 		opt.Monitor = otelmongo.NewMonitor()
 	}
 

@@ -1,6 +1,7 @@
 // Ref: https://github.com/erni27/mapper/
 // https://github.com/alexsem80/go-mapper
 
+// Package mapper provides a mapper for structs.
 package mapper
 
 import (
@@ -37,16 +38,19 @@ const (
 	DestKeyIndex
 )
 
+// mappingsEntry is a struct that contains the source and destination types.
 type mappingsEntry struct {
 	SourceType      reflect.Type
 	DestinationType reflect.Type
 }
 
+// typeMeta is a struct that contains the keys to tags and tags to keys.
 type typeMeta struct {
 	keysToTags map[string]string
 	tagsToKeys map[string]string
 }
 
+// MapFunc is a function that maps a source type to a destination type.
 type MapFunc[TSrc any, TDst any] func(TSrc) TDst
 
 var (
@@ -61,15 +65,18 @@ func init() {
 	}
 }
 
+// Configure is a function that configures the mapper.
 func Configure(config *MapperConfig) {
 	mapperConfig = config
 }
 
+// ClearMappings is a function that clears the mappings.
 func ClearMappings() {
 	profiles = map[string][][2]string{}
 	maps = map[mappingsEntry]interface{}{}
 }
 
+// CreateMap is a function that creates a map.
 func CreateMap[TSrc any, TDst any]() error {
 	var src TSrc
 	var dst TDst
@@ -131,6 +138,7 @@ func CreateMap[TSrc any, TDst any]() error {
 	return nil
 }
 
+// CreateCustomMap is a function that creates a custom map.
 func CreateCustomMap[TSrc any, TDst any](fn MapFunc[TSrc, TDst]) error {
 	if fn == nil {
 		return ErrNilFunction
@@ -155,13 +163,14 @@ func CreateCustomMap[TSrc any, TDst any](fn MapFunc[TSrc, TDst]) error {
 	//	srcType = srcType.Elem()
 	//}
 	//
-	// if desType.Kind() == reflect.Ptr && desType.Elem().Kind() == reflect.Struct {
+	//if desType.Kind() == reflect.Ptr && desType.Elem().Kind() == reflect.Struct {
 	//	desType = desType.Elem()
 	//}
 
 	return nil
 }
 
+// Map is a function that maps a source type to a destination type.
 func Map[TDes any, TSrc any](src TSrc) (TDes, error) {
 	if reflect.ValueOf(src).IsZero() {
 		return *new(TDes), nil
@@ -217,6 +226,7 @@ func Map[TDes any, TSrc any](src TSrc) (TDes, error) {
 	return des, nil
 }
 
+// configProfile is a function that configures the profile.
 func configProfile(srcType reflect.Type, destType reflect.Type) {
 	// check for provided types kind.
 	// if not struct - skip.
@@ -293,10 +303,12 @@ func configProfile(srcType reflect.Type, destType reflect.Type) {
 	profiles[getProfileKey(srcType, destType)] = profile
 }
 
+// getProfileKey is a function that gets the profile key.
 func getProfileKey(srcType reflect.Type, destType reflect.Type) string {
 	return fmt.Sprintf("%s_%s", srcType.Name(), destType.Name())
 }
 
+// getTypeMeta is a function that gets the type meta.
 func getTypeMeta(val reflect.Type) typeMeta {
 	fieldsNum := val.NumField()
 
@@ -320,6 +332,7 @@ func getTypeMeta(val reflect.Type) typeMeta {
 	}
 }
 
+// getTypeMethods is a function that gets the type methods.
 func getTypeMethods(val reflect.Type) []string {
 	methodsNum := val.NumMethod()
 	var keys []string
@@ -332,7 +345,7 @@ func getTypeMethods(val reflect.Type) []string {
 	return keys
 }
 
-// mapStructs func perform structs casts.
+// mapStructs is a function that maps structs.
 func mapStructs[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	// get values types
 	// if types or their slices were not registered - abort
@@ -380,7 +393,7 @@ func mapStructs[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	}
 }
 
-// mapSlices func perform slices casts.
+// mapSlices is a function that maps slices.
 func mapSlices[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	// Make dest slice
 	dest.Set(reflect.MakeSlice(dest.Type(), src.Len(), src.Cap()))
@@ -395,7 +408,7 @@ func mapSlices[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	}
 }
 
-// mapPointers func perform pointers casts.
+// mapPointers is a function that maps pointers.
 func mapPointers[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	// create new struct from provided dest type
 	val := reflect.New(dest.Type().Elem()).Elem()
@@ -406,7 +419,7 @@ func mapPointers[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	dest.Set(val.Addr())
 }
 
-// mapMaps func perform maps casts.
+// mapMaps is a function that maps maps.
 func mapMaps[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	// Make dest map
 	dest.Set(reflect.MakeMapWithSize(dest.Type(), src.Len()))
@@ -426,6 +439,7 @@ func mapMaps[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	}
 }
 
+// processValues is a function that processes the values.
 func processValues[TDes any, TSrc any](
 	src reflect.Value,
 	dest reflect.Value,

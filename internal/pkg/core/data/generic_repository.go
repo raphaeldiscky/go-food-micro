@@ -1,3 +1,4 @@
+// Package data provides a module for the data.
 package data
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 )
 
+// GenericRepositoryWithDataModel is a generic repository with data model.
 type GenericRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}] interface {
 	Add(ctx context.Context, entity TEntity) error
 	AddAll(ctx context.Context, entities []TEntity) error
@@ -30,6 +32,7 @@ type GenericRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}]
 	Find(ctx context.Context, specification specification.Specification) ([]TEntity, error)
 }
 
+// GenericRepository is a generic repository.
 type GenericRepository[TEntity interface{}] interface {
 	GenericRepositoryWithDataModel[TEntity, TEntity]
 }

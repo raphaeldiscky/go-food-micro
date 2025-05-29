@@ -1,3 +1,4 @@
+// Package environment provides a module for the environment.
 package environment
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 )
 
+// FixProjectRootWorkingDirectoryPath fixes the project root working directory path.
 func FixProjectRootWorkingDirectoryPath() {
 	currentWD, _ := os.Getwd()
 	log.Printf("Current working directory is: `%s`", currentWD)
@@ -24,6 +26,7 @@ func FixProjectRootWorkingDirectoryPath() {
 	log.Printf("New fixed working directory is: `%s`", newWD)
 }
 
+// GetProjectRootWorkingDirectory gets the project root working directory.
 func GetProjectRootWorkingDirectory() string {
 	var rootWorkingDirectory string
 	// https://articles.wesionary.team/environment-variable-configuration-in-your-golang-project-using-viper-4e8289ef664d
@@ -46,6 +49,7 @@ func GetProjectRootWorkingDirectory() string {
 	return absoluteRootWorkingDirectory
 }
 
+// getProjectRootDirectoryFromProjectName gets the project root directory from the project name.
 func getProjectRootDirectoryFromProjectName(pn string) string {
 	// set root working directory of our app in the viper
 	// https://stackoverflow.com/a/47785436/581476
@@ -58,6 +62,7 @@ func getProjectRootDirectoryFromProjectName(pn string) string {
 	return wd
 }
 
+// searchRootDirectory searches the root directory.
 func searchRootDirectory(
 	dir string,
 ) (string, error) {

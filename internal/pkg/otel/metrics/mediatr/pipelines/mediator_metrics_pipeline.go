@@ -1,3 +1,4 @@
+// Package pipelines provides a mediator metrics pipeline.
 package pipelines
 
 import (
@@ -18,11 +19,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// mediatorMetricsPipeline is a mediator metrics pipeline.
 type mediatorMetricsPipeline struct {
 	config *config
 	meter  metrics.AppMetrics
 }
 
+// NewMediatorMetricsPipeline creates a new mediator metrics pipeline.
 func NewMediatorMetricsPipeline(
 	appMetrics metrics.AppMetrics,
 	opts ...Option,
@@ -38,6 +41,7 @@ func NewMediatorMetricsPipeline(
 	}
 }
 
+// Handle handles a request.
 func (r *mediatorMetricsPipeline) Handle(
 	ctx context.Context,
 	request interface{},
@@ -132,15 +136,15 @@ func (r *mediatorMetricsPipeline) Handle(
 		return nil, err
 	}
 
-	// Start recording the duration
+	// start recording the duration
 	startTime := time.Now()
 
 	response, err := next(ctx)
 
-	// Calculate the duration
+	// calculate the duration
 	duration := time.Since(startTime).Milliseconds()
 
-	// response will be nil if we have an error
+	// response will be nil if we have an error, so we need to check for that
 	responseSnakeName := typemapper.GetSnakeTypeName(response)
 
 	opt := metric.WithAttributes(
@@ -151,7 +155,7 @@ func (r *mediatorMetricsPipeline) Handle(
 		customAttribute.Object(resultTag, response),
 	)
 
-	// Record metrics
+	// record metrics
 	totalRequestsCounter.Add(ctx, 1, opt)
 
 	if err == nil {

@@ -1,7 +1,9 @@
+// Package constants provides a module for the constants.
 package constants
 
 import "time"
 
+// constants.
 const (
 	ConfigPath           = "CONFIG_PATH"
 	AppEnv               = "APP_ENV"

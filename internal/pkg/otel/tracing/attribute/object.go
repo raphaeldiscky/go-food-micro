@@ -1,3 +1,4 @@
+// Package attribute provides a module for the attribute.
 package attribute
 
 import (
@@ -6,7 +7,7 @@ import (
 	json "github.com/goccy/go-json"
 )
 
-// Object creates a KeyValue with a interface{} Value type.
+// Object creates a KeyValue with a interface{} value type.
 func Object(k string, v interface{}) attribute.KeyValue {
 	marshal, err := json.Marshal(&v)
 	if err != nil {

@@ -1,3 +1,4 @@
+// Package zap provides a logger for the application.
 package zap
 
 import (
@@ -15,6 +16,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
 )
 
+// zapLogger is a zap logger.
 type zapLogger struct {
 	level       string
 	sugarLogger *zap.SugaredLogger
@@ -22,6 +24,7 @@ type zapLogger struct {
 	logOptions  *config2.LogOptions
 }
 
+// ZapLogger is a zap logger.
 type ZapLogger interface {
 	logger.Logger
 	InternalLogger() *zap.Logger
@@ -51,10 +54,12 @@ func NewZapLogger(
 	return zapLogger
 }
 
+// InternalLogger returns the internal logger.
 func (l *zapLogger) InternalLogger() *zap.Logger {
 	return l.logger
 }
 
+// getLoggerLevel gets the logger level.
 func (l *zapLogger) getLoggerLevel() zapcore.Level {
 	level, exist := loggerLevelMap[l.level]
 	if !exist {
@@ -124,10 +129,12 @@ func (l *zapLogger) initLogger(env environment.Environment) {
 	l.sugarLogger = logger.Sugar()
 }
 
+// Configure configures the logger.
 func (l *zapLogger) Configure(cfg func(internalLog interface{})) {
 	cfg(l.logger)
 }
 
+// LogType returns the log type.
 func (l *zapLogger) LogType() models.LogType {
 	return models.Zap
 }
@@ -148,6 +155,7 @@ func (l *zapLogger) Debugf(template string, args ...interface{}) {
 	l.sugarLogger.Debugf(template, args...)
 }
 
+// Debugw logs a message with fields.
 func (l *zapLogger) Debugw(msg string, fields logger.Fields) {
 	zapFields := mapToZapFields(fields)
 	l.logger.Debug(msg, zapFields...)
@@ -252,6 +260,7 @@ func (l *zapLogger) Sync() error {
 	return l.sugarLogger.Sync()
 }
 
+// GrpcMiddlewareAccessLogger logs a grpc middleware access message.
 func (l *zapLogger) GrpcMiddlewareAccessLogger(
 	method string,
 	time time.Duration,
@@ -267,6 +276,7 @@ func (l *zapLogger) GrpcMiddlewareAccessLogger(
 	)
 }
 
+// GrpcClientInterceptorLogger logs a grpc client interceptor message.
 func (l *zapLogger) GrpcClientInterceptorLogger(
 	method string,
 	req, reply interface{},
@@ -285,6 +295,7 @@ func (l *zapLogger) GrpcClientInterceptorLogger(
 	)
 }
 
+// mapToZapFields maps data to zap fields.
 func mapToZapFields(data map[string]interface{}) []zap.Field {
 	fields := make([]zap.Field, 0, len(data))
 

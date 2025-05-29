@@ -1,6 +1,5 @@
+// Package gomigrate provides a migration runner.
 package gomigrate
-
-// https://github.com/golang-migrate/migrate/blob/856ea12df9d230b0145e23d951b7dbd6b86621cb/database/postgres/TUTORIAL.md#optional-run-migrations-within-your-go-app
 
 import (
 	"context"
@@ -19,6 +18,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
 )
 
+// goMigratePostgresMigrator is a go migrate postgres migrator.
 type goMigratePostgresMigrator struct {
 	config     *migration.MigrationOptions
 	db         *sql.DB
@@ -27,6 +27,7 @@ type goMigratePostgresMigrator struct {
 	migration  *migrate.Migrate
 }
 
+// NewGoMigratorPostgres creates a new go migrate postgres migrator.
 func NewGoMigratorPostgres(
 	config *migration.MigrationOptions,
 	db *sql.DB,
@@ -59,6 +60,7 @@ func NewGoMigratorPostgres(
 	}, nil
 }
 
+// Up runs the up migration.
 func (m *goMigratePostgresMigrator) Up(_ context.Context, version uint) error {
 	if m.config.SkipMigration {
 		m.logger.Info("database migration skipped")
@@ -85,6 +87,7 @@ func (m *goMigratePostgresMigrator) Up(_ context.Context, version uint) error {
 	return nil
 }
 
+// Down runs the down migration.
 func (m *goMigratePostgresMigrator) Down(_ context.Context, version uint) error {
 	if m.config.SkipMigration {
 		m.logger.Info("database migration skipped")
@@ -107,6 +110,7 @@ func (m *goMigratePostgresMigrator) Down(_ context.Context, version uint) error 
 	return nil
 }
 
+// executeCommand executes a command.
 func (m *goMigratePostgresMigrator) executeCommand(
 	command migration.CommandType,
 	version uint,

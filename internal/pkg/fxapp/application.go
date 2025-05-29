@@ -62,13 +62,13 @@ func (a *application) Run() {
 	//// startup ctx just for setup dependencies about 15 seconds
 	// const defaultTimeout = 15 * time.Second
 	// startCtx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	//defer cancel()
+	// defer cancel()
 	//
-	//if err := fxApp.Start(startCtx); err != nil {
+	// if err := fxApp.Start(startCtx); err != nil {
 	//	os.Exit(1)
 	//}
 	//// wait until get a os signal
-	//sig := <-fxApp.Wait()
+	// sig := <-fxApp.Wait()
 	//exitCode := sig.ExitCode
 	//// shutdown ctx just for shut down process and about 15 seconds
 	//stopCtx, cancel := context.WithTimeout(context.Background(), defaultTimeout)

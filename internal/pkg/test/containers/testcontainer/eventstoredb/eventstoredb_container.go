@@ -13,8 +13,8 @@ import (
 
 	testcontainers "github.com/testcontainers/testcontainers-go"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
@@ -107,7 +107,7 @@ func (g *eventstoredbTestContainers) Start(
 		return nil, err
 	}
 
-	return eventstroredb.NewEventStoreDB(eventstoredbOptions)
+	return eventstoredb.NewEventStoreDB(eventstoredbOptions)
 }
 
 func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {

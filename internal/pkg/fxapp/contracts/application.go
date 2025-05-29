@@ -1,3 +1,4 @@
+// Package contracts provides a module for the contracts.
 package contracts
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Application is a contract for the application.
 type Application interface {
 	Container
 	RegisterHook(function interface{})

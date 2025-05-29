@@ -1,3 +1,4 @@
+// Package repository provides a generic repository for the mongodb.
 package repository
 
 import (
@@ -30,13 +31,15 @@ import (
 // https://www.mongodb.com/docs/drivers/go/current/quick-reference/
 // https://www.mongodb.com/docs/drivers/go/current/fundamentals/bson/
 // https://www.mongodb.com/docs
+
+// mongoGenericRepository is a generic repository for the mongodb.
 type mongoGenericRepository[TDataModel interface{}, TEntity interface{}] struct {
 	db             *mongo.Client
 	databaseName   string
 	collectionName string
 }
 
-// NewGenericMongoRepositoryWithDataModel create new gorm generic repository.
+// NewGenericMongoRepositoryWithDataModel creates a new generic mongo repository with data model.
 func NewGenericMongoRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}](
 	db *mongo.Client,
 	databaseName string,
@@ -49,7 +52,7 @@ func NewGenericMongoRepositoryWithDataModel[TDataModel interface{}, TEntity inte
 	}
 }
 
-// NewGenericMongoRepository create new gorm generic repository.
+// NewGenericMongoRepository creates a new generic mongo repository.
 func NewGenericMongoRepository[TEntity interface{}](
 	db *mongo.Client,
 	databaseName string,
@@ -62,6 +65,7 @@ func NewGenericMongoRepository[TEntity interface{}](
 	}
 }
 
+// Add adds an entity to the database.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Add(
 	ctx context.Context,
 	entity TEntity,
@@ -97,6 +101,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Add(
 	return nil
 }
 
+// AddAll adds multiple entities to the database.
 func (m *mongoGenericRepository[TDataModel, TEntity]) AddAll(
 	ctx context.Context,
 	entities []TEntity,
@@ -111,6 +116,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) AddAll(
 	return nil
 }
 
+// GetById gets an entity by id.
 func (m *mongoGenericRepository[TDataModel, TEntity]) GetById(
 	ctx context.Context,
 	id uuid.UUID,
@@ -166,6 +172,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetById(
 	}
 }
 
+// GetAll gets all entities.
 func (m *mongoGenericRepository[TDataModel, TEntity]) GetAll(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -200,6 +207,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetAll(
 	}
 }
 
+// Search searches for entities.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Search(
 	ctx context.Context,
 	searchTerm string,
@@ -266,6 +274,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Search(
 	}
 }
 
+// GetByFilter gets entities by filter.
 func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFilter(
 	ctx context.Context,
 	filters map[string]interface{},
@@ -314,6 +323,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFilter(
 	}
 }
 
+// GetByFuncFilter gets entities by filter function.
 func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFuncFilter(
 	ctx context.Context,
 	filterFunc func(TEntity) bool,
@@ -321,6 +331,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFuncFilter(
 	return nil, nil
 }
 
+// FirstOrDefault gets the first entity by filter.
 func (m *mongoGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 	ctx context.Context,
 	filters map[string]interface{},
@@ -362,6 +373,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 	}
 }
 
+// Update updates an entity.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Update(
 	ctx context.Context,
 	entity TEntity,
