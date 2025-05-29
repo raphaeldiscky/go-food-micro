@@ -355,12 +355,12 @@ func (_c *Serializer_UnmarshalToMap_Call) RunAndReturn(run func([]byte, *map[str
 	return _c
 }
 
-// UnmarshalToMapFromJson provides a mock function with given fields: data, v
-func (_m *Serializer) UnmarshalToMapFromJson(data string, v *map[string]interface{}) error {
+// UnmarshalToMapFromJSON provides a mock function with given fields: data, v
+func (_m *Serializer) UnmarshalToMapFromJSON(data string, v *map[string]interface{}) error {
 	ret := _m.Called(data, v)
 
 	if len(ret) == 0 {
-		panic("no return value specified for UnmarshalToMapFromJson")
+		panic("no return value specified for UnmarshalToMapFromJSON")
 	}
 
 	var r0 error
@@ -373,16 +373,16 @@ func (_m *Serializer) UnmarshalToMapFromJson(data string, v *map[string]interfac
 	return r0
 }
 
-// Serializer_UnmarshalToMapFromJson_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UnmarshalToMapFromJson'
+// Serializer_UnmarshalToMapFromJson_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UnmarshalToMapFromJSON'
 type Serializer_UnmarshalToMapFromJson_Call struct {
 	*mock.Call
 }
 
-// UnmarshalToMapFromJson is a helper method to define mock.On call
+// UnmarshalToMapFromJSON is a helper method to define mock.On call
 //   - data string
 //   - v *map[string]interface{}
-func (_e *Serializer_Expecter) UnmarshalToMapFromJson(data interface{}, v interface{}) *Serializer_UnmarshalToMapFromJson_Call {
-	return &Serializer_UnmarshalToMapFromJson_Call{Call: _e.mock.On("UnmarshalToMapFromJson", data, v)}
+func (_e *Serializer_Expecter) UnmarshalToMapFromJSON(data interface{}, v interface{}) *Serializer_UnmarshalToMapFromJson_Call {
+	return &Serializer_UnmarshalToMapFromJson_Call{Call: _e.mock.On("UnmarshalToMapFromJSON", data, v)}
 }
 
 func (_c *Serializer_UnmarshalToMapFromJson_Call) Run(run func(data string, v *map[string]interface{})) *Serializer_UnmarshalToMapFromJson_Call {

@@ -103,8 +103,8 @@ type EventSourcedAggregateRootDataModel struct {
 	OriginalVersion int64 `json:"originalVersion" bson:"originalVersion"`
 }
 
-// NewEventSourcedAggregateRootWithId creates a new event sourced aggregate root with an id.
-func NewEventSourcedAggregateRootWithId(
+// NewEventSourcedAggregateRootWithID creates a new event sourced aggregate root with an id.
+func NewEventSourcedAggregateRootWithID(
 	id uuid.UUID,
 	aggregateType string,
 	when WhenFunc,
@@ -230,7 +230,7 @@ func (a *EventSourcedAggregateRoot) Apply(event domain.IDomainEvent, isNew bool)
 // fold restores the aggregate state with events that are loaded form the event store and increase the current version and last commit version.
 func (a *EventSourcedAggregateRoot) fold(
 	event domain.IDomainEvent,
-	metadata metadata.Metadata,
+	_ metadata.Metadata,
 ) error {
 	err := a.when(event)
 	if err != nil {

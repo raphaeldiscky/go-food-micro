@@ -19,8 +19,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 )
 
-// HttpTrace returns echo middleware which will trace incoming requests.
-func HttpTrace(opts ...Option) echo.MiddlewareFunc {
+// HTTPTrace returns echo middleware which will trace incoming requests.
+func HTTPTrace(opts ...Option) echo.MiddlewareFunc {
 	cfg := defualtConfig
 	for _, opt := range opts {
 		opt.apply(&cfg)

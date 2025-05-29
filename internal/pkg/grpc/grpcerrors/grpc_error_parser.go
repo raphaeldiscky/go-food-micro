@@ -37,7 +37,7 @@ func ParseError(err error) GrpcErr {
 				customErr.Error(),
 				stackTrace,
 			)
-		case customErrors.IsApiError(err, customErr.Status()):
+		case customErrors.IsAPIError(err, customErr.Status()):
 			return NewAPIGrpcError(
 				codes.Code(customErr.Status()),
 				customErr.Error(),

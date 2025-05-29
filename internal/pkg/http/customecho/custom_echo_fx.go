@@ -31,7 +31,7 @@ var (
 		// https://uber-go.github.io/fx/value-groups/consume.html#with-annotated-functions
 		// https://uber-go.github.io/fx/annotate.html
 		fx.Annotate(
-			NewEchoHttpServer,
+			NewEchoHTTPServer,
 			fx.ParamTags(``, ``, `optional:"true"`),
 		),
 	))
@@ -51,7 +51,7 @@ func registerHooks(
 	logger logger.Logger,
 ) {
 	lc.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
+		OnStart: func(_ context.Context) error {
 			// https://github.com/uber-go/fx/blob/v1.20.0/app.go#L573
 			// this ctx is just for startup dependencies setup and OnStart callbacks, and it has short timeout 15s, and it is not alive in whole lifetime app
 			// if we need an app context which is alive until the app context done we should create it manually here
@@ -59,13 +59,13 @@ func registerHooks(
 			go func() {
 				// https://medium.com/@mokiat/proper-http-shutdown-in-go-bd3bfaade0f2
 				// When Shutdown is called, Serve, ListenAndServe, and ListenAndServeTLS immediately return ErrServerClosed. Make sure the program doesn’t exit and waits instead for Shutdown to return.
-				if err := echoServer.RunHttpServer(); !errors.Is(
+				if err := echoServer.RunHTTPServer(); !errors.Is(
 					err,
 					http.ErrServerClosed,
 				) {
 					// do a fatal for going to OnStop process
 					logger.Fatalf(
-						"(EchoHttpServer.RunHttpServer) error in running server: {%v}",
+						"(EchoHttpServer.RunHTTPServer) error in running server: {%v}",
 						err,
 					)
 				}

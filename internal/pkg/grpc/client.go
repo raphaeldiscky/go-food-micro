@@ -86,9 +86,7 @@ func waitUntilConditionMet(
 	meet := conditionToMet()
 	for !meet {
 		if timeOutExpired {
-			return errors.New(
-				"grpc connection could not be established in the given timeout.",
-			)
+			return errors.New("grpc connection could not be established in the given timeout")
 		}
 		time.Sleep(time.Second * 2)
 		meet = conditionToMet()

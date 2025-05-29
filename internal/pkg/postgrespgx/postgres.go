@@ -49,7 +49,7 @@ type Pgx struct {
 // NewPgx func for connection to PostgreSQL database.
 func NewPgx(cfg *PostgresPgxOptions) (*Pgx, error) {
 	if cfg.DBName == "" {
-		return nil, errors.New("dbName is required in the config.")
+		return nil, errors.New("dbname is required in the config")
 	}
 
 	err := createDB(cfg)

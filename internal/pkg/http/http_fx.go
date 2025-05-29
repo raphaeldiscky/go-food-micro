@@ -1,3 +1,4 @@
+// Package http provides the http module.
 package http
 
 import (
@@ -7,7 +8,7 @@ import (
 	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
 )
 
-// Module provided to fxlog
+// Module is the module for the http.
 // https://uber-go.github.io/fx/modules.html
 var Module = fx.Module("httpfx",
 	// - order is not important in provide

@@ -12,7 +12,7 @@ import (
 
 // EchoHttpServer is an interface that represents a echo http server.
 type EchoHttpServer interface {
-	RunHttpServer(configEcho ...func(echo *echo.Echo)) error
+	RunHTTPServer(configEcho ...func(echo *echo.Echo)) error
 	GracefulShutdown(ctx context.Context) error
 	ApplyVersioningFromHeader()
 	GetEchoInstance() *echo.Echo

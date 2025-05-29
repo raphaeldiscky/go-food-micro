@@ -94,7 +94,7 @@ func (c *postgresMessageServiceTest) SetupTest() {
 	).RequireStart()
 
 	c.dbContext = gormDBContext
-	c.dbFilePath = gormOptions.Dns()
+	c.dbFilePath = gormOptions.DND()
 	c.app = app
 
 	c.initDB()

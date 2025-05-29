@@ -23,7 +23,7 @@ func NewGorm(cfg *GormOptions) (*gorm.DB, error) {
 	}
 
 	if cfg.UseSQLLite {
-		db, err := createSQLLiteDB(cfg.Dns())
+		db, err := createSQLLiteDB(cfg.DND())
 
 		return db, err
 	}

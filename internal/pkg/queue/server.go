@@ -19,6 +19,7 @@ func NewServeMux() *asynq.ServeMux {
 
 // NewServer creates a new server.
 func NewServer(config *redis2.RedisOptions, logger logger.Logger) *asynq.Server {
+	logger.Infof("Creating new server with config: %+v", config)
 	return asynq.NewServer(
 		asynq.RedisClientOpt{Addr: fmt.Sprintf("%s:%d", config.Host, config.Port)},
 		asynq.Config{Concurrency: 10},
@@ -28,7 +29,7 @@ func NewServer(config *redis2.RedisOptions, logger logger.Logger) *asynq.Server 
 // HookServer hooks the server.
 func HookServer(lifecycle fx.Lifecycle, server *asynq.Server, mux *asynq.ServeMux) {
 	lifecycle.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
+		OnStart: func(_ context.Context) error {
 			go func() {
 				if err := server.Run(mux); err != nil {
 					panic(err)
@@ -37,7 +38,7 @@ func HookServer(lifecycle fx.Lifecycle, server *asynq.Server, mux *asynq.ServeMu
 
 			return nil
 		},
-		OnStop: func(ctx context.Context) error {
+		OnStop: func(_ context.Context) error {
 			server.Shutdown()
 
 			return nil

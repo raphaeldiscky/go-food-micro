@@ -229,7 +229,7 @@ func (s *DBContextTestSuite) SetupTest() {
 
 	s.app = app
 	s.dbContext = gormDBContext
-	s.dbFilePath = gormOptions.Dns()
+	s.dbFilePath = gormOptions.DND()
 
 	s.initDB()
 }

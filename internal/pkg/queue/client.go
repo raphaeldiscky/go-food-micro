@@ -21,7 +21,7 @@ func NewClient(config *redis2.RedisOptions) *asynq.Client {
 // HookClient hooks the client.
 func HookClient(lifecycle fx.Lifecycle, client *asynq.Client) {
 	lifecycle.Append(fx.Hook{
-		OnStop: func(c context.Context) error {
+		OnStop: func(_ context.Context) error {
 			return client.Close()
 		},
 	})

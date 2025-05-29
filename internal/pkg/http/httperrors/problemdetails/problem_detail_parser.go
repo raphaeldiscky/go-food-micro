@@ -66,7 +66,7 @@ func ParseError(err error) ProblemDetailErr {
 				customErr.Error(),
 				stackTrace,
 			)
-		case customErrors.IsApiError(err, customErr.Status()):
+		case customErrors.IsAPIError(err, customErr.Status()):
 			return NewAPIProblemDetail(
 				customErr.Status(),
 				customErr.Error(),

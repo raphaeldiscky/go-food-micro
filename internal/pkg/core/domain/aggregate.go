@@ -52,8 +52,8 @@ type IAggregateRoot interface {
 	String() string
 }
 
-// NewAggregateRootWithId creates a new aggregate root with id.
-func NewAggregateRootWithId(id uuid.UUID, aggregateType string) *AggregateRoot {
+// NewAggregateRootWithID creates a new aggregate root with id.
+func NewAggregateRootWithID(id uuid.UUID, aggregateType string) *AggregateRoot {
 	aggregate := &AggregateRoot{
 		originalVersion: newAggregateVersion,
 	}

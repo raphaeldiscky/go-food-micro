@@ -24,13 +24,13 @@ type Message struct {
 }
 
 // NewMessage is a function that creates a new message.
-func NewMessage(messageId string) *Message {
-	return &Message{MessageId: messageId, Created: time.Now()}
+func NewMessage(messageID string) *Message {
+	return &Message{MessageId: messageID, Created: time.Now()}
 }
 
 // NewMessageWithTypeName is a function that creates a new message with a type name.
-func NewMessageWithTypeName(messageId string, eventTypeName string) *Message {
-	return &Message{MessageId: messageId, Created: time.Now(), EventType: eventTypeName}
+func NewMessageWithTypeName(messageID string, eventTypeName string) *Message {
+	return &Message{MessageId: messageID, Created: time.Now(), EventType: eventTypeName}
 }
 
 // GeMessageId is a function that returns the message id.

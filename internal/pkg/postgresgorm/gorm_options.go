@@ -28,8 +28,8 @@ type GormOptions struct {
 	EnableTracing bool   `mapstructure:"enableTracing" default:"true"`
 }
 
-// Dns returns the dns.
-func (h *GormOptions) Dns() string {
+// DND returns the dns.
+func (h *GormOptions) DND() string {
 	if h.UseInMemory {
 		return ""
 	}

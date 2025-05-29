@@ -12,7 +12,7 @@ import (
 // BindConfigKey binds the config key.
 func BindConfigKey[T any](
 	configKey string,
-	environments ...environment.Environment,
+	_ ...environment.Environment,
 ) (T, error) {
 	var cfg T
 	if len(configKey) == 0 {

@@ -95,7 +95,7 @@ func registerHooks(
 
 			return nil
 		},
-		OnStop: func(ctx context.Context) error {
+		OnStop: func(_ context.Context) error {
 			// https://github.com/uber-go/fx/blob/v1.20.0/app.go#L573
 			// this ctx is just for stopping callbacks or OnStop callbacks, and it has short timeout 15s, and it is not alive in whole lifetime app
 			if err := bus.Stop(); err != nil {

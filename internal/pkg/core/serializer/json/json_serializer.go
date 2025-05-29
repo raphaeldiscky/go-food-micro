@@ -61,12 +61,12 @@ func (s *jsonSerializer) UnmarshalToMap(
 	return UnmarshalToMap(data, v)
 }
 
-// UnmarshalToMapFromJson is a function that unmarshals an object to a map from json.
-func (s *jsonSerializer) UnmarshalToMapFromJson(
+// UnmarshalToMapFromJSON is a function that unmarshals an object to a map from json.
+func (s *jsonSerializer) UnmarshalToMapFromJSON(
 	data string,
 	v *map[string]interface{},
 ) error {
-	return UnmarshalToMapFromJson(data, v)
+	return UnmarshalToMapFromJSON(data, v)
 }
 
 // PrettyPrint is a function that pretty prints an object.
@@ -166,8 +166,8 @@ func UnmarshalToMap(
 	return nil
 }
 
-// UnmarshalToMapFromJson is a function that unmarshals an object to a map from json.
-func UnmarshalToMapFromJson(
+// UnmarshalToMapFromJSON is a function that unmarshals an object to a map from json.
+func UnmarshalToMapFromJSON(
 	data string,
 	v *map[string]interface{},
 ) error {

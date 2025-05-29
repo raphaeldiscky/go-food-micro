@@ -21,12 +21,12 @@ func NewRabbitMQHealthChecker(connection types.IConnection) contracts.Health {
 }
 
 // CheckHealth checks the health of the rabbitmq connection.
-func (g gormHealthChecker) CheckHealth(ctx context.Context) error {
+func (g gormHealthChecker) CheckHealth(_ context.Context) error {
 	if g.connection.IsConnected() {
 		return nil
-	} else {
-		return errors.New("rabbitmq is not available")
 	}
+
+	return errors.New("rabbitmq is not available")
 }
 
 // GetHealthName returns the name of the rabbitmq health checker.

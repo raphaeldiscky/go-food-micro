@@ -10,8 +10,8 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
+	ginkgo "github.com/onsi/ginkgo/v2"
+	gomega "github.com/onsi/gomega"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
@@ -22,23 +22,23 @@ import (
 
 // TestHealth tests the health of the metrics.
 func TestHealth(t *testing.T) {
-	RegisterFailHandler(Fail)
+	gomega.RegisterFailHandler(ginkgo.Fail)
 
-	RunSpecs(t, "/health suite")
+	ginkgo.RunSpecs(t, "/health suite")
 }
 
-var _ = Describe("/", Ordered, func() {
+var _ = ginkgo.Describe("/", ginkgo.Ordered, func() {
 	var (
 		url string
 		err error
 		res *http.Response
 	)
 
-	BeforeAll(func() {
+	ginkgo.BeforeAll(func() {
 		var cfg *metrics.MetricsOptions
 
 		fxtest.New(
-			GinkgoT(),
+			ginkgo.GinkgoT(),
 			zap.Module,
 			fxlog.FxLogger,
 			config.Module,
@@ -52,20 +52,20 @@ var _ = Describe("/", Ordered, func() {
 		url = fmt.Sprintf("http://%s:%s/metrics", cfg.Host, cfg.Port)
 	})
 
-	BeforeEach(func() {
+	ginkgo.BeforeEach(func() {
 		res, err = http.Get(url)
 	})
-	It("returns status OK", func() {
-		Expect(err).To(BeNil())
-		Expect(res.StatusCode).To(Equal(http.StatusOK))
+	ginkgo.It("returns status OK", func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(res.StatusCode).To(gomega.Equal(http.StatusOK))
 	})
 
-	It("returns how many requests were made", func() {
+	ginkgo.It("returns how many requests were made", func() {
 		b, err := io.ReadAll(res.Body)
-		Expect(err).To(BeNil())
+		gomega.Expect(err).To(gomega.BeNil())
 
-		Expect(
+		gomega.Expect(
 			b,
-		).To(ContainSubstring(`promhttp_metric_handler_requests_total{code="200"} 1`))
+		).To(gomega.ContainSubstring(`promhttp_metric_handler_requests_total{code="200"} 1`))
 	})
 })

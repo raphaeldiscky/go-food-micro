@@ -11,25 +11,25 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
-// DefaultEventJsonSerializer is a struct that represents a default event json serializer.
-type DefaultEventJsonSerializer struct {
+// DefaultEventJSONSerializer is a struct that represents a default event json serializer.
+type DefaultEventJSONSerializer struct {
 	serializer serializer.Serializer
 }
 
 // NewDefaultEventJsonSerializer is a function that creates a new default event json serializer.
 func NewDefaultEventJsonSerializer(serializer serializer.Serializer) serializer.EventSerializer {
-	return &DefaultEventJsonSerializer{serializer: serializer}
+	return &DefaultEventJSONSerializer{serializer: serializer}
 }
 
 // Serialize is a function that serializes an event.
-func (s *DefaultEventJsonSerializer) Serialize(
+func (s *DefaultEventJSONSerializer) Serialize(
 	event domain.IDomainEvent,
 ) (*serializer.EventSerializationResult, error) {
 	return s.SerializeObject(event)
 }
 
 // SerializeObject is a function that serializes an object.
-func (s *DefaultEventJsonSerializer) SerializeObject(
+func (s *DefaultEventJSONSerializer) SerializeObject(
 	event interface{},
 ) (*serializer.EventSerializationResult, error) {
 	if event == nil {
@@ -50,7 +50,7 @@ func (s *DefaultEventJsonSerializer) SerializeObject(
 }
 
 // Deserialize is a function that deserializes an event.
-func (s *DefaultEventJsonSerializer) Deserialize(
+func (s *DefaultEventJSONSerializer) Deserialize(
 	data []byte,
 	eventType string,
 	contentType string,
@@ -82,7 +82,7 @@ func (s *DefaultEventJsonSerializer) Deserialize(
 }
 
 // DeserializeObject is a function that deserializes an object.
-func (s *DefaultEventJsonSerializer) DeserializeObject(
+func (s *DefaultEventJSONSerializer) DeserializeObject(
 	data []byte,
 	eventType string,
 	contentType string,
@@ -109,7 +109,7 @@ func (s *DefaultEventJsonSerializer) DeserializeObject(
 }
 
 // DeserializeType is a function that deserializes a type.
-func (s *DefaultEventJsonSerializer) DeserializeType(
+func (s *DefaultEventJSONSerializer) DeserializeType(
 	data []byte,
 	eventType reflect.Type,
 	contentType string,
@@ -125,11 +125,11 @@ func (s *DefaultEventJsonSerializer) DeserializeType(
 }
 
 // ContentType is a function that returns the content type.
-func (s *DefaultEventJsonSerializer) ContentType() string {
+func (s *DefaultEventJSONSerializer) ContentType() string {
 	return "application/json"
 }
 
 // Serializer is a function that returns the serializer.
-func (s *DefaultEventJsonSerializer) Serializer() serializer.Serializer {
+func (s *DefaultEventJSONSerializer) Serializer() serializer.Serializer {
 	return s.serializer
 }

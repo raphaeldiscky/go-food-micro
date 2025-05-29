@@ -11,25 +11,25 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
-// DefaultMessageJsonSerializer is a struct that represents a default message json serializer.
-type DefaultMessageJsonSerializer struct {
+// DefaultMessageJSONSerializer is a struct that represents a default message json serializer.
+type DefaultMessageJSONSerializer struct {
 	serializer serializer.Serializer
 }
 
 // NewDefaultMessageJsonSerializer is a function that creates a new default message json serializer.
 func NewDefaultMessageJsonSerializer(s serializer.Serializer) serializer.MessageSerializer {
-	return &DefaultMessageJsonSerializer{serializer: s}
+	return &DefaultMessageJSONSerializer{serializer: s}
 }
 
 // Serialize is a function that serializes a message.
-func (m *DefaultMessageJsonSerializer) Serialize(
+func (m *DefaultMessageJSONSerializer) Serialize(
 	message types.IMessage,
 ) (*serializer.EventSerializationResult, error) {
 	return m.SerializeObject(message)
 }
 
 // SerializeObject is a function that serializes an object.
-func (m *DefaultMessageJsonSerializer) SerializeObject(
+func (m *DefaultMessageJSONSerializer) SerializeObject(
 	message interface{},
 ) (*serializer.EventSerializationResult, error) {
 	if message == nil {
@@ -50,15 +50,36 @@ func (m *DefaultMessageJsonSerializer) SerializeObject(
 }
 
 // SerializeEnvelop is a function that serializes a message envelop.
-func (m *DefaultMessageJsonSerializer) SerializeEnvelop(
+func (m *DefaultMessageJSONSerializer) SerializeEnvelop(
 	messageEnvelop types.MessageEnvelope,
 ) (*serializer.EventSerializationResult, error) {
-	// TODO implement me
-	panic("implement me")
+	if messageEnvelop.Message == nil {
+		return &serializer.EventSerializationResult{Data: nil, ContentType: m.ContentType()}, nil
+	}
+
+	// Create an envelope structure that includes both the message and headers
+	envelope := struct {
+		Message interface{}            `json:"message"`
+		Headers map[string]interface{} `json:"headers"`
+	}{
+		Message: messageEnvelop.Message,
+		Headers: messageEnvelop.Headers,
+	}
+
+	// Serialize the entire envelope
+	data, err := m.serializer.Marshal(envelope)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to serialize message envelope")
+	}
+
+	return &serializer.EventSerializationResult{
+		Data:        data,
+		ContentType: m.ContentType(),
+	}, nil
 }
 
 // Deserialize is a function that deserializes a message.
-func (m *DefaultMessageJsonSerializer) Deserialize(
+func (m *DefaultMessageJSONSerializer) Deserialize(
 	data []byte,
 	messageType string,
 	contentType string,
@@ -90,7 +111,7 @@ func (m *DefaultMessageJsonSerializer) Deserialize(
 }
 
 // DeserializeObject is a function that deserializes an object.
-func (m *DefaultMessageJsonSerializer) DeserializeObject(
+func (m *DefaultMessageJSONSerializer) DeserializeObject(
 	data []byte,
 	messageType string,
 	contentType string,
@@ -117,7 +138,7 @@ func (m *DefaultMessageJsonSerializer) DeserializeObject(
 }
 
 // DeserializeType is a function that deserializes a type.
-func (m *DefaultMessageJsonSerializer) DeserializeType(
+func (m *DefaultMessageJSONSerializer) DeserializeType(
 	data []byte,
 	messageType reflect.Type,
 	contentType string,
@@ -133,11 +154,11 @@ func (m *DefaultMessageJsonSerializer) DeserializeType(
 }
 
 // ContentType is a function that returns the content type.
-func (m *DefaultMessageJsonSerializer) ContentType() string {
+func (m *DefaultMessageJSONSerializer) ContentType() string {
 	return "application/json"
 }
 
 // Serializer is a function that returns the serializer.
-func (m *DefaultMessageJsonSerializer) Serializer() serializer.Serializer {
+func (m *DefaultMessageJSONSerializer) Serializer() serializer.Serializer {
 	return m.serializer
 }

@@ -23,8 +23,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
-// echoHttpServer is a echo http server.
-type echoHttpServer struct {
+// echoHTTPServer is a echo http server.
+type echoHTTPServer struct {
 	echo         *echo.Echo
 	config       *config.EchoHTTPOptions
 	log          logger.Logger
@@ -32,8 +32,8 @@ type echoHttpServer struct {
 	routeBuilder *contracts.RouteBuilder
 }
 
-// NewEchoHttpServer creates a new echo http server.
-func NewEchoHttpServer(
+// NewEchoHTTPServer creates a new echo http server.
+func NewEchoHTTPServer(
 	config *config.EchoHTTPOptions,
 	logger logger.Logger,
 	meter metric.Meter,
@@ -41,7 +41,7 @@ func NewEchoHttpServer(
 	e := echo.New()
 	e.HideBanner = true
 
-	return &echoHttpServer{
+	return &echoHTTPServer{
 		echo:         e,
 		config:       config,
 		log:          logger,
@@ -50,8 +50,8 @@ func NewEchoHttpServer(
 	}
 }
 
-// RunHttpServer runs the http server.
-func (s *echoHttpServer) RunHttpServer(
+// RunHTTPServer runs the http server.
+func (s *echoHTTPServer) RunHTTPServer(
 	configEcho ...func(echo *echo.Echo),
 ) error {
 	s.echo.Server.ReadTimeout = constants.ReadTimeout
@@ -70,22 +70,22 @@ func (s *echoHttpServer) RunHttpServer(
 }
 
 // Logger returns the logger.
-func (s *echoHttpServer) Logger() logger.Logger {
+func (s *echoHTTPServer) Logger() logger.Logger {
 	return s.log
 }
 
 // Cfg returns the config.
-func (s *echoHttpServer) Cfg() *config.EchoHTTPOptions {
+func (s *echoHTTPServer) Cfg() *config.EchoHTTPOptions {
 	return s.config
 }
 
 // RouteBuilder returns the route builder.
-func (s *echoHttpServer) RouteBuilder() *contracts.RouteBuilder {
+func (s *echoHTTPServer) RouteBuilder() *contracts.RouteBuilder {
 	return s.routeBuilder
 }
 
 // ConfigGroup configures the group.
-func (s *echoHttpServer) ConfigGroup(
+func (s *echoHTTPServer) ConfigGroup(
 	groupName string,
 	groupFunc func(group *echo.Group),
 ) {
@@ -93,14 +93,14 @@ func (s *echoHttpServer) ConfigGroup(
 }
 
 // AddMiddlewares adds the middlewares.
-func (s *echoHttpServer) AddMiddlewares(middlewares ...echo.MiddlewareFunc) {
+func (s *echoHTTPServer) AddMiddlewares(middlewares ...echo.MiddlewareFunc) {
 	if len(middlewares) > 0 {
 		s.echo.Use(middlewares...)
 	}
 }
 
 // GracefulShutdown shuts down the http server.
-func (s *echoHttpServer) GracefulShutdown(ctx context.Context) error {
+func (s *echoHTTPServer) GracefulShutdown(ctx context.Context) error {
 	err := s.echo.Shutdown(ctx)
 	if err != nil {
 		return err
@@ -110,7 +110,7 @@ func (s *echoHttpServer) GracefulShutdown(ctx context.Context) error {
 }
 
 // SetupDefaultMiddlewares sets up the default middlewares.
-func (s *echoHttpServer) SetupDefaultMiddlewares() {
+func (s *echoHTTPServer) SetupDefaultMiddlewares() {
 	skipper := func(c echo.Context) bool {
 		return strings.Contains(c.Request().URL.Path, "swagger") ||
 			strings.Contains(c.Request().URL.Path, "metrics") ||
@@ -136,7 +136,7 @@ func (s *echoHttpServer) SetupDefaultMiddlewares() {
 		),
 	)
 	s.echo.Use(
-		oteltracing.HttpTrace(
+		oteltracing.HTTPTrace(
 			oteltracing.WithSkipper(skipper),
 			oteltracing.WithServiceName(s.config.Name),
 		),
@@ -158,12 +158,12 @@ func (s *echoHttpServer) SetupDefaultMiddlewares() {
 }
 
 // ApplyVersioningFromHeader applies the versioning from the header.
-func (s *echoHttpServer) ApplyVersioningFromHeader() {
+func (s *echoHTTPServer) ApplyVersioningFromHeader() {
 	s.echo.Pre(apiVersion)
 }
 
 // GetEchoInstance returns the echo instance.
-func (s *echoHttpServer) GetEchoInstance() *echo.Echo {
+func (s *echoHTTPServer) GetEchoInstance() *echo.Echo {
 	return s.echo
 }
 

@@ -133,8 +133,8 @@ func TestApiErr(t *testing.T) {
 	)
 	err := errors.WithMessage(appErr, "outer errorUtils wrapper")
 
-	assert.True(t, IsApiError(err, 400))
-	assert.True(t, IsApiError(rootErr2, 500))
+	assert.True(t, IsAPIError(err, 400))
+	assert.True(t, IsAPIError(rootErr2, 500))
 	assert.True(t, IsCustomError(err))
 	assert.True(t, IsCustomError(rootErr2))
 
@@ -144,9 +144,9 @@ func TestApiErr(t *testing.T) {
 	_, isConflict := appErr.(ConflictError)
 	assert.False(t, isConflict)
 
-	assert.True(t, IsApiError(appErr, 400))
-	assert.True(t, IsApiError(apiError, 400))
-	assert.False(t, IsApiError(NewConflictError("conflict error"), 400))
+	assert.True(t, IsAPIError(appErr, 400))
+	assert.True(t, IsAPIError(apiError, 400))
+	assert.False(t, IsAPIError(NewConflictError("conflict error"), 400))
 
 	assert.Equal(t, 400, apiError.Status())
 	assert.Equal(t, "this is a api_exceptions errorUtils", apiError.Message())

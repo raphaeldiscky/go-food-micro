@@ -11,7 +11,7 @@ type Serializer interface {
 		output interface{},
 	) error
 	UnmarshalToMap(data []byte, v *map[string]interface{}) error
-	UnmarshalToMapFromJson(data string, v *map[string]interface{}) error
+	UnmarshalToMapFromJSON(data string, v *map[string]interface{}) error
 	PrettyPrint(data interface{}) string
 	ColoredPrettyPrint(data interface{}) string
 }

@@ -8,9 +8,6 @@ import (
 
 	"emperror.dev/errors"
 
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-
 	migrate "github.com/golang-migrate/migrate/v4"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
@@ -34,7 +31,7 @@ func NewGoMigratorPostgres(
 	logger logger.Logger,
 ) (contracts.PostgresMigrationRunner, error) {
 	if config.DBName == "" {
-		return nil, errors.New("dbName is required in the config.")
+		return nil, errors.New("dbname is required in the config")
 	}
 
 	datasource := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",

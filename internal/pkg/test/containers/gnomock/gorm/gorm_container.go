@@ -90,7 +90,7 @@ func (g *gnoMockGormContainer) Start(
 }
 
 // Cleanup cleans up the gorm container.
-func (g *gnoMockGormContainer) Cleanup(ctx context.Context) error {
+func (g *gnoMockGormContainer) Cleanup(_ context.Context) error {
 	return gnomock.Stop(g.container)
 }
 
