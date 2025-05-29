@@ -22,25 +22,50 @@ type postgresMessagePersistenceService struct {
 	logger             logger.Logger
 }
 
-// Process processes the message.
+// Process processes a single message by ID.
 func (m *postgresMessagePersistenceService) Process(messageID string, ctx context.Context) error {
-	// TODO implement me
-	panic("implement me")
+	id, err := uuid.FromString(messageID)
+	if err != nil {
+		return customErrors.NewBadRequestErrorWrap(err, "invalid message ID format")
+	}
+
+	storeMessage, err := m.GetByID(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if storeMessage.MessageStatus != persistmessage.Stored {
+		return customErrors.NewConflictErrorWrap(
+			errors.New("message is not in stored state"),
+			fmt.Sprintf("message %s is in state %d", messageID, storeMessage.MessageStatus),
+		)
+	}
+
+	return m.ChangeState(ctx, id, persistmessage.Processing)
 }
 
-// ProcessAll processes all the messages.
+// ProcessAll processes all stored messages.
 func (m *postgresMessagePersistenceService) ProcessAll(ctx context.Context) error {
-	// TODO implement me
-	panic("implement me")
+	storeMessages, err := m.GetAllActive(ctx)
+	if err != nil {
+		return err
+	}
+
+	for _, msg := range storeMessages {
+		if err := m.ChangeState(ctx, msg.ID, persistmessage.Processing); err != nil {
+			m.logger.Errorf("Failed to process message %s: %v", msg.ID, err)
+		}
+	}
+
+	return nil
 }
 
-// AddPublishMessage adds a publish message.
+// AddPublishMessage adds a message to be published.
 func (m *postgresMessagePersistenceService) AddPublishMessage(
 	messageEnvelope types.MessageEnvelope,
 	ctx context.Context,
 ) error {
-	// TODO implement me
-	panic("implement me")
+	return m.AddMessageCore(ctx, messageEnvelope, persistmessage.Publish)
 }
 
 // AddReceivedMessage adds a received message.
@@ -48,8 +73,7 @@ func (m *postgresMessagePersistenceService) AddReceivedMessage(
 	messageEnvelope types.MessageEnvelope,
 	ctx context.Context,
 ) error {
-	// TODO implement me
-	panic("implement me")
+	return m.AddMessageCore(ctx, messageEnvelope, persistmessage.Received)
 }
 
 // AddMessageCore adds a message core.

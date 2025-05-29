@@ -11,6 +11,8 @@ import (
 
 // MongoDockerTestContainerOptionsDecorator is a decorator for the mongo docker test container options.
 var MongoDockerTestContainerOptionsDecorator = func(t *testing.T, ctx context.Context) interface{} {
+	t.Helper()
+
 	return func(_ *mongodb.MongoDbOptions, _ logger.Logger) (*mongodb.MongoDbOptions, error) {
 		return NewMongoDockerTest().PopulateContainerOptions(ctx, t)
 	}

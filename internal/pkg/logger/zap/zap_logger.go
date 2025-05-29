@@ -255,7 +255,7 @@ func (l *zapLogger) Sync() error {
 		if err != nil {
 			l.logger.Error("error while syncing", zap.Error(err))
 		}
-	}() // nolint: errcheck
+	}()
 
 	return l.sugarLogger.Sync()
 }

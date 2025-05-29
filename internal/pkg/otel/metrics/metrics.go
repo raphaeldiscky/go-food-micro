@@ -133,165 +133,159 @@ func (o *OtelMetrics) initMetrics(
 // configExporters configures the exporters.
 func (o *OtelMetrics) configExporters() ([]metric.Reader, error) {
 	ctx := context.Background()
-
-	var exporters []metric.Reader
-
-	// use some otel collector endpoints
 	metricOpts := []otlpmetricgrpc.Option{
 		otlpmetricgrpc.WithTimeout(5 * time.Second),
 		otlpmetricgrpc.WithInsecure(),
 	}
 
-	if !o.config.UseOTLP { //nolint:nestif
-		if o.config.UseStdout {
-			console, err := stdoutmetric.New()
-			if err != nil {
-				return nil, errors.WrapIf(
-					err,
-					"error creating console exporter",
-				)
-			}
+	if o.config.UseOTLP {
+		return o.configureOTLPExporters(ctx, metricOpts)
+	}
 
-			consoleMetricExporter := metric.NewPeriodicReader(
-				console,
-				// Default is 1m. Set to 3s for demonstrative purposes.
-				metric.WithInterval(3*time.Second))
+	return o.configureLegacyExporters(ctx, metricOpts)
+}
 
-			exporters = append(exporters, consoleMetricExporter)
+func (o *OtelMetrics) configureOTLPExporters(
+	ctx context.Context,
+	metricOpts []otlpmetricgrpc.Option,
+) ([]metric.Reader, error) {
+	var exporters []metric.Reader
+	for _, oltpProvider := range o.config.OTLPProviders {
+		if !oltpProvider.Enabled {
+			continue
 		}
+		opts := append(metricOpts,
+			otlpmetricgrpc.WithEndpoint(oltpProvider.OTLPEndpoint),
+			otlpmetricgrpc.WithHeaders(oltpProvider.OTLPHeaders))
 
-		if o.config.ElasticApmExporterOptions != nil {
-			// https://www.elastic.co/guide/en/apm/guide/current/open-telemetry.html
-			// https://www.elastic.co/guide/en/apm/guide/current/open-telemetry-direct.html#instrument-apps-otel
-			// https://github.com/anilsenay/go-opentelemetry-examples/blob/elastic/cmd/main.go#L35
-			metricOpts = append(
-				metricOpts,
-				otlpmetricgrpc.WithEndpoint(
-					o.config.ElasticApmExporterOptions.OTLPEndpoint,
-				),
-				otlpmetricgrpc.WithHeaders(
-					o.config.ElasticApmExporterOptions.OTLPHeaders,
-				),
-			)
-
-			// send otel traces to jaeger builtin collector endpoint (default grpc port: 4317)
-			// https://opentelemetry.io/docs/collector/
-			exporter, err := otlpmetricgrpc.New(ctx, metricOpts...)
-			if err != nil {
-				return nil, errors.WrapIf(
-					err,
-					"failed to create otlpmetric exporter for elastic-apm",
-				)
-			}
-
-			elasticApmExporter := metric.NewPeriodicReader(
-				exporter,
-				// Default is 1m. Set to 3s for demonstrative purposes.
-				metric.WithInterval(3*time.Second))
-
-			exporters = append(exporters, elasticApmExporter)
+		exporter, err := otlpmetricgrpc.New(ctx, opts...)
+		if err != nil {
+			return nil, errors.WrapIf(err, "failed to create otlptracegrpc exporter")
 		}
-
-		if o.config.UptraceExporterOptions != nil {
-			// https://github.com/uptrace/uptrace-go/blob/master/example/otlp-traces/main.go#L49C1-L56C5
-			// https://uptrace.dev/get/opentelemetry-go.html#exporting-traces
-			// https://uptrace.dev/get/opentelemetry-go.html#exporting-metrics
-			metricOpts = append(
-				metricOpts,
-				otlpmetricgrpc.WithEndpoint(
-					o.config.UptraceExporterOptions.OTLPEndpoint,
-				),
-				otlpmetricgrpc.WithHeaders(
-					o.config.UptraceExporterOptions.OTLPHeaders,
-				),
-			)
-
-			// send otel traces to jaeger builtin collector endpoint (default grpc port: 4317)
-			// https://opentelemetry.io/docs/collector/
-			exporter, err := otlpmetricgrpc.New(ctx, metricOpts...)
-			if err != nil {
-				return nil, errors.WrapIf(
-					err,
-					"failed to create otlpmetric exporter for uptrace",
-				)
-			}
-
-			uptraceExporter := metric.NewPeriodicReader(
-				exporter,
-				// Default is 1m. Set to 3s for demonstrative purposes.
-				metric.WithInterval(3*time.Second))
-
-			exporters = append(exporters, uptraceExporter)
-		}
-		if o.config.SignozExporterOptions != nil {
-			// https://signoz.io/docs/instrumentation/golang/#instrumentation-of-a-sample-golang-application
-			// https://signoz.io/blog/distributed-tracing-golang/
-			metricOpts = append(
-				metricOpts,
-				otlpmetricgrpc.WithEndpoint(
-					o.config.SignozExporterOptions.OTLPEndpoint,
-				),
-				otlpmetricgrpc.WithHeaders(
-					o.config.SignozExporterOptions.OTLPHeaders,
-				),
-			)
-
-			// send otel traces to jaeger builtin collector endpoint (default grpc port: 4317)
-			// https://opentelemetry.io/docs/collector/
-			exporter, err := otlpmetricgrpc.New(ctx, metricOpts...)
-			if err != nil {
-				return nil, errors.WrapIf(
-					err,
-					"failed to create otlpmetric exporter for signoz",
-				)
-			}
-
-			signozExporter := metric.NewPeriodicReader(
-				exporter,
-				// Default is 1m. Set to 3s for demonstrative purposes.
-				metric.WithInterval(3*time.Second))
-
-			exporters = append(exporters, signozExporter)
-		} else {
-			// https://prometheus.io/docs/prometheus/latest/getting_started/
-			// https://prometheus.io/docs/guides/go-application/
-			// prometheus exporter will collect otel metrics in prometheus registry
-			// all prometheus exporters will add to a singleton `prometheus.DefaultRegisterer` registry in newConfig method and this registry will use via `promhttp.Handler` through http endpoint on `/metrics` and calls `Collect` on prometheus Reader interface inner signature prometheus.DefaultRegisterer
-			prometheusExporter, err := prometheus.New()
-			if err != nil {
-				return nil, errors.WrapIf(
-					err,
-					"error creating prometheus exporter",
-				)
-			}
-			exporters = append(exporters, prometheusExporter)
-		}
-	} else {
-		for _, oltpProvider := range o.config.OTLPProviders {
-			if !oltpProvider.Enabled {
-				continue
-			}
-
-			metricOpts = append(metricOpts, otlpmetricgrpc.WithEndpoint(oltpProvider.OTLPEndpoint), otlpmetricgrpc.WithHeaders(oltpProvider.OTLPHeaders))
-
-			// send otel metrics to an otel collector endpoint (default grpc port: 4317)
-			// https://opentelemetry.io/docs/collector/
-			// https://github.com/uptrace/uptrace-go/blob/master/example/otlp-metrics/main.go#L28
-			// https://github.com/open-telemetry/opentelemetry-go/blob/main/exporters/otlp/otlpmetric/otlpmetricgrpc/example_test.go
-			exporter, err := otlpmetricgrpc.New(ctx, metricOpts...)
-			if err != nil {
-				return nil, errors.WrapIf(err, "failed to create otlptracegrpc exporter")
-			}
-			metricExporter := metric.NewPeriodicReader(
-				exporter,
-				// Default is 1m. Set to 3s for demonstrative purposes.
-				metric.WithInterval(3*time.Second))
-
-			exporters = append(exporters, metricExporter)
-		}
+		metricExporter := metric.NewPeriodicReader(exporter, metric.WithInterval(3*time.Second))
+		exporters = append(exporters, metricExporter)
 	}
 
 	return exporters, nil
+}
+
+func (o *OtelMetrics) configureLegacyExporters(
+	ctx context.Context,
+	metricOpts []otlpmetricgrpc.Option,
+) ([]metric.Reader, error) {
+	var exporters []metric.Reader
+
+	if err := o.addStdoutExporter(&exporters); err != nil {
+		return nil, err
+	}
+	if err := o.addElasticApmExporter(ctx, metricOpts, &exporters); err != nil {
+		return nil, err
+	}
+	if err := o.addUptraceExporter(ctx, metricOpts, &exporters); err != nil {
+		return nil, err
+	}
+	if err := o.addSignozExporter(ctx, metricOpts, &exporters); err != nil {
+		return nil, err
+	}
+	if err := o.addPrometheusExporter(&exporters); err != nil {
+		return nil, err
+	}
+
+	return exporters, nil
+}
+
+func (o *OtelMetrics) addStdoutExporter(exporters *[]metric.Reader) error {
+	if !o.config.UseStdout {
+		return nil
+	}
+	console, err := stdoutmetric.New()
+	if err != nil {
+		return errors.WrapIf(err, "error creating console exporter")
+	}
+	consoleMetricExporter := metric.NewPeriodicReader(console, metric.WithInterval(3*time.Second))
+	*exporters = append(*exporters, consoleMetricExporter)
+
+	return nil
+}
+
+func (o *OtelMetrics) addElasticApmExporter(
+	ctx context.Context,
+	metricOpts []otlpmetricgrpc.Option,
+	exporters *[]metric.Reader,
+) error {
+	if o.config.ElasticApmExporterOptions == nil {
+		return nil
+	}
+	opts := append(metricOpts,
+		otlpmetricgrpc.WithEndpoint(o.config.ElasticApmExporterOptions.OTLPEndpoint),
+		otlpmetricgrpc.WithHeaders(o.config.ElasticApmExporterOptions.OTLPHeaders))
+
+	exporter, err := otlpmetricgrpc.New(ctx, opts...)
+	if err != nil {
+		return errors.WrapIf(err, "failed to create otlpmetric exporter for elastic-apm")
+	}
+	elasticApmExporter := metric.NewPeriodicReader(exporter, metric.WithInterval(3*time.Second))
+	*exporters = append(*exporters, elasticApmExporter)
+
+	return nil
+}
+
+func (o *OtelMetrics) addUptraceExporter(
+	ctx context.Context,
+	metricOpts []otlpmetricgrpc.Option,
+	exporters *[]metric.Reader,
+) error {
+	if o.config.UptraceExporterOptions == nil {
+		return nil
+	}
+	opts := append(metricOpts,
+		otlpmetricgrpc.WithEndpoint(o.config.UptraceExporterOptions.OTLPEndpoint),
+		otlpmetricgrpc.WithHeaders(o.config.UptraceExporterOptions.OTLPHeaders))
+
+	exporter, err := otlpmetricgrpc.New(ctx, opts...)
+	if err != nil {
+		return errors.WrapIf(err, "failed to create otlpmetric exporter for uptrace")
+	}
+	uptraceExporter := metric.NewPeriodicReader(exporter, metric.WithInterval(3*time.Second))
+	*exporters = append(*exporters, uptraceExporter)
+
+	return nil
+}
+
+func (o *OtelMetrics) addSignozExporter(
+	ctx context.Context,
+	metricOpts []otlpmetricgrpc.Option,
+	exporters *[]metric.Reader,
+) error {
+	if o.config.SignozExporterOptions == nil {
+		return nil
+	}
+	opts := append(metricOpts,
+		otlpmetricgrpc.WithEndpoint(o.config.SignozExporterOptions.OTLPEndpoint),
+		otlpmetricgrpc.WithHeaders(o.config.SignozExporterOptions.OTLPHeaders))
+
+	exporter, err := otlpmetricgrpc.New(ctx, opts...)
+	if err != nil {
+		return errors.WrapIf(err, "failed to create otlpmetric exporter for signoz")
+	}
+
+	signozExporter := metric.NewPeriodicReader(exporter, metric.WithInterval(3*time.Second))
+	*exporters = append(*exporters, signozExporter)
+
+	return nil
+}
+
+func (o *OtelMetrics) addPrometheusExporter(exporters *[]metric.Reader) error {
+	if o.config.SignozExporterOptions != nil {
+		return nil
+	}
+	prometheusExporter, err := prometheus.New()
+	if err != nil {
+		return errors.WrapIf(err, "error creating prometheus exporter")
+	}
+	*exporters = append(*exporters, prometheusExporter)
+
+	return nil
 }
 
 // RegisterMetricsEndpoint registers the metrics endpoint.

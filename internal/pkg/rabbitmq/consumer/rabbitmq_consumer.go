@@ -9,6 +9,7 @@ import (
 
 	"emperror.dev/errors"
 	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 
 	linq "github.com/ahmetb/go-linq/v3"
 	retry "github.com/avast/retry-go"
@@ -309,14 +310,60 @@ func (r *rabbitMQConsumer) reConsumeOnDropConnection(ctx context.Context) {
 	}()
 }
 
-// handleReceived handles the received message.
-func (r *rabbitMQConsumer) handleReceived(
-	ctx context.Context,
+func (r *rabbitMQConsumer) createAckFunc(
+	delivery amqp091.Delivery,
+	beforeConsumeSpan trace.Span,
+) func() {
+	return func() {
+		if err := delivery.Ack(false); err != nil {
+			r.logger.Error(
+				"error sending ACK to RabbitMQ consumer: %v",
+				consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
+			)
+
+			return
+		}
+		r.finishSpanAndNotify(beforeConsumeSpan, nil, delivery)
+	}
+}
+
+func (r *rabbitMQConsumer) createNackFunc(
+	delivery amqp091.Delivery,
+	beforeConsumeSpan trace.Span,
+) func() {
+	return func() {
+		if err := delivery.Nack(false, true); err != nil {
+			r.logger.Error(
+				"error in sending Nack to RabbitMQ consumer: %v",
+				consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
+			)
+
+			return
+		}
+		r.finishSpanAndNotify(beforeConsumeSpan, nil, delivery)
+	}
+}
+
+func (r *rabbitMQConsumer) finishSpanAndNotify(
+	span trace.Span,
+	err error,
 	delivery amqp091.Delivery,
 ) {
-	// for ensuring our handlers execute completely after shutdown
-	r.deliveryRoutines <- struct{}{}
+	if err := consumertracing.FinishConsumerSpan(span, err); err != nil {
+		r.logger.Error("error in finishing consumer span: %v", err)
+	}
+	if len(r.isConsumedNotifications) > 0 {
+		for _, notification := range r.isConsumedNotifications {
+			if notification != nil {
+				notification(r.createConsumeContext(delivery).Message())
+			}
+		}
+	}
+}
 
+// handleReceived handles the received message.
+func (r *rabbitMQConsumer) handleReceived(ctx context.Context, delivery amqp091.Delivery) {
+	r.deliveryRoutines <- struct{}{}
 	defer func() { <-r.deliveryRoutines }()
 
 	var meta metadata.Metadata
@@ -338,63 +385,12 @@ func (r *rabbitMQConsumer) handleReceived(
 		string(delivery.Body),
 		consumerTraceOption,
 	)
+	consumeContext := r.createConsumeContext(delivery)
 
-	consumeContext, err := r.createConsumeContext(delivery)
-	if err != nil {
-		r.logger.Error(
-			consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
-		)
-
-		return
-	}
-
-	var ack func()
-	var nack func()
-
-	// if auto-ack is enabled we should not call Ack method manually it could create some unexpected errors
+	var ack, nack func()
 	if !r.rabbitmqConsumerOptions.AutoAck {
-		ack = func() {
-			if err := delivery.Ack(false); err != nil {
-				r.logger.Error(
-					"error sending ACK to RabbitMQ consumer: %v",
-					consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
-				)
-
-				return
-			}
-			err := consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
-			if err != nil {
-				r.logger.Error(
-					"error in finishing consumer span: %v",
-					err,
-				)
-			}
-			if len(r.isConsumedNotifications) > 0 {
-				for _, notification := range r.isConsumedNotifications {
-					if notification != nil {
-						notification(consumeContext.Message())
-					}
-				}
-			}
-		}
-
-		nack = func() {
-			if err := delivery.Nack(false, true); err != nil {
-				r.logger.Error(
-					"error in sending Nack to RabbitMQ consumer: %v",
-					consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
-				)
-
-				return
-			}
-			err := consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
-			if err != nil {
-				r.logger.Error(
-					"error in finishing consumer span: %v",
-					err,
-				)
-			}
-		}
+		ack = r.createAckFunc(delivery, beforeConsumeSpan)
+		nack = r.createNackFunc(delivery, beforeConsumeSpan)
 	}
 
 	r.handle(ctx, ack, nack, consumeContext)
@@ -484,7 +480,7 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 
 func (r *rabbitMQConsumer) createConsumeContext(
 	delivery amqp091.Delivery,
-) (messagingTypes.MessageConsumeContext, error) {
+) messagingTypes.MessageConsumeContext {
 	message := r.deserializeData(
 		delivery.ContentType,
 		delivery.Type,
@@ -507,7 +503,7 @@ func (r *rabbitMQConsumer) createConsumeContext(
 		delivery.CorrelationId,
 	)
 
-	return consumeContext, nil
+	return consumeContext
 }
 
 func (r *rabbitMQConsumer) deserializeData(

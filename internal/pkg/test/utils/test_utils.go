@@ -15,6 +15,8 @@ import (
 
 // SkipCI skips the test if the CI environment is set.
 func SkipCI(t *testing.T) {
+	t.Helper()
+
 	if os.Getenv("CI") != "" {
 		t.Skip("Skipping testing in CI environment")
 
@@ -51,6 +53,8 @@ func HTTPRecorder(
 	req *http.Request,
 	f func(w *httptest.ResponseRecorder) bool,
 ) {
+	t.Helper()
+
 	w := httptest.NewRecorder()
 	e.ServeHTTP(w, req)
 

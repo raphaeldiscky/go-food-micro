@@ -149,6 +149,7 @@ func addAfterBaggage(ctx context.Context, meta *metadata.Metadata) context.Conte
 		// Log the error but continue with the original context
 		// since baggage is optional for tracing
 		log.Printf("Failed to create baggage: %v", err)
+
 		return ctx
 	}
 	ctx = baggage.ContextWithBaggage(ctx, b)

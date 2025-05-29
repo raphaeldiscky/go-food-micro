@@ -11,17 +11,20 @@ import (
 type MessageDeliveryType int
 
 const (
-	Outbox   MessageDeliveryType = 1
-	Inbox    MessageDeliveryType = 2
-	Internal MessageDeliveryType = 4
+	Publish  MessageDeliveryType = 1
+	Received MessageDeliveryType = 2
+	Outbox   MessageDeliveryType = 3
+	Inbox    MessageDeliveryType = 4
+	Internal MessageDeliveryType = 5
 )
 
 // MessageStatus is a type that represents the status of a message.
 type MessageStatus int
 
 const (
-	Stored    MessageStatus = 1
-	Processed MessageStatus = 2
+	Stored     MessageStatus = 1
+	Processing MessageStatus = 2
+	Processed  MessageStatus = 3
 )
 
 // StoreMessage is a struct that represents a message in the store.

@@ -52,7 +52,7 @@ func (g *eventstoredbTestContainers) PopulateContainerOptions(
 ) (*config.EventStoreDbOptions, error) {
 	containerReq := g.getRunOptions(options...)
 
-	// TODO: Using Parallel Container
+	// @TODO: Using Parallel Container
 	dbContainer, err := testcontainers.GenericContainer(
 		ctx,
 		testcontainers.GenericContainerRequest{
@@ -128,23 +128,11 @@ func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
 func (g *eventstoredbTestContainers) getRunOptions(
 	opts ...*contracts.EventstoreDBContainerOptions,
 ) testcontainers.ContainerRequest {
-	if len(opts) > 0 && opts[0] != nil {
-		option := opts[0]
-		if option.ImageName != "" {
-			g.defaultOptions.ImageName = option.ImageName
-		}
-		if option.Host != "" {
-			g.defaultOptions.Host = option.Host
-		}
-		if len(option.Ports) > 0 {
-			g.defaultOptions.Ports = option.Ports
-		}
-		if option.Tag != "" {
-			g.defaultOptions.Tag = option.Tag
-		}
+	if len(opts) > 0 {
+		g.updateOptions(opts[0])
 	}
 
-	containerReq := testcontainers.ContainerRequest{
+	return testcontainers.ContainerRequest{
 		Image:        fmt.Sprintf("%s:%s", g.defaultOptions.ImageName, g.defaultOptions.Tag),
 		ExposedPorts: g.defaultOptions.Ports,
 		WaitingFor: wait.ForListeningPort(nat.Port(g.defaultOptions.Ports[0])).
@@ -159,6 +147,19 @@ func (g *eventstoredbTestContainers) getRunOptions(
 			"EVENTSTORE_MEM_DB":                     "true",
 		},
 	}
+}
 
-	return containerReq
+func (g *eventstoredbTestContainers) updateOptions(option *contracts.EventstoreDBContainerOptions) {
+	if option.ImageName != "" {
+		g.defaultOptions.ImageName = option.ImageName
+	}
+	if option.Host != "" {
+		g.defaultOptions.Host = option.Host
+	}
+	if len(option.Ports) > 0 {
+		g.defaultOptions.Ports = option.Ports
+	}
+	if option.Tag != "" {
+		g.defaultOptions.Tag = option.Tag
+	}
 }

@@ -43,6 +43,8 @@ func (g *gnoMockGormContainer) PopulateContainerOptions(
 	t *testing.T,
 	options ...*contracts.PostgresContainerOptions,
 ) (*gormPostgres.GormOptions, error) {
+	t.Helper()
+
 	// https://github.com/orlangure/gnomock
 	gnomock.WithContext(ctx)
 	runOption := g.getRunOptions(options...)
@@ -80,6 +82,7 @@ func (g *gnoMockGormContainer) Start(
 	t *testing.T,
 	options ...*contracts.PostgresContainerOptions,
 ) (*gorm.DB, error) {
+	t.Helper()
 	gormOptions, err := g.PopulateContainerOptions(ctx, t, options...)
 	if err != nil {
 		return nil, err

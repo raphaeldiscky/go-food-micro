@@ -20,6 +20,7 @@ func NewServeMux() *asynq.ServeMux {
 // NewServer creates a new server.
 func NewServer(config *redis2.RedisOptions, logger logger.Logger) *asynq.Server {
 	logger.Infof("Creating new server with config: %+v", config)
+
 	return asynq.NewServer(
 		asynq.RedisClientOpt{Addr: fmt.Sprintf("%s:%d", config.Host, config.Port)},
 		asynq.Config{Concurrency: 10},

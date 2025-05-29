@@ -114,6 +114,7 @@ func (m *DefaultMessageJSONSerializer) Deserialize(
 			targetMessagePointer,
 		)
 	}
+
 	return message, nil
 }
 

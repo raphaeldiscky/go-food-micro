@@ -11,13 +11,13 @@ import (
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
-	Module = fx.Module( //nolint:gochecknoglobals
+	Module = fx.Module(
 		"gomigratefx",
 		mongoProviders,
 	)
 
 	// mongoProviders is a module for the gomigrate.
-	mongoProviders = fx.Provide( //nolint:gochecknoglobals
+	mongoProviders = fx.Provide(
 		migration.ProvideConfig,
 		NewGoMigratorPostgres,
 	)

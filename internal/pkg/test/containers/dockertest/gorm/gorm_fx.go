@@ -10,6 +10,8 @@ import (
 
 // GormDockerTestConatnerOptionsDecorator is a decorator for the gorm docker test container options.
 var GormDockerTestConatnerOptionsDecorator = func(t *testing.T, ctx context.Context) interface{} {
+	t.Helper()
+
 	return func(c *gormPostgres.GormOptions) (*gormPostgres.GormOptions, error) {
 		return NewGormDockerTest().PopulateContainerOptions(ctx, t)
 	}

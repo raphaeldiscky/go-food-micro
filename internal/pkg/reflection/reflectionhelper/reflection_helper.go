@@ -41,7 +41,6 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 		}
 		// for all unexported fields (private)
 		return reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
-
 	} else if v.Kind() == reflect.Struct {
 		// for all exported fields (public)
 		val := v
@@ -79,7 +78,6 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 		}
 		// for all unexported fields (private)
 		return reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
-
 	} else if v.Kind() == reflect.Struct {
 		// for all exported fields (public)
 		val := v

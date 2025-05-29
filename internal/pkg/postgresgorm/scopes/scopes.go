@@ -17,7 +17,7 @@ import (
 // AmountGreaterThan1000 returns the amount greater than 1000.
 // https://gorm.io/docs/advanced_query.html#Scopes
 // https://gorm.io/docs/scopes.html
-// After scopes, we should have a runner function like Find, Update, Delete
+// After scopes, we should have a runner function like Find, Update, Delete.
 func AmountGreaterThan1000(db *gorm.DB) *gorm.DB {
 	return db.Where("amount > ?", 1000)
 }

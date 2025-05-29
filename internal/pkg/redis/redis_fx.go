@@ -13,7 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
-// Module provided to fxlog
+// Module provided to fxlog.
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
@@ -23,7 +23,7 @@ var (
 		redisInvokes,
 	)
 
-	redisProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
+	redisProviders = fx.Options(fx.Provide(
 		NewRedisClient,
 		func(client *redis.Client) redis.UniversalClient {
 			return client

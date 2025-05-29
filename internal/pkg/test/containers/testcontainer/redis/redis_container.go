@@ -114,23 +114,11 @@ func (g *redisTestContainers) Cleanup(ctx context.Context) error {
 func (g *redisTestContainers) getRunOptions(
 	opts ...*contracts.RedisContainerOptions,
 ) testcontainers.ContainerRequest {
-	if len(opts) > 0 && opts[0] != nil {
-		option := opts[0]
-		if option.ImageName != "" {
-			g.defaultOptions.ImageName = option.ImageName
-		}
-		if option.Host != "" {
-			g.defaultOptions.Host = option.Host
-		}
-		if option.Port != "" {
-			g.defaultOptions.Port = option.Port
-		}
-		if option.Tag != "" {
-			g.defaultOptions.Tag = option.Tag
-		}
+	if len(opts) > 0 {
+		g.updateOptions(opts[0])
 	}
 
-	containerReq := testcontainers.ContainerRequest{
+	return testcontainers.ContainerRequest{
 		Image: fmt.Sprintf(
 			"%s:%s",
 			g.defaultOptions.ImageName,
@@ -142,8 +130,21 @@ func (g *redisTestContainers) getRunOptions(
 		Hostname: g.defaultOptions.Host,
 		Env:      map[string]string{},
 	}
+}
 
-	return containerReq
+func (g *redisTestContainers) updateOptions(option *contracts.RedisContainerOptions) {
+	if option.ImageName != "" {
+		g.defaultOptions.ImageName = option.ImageName
+	}
+	if option.Host != "" {
+		g.defaultOptions.Host = option.Host
+	}
+	if option.Port != "" {
+		g.defaultOptions.Port = option.Port
+	}
+	if option.Tag != "" {
+		g.defaultOptions.Tag = option.Tag
+	}
 }
 
 // isConnectable checks if the container is connectable.

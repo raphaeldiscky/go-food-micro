@@ -47,6 +47,8 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	t *testing.T,
 	options ...*contracts.RabbitMQContainerOptions,
 ) (*config.RabbitmqHostOptions, error) {
+	t.Helper()
+
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		log.Fatalf("Could not connect to docker: %s", err)
@@ -127,29 +129,11 @@ func (g *rabbitmqDockerTest) Cleanup(ctx context.Context) error {
 func (g *rabbitmqDockerTest) getRunOptions(
 	opts ...*contracts.RabbitMQContainerOptions,
 ) *dockertest.RunOptions {
-	if len(opts) > 0 && opts[0] != nil {
-		option := opts[0]
-		if option.ImageName != "" {
-			g.defaultOptions.ImageName = option.ImageName
-		}
-		if option.Host != "" {
-			g.defaultOptions.Host = option.Host
-		}
-		if len(option.Ports) > 0 {
-			g.defaultOptions.Ports = option.Ports
-		}
-		if option.UserName != "" {
-			g.defaultOptions.UserName = option.UserName
-		}
-		if option.Password != "" {
-			g.defaultOptions.Password = option.Password
-		}
-		if option.Tag != "" {
-			g.defaultOptions.Tag = option.Tag
-		}
+	if len(opts) > 0 {
+		g.updateOptions(opts[0])
 	}
 
-	runOptions := &dockertest.RunOptions{
+	return &dockertest.RunOptions{
 		Repository: g.defaultOptions.ImageName,
 		Tag:        g.defaultOptions.Tag,
 		Env: []string{
@@ -159,6 +143,25 @@ func (g *rabbitmqDockerTest) getRunOptions(
 		Hostname:     g.defaultOptions.Host,
 		ExposedPorts: g.defaultOptions.Ports,
 	}
+}
 
-	return runOptions
+func (g *rabbitmqDockerTest) updateOptions(option *contracts.RabbitMQContainerOptions) {
+	if option.ImageName != "" {
+		g.defaultOptions.ImageName = option.ImageName
+	}
+	if option.Host != "" {
+		g.defaultOptions.Host = option.Host
+	}
+	if len(option.Ports) > 0 {
+		g.defaultOptions.Ports = option.Ports
+	}
+	if option.UserName != "" {
+		g.defaultOptions.UserName = option.UserName
+	}
+	if option.Password != "" {
+		g.defaultOptions.Password = option.Password
+	}
+	if option.Tag != "" {
+		g.defaultOptions.Tag = option.Tag
+	}
 }

@@ -237,6 +237,7 @@ func Map[TDes any, TSrc any](src TSrc) (TDes, error) {
 		if !ok {
 			return *new(TDes), errors.New("type assertion failed for mapping result")
 		}
+
 		return val, nil
 	}
 
@@ -414,6 +415,7 @@ func mapStructs[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 
 		if err := processValues[TDes, TSrc](sourceFiledValue, destinationField); err != nil {
 			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+
 			return
 		}
 	}
@@ -432,6 +434,7 @@ func mapSlices[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 
 		if err := processValues[TDes, TSrc](srcVal, destVal); err != nil {
 			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+
 			return
 		}
 	}
@@ -444,6 +447,7 @@ func mapPointers[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 
 	if err := processValues[TDes, TSrc](src.Elem(), val); err != nil {
 		defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+
 		return
 	}
 
@@ -466,10 +470,12 @@ func mapMaps[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 		destValue := reflect.New(destMapIter.Value().Type()).Elem()
 		if err := processValues[TDes, TSrc](srcMapIter.Key(), destKey); err != nil {
 			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+
 			return
 		}
 		if err := processValues[TDes, TSrc](srcMapIter.Value(), destValue); err != nil {
 			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+
 			return
 		}
 
@@ -502,7 +508,7 @@ func processValues[TDes any, TSrc any](
 
 	// check if kinds are equal
 	if srcKind != destKind {
-		// TODO dynamic cast, m.b. with Mapper extensions
+		// @TODO dynamic cast, m.b. with Mapper extensions
 		return nil
 	}
 

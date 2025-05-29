@@ -17,14 +17,14 @@ import (
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
-	Module = fx.Module( //nolint:gochecknoglobals
+	Module = fx.Module(
 		"mongofx",
 		mongoProviders,
 		mongoInvokes,
 	)
 
 	// mongoProviders is a module for the mongodb.
-	mongoProviders = fx.Provide( //nolint:gochecknoglobals
+	mongoProviders = fx.Provide(
 		provideConfig,
 		NewMongoDB,
 		fx.Annotate(
@@ -34,7 +34,7 @@ var (
 		),
 	)
 
-	mongoInvokes = fx.Invoke(registerHooks) //nolint:gochecknoglobals
+	mongoInvokes = fx.Invoke(registerHooks)
 )
 
 // registerHooks registers hooks for the mongodb.
