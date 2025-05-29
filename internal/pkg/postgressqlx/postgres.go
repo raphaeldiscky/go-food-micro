@@ -10,7 +10,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/Masterminds/squirrel"
-	"github.com/doug-martin/goqu/v9"
+	goqu "github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 	"github.com/uptrace/bun/driver/pgdriver"
 

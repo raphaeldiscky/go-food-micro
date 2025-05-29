@@ -1,3 +1,4 @@
+// Package v1 contains the product dto.
 package v1
 
 import (
@@ -6,8 +7,9 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// ProductDto is a struct that contains the product dto.
 type ProductDto struct {
-	Id          uuid.UUID `json:"id"`
+	ID          uuid.UUID `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Price       float64   `json:"price"`

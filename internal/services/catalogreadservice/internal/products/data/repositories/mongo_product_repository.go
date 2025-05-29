@@ -1,3 +1,4 @@
+// Package repositories contains the mongo product repository.
 package repositories
 
 // https://github.com/Kamva/mgm
@@ -11,33 +12,36 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb/repository"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
-	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"go.mongodb.org/mongo-driver/mongo"
+
+	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
+	uuid2 "github.com/satori/go.uuid"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-
-	"emperror.dev/errors"
-	uuid2 "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/mongo"
-	attribute2 "go.opentelemetry.io/otel/attribute"
 )
 
 const (
 	productCollection = "products"
 )
 
+// mongoProductRepository is a struct that contains the mongo product repository.
 type mongoProductRepository struct {
 	log                    logger.Logger
 	mongoGenericRepository data.GenericRepository[*models.Product]
 	tracer                 tracing.AppTracer
 }
 
+// NewMongoProductRepository creates a new MongoProductRepository.
 func NewMongoProductRepository(
 	log logger.Logger,
 	db *mongo.Client,
@@ -49,6 +53,7 @@ func NewMongoProductRepository(
 		mongoOptions.Database,
 		productCollection,
 	)
+
 	return &mongoProductRepository{
 		log:                    log,
 		mongoGenericRepository: mongoRepo,
@@ -56,6 +61,7 @@ func NewMongoProductRepository(
 	}
 }
 
+// GetAllProducts gets all products from the database.
 func (p *mongoProductRepository) GetAllProducts(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -85,6 +91,7 @@ func (p *mongoProductRepository) GetAllProducts(
 	return result, nil
 }
 
+// SearchProducts searches for products in the database.
 func (p *mongoProductRepository) SearchProducts(
 	ctx context.Context,
 	searchText string,
@@ -118,12 +125,13 @@ func (p *mongoProductRepository) SearchProducts(
 	return result, nil
 }
 
-func (p *mongoProductRepository) GetProductById(
+// GetProductByID gets a product by id from the database.
+func (p *mongoProductRepository) GetProductByID(
 	ctx context.Context,
 	uuid string,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.GetProductById")
-	span.SetAttributes(attribute2.String("Id", uuid))
+	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.GetProductByID")
+	span.SetAttributes(attribute2.String("ID", uuid))
 	defer span.End()
 
 	id, err := uuid2.FromString(uuid)
@@ -149,22 +157,23 @@ func (p *mongoProductRepository) GetProductById(
 
 	p.log.Infow(
 		fmt.Sprintf("product with id %s laoded", uuid),
-		logger.Fields{"Product": product, "Id": uuid},
+		logger.Fields{"Product": product, "ID": uuid},
 	)
 
 	return product, nil
 }
 
-func (p *mongoProductRepository) GetProductByProductId(
+// GetProductByProductID gets a product by product id from the database.
+func (p *mongoProductRepository) GetProductByProductID(
 	ctx context.Context,
 	uuid string,
 ) (*models.Product, error) {
-	productId := uuid
+	productID := uuid
 	ctx, span := p.tracer.Start(
 		ctx,
-		"mongoProductRepository.GetProductByProductId",
+		"mongoProductRepository.GetProductByProductID",
 	)
-	span.SetAttributes(attribute2.String("ProductId", productId))
+	span.SetAttributes(attribute2.String("ProductID", productID))
 	defer span.End()
 
 	product, err := p.mongoGenericRepository.FirstOrDefault(
@@ -189,14 +198,15 @@ func (p *mongoProductRepository) GetProductByProductId(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with productId %s laoded",
-			productId,
+			productID,
 		),
-		logger.Fields{"Product": product, "ProductId": uuid},
+		logger.Fields{"Product": product, "ProductID": uuid},
 	)
 
 	return product, nil
 }
 
+// CreateProduct creates a product in the database.
 func (p *mongoProductRepository) CreateProduct(
 	ctx context.Context,
 	product *models.Product,
@@ -220,14 +230,15 @@ func (p *mongoProductRepository) CreateProduct(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' created",
-			product.ProductId,
+			product.ProductID,
 		),
-		logger.Fields{"Product": product, "Id": product.ProductId},
+		logger.Fields{"Product": product, "ID": product.ProductID},
 	)
 
 	return product, nil
 }
 
+// UpdateProduct updates a product in the database.
 func (p *mongoProductRepository) UpdateProduct(
 	ctx context.Context,
 	updateProduct *models.Product,
@@ -244,7 +255,7 @@ func (p *mongoProductRepository) UpdateProduct(
 				err,
 				fmt.Sprintf(
 					"error in updating product with id %s into the database.",
-					updateProduct.ProductId,
+					updateProduct.ProductID,
 				),
 			),
 		)
@@ -254,20 +265,21 @@ func (p *mongoProductRepository) UpdateProduct(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' updated",
-			updateProduct.ProductId,
+			updateProduct.ProductID,
 		),
-		logger.Fields{"Product": updateProduct, "Id": updateProduct.ProductId},
+		logger.Fields{"Product": updateProduct, "ID": updateProduct.ProductID},
 	)
 
 	return updateProduct, nil
 }
 
+// DeleteProductByID deletes a product by id from the database.
 func (p *mongoProductRepository) DeleteProductByID(
 	ctx context.Context,
 	uuid string,
 ) error {
 	ctx, span := p.tracer.Start(ctx, "mongoProductRepository.DeleteProductByID")
-	span.SetAttributes(attribute2.String("Id", uuid))
+	span.SetAttributes(attribute2.String("ID", uuid))
 	defer span.End()
 
 	id, err := uuid2.FromString(uuid)

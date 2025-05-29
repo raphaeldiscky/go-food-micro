@@ -1,15 +1,17 @@
+// Package mappings contains the products mappings.
 package mappings
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
+	"google.golang.org/protobuf/types/known/timestamppb"
+
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	dtoV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// ConfigureProductsMappings is a function that configures the products mappings.
 func ConfigureProductsMappings() error {
 	err := mapper.CreateMap[*models.Product, *dtoV1.ProductDto]()
 	if err != nil {
@@ -36,8 +38,9 @@ func ConfigureProductsMappings() error {
 			if product == nil {
 				return nil
 			}
+
 			return &productsService.Product{
-				ProductId:   product.Id.String(),
+				ProductID:   product.ID.String(),
 				Name:        product.Name,
 				Description: product.Description,
 				Price:       product.Price,
@@ -50,10 +53,10 @@ func ConfigureProductsMappings() error {
 		return err
 	}
 
-	mapper.CreateCustomMap(
+	err = mapper.CreateCustomMap(
 		func(product *models.Product) *productsService.Product {
 			return &productsService.Product{
-				ProductId:   product.Id.String(),
+				ProductID:   product.ID.String(),
 				Name:        product.Name,
 				Description: product.Description,
 				Price:       product.Price,
@@ -62,6 +65,9 @@ func ConfigureProductsMappings() error {
 			}
 		},
 	)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }

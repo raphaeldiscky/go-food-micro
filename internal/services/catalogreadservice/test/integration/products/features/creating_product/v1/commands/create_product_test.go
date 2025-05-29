@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
+	. "github.com/smartystreets/goconvey/convey"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	uuid "github.com/satori/go.uuid"
+
 	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
-
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-
-	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestCreateProduct(t *testing.T) {
@@ -56,14 +56,14 @@ func TestCreateProduct(t *testing.T) {
 								Convey(
 									"And the product ID should not be empty and same as commandId",
 									func() {
-										So(result.Id, ShouldEqual, command.Id)
+										So(result.ID, ShouldEqual, command.ID)
 
 										Convey(
 											"And product detail should be retrievable from the database",
 											func() {
-												createdProduct, err := integrationTestSharedFixture.ProductRepository.GetProductById(
+												createdProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
 													ctx,
-													result.Id,
+													result.ID,
 												)
 												So(err, ShouldBeNil)
 												So(createdProduct, ShouldNotBeNil)

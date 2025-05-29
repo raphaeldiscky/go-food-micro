@@ -7,13 +7,13 @@ import (
 	"context"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestDeleteProduct(t *testing.T) {
@@ -30,7 +30,7 @@ func TestDeleteProduct(t *testing.T) {
 		Convey("Deleting an existing product from the database", func() {
 			Convey("Given an existing product in the mongo database", func() {
 				productId, err := uuid.FromString(
-					integrationTestSharedFixture.Items[0].ProductId,
+					integrationTestSharedFixture.Items[0].ProductID,
 				)
 				So(err, ShouldBeNil)
 
@@ -52,7 +52,7 @@ func TestDeleteProduct(t *testing.T) {
 							Convey(
 								"And the product should no longer exist in the system",
 								func() {
-									deletedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+									deletedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 										ctx,
 										productId.String(),
 									)

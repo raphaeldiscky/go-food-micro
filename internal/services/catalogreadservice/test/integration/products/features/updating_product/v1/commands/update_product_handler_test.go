@@ -7,14 +7,14 @@ import (
 	"context"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
+	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/mehdihadeli/go-mediatr"
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/smartystreets/goconvey/convey"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestUpdateProduct(t *testing.T) {
@@ -28,7 +28,7 @@ func TestUpdateProduct(t *testing.T) {
 		// scenario
 		Convey("Updating an existing product in the database", func() {
 			Convey("Given an existing product in the system", func() {
-				productId, err := uuid.FromString(integrationTestSharedFixture.Items[0].ProductId)
+				productId, err := uuid.FromString(integrationTestSharedFixture.Items[0].ProductID)
 				So(err, ShouldBeNil)
 
 				updateProduct, err := commands.NewUpdateProduct(
@@ -40,27 +40,36 @@ func TestUpdateProduct(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				Convey("When a UpdateProduct command executed for a existing product", func() {
-					result, err := mediatr.Send[*commands.UpdateProduct, *mediatr.Unit](ctx, updateProduct)
+					result, err := mediatr.Send[*commands.UpdateProduct, *mediatr.Unit](
+						ctx,
+						updateProduct,
+					)
 
 					Convey("Then the product should be updated successfully", func() {
 						// Assert that the error is nil (indicating success).
 						So(err, ShouldBeNil)
 						So(result, ShouldNotBeNil)
 
-						Convey("And the updated product details should be reflected in the system", func() {
-							// Fetch the updated product from the database.
-							updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductId(
-								ctx,
-								productId.String(),
-							)
+						Convey(
+							"And the updated product details should be reflected in the system",
+							func() {
+								// Fetch the updated product from the database.
+								updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
+									ctx,
+									productId.String(),
+								)
 
-							Convey("And the product's properties should match the updated data", func() {
-								// Assert that the product properties match the updated data.
-								So(updatedProduct.Name, ShouldEqual, updatedProduct.Name)
-								So(updatedProduct.Price, ShouldEqual, updatedProduct.Price)
-								// Add more assertions as needed for other properties.
-							})
-						})
+								Convey(
+									"And the product's properties should match the updated data",
+									func() {
+										// Assert that the product properties match the updated data.
+										So(updatedProduct.Name, ShouldEqual, updatedProduct.Name)
+										So(updatedProduct.Price, ShouldEqual, updatedProduct.Price)
+										// Add more assertions as needed for other properties.
+									},
+								)
+							},
+						)
 					})
 				})
 			})

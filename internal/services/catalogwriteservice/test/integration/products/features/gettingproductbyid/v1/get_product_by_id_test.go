@@ -9,16 +9,16 @@ import (
 	"testing"
 	"time"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
 	getProductByIdQuery "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -33,8 +33,8 @@ var _ = Describe("Get Product by ID Feature", func() {
 	var (
 		ctx    context.Context
 		id     uuid.UUID
-		query  *getProductByIdQuery.GetProductById
-		result *dtos.GetProductByIdResponseDto
+		query  *getProductByIdQuery.GetProductByID
+		result *dtos.GetProductByIDResponseDto
 		err    error
 	)
 
@@ -44,7 +44,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 		integrationFixture.SetupTest()
 
 		// child hook codes should be here
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {
@@ -75,11 +75,11 @@ var _ = Describe("Get Product by ID Feature", func() {
 
 	// "Scenario" step for testing returning an existing product with correct properties
 	Describe(
-		"Returning an existing product with valid Id from the database with correct properties",
+		"Returning an existing product with valid ID from the database with correct properties",
 		func() {
 			Context("Given products exists in the database", func() {
 				BeforeEach(func() {
-					query, err = getProductByIdQuery.NewGetProductByIdWithValidation(id)
+					query, err = getProductByIdQuery.NewGetProductByIDWithValidation(id)
 				})
 
 				// "When" step
@@ -87,7 +87,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 					"the GteProductById query is executed for existing product",
 					func() {
 						BeforeEach(func() {
-							result, err = mediatr.Send[*getProductByIdQuery.GetProductById, *dtos.GetProductByIdResponseDto](
+							result, err = mediatr.Send[*getProductByIdQuery.GetProductByID, *dtos.GetProductByIDResponseDto](
 								ctx,
 								query,
 							)
@@ -106,7 +106,7 @@ var _ = Describe("Get Product by ID Feature", func() {
 							"Should return a product with the correct ID",
 							func() {
 								Expect(result.Product).NotTo(BeNil())
-								Expect(result.Product.Id).To(Equal(id))
+								Expect(result.Product.ID).To(Equal(id))
 							},
 						)
 					},
@@ -123,16 +123,16 @@ var _ = Describe("Get Product by ID Feature", func() {
 				BeforeEach(func() {
 					// Generate a random UUID that does not exist in the database
 					id = uuid.NewV4()
-					query, err = getProductByIdQuery.NewGetProductByIdWithValidation(id)
+					query, err = getProductByIdQuery.NewGetProductByIDWithValidation(id)
 					Expect(err).To(BeNil())
 				})
 
 				// "When" step
 				When(
-					"the GetProductById query is executed for non-existing product",
+					"the GetProductByID query is executed for non-existing product",
 					func() {
 						BeforeEach(func() {
-							result, err = mediatr.Send[*getProductByIdQuery.GetProductById, *dtos.GetProductByIdResponseDto](
+							result, err = mediatr.Send[*getProductByIdQuery.GetProductByID, *dtos.GetProductByIDResponseDto](
 								ctx,
 								query,
 							)

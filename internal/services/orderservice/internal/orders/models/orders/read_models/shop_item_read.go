@@ -1,5 +1,7 @@
-package read_models
+// Package readmodels contains the shop item read model.
+package readmodels
 
+// ShopItemReadModel is the read model for the shop item.
 type ShopItemReadModel struct {
 	Title       string  `json:"title,omitempty"       bson:"title,omitempty"`
 	Description string  `json:"description,omitempty" bson:"description,omitempty"`
@@ -7,6 +9,17 @@ type ShopItemReadModel struct {
 	Price       float64 `json:"price,omitempty"       bson:"price,omitempty"`
 }
 
-func NewShopItemReadModel(title string, description string, quantity uint64, price float64) *ShopItemReadModel {
-	return &ShopItemReadModel{Title: title, Description: description, Quantity: quantity, Price: price}
+// NewShopItemReadModel creates a new shop item read model.
+func NewShopItemReadModel(
+	title string,
+	description string,
+	quantity uint64,
+	price float64,
+) *ShopItemReadModel {
+	return &ShopItemReadModel{
+		Title:       title,
+		Description: description,
+		Quantity:    quantity,
+		Price:       price,
+	}
 }

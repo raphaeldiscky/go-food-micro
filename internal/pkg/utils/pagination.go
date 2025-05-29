@@ -8,8 +8,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 
 	"emperror.dev/errors"
-	"github.com/goccy/go-json"
-	"github.com/labstack/echo/v4"
+	json "github.com/goccy/go-json"
+	echo "github.com/labstack/echo/v4"
 )
 
 const (

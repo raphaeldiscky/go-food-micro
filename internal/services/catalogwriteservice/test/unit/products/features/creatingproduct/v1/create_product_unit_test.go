@@ -8,22 +8,23 @@ import (
 	"testing"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
+	"github.com/stretchr/testify/suite"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+
 	createProductCommand "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/stretchr/testify/suite"
 )
 
 type createProductUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestCreateProductUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&createProductUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }

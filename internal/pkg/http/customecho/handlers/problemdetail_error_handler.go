@@ -5,7 +5,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
 	"emperror.dev/errors"
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 )
 
 func ProblemDetailErrorHandlerFunc(

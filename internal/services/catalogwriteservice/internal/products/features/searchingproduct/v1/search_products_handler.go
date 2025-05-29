@@ -1,3 +1,4 @@
+// Package v1 contains the search products handler.
 package v1
 
 import (
@@ -6,27 +7,30 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/iancoleman/strcase"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"gorm.io/gorm"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	dto "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/searchingproduct/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"github.com/iancoleman/strcase"
-	"github.com/mehdihadeli/go-mediatr"
-	"gorm.io/gorm"
 )
 
+// searchProductsHandler is a struct that contains the search products handler.
 type searchProductsHandler struct {
 	fxparams.ProductHandlerParams
 }
 
+// NewSearchProductsHandler is a constructor for the searchProductsHandler.
 func NewSearchProductsHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*SearchProducts, *dtos.SearchProductsResponseDto] {
@@ -35,12 +39,14 @@ func NewSearchProductsHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the search products handler.
 func (c *searchProductsHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*SearchProducts, *dtos.SearchProductsResponseDto](
 		c,
 	)
 }
 
+// Handle is a method that handles the search products query.
 func (c *searchProductsHandler) Handle(
 	ctx context.Context,
 	query *SearchProducts,
@@ -74,6 +80,7 @@ func (c *searchProductsHandler) Handle(
 	return &dtos.SearchProductsResponseDto{Products: listResultDto}, nil
 }
 
+// prepareSearchDBQuery is a method that prepares the search db query.
 func (c *searchProductsHandler) prepareSearchDBQuery(
 	query *SearchProducts,
 ) *gorm.DB {

@@ -78,24 +78,24 @@ func (_c *ProductsServiceServer_CreateProduct_Call) RunAndReturn(run func(contex
 	return _c
 }
 
-// GetProductById provides a mock function with given fields: _a0, _a1
-func (_m *ProductsServiceServer) GetProductById(_a0 context.Context, _a1 *productsservice.GetProductByIdReq) (*productsservice.GetProductByIdRes, error) {
+// GetProductByID provides a mock function with given fields: _a0, _a1
+func (_m *ProductsServiceServer) GetProductByID(_a0 context.Context, _a1 *productsservice.GetProductByIDReq) (*productsservice.GetProductByIDRes, error) {
 	ret := _m.Called(_a0, _a1)
 
-	var r0 *productsservice.GetProductByIdRes
+	var r0 *productsservice.GetProductByIDRes
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIdReq) (*productsservice.GetProductByIdRes, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIDReq) (*productsservice.GetProductByIDRes, error)); ok {
 		return rf(_a0, _a1)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIdReq) *productsservice.GetProductByIdRes); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *productsservice.GetProductByIDReq) *productsservice.GetProductByIDRes); ok {
 		r0 = rf(_a0, _a1)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*productsservice.GetProductByIdRes)
+			r0 = ret.Get(0).(*productsservice.GetProductByIDRes)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *productsservice.GetProductByIdReq) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *productsservice.GetProductByIDReq) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
@@ -104,31 +104,31 @@ func (_m *ProductsServiceServer) GetProductById(_a0 context.Context, _a1 *produc
 	return r0, r1
 }
 
-// ProductsServiceServer_GetProductById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProductById'
+// ProductsServiceServer_GetProductById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProductByID'
 type ProductsServiceServer_GetProductById_Call struct {
 	*mock.Call
 }
 
-// GetProductById is a helper method to define mock.On call
+// GetProductByID is a helper method to define mock.On call
 //   - _a0 context.Context
-//   - _a1 *products_service.GetProductByIdReq
-func (_e *ProductsServiceServer_Expecter) GetProductById(_a0 interface{}, _a1 interface{}) *ProductsServiceServer_GetProductById_Call {
-	return &ProductsServiceServer_GetProductById_Call{Call: _e.mock.On("GetProductById", _a0, _a1)}
+//   - _a1 *products_service.GetProductByIDReq
+func (_e *ProductsServiceServer_Expecter) GetProductByID(_a0 interface{}, _a1 interface{}) *ProductsServiceServer_GetProductById_Call {
+	return &ProductsServiceServer_GetProductById_Call{Call: _e.mock.On("GetProductByID", _a0, _a1)}
 }
 
-func (_c *ProductsServiceServer_GetProductById_Call) Run(run func(_a0 context.Context, _a1 *productsservice.GetProductByIdReq)) *ProductsServiceServer_GetProductById_Call {
+func (_c *ProductsServiceServer_GetProductById_Call) Run(run func(_a0 context.Context, _a1 *productsservice.GetProductByIDReq)) *ProductsServiceServer_GetProductById_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(*productsservice.GetProductByIdReq))
+		run(args[0].(context.Context), args[1].(*productsservice.GetProductByIDReq))
 	})
 	return _c
 }
 
-func (_c *ProductsServiceServer_GetProductById_Call) Return(_a0 *productsservice.GetProductByIdRes, _a1 error) *ProductsServiceServer_GetProductById_Call {
+func (_c *ProductsServiceServer_GetProductById_Call) Return(_a0 *productsservice.GetProductByIDRes, _a1 error) *ProductsServiceServer_GetProductById_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *ProductsServiceServer_GetProductById_Call) RunAndReturn(run func(context.Context, *productsservice.GetProductByIdReq) (*productsservice.GetProductByIdRes, error)) *ProductsServiceServer_GetProductById_Call {
+func (_c *ProductsServiceServer_GetProductById_Call) RunAndReturn(run func(context.Context, *productsservice.GetProductByIDReq) (*productsservice.GetProductByIDRes, error)) *ProductsServiceServer_GetProductById_Call {
 	_c.Call.Return(run)
 	return _c
 }

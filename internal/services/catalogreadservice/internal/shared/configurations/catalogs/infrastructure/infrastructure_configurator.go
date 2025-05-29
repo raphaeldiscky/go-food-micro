@@ -1,30 +1,34 @@
+// Package infrastructure contains the infrastructure configurator.
 package infrastructure
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	loggingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/pipelines"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
-	metricspipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics/mediatr/pipelines"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
-	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	loggingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/pipelines"
+	metricspipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics/mediatr/pipelines"
+	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 )
 
-type InfrastructureConfigurator struct {
+// CatalogReadInfraConfigurator is a struct that contains the infrastructure configurator.
+type CatalogReadInfraConfigurator struct {
 	contracts.Application
 }
 
-func NewInfrastructureConfigurator(
+// NewCatalogReadInfraConfigurator creates a new CatalogReadInfraConfigurator.
+func NewCatalogReadInfraConfigurator(
 	app contracts.Application,
-) *InfrastructureConfigurator {
-	return &InfrastructureConfigurator{
+) *CatalogReadInfraConfigurator {
+	return &CatalogReadInfraConfigurator{
 		Application: app,
 	}
 }
 
-func (ic *InfrastructureConfigurator) ConfigInfrastructures() {
+// CatalogReadConfigInfra is a method that configures the infrastructures.
+func (ic *CatalogReadInfraConfigurator) CatalogReadConfigInfra() {
 	ic.ResolveFunc(
 		func(l logger.Logger, tracer tracing.AppTracer, metrics metrics.AppMetrics) error {
 			err := mediatr.RegisterRequestPipelineBehaviors(

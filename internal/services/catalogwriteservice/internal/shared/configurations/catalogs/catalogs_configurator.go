@@ -1,3 +1,4 @@
+// Package catalogs contains the catalogs service configurator.
 package catalogs
 
 import (
@@ -6,43 +7,44 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
+	"gorm.io/gorm"
+
+	echo "github.com/labstack/echo/v4"
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	migrationcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs/infrastructure"
-
-	"github.com/labstack/echo/v4"
-	"gorm.io/gorm"
 )
 
-type CatalogsServiceConfigurator struct {
+// CatalogWriteServiceConfigurator is a struct that contains the catalogs service configurator.
+type CatalogWriteServiceConfigurator struct {
 	contracts.Application
-	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
+	infrastructureConfigurator *infrastructure.CatalogWriteInfraConfigurator
 	productsModuleConfigurator *configurations.ProductsModuleConfigurator
 }
 
-func NewCatalogsServiceConfigurator(
+// NewCatalogWriteServiceConfigurator is a constructor for the CatalogWriteServiceConfigurator.
+func NewCatalogWriteServiceConfigurator(
 	app contracts.Application,
-) *CatalogsServiceConfigurator {
-	infraConfigurator := infrastructure.NewInfrastructureConfigurator(app)
+) *CatalogWriteServiceConfigurator {
+	infraConfigurator := infrastructure.NewCatalogWriteInfraConfigurator(app)
 	productModuleConfigurator := configurations.NewProductsModuleConfigurator(
 		app,
 	)
 
-	return &CatalogsServiceConfigurator{
+	return &CatalogWriteServiceConfigurator{
 		Application:                app,
 		infrastructureConfigurator: infraConfigurator,
 		productsModuleConfigurator: productModuleConfigurator,
 	}
 }
 
-func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
-	// Shared
-	// Infrastructure
-	ic.infrastructureConfigurator.ConfigInfrastructures()
+// ConfigureCatalogs is a method that configures the catalogs.
+func (ic *CatalogWriteServiceConfigurator) ConfigureCatalogs() error {
+	ic.infrastructureConfigurator.CatalogWriteConfigInfra()
 
-	// Shared
 	// Catalogs configurations
 	ic.ResolveFunc(
 		func(db *gorm.DB, postgresMigrationRunner migrationcontracts.PostgresMigrationRunner) error {
@@ -69,7 +71,8 @@ func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() error {
 	return err
 }
 
-func (ic *CatalogsServiceConfigurator) MapCatalogsEndpoints() error {
+// MapCatalogsEndpoints is a method that maps the catalogs endpoints.
+func (ic *CatalogWriteServiceConfigurator) MapCatalogsEndpoints() error {
 	// Shared
 	ic.ResolveFunc(
 		func(catalogsServer echocontracts.EchoHttpServer, options *config.AppOptions) error {

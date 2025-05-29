@@ -8,16 +8,17 @@ import (
 	"testing"
 	"time"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	"github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -44,7 +45,7 @@ var _ = Describe("Product Repository Suite", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {
@@ -76,7 +77,7 @@ var _ = Describe("Product Repository Suite", func() {
 			product = &models.Product{
 				Name:        gofakeit.Name(),
 				Description: gofakeit.AdjectiveDescriptive(),
-				Id:          uuid.NewV4(),
+				ID:          uuid.NewV4(),
 				Price:       gofakeit.Price(100, 1000),
 				CreatedAt:   time.Now(),
 			}
@@ -85,7 +86,10 @@ var _ = Describe("Product Repository Suite", func() {
 		// "When" step
 		When("CreateProduct function of ProductRepository executed", func() {
 			BeforeEach(func() {
-				createdProduct, err = integrationFixture.ProductRepository.CreateProduct(ctx, product)
+				createdProduct, err = integrationFixture.ProductRepository.CreateProduct(
+					ctx,
+					product,
+				)
 			})
 
 			// "Then" step
@@ -97,18 +101,18 @@ var _ = Describe("Product Repository Suite", func() {
 				Expect(createdProduct).NotTo(BeNil())
 			})
 
-			It("Should have the same Id as the input product", func() {
-				Expect(createdProduct.Id).To(Equal(product.Id))
+			It("Should have the same ID as the input product", func() {
+				Expect(createdProduct.ID).To(Equal(product.ID))
 			})
 
 			It("Should be able to retrieve the created product from the database", func() {
-				retrievedProduct, err := integrationFixture.ProductRepository.GetProductById(
+				retrievedProduct, err := integrationFixture.ProductRepository.GetProductByID(
 					ctx,
-					createdProduct.Id,
+					createdProduct.ID,
 				)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(retrievedProduct).NotTo(BeNil())
-				Expect(retrievedProduct.ProductId).To(Equal(createdProduct.Id))
+				Expect(retrievedProduct.ProductID).To(Equal(createdProduct.ID))
 			})
 		})
 	})
@@ -116,7 +120,7 @@ var _ = Describe("Product Repository Suite", func() {
 	// "Scenario" step for testing updating an existing product in the database
 	Describe("Updating an existing product in the database", func() {
 		BeforeEach(func() {
-			existingProduct, err = integrationFixture.ProductRepository.GetProductById(ctx, id)
+			existingProduct, err = integrationFixture.ProductRepository.GetProductByID(ctx, id)
 			Expect(err).To(BeNil())
 			Expect(existingProduct).NotTo(BeNil())
 		})
@@ -135,9 +139,9 @@ var _ = Describe("Product Repository Suite", func() {
 			})
 
 			It("Should be able to retrieve the updated product from the database", func() {
-				updatedProduct, err = integrationFixture.ProductRepository.GetProductById(
+				updatedProduct, err = integrationFixture.ProductRepository.GetProductByID(
 					ctx,
-					existingProduct.Id,
+					existingProduct.ID,
 				)
 				Expect(err).To(BeNil())
 				Expect(updatedProduct).NotTo(BeNil())
@@ -151,7 +155,7 @@ var _ = Describe("Product Repository Suite", func() {
 	Describe("Deleting an existing product from the database", func() {
 		BeforeEach(func() {
 			// Ensure that the product with 'id' exists in the database
-			product, err := integrationFixture.ProductRepository.GetProductById(ctx, id)
+			product, err := integrationFixture.ProductRepository.GetProductByID(ctx, id)
 			Expect(err).To(BeNil())
 			Expect(product).NotTo(BeNil())
 		})
@@ -168,7 +172,7 @@ var _ = Describe("Product Repository Suite", func() {
 			})
 
 			It("Should delete given product from the database", func() {
-				product, err := integrationFixture.ProductRepository.GetProductById(ctx, id)
+				product, err := integrationFixture.ProductRepository.GetProductByID(ctx, id)
 				Expect(err).To(HaveOccurred())
 				Expect(customErrors.IsNotFoundError(err)).To(BeTrue())
 				Expect(product).To(BeNil())
@@ -180,23 +184,23 @@ var _ = Describe("Product Repository Suite", func() {
 	Describe("Retrieving an existing product from the database", func() {
 		BeforeEach(func() {
 			// Ensure that the product with 'id' exists in the database
-			product, err := integrationFixture.ProductRepository.GetProductById(ctx, id)
+			product, err := integrationFixture.ProductRepository.GetProductByID(ctx, id)
 			Expect(err).To(BeNil())
 			Expect(product).NotTo(BeNil())
 		})
 
 		// "When" step
-		When("GetProductById function of ProductRepository executed", func() {
+		When("GetProductByID function of ProductRepository executed", func() {
 			BeforeEach(func() {
-				existingProduct, err = integrationFixture.ProductRepository.GetProductById(ctx, id)
+				existingProduct, err = integrationFixture.ProductRepository.GetProductByID(ctx, id)
 			})
 			It("should not return an error", func() {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(existingProduct).NotTo(BeNil())
 			})
 
-			It("should retrieve correct data from database by Id", func() {
-				Expect(existingProduct.Id).To(Equal(id))
+			It("should retrieve correct data from database by ID", func() {
+				Expect(existingProduct.ID).To(Equal(id))
 			})
 		})
 	})
@@ -205,17 +209,20 @@ var _ = Describe("Product Repository Suite", func() {
 	Describe("Retrieving a product that does not exist in the database", func() {
 		BeforeEach(func() {
 			// Ensure that the product with 'id' exists in the database
-			product, err := integrationFixture.ProductRepository.GetProductById(ctx, id)
+			product, err := integrationFixture.ProductRepository.GetProductByID(ctx, id)
 			Expect(err).To(BeNil())
 			Expect(product).NotTo(BeNil())
 		})
 
 		// "When" step
-		When("GetProductById function of ProductRepository executed", func() {
+		When("GetProductByID function of ProductRepository executed", func() {
 			BeforeEach(func() {
 				// Use a random UUID that does not exist in the database
 				nonexistentID := uuid.NewV4()
-				existingProduct, err = integrationFixture.ProductRepository.GetProductById(ctx, nonexistentID)
+				existingProduct, err = integrationFixture.ProductRepository.GetProductByID(
+					ctx,
+					nonexistentID,
+				)
 			})
 
 			// "Then" step
@@ -235,7 +242,10 @@ var _ = Describe("Product Repository Suite", func() {
 		// "When" step
 		When("GetAllProducts function of ProductRepository executed", func() {
 			It("should not return an error and return the correct number of products", func() {
-				res, err := integrationFixture.ProductRepository.GetAllProducts(ctx, utils.NewListQuery(10, 1))
+				res, err := integrationFixture.ProductRepository.GetAllProducts(
+					ctx,
+					utils.NewListQuery(10, 1),
+				)
 				Expect(err).To(BeNil())
 				Expect(res).NotTo(BeNil())
 				Expect(len(res.Items)).To(Equal(2)) // Replace with the expected number of products

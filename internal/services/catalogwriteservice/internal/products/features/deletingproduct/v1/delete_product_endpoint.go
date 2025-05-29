@@ -3,26 +3,30 @@ package v1
 import (
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1/dtos"
-
-	"emperror.dev/errors"
-	"github.com/labstack/echo/v4"
-	"github.com/mehdihadeli/go-mediatr"
 )
 
+// deleteProductEndpoint is a struct that contains the delete product endpoint.
 type deleteProductEndpoint struct {
 	fxparams.ProductRouteParams
 }
 
+// NewDeleteProductEndpoint is a constructor for the deleteProductEndpoint.
 func NewDeleteProductEndpoint(
 	params fxparams.ProductRouteParams,
 ) route.Endpoint {
 	return &deleteProductEndpoint{ProductRouteParams: params}
 }
 
+// MapEndpoint is a method that maps the endpoint.
 func (ep *deleteProductEndpoint) MapEndpoint() {
 	ep.ProductsGroup.DELETE("/:id", ep.handler())
 }
@@ -35,7 +39,7 @@ func (ep *deleteProductEndpoint) MapEndpoint() {
 // @Produce json
 // @Success 204
 // @Param id path string true "Product ID"
-// @Router /api/v1/products/{id} [delete]
+// @Router /api/v1/products/{id} [delete].
 func (ep *deleteProductEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()

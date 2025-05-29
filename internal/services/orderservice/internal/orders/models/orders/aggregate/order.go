@@ -8,26 +8,26 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
+
+	json "github.com/goccy/go-json"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
+	uuid "github.com/satori/go.uuid"
+
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	domainExceptions "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/exceptions/domain_exceptions"
 	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/domain_events"
 	updateOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/updating_shopping_card/v1/events"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/value_objects"
-
-	"github.com/goccy/go-json"
-	uuid "github.com/satori/go.uuid"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/valueobject"
 )
 
 type Order struct {
 	*models.EventSourcedAggregateRoot
-	shopItems       []*value_objects.ShopItem
+	shopItems       []*valueobject.ShopItem
 	accountEmail    string
 	deliveryAddress string
 	cancelReason    string
-	totalPrice      float64
 	deliveredTime   time.Time
 	paid            bool
 	submitted       bool
@@ -35,7 +35,6 @@ type Order struct {
 	canceled        bool
 	paymentId       uuid.UUID
 	createdAt       time.Time
-	updatedAt       time.Time
 }
 
 func (o *Order) NewEmptyAggregate() {
@@ -46,7 +45,7 @@ func (o *Order) NewEmptyAggregate() {
 
 func NewOrder(
 	id uuid.UUID,
-	shopItems []*value_objects.ShopItem,
+	shopItems []*valueobject.ShopItem,
 	accountEmail, deliveryAddress string,
 	deliveredTime time.Time,
 	createdAt time.Time,
@@ -55,7 +54,7 @@ func NewOrder(
 	order.NewEmptyAggregate()
 	order.SetId(id)
 
-	if shopItems == nil || len(shopItems) == 0 {
+	if len(shopItems) == 0 {
 		return nil, domainExceptions.NewOrderShopItemsRequiredError(
 			"[Order_NewOrder] order items is required",
 		)
@@ -95,7 +94,7 @@ func NewOrder(
 	return order, nil
 }
 
-func (o *Order) UpdateShoppingCard(shopItems []*value_objects.ShopItem) error {
+func (o *Order) UpdateShoppingCard(shopItems []*valueobject.ShopItem) error {
 	event, err := updateOrderDomainEventsV1.NewShoppingCartUpdatedV1(shopItems)
 	if err != nil {
 		return err
@@ -111,7 +110,6 @@ func (o *Order) UpdateShoppingCard(shopItems []*value_objects.ShopItem) error {
 
 func (o *Order) When(event domain.IDomainEvent) error {
 	switch evt := event.(type) {
-
 	case *createOrderDomainEventsV1.OrderCreatedV1:
 		return o.onOrderCreated(evt)
 
@@ -121,7 +119,7 @@ func (o *Order) When(event domain.IDomainEvent) error {
 }
 
 func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) error {
-	items, err := mapper.Map[[]*value_objects.ShopItem](evt.ShopItems)
+	items, err := mapper.Map[[]*valueobject.ShopItem](evt.ShopItems)
 	if err != nil {
 		return err
 	}
@@ -131,12 +129,12 @@ func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) er
 	o.deliveryAddress = evt.DeliveryAddress
 	o.deliveredTime = evt.DeliveredTime
 	o.createdAt = evt.CreatedAt
-	o.SetId(evt.GetAggregateId()) // o.SetId(evt.Id)
+	o.SetId(evt.GetAggregateId()) // o.SetId(evt.ID)
 
 	return nil
 }
 
-func (o *Order) ShopItems() []*value_objects.ShopItem {
+func (o *Order) ShopItems() []*valueobject.ShopItem {
 	return o.shopItems
 }
 
@@ -186,10 +184,11 @@ func (o *Order) CancelReason() string {
 
 func (o *Order) String() string {
 	j, _ := json.Marshal(o)
+
 	return string(j)
 }
 
-func getShopItemsTotalPrice(shopItems []*value_objects.ShopItem) float64 {
+func getShopItemsTotalPrice(shopItems []*valueobject.ShopItem) float64 {
 	var totalPrice float64 = 0
 	for _, item := range shopItems {
 		totalPrice += item.Price() * float64(item.Quantity())

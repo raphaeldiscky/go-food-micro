@@ -11,8 +11,8 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
 	"emperror.dev/errors"
-	"github.com/caarlos0/env/v8"
-	"github.com/mcuadros/go-defaults"
+	env "github.com/caarlos0/env/v8"
+	defaults "github.com/mcuadros/go-defaults"
 	"github.com/spf13/viper"
 )
 

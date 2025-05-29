@@ -11,7 +11,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
 
-	"github.com/redis/go-redis/v9"
+	redis "github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"

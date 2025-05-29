@@ -1,25 +1,29 @@
+// Package v1 contains the get products handler.
 package v1
 
 import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	dtosv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproducts/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"github.com/mehdihadeli/go-mediatr"
 )
 
+// getProductsHandler is a struct that contains the get products handler.
 type getProductsHandler struct {
 	fxparams.ProductHandlerParams
 }
 
+// NewGetProductsHandler is a constructor for the getProductsHandler.
 func NewGetProductsHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*GetProducts, *dtos.GetProductsResponseDto] {
@@ -28,12 +32,14 @@ func NewGetProductsHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the get products handler.
 func (c *getProductsHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*GetProducts, *dtos.GetProductsResponseDto](
 		c,
 	)
 }
 
+// Handle is a method that handles the get products query.
 func (c *getProductsHandler) Handle(
 	ctx context.Context,
 	query *GetProducts,

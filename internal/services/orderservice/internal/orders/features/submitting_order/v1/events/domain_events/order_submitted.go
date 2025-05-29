@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	uuid "github.com/satori/go.uuid"
 )
 

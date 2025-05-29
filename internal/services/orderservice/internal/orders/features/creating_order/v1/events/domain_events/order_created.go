@@ -4,12 +4,13 @@ import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
+
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
+	uuid "github.com/satori/go.uuid"
+
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	domainExceptions "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/exceptions/domain_exceptions"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 type OrderCreatedV1 struct {
@@ -29,7 +30,7 @@ func NewOrderCreatedEventV1(
 	deliveredTime time.Time,
 	createdAt time.Time,
 ) (*OrderCreatedV1, error) {
-	if shopItems == nil || len(shopItems) == 0 {
+	if len(shopItems) == 0 {
 		return nil, domainExceptions.NewOrderShopItemsRequiredError("shopItems is required")
 	}
 

@@ -7,11 +7,12 @@
 package orders_service
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -248,7 +249,7 @@ type OrderReadModel struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id              string                 `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ID              string                 `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 	OrderId         string                 `protobuf:"bytes,2,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
 	ShopItems       []*ShopItemReadModel   `protobuf:"bytes,3,rep,name=ShopItems,proto3" json:"ShopItems,omitempty"`
 	Paid            bool                   `protobuf:"varint,4,opt,name=Paid,proto3" json:"Paid,omitempty"`
@@ -299,7 +300,7 @@ func (*OrderReadModel) Descriptor() ([]byte, []int) {
 
 func (x *OrderReadModel) GetId() string {
 	if x != nil {
-		return x.Id
+		return x.ID
 	}
 	return ""
 }
@@ -690,7 +691,7 @@ type GetOrderByIDReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id string `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
 func (x *GetOrderByIDReq) Reset() {
@@ -727,7 +728,7 @@ func (*GetOrderByIDReq) Descriptor() ([]byte, []int) {
 
 func (x *GetOrderByIDReq) GetId() string {
 	if x != nil {
-		return x.Id
+		return x.ID
 	}
 	return ""
 }

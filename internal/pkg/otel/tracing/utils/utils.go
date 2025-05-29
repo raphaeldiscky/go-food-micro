@@ -12,7 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/telemetrytags"
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
 	trace2 "go.opentelemetry.io/otel/sdk/trace"

@@ -41,7 +41,7 @@ func FindModelByID[TDataModel interface{}, TModel interface{}](
 	// https://gorm.io/docs/query.html#Inline-Condition
 	// https://gorm.io/docs/advanced_query.html
 	// result := c.WithContext(ctx).First(&dataModel, "id = ?", id)
-	// result := c.WithContext(ctx).First(&TDataModel{Id: id})
+	// result := c.WithContext(ctx).First(&TDataModel{ID: id})
 	// result := c.WithContext(ctx).Scopes(scopes.FilterByID(id)).First(&dataModel)
 
 	modelName := strcase.ToSnake(typeMapper.GetGenericNonePointerTypeNameByT[TModel]())
@@ -83,7 +83,7 @@ func FindDataModelByID[TDataModel interface{}](
 	// https://gorm.io/docs/query.html#Inline-Condition
 	// https://gorm.io/docs/advanced_query.html
 	// result := c.WithContext(ctx).First(&dataModel, "id = ?", id)
-	// result := c.WithContext(ctx).First(&TDataModel{Id: id})
+	// result := c.WithContext(ctx).First(&TDataModel{ID: id})
 	// result := c.WithContext(ctx).Scopes(scopes.FilterByID(id)).First(&dataModel)
 
 	dataModelName := strcase.ToSnake(typeMapper.GetGenericNonePointerTypeNameByT[TDataModel]())
@@ -127,7 +127,7 @@ func DeleteDataModelByID[TDataModel interface{}](
 
 	// https://gorm.io/docs/delete.html#Delete-a-Record
 	// https://gorm.io/docs/delete.html#Find-soft-deleted-records
-	// result := dbContext.WithContext(ctx).Delete(&TDataModel{Id: id})
+	// result := dbContext.WithContext(ctx).Delete(&TDataModel{ID: id})
 	result := txDBContext.DB().WithContext(ctx).Delete(dataModel, id)
 	if result.Error != nil {
 		return customErrors.NewInternalServerErrorWrap(

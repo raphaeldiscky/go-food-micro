@@ -3,7 +3,7 @@ package metadata
 import (
 	"time"
 
-	"github.com/goccy/go-json"
+	json "github.com/goccy/go-json"
 )
 
 func (m Metadata) GetString(key string) string {

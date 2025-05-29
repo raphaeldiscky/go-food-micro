@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"emperror.dev/errors"
-	"github.com/ahmetb/go-linq/v3"
-	"github.com/goccy/go-json"
+	linq "github.com/ahmetb/go-linq/v3"
+	json "github.com/goccy/go-json"
 	uuid "github.com/satori/go.uuid"
 )
 

@@ -6,11 +6,11 @@ import (
 )
 
 type GetOrderById struct {
-	Id uuid.UUID
+	ID uuid.UUID
 }
 
 func NewGetOrderById(id uuid.UUID) (*GetOrderById, error) {
-	query := &GetOrderById{Id: id}
+	query := &GetOrderById{ID: id}
 
 	err := query.Validate()
 	if err != nil {
@@ -22,6 +22,6 @@ func NewGetOrderById(id uuid.UUID) (*GetOrderById, error) {
 
 func (g GetOrderById) Validate() error {
 	return validation.ValidateStruct(&g,
-		validation.Field(&g.Id, validation.Required),
+		validation.Field(&g.ID, validation.Required),
 	)
 }

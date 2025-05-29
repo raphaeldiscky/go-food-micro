@@ -12,7 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	"go.opentelemetry.io/otel/attribute"
 )
 

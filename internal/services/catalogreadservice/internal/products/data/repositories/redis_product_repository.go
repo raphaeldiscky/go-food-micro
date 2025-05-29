@@ -5,28 +5,31 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
+
+	redis "github.com/redis/go-redis/v9"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-
-	"emperror.dev/errors"
-	"github.com/redis/go-redis/v9"
-	attribute2 "go.opentelemetry.io/otel/attribute"
 )
 
 const (
 	redisProductPrefixKey = "product_read_service"
 )
 
+// RedisProductRepository is a struct that contains the redis product repository.
 type redisProductRepository struct {
 	log         logger.Logger
 	redisClient redis.UniversalClient
 	tracer      tracing.AppTracer
 }
 
+// NewRedisProductRepository creates a new RedisProductRepository.
 func NewRedisProductRepository(
 	log logger.Logger,
 	redisClient redis.UniversalClient,
@@ -39,6 +42,7 @@ func NewRedisProductRepository(
 	}
 }
 
+// PutProduct puts a product in the redis cache.
 func (r *redisProductRepository) PutProduct(
 	ctx context.Context,
 	key string,
@@ -57,7 +61,7 @@ func (r *redisProductRepository) PutProduct(
 			span,
 			errors.WrapIf(
 				err,
-				"error marshalling product",
+				"error marshaling product",
 			),
 		)
 	}
@@ -85,7 +89,7 @@ func (r *redisProductRepository) PutProduct(
 		),
 		logger.Fields{
 			"Product":   product,
-			"Id":        product.ProductId,
+			"ID":        product.ProductID,
 			"Key":       key,
 			"PrefixKey": r.getRedisProductPrefixKey(),
 		},
@@ -94,11 +98,12 @@ func (r *redisProductRepository) PutProduct(
 	return nil
 }
 
-func (r *redisProductRepository) GetProductById(
+// GetProductByID gets a product by id from the redis cache.
+func (r *redisProductRepository) GetProductByID(
 	ctx context.Context,
 	key string,
 ) (*models.Product, error) {
-	ctx, span := r.tracer.Start(ctx, "redisRepository.GetProductById")
+	ctx, span := r.tracer.Start(ctx, "redisRepository.GetProductByID")
 	span.SetAttributes(
 		attribute2.String("PrefixKey", r.getRedisProductPrefixKey()),
 	)
@@ -139,7 +144,7 @@ func (r *redisProductRepository) GetProductById(
 		),
 		logger.Fields{
 			"Product":   product,
-			"Id":        product.ProductId,
+			"ID":        product.ProductID,
 			"Key":       key,
 			"PrefixKey": r.getRedisProductPrefixKey(),
 		},
@@ -148,6 +153,7 @@ func (r *redisProductRepository) GetProductById(
 	return &product, nil
 }
 
+// DeleteProduct deletes a product from the redis cache.
 func (r *redisProductRepository) DeleteProduct(
 	ctx context.Context,
 	key string,
@@ -184,6 +190,7 @@ func (r *redisProductRepository) DeleteProduct(
 	return nil
 }
 
+// DeleteAllProducts deletes all products from the redis cache.
 func (r *redisProductRepository) DeleteAllProducts(ctx context.Context) error {
 	ctx, span := r.tracer.Start(ctx, "redisRepository.DeleteAllProducts")
 	span.SetAttributes(
@@ -209,6 +216,7 @@ func (r *redisProductRepository) DeleteAllProducts(ctx context.Context) error {
 	return nil
 }
 
+// getRedisProductPrefixKey gets the redis product prefix key.
 func (r *redisProductRepository) getRedisProductPrefixKey() string {
 	return redisProductPrefixKey
 }

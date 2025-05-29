@@ -12,7 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/queries"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
 	. "github.com/onsi/ginkgo"
@@ -24,10 +24,10 @@ var integrationFixture *integration.IntegrationTestSharedFixture
 func TestGetOrderById(t *testing.T) {
 	RegisterFailHandler(Fail)
 	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
-	RunSpecs(t, "Get Order By Id Integration Tests")
+	RunSpecs(t, "Get Order By ID Integration Tests")
 }
 
-var _ = Describe("Get Order By Id Feature", func() {
+var _ = Describe("Get Order By ID Feature", func() {
 	var (
 		ctx    context.Context
 		query  *queries.GetOrderById
@@ -40,7 +40,7 @@ var _ = Describe("Get Order By Id Feature", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		idString := integrationFixture.Items[0].Id
+		idString := integrationFixture.Items[0].ID
 		id, err = uuid.FromString(idString)
 		Expect(err).NotTo(HaveOccurred())
 	})
@@ -90,7 +90,7 @@ var _ = Describe("Get Order By Id Feature", func() {
 				Expect(err).NotTo(HaveOccurred())
 				Expect(result).NotTo(BeNil())
 				Expect(result.Order).NotTo(BeNil())
-				Expect(result.Order.Id).To(Equal(id.String()))
+				Expect(result.Order.ID).To(Equal(id.String()))
 				Expect(result.Order.OrderId).NotTo(BeEmpty())
 			})
 		})

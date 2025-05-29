@@ -1,32 +1,37 @@
+// Package endpoints contains the get product by id endpoint.
 package endpoints
 
 import (
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/params"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
-
-	"emperror.dev/errors"
-	"github.com/labstack/echo/v4"
-	"github.com/mehdihadeli/go-mediatr"
 )
 
-type getProductByIdEndpoint struct {
+// getProductByIDEndpoint is a struct that contains the get product by id endpoint.
+type getProductByIDEndpoint struct {
 	params.ProductRouteParams
 }
 
-func NewGetProductByIdEndpoint(
-	params params.ProductRouteParams,
+// NewGetProductByIDEndpoint creates a new GetProductByIDEndpoint.
+func NewGetProductByIDEndpoint(
+	p params.ProductRouteParams,
 ) route.Endpoint {
-	return &getProductByIdEndpoint{
-		ProductRouteParams: params,
+	return &getProductByIDEndpoint{
+		ProductRouteParams: p,
 	}
 }
 
-func (ep *getProductByIdEndpoint) MapEndpoint() {
+// MapEndpoint maps the endpoint to the router.
+func (ep *getProductByIDEndpoint) MapEndpoint() {
 	ep.ProductsGroup.GET("/:id", ep.handler())
 }
 
@@ -37,13 +42,13 @@ func (ep *getProductByIdEndpoint) MapEndpoint() {
 // @Accept json
 // @Produce json
 // @Param id path string true "Product ID"
-// @Success 200 {object} dtos.GetProductByIdResponseDto
-// @Router /api/v1/products/{id} [get]
-func (ep *getProductByIdEndpoint) handler() echo.HandlerFunc {
+// @Success 200 {object} dtos.GetProductByIDResponseDto
+// @Router /api/v1/products/{id} [get].
+func (ep *getProductByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 
-		request := &dtos.GetProductByIdRequestDto{}
+		request := &dtos.GetProductByIDRequestDto{}
 		if err := c.Bind(request); err != nil {
 			badRequestErr := customErrors.NewBadRequestErrorWrap(
 				err,
@@ -53,7 +58,7 @@ func (ep *getProductByIdEndpoint) handler() echo.HandlerFunc {
 			return badRequestErr
 		}
 
-		query, err := queries.NewGetProductById(request.Id)
+		query, err := queries.NewGetProductByID(request.ID)
 		if err != nil {
 			validationErr := customErrors.NewValidationErrorWrap(
 				err,
@@ -63,14 +68,14 @@ func (ep *getProductByIdEndpoint) handler() echo.HandlerFunc {
 			return validationErr
 		}
 
-		queryResult, err := mediatr.Send[*queries.GetProductById, *dtos.GetProductByIdResponseDto](
+		queryResult, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
 			ctx,
 			query,
 		)
 		if err != nil {
 			return errors.WithMessage(
 				err,
-				"error in sending GetProductById",
+				"error in sending GetProductByID",
 			)
 		}
 

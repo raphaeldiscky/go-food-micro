@@ -9,11 +9,11 @@ option go_package = "./;products_service";
 service ProductsService {
   rpc CreateProduct(CreateProductReq) returns (CreateProductRes);
   rpc UpdateProduct(UpdateProductReq) returns (UpdateProductRes);
-  rpc GetProductById(GetProductByIdReq) returns (GetProductByIdRes);
+  rpc GetProductByID(GetProductByIDReq) returns (GetProductByIDRes);
 }
 
 message Product {
-  string ProductId = 1;
+  string ProductID = 1;
   string Name = 2;
   string Description = 3;
   double Price = 4;
@@ -28,11 +28,11 @@ message CreateProductReq {
 }
 
 message CreateProductRes {
-  string ProductId = 1;
+  string ProductID = 1;
 }
 
 message UpdateProductReq {
-  string ProductId = 1;
+  string ProductID = 1;
   string Name = 2;
   string Description = 3;
   double Price = 4;
@@ -40,10 +40,10 @@ message UpdateProductReq {
 
 message UpdateProductRes {}
 
-message GetProductByIdReq {
-  string ProductId = 1;
+message GetProductByIDReq {
+  string ProductID = 1;
 }
 
-message GetProductByIdRes {
+message GetProductByIDRes {
   Product Product = 1;
 }

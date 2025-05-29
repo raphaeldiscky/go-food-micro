@@ -14,7 +14,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type esdbSubscriptionAllWorker struct {

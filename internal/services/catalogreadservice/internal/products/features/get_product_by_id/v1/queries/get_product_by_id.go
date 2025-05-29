@@ -1,17 +1,21 @@
+// Package queries contains the get product by id query.
 package queries
 
 import (
-	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/go-ozzo/ozzo-validation/is"
+
+	validation "github.com/go-ozzo/ozzo-validation"
 	uuid "github.com/satori/go.uuid"
 )
 
-type GetProductById struct {
-	Id uuid.UUID
+// GetProductByID is a struct that contains the get product by id query.
+type GetProductByID struct {
+	ID uuid.UUID
 }
 
-func NewGetProductById(id uuid.UUID) (*GetProductById, error) {
-	product := &GetProductById{Id: id}
+// NewGetProductByID creates a new GetProductByID.
+func NewGetProductByID(id uuid.UUID) (*GetProductByID, error) {
+	product := &GetProductByID{ID: id}
 	if err := product.Validate(); err != nil {
 		return nil, err
 	}
@@ -19,6 +23,7 @@ func NewGetProductById(id uuid.UUID) (*GetProductById, error) {
 	return product, nil
 }
 
-func (p *GetProductById) Validate() error {
-	return validation.ValidateStruct(p, validation.Field(&p.Id, validation.Required, is.UUIDv4))
+// Validate is a method that validates the get product by id query.
+func (p *GetProductByID) Validate() error {
+	return validation.ValidateStruct(p, validation.Field(&p.ID, validation.Required, is.UUIDv4))
 }

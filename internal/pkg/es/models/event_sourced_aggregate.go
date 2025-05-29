@@ -13,7 +13,7 @@ import (
 	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
 
 	"emperror.dev/errors"
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -149,7 +149,7 @@ func (a *EventSourcedAggregateRoot) AddDomainEvents(event domain.IDomainEvent) e
 	if exists {
 		return errors2.EventAlreadyExistsError
 	}
-	event.WithAggregate(a.Id(), a.CurrentVersion()+1)
+	event.WithAggregate(a.ID(), a.CurrentVersion()+1)
 	a.uncommittedEvents = append(a.uncommittedEvents, event)
 
 	return nil

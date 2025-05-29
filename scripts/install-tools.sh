@@ -24,8 +24,8 @@ go install mvdan.cc/gofumpt@latest
 # https://github.com/segmentio/golines
 go install github.com/segmentio/golines@latest
 
-# https://golangci-lint.run/usage/install/#install-from-source
-go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+# https://golangci-lint.run/welcome/install/
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
 
 go install github.com/mgechev/revive@latest
 

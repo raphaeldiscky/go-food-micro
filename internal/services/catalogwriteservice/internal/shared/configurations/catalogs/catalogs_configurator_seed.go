@@ -3,15 +3,16 @@ package catalogs
 import (
 	"time"
 
-	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
-
 	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 )
 
-func (ic *CatalogsServiceConfigurator) seedCatalogs(
+func (ic *CatalogWriteServiceConfigurator) seedCatalogs(
 	db *gorm.DB,
 ) error {
 	err := seedDataManually(db)
@@ -27,20 +28,21 @@ func seedDataManually(gormDB *gorm.DB) error {
 
 	// https://gorm.io/docs/advanced_query.html#Count
 	gormDB.Model(&datamodel.ProductDataModel{}).Count(&count)
+
 	if count > 0 {
 		return nil
 	}
 
 	products := []*datamodel.ProductDataModel{
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
 			Price:       gofakeit.Price(100, 1000),
 		},
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),

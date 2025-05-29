@@ -8,24 +8,25 @@ import (
 	"net/http"
 	"testing"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	updatingoroductsv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
 )
 
 type updateProductHandlerUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*updatingoroductsv1.UpdateProduct, *mediatr.Unit]
 }
 
@@ -33,14 +34,14 @@ func TestUpdateProductHandlerUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&updateProductHandlerUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }
 
 func (c *updateProductHandlerUnitTests) SetupTest() {
 	// call base `SetupTest hook` before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = updatingoroductsv1.NewUpdateProductHandler(
 		fxparams.ProductHandlerParams{
 			CatalogsDBContext: c.CatalogDBContext,
@@ -53,14 +54,14 @@ func (c *updateProductHandlerUnitTests) SetupTest() {
 
 func (c *updateProductHandlerUnitTests) TearDownTest() {
 	// call base `TearDownTest hook` before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_Valid_Data() {
 	existing := c.Products[0]
 
 	updateProductCommand, err := updatingoroductsv1.NewUpdateProductWithValidation(
-		existing.Id,
+		existing.ID,
 		gofakeit.Name(),
 		gofakeit.EmojiDescription(),
 		existing.Price,
@@ -80,7 +81,7 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Update_Product_With_V
 	)
 	c.Require().NoError(err)
 
-	c.Assert().Equal(updatedProduct.Id, updateProductCommand.ProductID)
+	c.Assert().Equal(updatedProduct.ID, updateProductCommand.ProductID)
 	c.Assert().Equal(updatedProduct.Name, updateProductCommand.Name)
 	c.Bus.AssertNumberOfCalls(c.T(), "PublishMessage", 1)
 }
@@ -112,7 +113,7 @@ func (c *updateProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Erro
 	existing := c.Products[0]
 
 	updateProductCommand, err := updatingoroductsv1.NewUpdateProductWithValidation(
-		existing.Id,
+		existing.ID,
 		gofakeit.Name(),
 		gofakeit.EmojiDescription(),
 		existing.Price,

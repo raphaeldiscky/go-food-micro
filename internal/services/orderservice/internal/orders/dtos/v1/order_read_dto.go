@@ -1,9 +1,11 @@
-package dtosV1
+// Package dtosv1 contains the order read dto.
+package dtosv1
 
 import "time"
 
+// OrderReadDto is the read dto for the order.
 type OrderReadDto struct {
-	Id              string             `json:"id"`
+	ID              string             `json:"id"`
 	OrderId         string             `json:"orderId"`
 	ShopItems       []*ShopItemReadDto `json:"shopItems"`
 	AccountEmail    string             `json:"accountEmail"`

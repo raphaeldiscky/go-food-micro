@@ -1,13 +1,22 @@
+// Package grpc contains the product grpc service server.
 package grpc
 
 import (
 	"context"
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
+	"go.opentelemetry.io/otel/trace"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+	api "go.opentelemetry.io/otel/metric"
+
 	createProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1"
 	createProductDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
 	getProductByIdQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/gettingproductbyid/v1"
@@ -15,19 +24,16 @@ import (
 	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/contracts"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-
-	"emperror.dev/errors"
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-	attribute2 "go.opentelemetry.io/otel/attribute"
-	api "go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/trace"
 )
 
-var grpcMetricsAttr = api.WithAttributes(
-	attribute2.Key("MetricsType").String("Http"),
-)
+// grpcMetricsAttr returns the metric attributes for gRPC metrics.
+func grpcMetricsAttr() api.MeasurementOption {
+	return api.WithAttributes(
+		attribute2.Key("MetricsType").String("Http"),
+	)
+}
 
+// ProductGrpcServiceServer is a struct that contains the ProductGrpcServiceServer.
 type ProductGrpcServiceServer struct {
 	catalogsMetrics *contracts.CatalogsMetrics
 	logger          logger.Logger
@@ -35,23 +41,25 @@ type ProductGrpcServiceServer struct {
 	// product_service_client.UnimplementedProductsServiceServer
 }
 
+// NewProductGrpcService is a constructor for the ProductGrpcServiceServer.
 func NewProductGrpcService(
 	catalogsMetrics *contracts.CatalogsMetrics,
-	logger logger.Logger,
+	log logger.Logger,
 ) *ProductGrpcServiceServer {
 	return &ProductGrpcServiceServer{
 		catalogsMetrics: catalogsMetrics,
-		logger:          logger,
+		logger:          log,
 	}
 }
 
+// CreateProduct is a method that creates a product.
 func (s *ProductGrpcServiceServer) CreateProduct(
 	ctx context.Context,
 	req *productsService.CreateProductReq,
 ) (*productsService.CreateProductRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
-	s.catalogsMetrics.CreateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	s.catalogsMetrics.CreateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr())
 
 	command, err := createProductCommandV1.NewCreateProductWithValidation(
 		req.GetName(),
@@ -69,6 +77,7 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 				validationErr,
 			),
 		)
+
 		return nil, validationErr
 	}
 
@@ -87,21 +96,23 @@ func (s *ProductGrpcServiceServer) CreateProduct(
 				command.ProductID,
 				err,
 			),
-			logger.Fields{"Id": command.ProductID},
+			logger.Fields{"ID": command.ProductID},
 		)
+
 		return nil, err
 	}
 
 	return &productsService.CreateProductRes{
-		ProductId: result.ProductID.String(),
+		ProductID: result.ProductID.String(),
 	}, nil
 }
 
+// UpdateProduct is a method that updates a product.
 func (s *ProductGrpcServiceServer) UpdateProduct(
 	ctx context.Context,
 	req *productsService.UpdateProductReq,
 ) (*productsService.UpdateProductRes, error) {
-	s.catalogsMetrics.UpdateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	s.catalogsMetrics.UpdateProductGrpcRequests.Add(ctx, 1, grpcMetricsAttr())
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
 
@@ -117,6 +128,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 				badRequestErr,
 			),
 		)
+
 		return nil, badRequestErr
 	}
 
@@ -137,6 +149,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 				validationErr,
 			),
 		)
+
 		return nil, validationErr
 	}
 
@@ -151,25 +164,27 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 				command.ProductID,
 				err,
 			),
-			logger.Fields{"Id": command.ProductID},
+			logger.Fields{"ID": command.ProductID},
 		)
+
 		return nil, err
 	}
 
 	return &productsService.UpdateProductRes{}, nil
 }
 
-func (s *ProductGrpcServiceServer) GetProductById(
+// GetProductByID is a method that gets a product by id.
+func (s *ProductGrpcServiceServer) GetProductByID(
 	ctx context.Context,
-	req *productsService.GetProductByIdReq,
-) (*productsService.GetProductByIdRes, error) {
-	//// we could use trace manually, but I used grpc middleware for doing this
-	//ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductById")
-	//defer clean()
-
-	s.catalogsMetrics.GetProductByIdGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	req *productsService.GetProductByIDReq,
+) (*productsService.GetProductByIDRes, error) {
+	s.catalogsMetrics.GetProductByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr())
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
+
+	// we could use trace manually, but I used grpc middleware for doing this
+	// ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductByID")
+	// defer clean()
 
 	productUUID, err := uuid.FromString(req.GetProductId())
 	if err != nil {
@@ -183,10 +198,11 @@ func (s *ProductGrpcServiceServer) GetProductById(
 				badRequestErr,
 			),
 		)
+
 		return nil, badRequestErr
 	}
 
-	query, err := getProductByIdQueryV1.NewGetProductByIdWithValidation(productUUID)
+	query, err := getProductByIdQueryV1.NewGetProductByIDWithValidation(productUUID)
 	if err != nil {
 		validationErr := customErrors.NewValidationErrorWrap(
 			err,
@@ -198,17 +214,18 @@ func (s *ProductGrpcServiceServer) GetProductById(
 				validationErr,
 			),
 		)
+
 		return nil, validationErr
 	}
 
-	queryResult, err := mediatr.Send[*getProductByIdQueryV1.GetProductById, *getProductByIdDtosV1.GetProductByIdResponseDto](
+	queryResult, err := mediatr.Send[*getProductByIdQueryV1.GetProductByID, *getProductByIdDtosV1.GetProductByIDResponseDto](
 		ctx,
 		query,
 	)
 	if err != nil {
 		err = errors.WithMessage(
 			err,
-			"[ProductGrpcServiceServer_GetProductById.Send] error in sending GetProductById",
+			"[ProductGrpcServiceServer_GetProductById.Send] error in sending GetProductByID",
 		)
 		s.logger.Errorw(
 			fmt.Sprintf(
@@ -216,8 +233,9 @@ func (s *ProductGrpcServiceServer) GetProductById(
 				query.ProductID,
 				err,
 			),
-			logger.Fields{"Id": query.ProductID},
+			logger.Fields{"ID": query.ProductID},
 		)
+
 		return nil, err
 	}
 
@@ -227,8 +245,9 @@ func (s *ProductGrpcServiceServer) GetProductById(
 			err,
 			"[ProductGrpcServiceServer_GetProductById.Map] error in mapping product",
 		)
+
 		return nil, err
 	}
 
-	return &productsService.GetProductByIdRes{Product: product}, nil
+	return &productsService.GetProductByIDRes{Product: product}, nil
 }

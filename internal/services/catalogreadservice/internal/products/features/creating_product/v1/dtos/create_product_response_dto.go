@@ -1,5 +1,7 @@
+// Package dtos contains the create product response dto.
 package dtos
 
+// CreateProductResponseDto is a struct that contains the create product response dto.
 type CreateProductResponseDto struct {
-	Id string `json:"Id"`
+	ID string `json:"ID"`
 }

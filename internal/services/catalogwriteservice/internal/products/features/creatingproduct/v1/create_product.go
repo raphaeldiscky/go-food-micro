@@ -1,18 +1,20 @@
+// Package v1 contains the create product v1.
 package v1
 
 import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 
 	validation "github.com/go-ozzo/ozzo-validation"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
 )
 
 // https://echo.labstack.com/guide/request/
 // https://github.com/go-playground/validator
 
+// CreateProduct is a struct that contains the create product command.
 type CreateProduct struct {
 	cqrs.Command
 	ProductID   uuid.UUID
@@ -22,7 +24,7 @@ type CreateProduct struct {
 	CreatedAt   time.Time
 }
 
-// NewCreateProduct Create a new product
+// NewCreateProduct is a constructor for the CreateProduct.
 func NewCreateProduct(
 	name string,
 	description string,
@@ -40,7 +42,7 @@ func NewCreateProduct(
 	return command
 }
 
-// NewCreateProductWithValidation Create a new product with inline validation - for defensive programming and ensuring validation even without using middleware
+// NewCreateProductWithValidation is a constructor for the CreateProduct with validation.
 func NewCreateProductWithValidation(
 	name string,
 	description string,
@@ -52,6 +54,7 @@ func NewCreateProductWithValidation(
 	return command, err
 }
 
+// Validate is a method that validates the create product command.
 func (c *CreateProduct) Validate() error {
 	err := validation.ValidateStruct(
 		c,

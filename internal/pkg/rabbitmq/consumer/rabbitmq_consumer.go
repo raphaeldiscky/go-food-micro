@@ -21,9 +21,9 @@ import (
 	errorutils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 
 	"emperror.dev/errors"
-	"github.com/ahmetb/go-linq/v3"
-	"github.com/avast/retry-go"
-	"github.com/rabbitmq/amqp091-go"
+	linq "github.com/ahmetb/go-linq/v3"
+	retry "github.com/avast/retry-go"
+	amqp091 "github.com/rabbitmq/amqp091-go"
 	"go.opentelemetry.io/otel/attribute"
 	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 )

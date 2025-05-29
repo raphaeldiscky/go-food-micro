@@ -7,14 +7,14 @@ import (
 	"context"
 	"testing"
 
-	productService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	"github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
+	productService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -37,7 +37,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {
@@ -50,7 +50,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 		// "When" step
 		When("A request is made to create a product with valid data", func() {
 			// "Then" step
-			It("Should return a non-empty Id", func() {
+			It("Should return a non-empty ID", func() {
 				// Create a gRPC request with valid data
 				request := &productService.CreateProductReq{
 					Price:       gofakeit.Price(100, 1000),
@@ -62,7 +62,7 @@ var _ = Describe("Product Grpc Service Feature", func() {
 				res, err := integrationFixture.ProductServiceClient.CreateProduct(ctx, request)
 				Expect(err).To(BeNil())
 				Expect(res).NotTo(BeNil())
-				Expect(res.ProductId).NotTo(BeEmpty())
+				Expect(res.ProductID).NotTo(BeEmpty())
 			})
 		})
 	})
@@ -72,17 +72,17 @@ var _ = Describe("Product Grpc Service Feature", func() {
 		// "When" step
 		When("A request is made to retrieve data with a valid ID", func() {
 			// "Then" step
-			It("Should return data with a matching Id", func() {
+			It("Should return data with a matching ID", func() {
 				// Make the gRPC request to retrieve data by ID
-				res, err := integrationFixture.ProductServiceClient.GetProductById(
+				res, err := integrationFixture.ProductServiceClient.GetProductByID(
 					ctx,
-					&productService.GetProductByIdReq{ProductId: id.String()},
+					&productService.GetProductByIDReq{ProductID: id.String()},
 				)
 
 				Expect(err).To(BeNil())
 				Expect(res).NotTo(BeNil())
 				Expect(res.Product).NotTo(BeNil())
-				Expect(res.Product.ProductId).To(Equal(id.String()))
+				Expect(res.Product.ProductID).To(Equal(id.String()))
 			})
 		})
 	})

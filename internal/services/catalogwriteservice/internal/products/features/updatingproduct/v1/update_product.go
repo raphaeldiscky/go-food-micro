@@ -1,14 +1,15 @@
+// Package v1 contains the update product command.
 package v1
 
 import (
 	"time"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	validation "github.com/go-ozzo/ozzo-validation"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
 )
 
+// UpdateProduct is a struct that contains the update product command.
 type UpdateProduct struct {
 	ProductID   uuid.UUID
 	Name        string
@@ -17,6 +18,7 @@ type UpdateProduct struct {
 	UpdatedAt   time.Time
 }
 
+// NewUpdateProduct is a constructor for the UpdateProduct.
 func NewUpdateProduct(
 	productID uuid.UUID,
 	name string,
@@ -34,6 +36,7 @@ func NewUpdateProduct(
 	return command
 }
 
+// NewUpdateProductWithValidation is a constructor for the UpdateProduct with validation.
 func NewUpdateProductWithValidation(
 	productID uuid.UUID,
 	name string,
@@ -46,6 +49,7 @@ func NewUpdateProductWithValidation(
 	return command, err
 }
 
+// Validate is a method that validates the update product command.
 func (c *UpdateProduct) Validate() error {
 	err := validation.ValidateStruct(
 		c,

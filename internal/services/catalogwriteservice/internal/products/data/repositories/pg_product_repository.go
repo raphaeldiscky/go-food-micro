@@ -1,37 +1,42 @@
+// Package repositories contains the postgres product repository.
 package repositories
 
 import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
-	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/repository"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"gorm.io/gorm"
+
+	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
+	goUuid "github.com/satori/go.uuid"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"emperror.dev/errors"
-	uuid "github.com/satori/go.uuid"
-	attribute2 "go.opentelemetry.io/otel/attribute"
-	"gorm.io/gorm"
 )
 
+// postgresProductRepository is a struct that contains the postgres product repository.
 type postgresProductRepository struct {
 	log                   logger.Logger
 	gormGenericRepository data.GenericRepository[*models.Product]
 	tracer                tracing.AppTracer
 }
 
+// NewPostgresProductRepository is a constructor for the postgresProductRepository.
 func NewPostgresProductRepository(
 	log logger.Logger,
 	db *gorm.DB,
 	tracer tracing.AppTracer,
 ) data2.ProductRepository {
 	gormRepository := repository.NewGenericGormRepository[*models.Product](db)
+
 	return &postgresProductRepository{
 		log:                   log,
 		gormGenericRepository: gormRepository,
@@ -39,6 +44,7 @@ func NewPostgresProductRepository(
 	}
 }
 
+// GetAllProducts is a method that gets all products.
 func (p *postgresProductRepository) GetAllProducts(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -68,6 +74,7 @@ func (p *postgresProductRepository) GetAllProducts(
 	return result, nil
 }
 
+// SearchProducts is a method that searches for products.
 func (p *postgresProductRepository) SearchProducts(
 	ctx context.Context,
 	searchText string,
@@ -101,12 +108,13 @@ func (p *postgresProductRepository) SearchProducts(
 	return result, nil
 }
 
-func (p *postgresProductRepository) GetProductById(
+// GetProductByID is a method that gets a product by id.
+func (p *postgresProductRepository) GetProductByID(
 	ctx context.Context,
-	uuid uuid.UUID,
+	uuid goUuid.UUID,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.GetProductById")
-	span.SetAttributes(attribute2.String("Id", uuid.String()))
+	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.GetProductByID")
+	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()
 
 	product, err := p.gormGenericRepository.GetById(ctx, uuid)
@@ -130,7 +138,7 @@ func (p *postgresProductRepository) GetProductById(
 			"product with id %s laoded",
 			uuid.String(),
 		),
-		logger.Fields{"Product": product, "Id": uuid},
+		logger.Fields{"Product": product, "ID": uuid},
 	)
 
 	return product, nil
@@ -159,9 +167,9 @@ func (p *postgresProductRepository) CreateProduct(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' created",
-			product.Id,
+			product.ID,
 		),
-		logger.Fields{"Product": product, "Id": product.Id},
+		logger.Fields{"Product": product, "ID": product.ID},
 	)
 
 	return product, nil
@@ -181,7 +189,7 @@ func (p *postgresProductRepository) UpdateProduct(
 			err,
 			fmt.Sprintf(
 				"error in updating product with id %s into the database.",
-				updateProduct.Id,
+				updateProduct.ID,
 			),
 		),
 	)
@@ -193,11 +201,11 @@ func (p *postgresProductRepository) UpdateProduct(
 	p.log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' updated",
-			updateProduct.Id,
+			updateProduct.ID,
 		),
 		logger.Fields{
 			"Product": updateProduct,
-			"Id":      updateProduct.Id,
+			"ID":      updateProduct.ID,
 		},
 	)
 
@@ -206,10 +214,10 @@ func (p *postgresProductRepository) UpdateProduct(
 
 func (p *postgresProductRepository) DeleteProductByID(
 	ctx context.Context,
-	uuid uuid.UUID,
+	uuid goUuid.UUID,
 ) error {
 	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.UpdateProduct")
-	span.SetAttributes(attribute2.String("Id", uuid.String()))
+	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()
 
 	err := p.gormGenericRepository.Delete(ctx, uuid)

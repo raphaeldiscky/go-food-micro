@@ -6,7 +6,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	"github.com/iancoleman/strcase"
 )
 

@@ -5,18 +5,21 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 )
 
-type CatalogsReadApplicationBuilder struct {
+// CatalogReadApplicationBuilder is a struct that contains the catalogs read application builder.
+type CatalogReadApplicationBuilder struct {
 	contracts.ApplicationBuilder
 }
 
-func NewCatalogsReadApplicationBuilder() *CatalogsReadApplicationBuilder {
-	builder := &CatalogsReadApplicationBuilder{fxapp.NewApplicationBuilder()}
+// NewCatalogReadApplicationBuilder is a constructor for the CatalogReadApplicationBuilder.
+func NewCatalogReadApplicationBuilder() *CatalogReadApplicationBuilder {
+	builder := &CatalogReadApplicationBuilder{fxapp.NewApplicationBuilder()}
 
 	return builder
 }
 
-func (a *CatalogsReadApplicationBuilder) Build() *CatalogsReadApplication {
-	return NewCatalogsReadApplication(
+// Build is a method that builds the catalogs read application.
+func (a *CatalogReadApplicationBuilder) Build() *CatalogReadApplication {
+	return NewCatalogReadApplication(
 		a.GetProvides(),
 		a.GetDecorates(),
 		a.Options(),

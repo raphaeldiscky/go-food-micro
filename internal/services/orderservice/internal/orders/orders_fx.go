@@ -4,16 +4,17 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb"
+	"go.uber.org/fx"
+
+	echo "github.com/labstack/echo/v4"
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/data/repositories"
 	createOrderV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/endpoints"
 	getOrderByIdV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/endpoints"
 	getOrdersV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/endpoints"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/projections"
-
-	"github.com/labstack/echo/v4"
-	"go.uber.org/fx"
 )
 
 var Module = fx.Module(

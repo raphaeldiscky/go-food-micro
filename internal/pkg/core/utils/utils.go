@@ -7,7 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 )
 
 func GetAllDomainEventTypes() []reflect.Type {

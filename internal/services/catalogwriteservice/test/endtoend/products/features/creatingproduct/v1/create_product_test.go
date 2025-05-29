@@ -8,45 +8,44 @@ import (
 	"net/http"
 	"testing"
 
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	httpexpect "github.com/gavv/httpexpect/v2"
+	ginkgo "github.com/onsi/ginkgo"
+	gomega "github.com/onsi/gomega"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/gavv/httpexpect/v2"
-
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
 
 func TestCreateProductEndpoint(t *testing.T) {
-	RegisterFailHandler(Fail)
+	ginkgo.RegisterFailHandler(gomega.Fail)
 	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
-	RunSpecs(t, "CreateProduct Endpoint EndToEnd Tests")
+	ginkgo.RunSpecs(t, "CreateProduct Endpoint EndToEnd Tests")
 }
 
-var _ = Describe("CreateProduct Feature", func() {
+var _ = ginkgo.Describe("CreateProduct Feature", func() {
 	var (
 		ctx     context.Context
 		request *dtos.CreateProductRequestDto
 	)
 
-	_ = BeforeEach(func() {
+	_ = ginkgo.BeforeEach(func() {
 		ctx = context.Background()
 
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 	})
 
-	_ = AfterEach(func() {
+	_ = ginkgo.AfterEach(func() {
 		By("Cleanup test data")
 		integrationFixture.TearDownTest()
 	})
 
 	// "Scenario" step for testing the create product API with valid input
-	Describe("Create new product return created status with valid input", func() {
-		BeforeEach(func() {
+	ginkgo.Describe("Create new product return created status with valid input", func() {
+		ginkgo.BeforeEach(func() {
 			// Generate a valid request
 			request = &dtos.CreateProductRequestDto{
 				Description: gofakeit.AdjectiveDescriptive(),
@@ -55,9 +54,9 @@ var _ = Describe("CreateProduct Feature", func() {
 			}
 		})
 		// "When" step
-		When("A valid request is made to create a product", func() {
+		ginkgo.When("A valid request is made to create a product", func() {
 			// "Then" step
-			It("Should returns a StatusCreated response", func() {
+			ginkgo.It("Should returns a StatusCreated response", func() {
 				// Create an HTTPExpect instance and make the request
 				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
 				expect.POST("products").
@@ -70,8 +69,8 @@ var _ = Describe("CreateProduct Feature", func() {
 	})
 
 	// "Scenario" step for testing the create product API with invalid price input
-	Describe("Create product returns a BadRequest status with invalid price input", func() {
-		BeforeEach(func() {
+	ginkgo.Describe("Create product returns a BadRequest status with invalid price input", func() {
+		ginkgo.BeforeEach(func() {
 			// Generate an invalid request with zero price
 			request = &dtos.CreateProductRequestDto{
 				Description: gofakeit.AdjectiveDescriptive(),
@@ -80,9 +79,9 @@ var _ = Describe("CreateProduct Feature", func() {
 			}
 		})
 		// "When" step
-		When("An invalid request is made with a zero price", func() {
+		ginkgo.When("An invalid request is made with a zero price", func() {
 			// "Then" step
-			It("Should return a BadRequest status", func() {
+			ginkgo.It("Should return a BadRequest status", func() {
 				// Create an HTTPExpect instance and make the request
 				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
 				expect.POST("products").

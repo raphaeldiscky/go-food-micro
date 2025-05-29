@@ -6,22 +6,25 @@ package v1
 import (
 	"testing"
 
+	"github.com/stretchr/testify/suite"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
 	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	"github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
 )
 
 type updateProductUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestUpdateProductUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&updateProductUnitTests{UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t)},
+		&updateProductUnitTests{
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
+		},
 	)
 }
 
@@ -55,7 +58,12 @@ func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For
 }
 
 func (c *updateProductUnitTests) Test_New_Update_Product_Should_Return_Error_For_Empty_Name() {
-	command, err := v1.NewUpdateProductWithValidation(uuid.NewV4(), "", gofakeit.EmojiDescription(), 120)
+	command, err := v1.NewUpdateProductWithValidation(
+		uuid.NewV4(),
+		"",
+		gofakeit.EmojiDescription(),
+		120,
+	)
 
 	c.Require().Error(err)
 	c.NotNil(command)

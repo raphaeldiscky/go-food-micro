@@ -1,30 +1,33 @@
+// Package integration contains the integration test fixture.
 package integration
 
 import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
-	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"gorm.io/gorm"
+
+	_ "github.com/lib/pq" // postgres driver
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	rabbithole "github.com/michaelklishin/rabbit-hole"
+	fxcontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	uuid "github.com/satori/go.uuid"
+	dbcleaner "gopkg.in/khaiql/dbcleaner.v2"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
-
-	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	rabbithole "github.com/michaelklishin/rabbit-hole"
-	uuid "github.com/satori/go.uuid"
-	"gopkg.in/khaiql/dbcleaner.v2"
-	"gorm.io/gorm"
-
-	_ "github.com/lib/pq"
 )
 
-type IntegrationTestSharedFixture struct {
+// CatalogWriteIntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
+type CatalogWriteIntegrationTestSharedFixture struct {
 	Cfg                  *config.AppOptions
 	Log                  logger.Logger
 	Bus                  bus.Bus
@@ -39,10 +42,12 @@ type IntegrationTestSharedFixture struct {
 	ProductServiceClient productsService.ProductsServiceClient
 }
 
-func NewIntegrationTestSharedFixture(
+// NewCatalogWriteIntegrationTestSharedFixture is a constructor for the CatalogWriteIntegrationTestSharedFixture.
+func NewCatalogWriteIntegrationTestSharedFixture(
 	t *testing.T,
-) *IntegrationTestSharedFixture {
-	result := test.NewTestApp().Run(t)
+) *CatalogWriteIntegrationTestSharedFixture {
+	t.Helper()
+	result := test.NewCatalogWriteTestApp().Run(t)
 
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
@@ -55,7 +60,7 @@ func NewIntegrationTestSharedFixture(
 		)
 	}
 
-	shared := &IntegrationTestSharedFixture{
+	shared := &CatalogWriteIntegrationTestSharedFixture{
 		Log:                  result.Logger,
 		Container:            result.Container,
 		Cfg:                  result.Cfg,
@@ -64,14 +69,15 @@ func NewIntegrationTestSharedFixture(
 		Bus:                  result.Bus,
 		rabbitmqOptions:      result.RabbitmqOptions,
 		Gorm:                 result.Gorm,
-		BaseAddress:          result.EchoHttpOptions.BasePathAddress(),
+		BaseAddress:          result.EchoHTTPOptions.BasePathAddress(),
 		ProductServiceClient: result.ProductServiceClient,
 	}
 
 	return shared
 }
 
-func (i *IntegrationTestSharedFixture) SetupTest() {
+// SetupTest is a method that sets up the test.
+func (i *CatalogWriteIntegrationTestSharedFixture) SetupTest() {
 	i.Log.Info("SetupTest started")
 
 	// migration will do in app configuration
@@ -84,7 +90,8 @@ func (i *IntegrationTestSharedFixture) SetupTest() {
 	i.Items = res
 }
 
-func (i *IntegrationTestSharedFixture) TearDownTest() {
+// TearDownTest is a method that tears down the test.
+func (i *CatalogWriteIntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
 	// cleanup test containers with their hooks
@@ -97,7 +104,7 @@ func (i *IntegrationTestSharedFixture) TearDownTest() {
 	}
 }
 
-func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
+func (i *CatalogWriteIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
 	queues, err := i.RabbitmqCleaner.ListQueuesIn(
@@ -106,21 +113,22 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	if err != nil {
 		return err
 	}
-
 	// clear each queue
-	for _, queue := range queues {
-		_, err = i.RabbitmqCleaner.PurgeQueue(
+	var lastErr error
+	for idx := range queues {
+		_, err := i.RabbitmqCleaner.PurgeQueue(
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
-			queue.Name,
+			queues[idx].Name,
 		)
-
-		return err
+		if err != nil {
+			lastErr = err
+		}
 	}
 
-	return nil
+	return lastErr
 }
 
-func (i *IntegrationTestSharedFixture) cleanupPostgresData() error {
+func (i *CatalogWriteIntegrationTestSharedFixture) cleanupPostgresData() error {
 	tables := []string{"products"}
 	// Iterate over the tables and delete all records
 	for _, table := range tables {
@@ -135,14 +143,14 @@ func (i *IntegrationTestSharedFixture) cleanupPostgresData() error {
 func seedDataManually(gormDB *gorm.DB) ([]*datamodel.ProductDataModel, error) {
 	products := []*datamodel.ProductDataModel{
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),
 			Price:       gofakeit.Price(100, 1000),
 		},
 		{
-			Id:          uuid.NewV4(),
+			ID:          uuid.NewV4(),
 			Name:        gofakeit.Name(),
 			CreatedAt:   time.Now(),
 			Description: gofakeit.AdjectiveDescriptive(),

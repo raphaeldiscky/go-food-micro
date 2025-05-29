@@ -1,3 +1,4 @@
+// Package catalogs contains the catalogs service configurator.
 package catalogs
 
 import (
@@ -5,45 +6,42 @@ import (
 	"net/http"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
+
+	echo "github.com/labstack/echo/v4"
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs/infrastructure"
-
-	"github.com/labstack/echo/v4"
 )
 
-type CatalogsServiceConfigurator struct {
+// CatalogReadServiceConfigurator is a struct that contains the catalogs service configurator.
+type CatalogReadServiceConfigurator struct {
 	contracts.Application
-	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
+	infrastructureConfigurator *infrastructure.CatalogReadInfraConfigurator
 	productsModuleConfigurator *configurations.ProductsModuleConfigurator
 }
 
-func NewCatalogsServiceConfigurator(app contracts.Application) *CatalogsServiceConfigurator {
-	infraConfigurator := infrastructure.NewInfrastructureConfigurator(app)
+// NewCatalogReadServiceConfigurator is a constructor for the CatalogReadServiceConfigurator.
+func NewCatalogReadServiceConfigurator(app contracts.Application) *CatalogReadServiceConfigurator {
+	infraConfigurator := infrastructure.NewCatalogReadInfraConfigurator(app)
 	productModuleConfigurator := configurations.NewProductsModuleConfigurator(app)
 
-	return &CatalogsServiceConfigurator{
+	return &CatalogReadServiceConfigurator{
 		Application:                app,
 		infrastructureConfigurator: infraConfigurator,
 		productsModuleConfigurator: productModuleConfigurator,
 	}
 }
 
-func (ic *CatalogsServiceConfigurator) ConfigureCatalogs() {
-	// Shared
-	// Infrastructure
-	ic.infrastructureConfigurator.ConfigInfrastructures()
-
-	// Shared
-	// Catalogs configurations
-
-	// Modules
-	// Product module
+// ConfigureCatalogs is a method that configures the catalogs.
+func (ic *CatalogReadServiceConfigurator) ConfigureCatalogs() {
+	ic.infrastructureConfigurator.CatalogReadConfigInfra()
 	ic.productsModuleConfigurator.ConfigureProductsModule()
 }
 
-func (ic *CatalogsServiceConfigurator) MapCatalogsEndpoints() {
+// MapCatalogsEndpoints is a method that maps the catalogs endpoints.
+func (ic *CatalogReadServiceConfigurator) MapCatalogsEndpoints() {
 	// Shared
 	ic.ResolveFunc(
 		func(catalogsServer echocontracts.EchoHttpServer, cfg *config.Config) error {

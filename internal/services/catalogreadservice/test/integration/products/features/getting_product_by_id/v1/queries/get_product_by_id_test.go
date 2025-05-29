@@ -7,14 +7,14 @@ import (
 	"context"
 	"testing"
 
+	. "github.com/smartystreets/goconvey/convey"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
-
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-
-	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestGetProductById(t *testing.T) {
@@ -25,50 +25,59 @@ func TestGetProductById(t *testing.T) {
 		ctx := context.Background()
 		integrationTestSharedFixture.SetupTest(t)
 
-		knownProductID, err := uuid.FromString(integrationTestSharedFixture.Items[0].Id)
+		knownProductID, err := uuid.FromString(integrationTestSharedFixture.Items[0].ID)
 		unknownProductID := uuid.NewV4()
 		So(err, ShouldBeNil)
 
 		// https://specflow.org/learn/gherkin/#learn-gherkin
 		// scenario
-		Convey("Returning an existing product with valid Id from the database with correct properties", func() {
-			Convey("Given a product with a known ID exists in the database", func() {
-				query, err := queries.NewGetProductById(knownProductID)
-				So(err, ShouldBeNil)
+		Convey(
+			"Returning an existing product with valid ID from the database with correct properties",
+			func() {
+				Convey("Given a product with a known ID exists in the database", func() {
+					query, err := queries.NewGetProductByID(knownProductID)
+					So(err, ShouldBeNil)
 
-				Convey("When we execute GetProductById query for a product with known ID", func() {
-					result, err := mediatr.Send[*queries.GetProductById, *dtos.GetProductByIdResponseDto](
-						ctx,
-						query,
+					Convey(
+						"When we execute GetProductByID query for a product with known ID",
+						func() {
+							result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
+								ctx,
+								query,
+							)
+
+							Convey("Then it should retrieve product successfully", func() {
+								So(result, ShouldNotBeNil)
+								So(result.Product, ShouldNotBeNil)
+								So(err, ShouldBeNil)
+
+								Convey(
+									"And the retrieved product should have the correct ID",
+									func() {
+										// Assert that the retrieved product's ID matches the known ID.
+										So(result.Product.ID, ShouldEqual, knownProductID.String())
+									},
+								)
+
+								Convey("And other product properties should be correct", func() {
+									// Assert other properties of the retrieved product as needed.
+								})
+							})
+						},
 					)
-
-					Convey("Then it should retrieve product successfully", func() {
-						So(result, ShouldNotBeNil)
-						So(result.Product, ShouldNotBeNil)
-						So(err, ShouldBeNil)
-
-						Convey("And the retrieved product should have the correct ID", func() {
-							// Assert that the retrieved product's ID matches the known ID.
-							So(result.Product.Id, ShouldEqual, knownProductID.String())
-						})
-
-						Convey("And other product properties should be correct", func() {
-							// Assert other properties of the retrieved product as needed.
-						})
-					})
 				})
-			})
-		})
+			},
+		)
 
 		Convey("Returning a NotFound error when product with specific id does not exist", func() {
 			Convey("Given a product with a unknown ID in the database", func() {
 				// Create a test context and an unknown product ID.
 
-				query, err := queries.NewGetProductById(unknownProductID)
+				query, err := queries.NewGetProductByID(unknownProductID)
 				So(err, ShouldBeNil)
 
-				Convey("When GetProductById executed for a product with an unknown ID", func() {
-					result, err := mediatr.Send[*queries.GetProductById, *dtos.GetProductByIdResponseDto](
+				Convey("When GetProductByID executed for a product with an unknown ID", func() {
+					result, err := mediatr.Send[*queries.GetProductByID, *dtos.GetProductByIDResponseDto](
 						ctx,
 						query,
 					)

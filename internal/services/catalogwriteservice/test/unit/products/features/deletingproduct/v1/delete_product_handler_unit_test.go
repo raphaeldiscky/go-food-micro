@@ -7,23 +7,24 @@ import (
 	"net/http"
 	"testing"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	deletingproductv1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
-
-	"emperror.dev/errors"
-	"github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
 )
 
 type deleteProductHandlerUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 	handler cqrs.RequestHandlerWithRegisterer[*deletingproductv1.DeleteProduct, *mediatr.Unit]
 }
 
@@ -31,14 +32,14 @@ func TestDeleteProductHandlerUnit(t *testing.T) {
 	suite.Run(
 		t,
 		&deleteProductHandlerUnitTests{
-			UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t),
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
 		},
 	)
 }
 
 func (c *deleteProductHandlerUnitTests) SetupTest() {
 	// call base SetupTest hook before running child hook
-	c.UnitTestSharedFixture.SetupTest()
+	c.CatalogWriteUnitTestSharedFixture.SetupTest()
 	c.handler = deletingproductv1.NewDeleteProductHandler(
 		fxparams.ProductHandlerParams{
 			Log:               c.Log,
@@ -51,11 +52,11 @@ func (c *deleteProductHandlerUnitTests) SetupTest() {
 
 func (c *deleteProductHandlerUnitTests) TearDownTest() {
 	// call base TearDownTest hook before running child hook
-	c.UnitTestSharedFixture.TearDownTest()
+	c.CatalogWriteUnitTestSharedFixture.TearDownTest()
 }
 
 func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_Valid_Id() {
-	id := c.Products[0].Id
+	id := c.Products[0].ID
 
 	deleteProduct := &deletingproductv1.DeleteProduct{
 		ProductID: id,
@@ -67,7 +68,11 @@ func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Delete_Product_With_V
 
 	c.Require().NoError(err)
 
-	p, err := gormdbcontext.FindDataModelByID[*datamodels.ProductDataModel](c.Ctx, c.CatalogDBContext, id)
+	p, err := gormdbcontext.FindDataModelByID[*datamodels.ProductDataModel](
+		c.Ctx,
+		c.CatalogDBContext,
+		id,
+	)
 
 	c.Require().Nil(p)
 	c.Require().Error(err)
@@ -94,7 +99,7 @@ func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_NotFound_Error
 }
 
 func (c *deleteProductHandlerUnitTests) Test_Handle_Should_Return_Error_For_Error_In_Bus() {
-	id := c.Products[0].Id
+	id := c.Products[0].ID
 
 	deleteProduct := &deletingproductv1.DeleteProduct{
 		ProductID: id,

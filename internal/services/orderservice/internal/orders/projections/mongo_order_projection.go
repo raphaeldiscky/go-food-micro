@@ -4,23 +4,24 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/producer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/projection"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/domain_events"
 	createOrderIntegrationEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/integration_events"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
-
-	"emperror.dev/errors"
-	attribute2 "go.opentelemetry.io/otel/attribute"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 )
 
 type mongoOrderProjection struct {
@@ -66,7 +67,7 @@ func (m *mongoOrderProjection) onOrderCreated(
 	span.SetAttributes(attribute2.String("OrderId", evt.OrderId.String()))
 	defer span.End()
 
-	items, err := mapper.Map[[]*read_models.ShopItemReadModel](evt.ShopItems)
+	items, err := mapper.Map[[]*readmodels.ShopItemReadModel](evt.ShopItems)
 	if err != nil {
 		return errors.WrapIf(
 			err,
@@ -74,7 +75,7 @@ func (m *mongoOrderProjection) onOrderCreated(
 		)
 	}
 
-	orderRead := read_models.NewOrderReadModel(
+	orderRead := readmodels.NewOrderReadModel(
 		evt.OrderId,
 		items,
 		evt.AccountEmail,
@@ -121,15 +122,15 @@ func (m *mongoOrderProjection) onOrderCreated(
 			"[mongoOrderProjection.onOrderCreated] OrderCreated message with messageId `%s` published to the rabbitmq broker",
 			orderCreatedEvent.MessageId,
 		),
-		logger.Fields{"MessageId": orderCreatedEvent.MessageId, "Id": orderCreatedEvent.OrderId},
+		logger.Fields{"MessageId": orderCreatedEvent.MessageId, "ID": orderCreatedEvent.OrderId},
 	)
 
 	m.logger.Infow(
 		fmt.Sprintf(
 			"[mongoOrderProjection.onOrderCreated] order with id '%s' created",
-			orderCreatedEvent.Id,
+			orderCreatedEvent.ID,
 		),
-		logger.Fields{"Id": orderRead.Id, "MessageId": orderCreatedEvent.MessageId},
+		logger.Fields{"ID": orderRead.ID, "MessageId": orderCreatedEvent.MessageId},
 	)
 
 	return nil

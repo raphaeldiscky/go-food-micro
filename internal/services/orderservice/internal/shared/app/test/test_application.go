@@ -4,18 +4,20 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/app"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
-
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/app"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
 )
 
+// OrdersTestApplication is a struct that contains the orders test application.
 type OrdersTestApplication struct {
 	*app.OrdersApplication
 	tb fxtest.TB
 }
 
+// NewOrdersTestApplication creates a new OrdersTestApplication.
 func NewOrdersTestApplication(
 	tb fxtest.TB,
 	providers []interface{},

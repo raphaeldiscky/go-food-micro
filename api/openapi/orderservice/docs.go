@@ -235,7 +235,7 @@ const docTemplate = `{
         "github_com_raphaeldiscky_go-food-micro_internal_services_orderservice_internal_orders_features_creating_order_v1_dtos.CreateOrderResponseDto": {
             "type": "object",
             "properties": {
-                "Id": {
+                "ID": {
                     "type": "string"
                 }
             }

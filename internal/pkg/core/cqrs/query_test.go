@@ -10,8 +10,8 @@ import (
 )
 
 func Test_Query(t *testing.T) {
-	query := &GetProductById{
-		Query:     NewQueryByT[*GetProductById](),
+	query := &GetProductByID{
+		Query:     NewQueryByT[*GetProductByID](),
 		ProductID: uuid.NewV4(),
 	}
 
@@ -33,11 +33,11 @@ func Test_Query(t *testing.T) {
 	assert.False(t, IsCommand(query))
 	assert.True(t, IsRequest(query))
 
-	assert.Equal(t, query.ShortTypeName(), "*GetProductById")
-	assert.Equal(t, query.FullTypeName(), "*cqrs.GetProductById")
+	assert.Equal(t, query.ShortTypeName(), "*GetProductByID")
+	assert.Equal(t, query.FullTypeName(), "*cqrs.GetProductByID")
 }
 
-type GetProductById struct {
+type GetProductByID struct {
 	Query
 
 	ProductID uuid.UUID

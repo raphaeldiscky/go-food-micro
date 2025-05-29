@@ -1,22 +1,27 @@
+// Package app contains the app.
 package app
 
 import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/configurations/catalogs"
 )
 
-type App struct{}
+// CatalogWriteApp is a struct that contains the app.
+type CatalogWriteApp struct{}
 
-func NewApp() *App {
-	return &App{}
+// NewCatalogWriteApp is a constructor for the CatalogWriteApp.
+func NewCatalogWriteApp() *CatalogWriteApp {
+	return &CatalogWriteApp{}
 }
 
-func (a *App) Run() {
+// Run is a method that runs the app.
+func (a *CatalogWriteApp) Run() {
 	// configure dependencies
 	appBuilder := NewCatalogsWriteApplicationBuilder()
-	appBuilder.ProvideModule(catalogs.CatalogsServiceModule)
+	appBuilder.ProvideModule(catalogs.NewCatalogsServiceModule())
 
 	app := appBuilder.Build()
 

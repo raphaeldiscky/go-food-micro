@@ -19,7 +19,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"github.com/ahmetb/go-linq/v3"
+	linq "github.com/ahmetb/go-linq/v3"
 	attribute2 "go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/trace"
 )

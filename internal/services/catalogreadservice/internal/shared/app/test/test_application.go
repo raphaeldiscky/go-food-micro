@@ -4,41 +4,43 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"
-
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/configurations/catalogs"
 )
 
-type CatalogsReadTestApplication struct {
-	*app.CatalogsReadApplication
+// CatalogReadTestApplication is a struct that contains the catalogs read test application.
+type CatalogReadTestApplication struct {
+	*app.CatalogReadApplication
 	tb fxtest.TB
 }
 
-func NewCatalogsReadTestApplication(
+// NewCatalogReadTestApplication creates a new CatalogReadTestApplication.
+func NewCatalogReadTestApplication(
 	tb fxtest.TB,
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
-	logger logger.Logger,
-	environment environment.Environment,
-) *CatalogsReadTestApplication {
+	log logger.Logger,
+	env environment.Environment,
+) *CatalogReadTestApplication {
 	testApp := test.NewTestApplication(
 		tb,
 		providers,
 		decorates,
 		options,
-		logger,
-		environment,
+		log,
+		env,
 	)
 
-	catalogApplication := &app.CatalogsReadApplication{
-		CatalogsServiceConfigurator: catalogs.NewCatalogsServiceConfigurator(testApp),
+	catalogApplication := &app.CatalogReadApplication{
+		CatalogReadServiceConfigurator: catalogs.NewCatalogReadServiceConfigurator(testApp),
 	}
 
-	return &CatalogsReadTestApplication{
-		CatalogsReadApplication: catalogApplication,
-		tb:                      tb,
+	return &CatalogReadTestApplication{
+		CatalogReadApplication: catalogApplication,
+		tb:                     tb,
 	}
 }

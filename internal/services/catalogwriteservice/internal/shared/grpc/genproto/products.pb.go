@@ -27,7 +27,7 @@ type Product struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId   string                 `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ProductID   string                 `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 	Name        string                 `protobuf:"bytes,2,opt,name=ShortTypeName,proto3" json:"ShortTypeName,omitempty"`
 	Description string                 `protobuf:"bytes,3,opt,name=Description,proto3" json:"Description,omitempty"`
 	Price       float64                `protobuf:"fixed64,4,opt,name=Price,proto3" json:"Price,omitempty"`
@@ -69,7 +69,7 @@ func (*Product) Descriptor() ([]byte, []int) {
 
 func (x *Product) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
@@ -177,7 +177,7 @@ type CreateProductRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId string `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ProductID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
 func (x *CreateProductRes) Reset() {
@@ -214,7 +214,7 @@ func (*CreateProductRes) Descriptor() ([]byte, []int) {
 
 func (x *CreateProductRes) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
@@ -224,7 +224,7 @@ type UpdateProductReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId   string  `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ProductID   string  `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 	Name        string  `protobuf:"bytes,2,opt,name=ShortTypeName,proto3" json:"ShortTypeName,omitempty"`
 	Description string  `protobuf:"bytes,3,opt,name=Description,proto3" json:"Description,omitempty"`
 	Price       float64 `protobuf:"fixed64,4,opt,name=Price,proto3" json:"Price,omitempty"`
@@ -264,7 +264,7 @@ func (*UpdateProductReq) Descriptor() ([]byte, []int) {
 
 func (x *UpdateProductReq) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
@@ -328,16 +328,16 @@ func (*UpdateProductRes) Descriptor() ([]byte, []int) {
 	return file_catalog_write_service_products_proto_rawDescGZIP(), []int{4}
 }
 
-type GetProductByIdReq struct {
+type GetProductByIDReq struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ProductId string `protobuf:"bytes,1,opt,name=Id,proto3" json:"Id,omitempty"`
+	ProductID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
 }
 
-func (x *GetProductByIdReq) Reset() {
-	*x = GetProductByIdReq{}
+func (x *GetProductByIDReq) Reset() {
+	*x = GetProductByIDReq{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_catalog_write_service_products_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -345,13 +345,13 @@ func (x *GetProductByIdReq) Reset() {
 	}
 }
 
-func (x *GetProductByIdReq) String() string {
+func (x *GetProductByIDReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetProductByIdReq) ProtoMessage() {}
+func (*GetProductByIDReq) ProtoMessage() {}
 
-func (x *GetProductByIdReq) ProtoReflect() protoreflect.Message {
+func (x *GetProductByIDReq) ProtoReflect() protoreflect.Message {
 	mi := &file_catalog_write_service_products_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -363,19 +363,19 @@ func (x *GetProductByIdReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetProductByIdReq.ProtoReflect.Descriptor instead.
-func (*GetProductByIdReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetProductByIDReq.ProtoReflect.Descriptor instead.
+func (*GetProductByIDReq) Descriptor() ([]byte, []int) {
 	return file_catalog_write_service_products_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *GetProductByIdReq) GetProductId() string {
+func (x *GetProductByIDReq) GetProductId() string {
 	if x != nil {
-		return x.ProductId
+		return x.ProductID
 	}
 	return ""
 }
 
-type GetProductByIdRes struct {
+type GetProductByIDRes struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -383,8 +383,8 @@ type GetProductByIdRes struct {
 	Product *Product `protobuf:"bytes,1,opt,name=Product,proto3" json:"Product,omitempty"`
 }
 
-func (x *GetProductByIdRes) Reset() {
-	*x = GetProductByIdRes{}
+func (x *GetProductByIDRes) Reset() {
+	*x = GetProductByIDRes{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_catalog_write_service_products_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -392,13 +392,13 @@ func (x *GetProductByIdRes) Reset() {
 	}
 }
 
-func (x *GetProductByIdRes) String() string {
+func (x *GetProductByIDRes) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetProductByIdRes) ProtoMessage() {}
+func (*GetProductByIDRes) ProtoMessage() {}
 
-func (x *GetProductByIdRes) ProtoReflect() protoreflect.Message {
+func (x *GetProductByIDRes) ProtoReflect() protoreflect.Message {
 	mi := &file_catalog_write_service_products_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -410,12 +410,12 @@ func (x *GetProductByIdRes) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetProductByIdRes.ProtoReflect.Descriptor instead.
-func (*GetProductByIdRes) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetProductByIDRes.ProtoReflect.Descriptor instead.
+func (*GetProductByIDRes) Descriptor() ([]byte, []int) {
 	return file_catalog_write_service_products_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *GetProductByIdRes) GetProduct() *Product {
+func (x *GetProductByIDRes) GetProduct() *Product {
 	if x != nil {
 		return x.Product
 	}
@@ -514,8 +514,8 @@ var (
 		(*CreateProductRes)(nil),      // 2: products_service.CreateProductRes
 		(*UpdateProductReq)(nil),      // 3: products_service.UpdateProductReq
 		(*UpdateProductRes)(nil),      // 4: products_service.UpdateProductRes
-		(*GetProductByIdReq)(nil),     // 5: products_service.GetProductByIdReq
-		(*GetProductByIdRes)(nil),     // 6: products_service.GetProductByIdRes
+		(*GetProductByIDReq)(nil),     // 5: products_service.GetProductByIDReq
+		(*GetProductByIDRes)(nil),     // 6: products_service.GetProductByIDRes
 		(*timestamppb.Timestamp)(nil), // 7: google.protobuf.Timestamp
 	}
 )
@@ -523,13 +523,13 @@ var (
 var file_catalog_write_service_products_proto_depIdxs = []int32{
 	7, // 0: products_service.Product.CreatedAt:type_name -> google.protobuf.Timestamp
 	7, // 1: products_service.Product.UpdatedAt:type_name -> google.protobuf.Timestamp
-	0, // 2: products_service.GetProductByIdRes.Product:type_name -> products_service.Product
+	0, // 2: products_service.GetProductByIDRes.Product:type_name -> products_service.Product
 	1, // 3: products_service.ProductsService.CreateProduct:input_type -> products_service.CreateProductReq
 	3, // 4: products_service.ProductsService.UpdateProduct:input_type -> products_service.UpdateProductReq
-	5, // 5: products_service.ProductsService.GetProductById:input_type -> products_service.GetProductByIdReq
+	5, // 5: products_service.ProductsService.GetProductByID:input_type -> products_service.GetProductByIDReq
 	2, // 6: products_service.ProductsService.CreateProduct:output_type -> products_service.CreateProductRes
 	4, // 7: products_service.ProductsService.UpdateProduct:output_type -> products_service.UpdateProductRes
-	6, // 8: products_service.ProductsService.GetProductById:output_type -> products_service.GetProductByIdRes
+	6, // 8: products_service.ProductsService.GetProductByID:output_type -> products_service.GetProductByIDRes
 	6, // [6:9] is the sub-list for method output_type
 	3, // [3:6] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
@@ -604,7 +604,7 @@ func file_catalog_write_service_products_proto_init() {
 			}
 		}
 		file_catalog_write_service_products_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetProductByIdReq); i {
+			switch v := v.(*GetProductByIDReq); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -616,7 +616,7 @@ func file_catalog_write_service_products_proto_init() {
 			}
 		}
 		file_catalog_write_service_products_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetProductByIdRes); i {
+			switch v := v.(*GetProductByIDRes); i {
 			case 0:
 				return &v.state
 			case 1:

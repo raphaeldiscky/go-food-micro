@@ -16,21 +16,21 @@ import (
 	problemdetail "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/problem_detail"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
-	"github.com/labstack/echo/v4"
+	echo "github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"go.opentelemetry.io/otel/metric"
 )
 
 type echoHttpServer struct {
 	echo         *echo.Echo
-	config       *config.EchoHttpOptions
+	config       *config.EchoHTTPOptions
 	log          logger.Logger
 	meter        metric.Meter
 	routeBuilder *contracts.RouteBuilder
 }
 
 func NewEchoHttpServer(
-	config *config.EchoHttpOptions,
+	config *config.EchoHTTPOptions,
 	logger logger.Logger,
 	meter metric.Meter,
 ) contracts.EchoHttpServer {
@@ -68,7 +68,7 @@ func (s *echoHttpServer) Logger() logger.Logger {
 	return s.log
 }
 
-func (s *echoHttpServer) Cfg() *config.EchoHttpOptions {
+func (s *echoHttpServer) Cfg() *config.EchoHTTPOptions {
 	return s.config
 }
 

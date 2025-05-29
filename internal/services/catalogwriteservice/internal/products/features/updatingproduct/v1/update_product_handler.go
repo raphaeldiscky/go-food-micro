@@ -6,24 +6,27 @@ import (
 	"net/http"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	dto "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1/events/integrationevents"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
-
-	"github.com/mehdihadeli/go-mediatr"
 )
 
+// updateProductHandler is a struct that contains the update product handler.
 type updateProductHandler struct {
 	fxparams.ProductHandlerParams
 	cqrs.HandlerRegisterer
 }
 
+// NewUpdateProductHandler is a constructor for the updateProductHandler.
 func NewUpdateProductHandler(
 	params fxparams.ProductHandlerParams,
 ) cqrs.RequestHandlerWithRegisterer[*UpdateProduct, *mediatr.Unit] {
@@ -32,12 +35,14 @@ func NewUpdateProductHandler(
 	}
 }
 
+// RegisterHandler is a method that registers the update product handler.
 func (c *updateProductHandler) RegisterHandler() error {
 	return mediatr.RegisterRequestHandler[*UpdateProduct, *mediatr.Unit](
 		c,
 	)
 }
 
+// Handle is a method that handles the update product command.
 func (c *updateProductHandler) Handle(
 	ctx context.Context,
 	command *UpdateProduct,
@@ -98,7 +103,7 @@ func (c *updateProductHandler) Handle(
 			"product with id '%s' updated",
 			command.ProductID,
 		),
-		logger.Fields{"Id": command.ProductID},
+		logger.Fields{"ID": command.ProductID},
 	)
 
 	c.Log.Infow(

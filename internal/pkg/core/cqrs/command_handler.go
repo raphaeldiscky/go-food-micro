@@ -3,7 +3,7 @@ package cqrs
 import (
 	"context"
 
-	"github.com/mehdihadeli/go-mediatr"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type CommandHandler[TCommand Command, TResponse any] interface {

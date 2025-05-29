@@ -6,21 +6,24 @@ package v1
 import (
 	"testing"
 
-	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
+	"github.com/stretchr/testify/suite"
 
 	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/suite"
+
+	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/unittest"
 )
 
 type deleteProductUnitTests struct {
-	*unittest.UnitTestSharedFixture
+	*unittest.CatalogWriteUnitTestSharedFixture
 }
 
 func TestDeleteProductByIdUnit(t *testing.T) {
 	suite.Run(
 		t,
-		&deleteProductUnitTests{UnitTestSharedFixture: unittest.NewUnitTestSharedFixture(t)},
+		&deleteProductUnitTests{
+			CatalogWriteUnitTestSharedFixture: unittest.NewCatalogWriteUnitTestSharedFixture(t),
+		},
 	)
 }
 

@@ -1,8 +1,13 @@
+// Package mediator contains the mediator configurations.
 package mediator
 
 import (
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
 	createProductDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
@@ -14,20 +19,18 @@ import (
 	searchProductsDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/dtos"
 	searchProductsQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/queries"
 	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
-
-	"emperror.dev/errors"
-	"github.com/mehdihadeli/go-mediatr"
 )
 
+// ConfigProductsMediator configures the products mediator.
 func ConfigProductsMediator(
-	logger logger.Logger,
+	log logger.Logger,
 	mongoProductRepository data.ProductRepository,
 	cacheProductRepository data.ProductCacheRepository,
 	tracer tracing.AppTracer,
 ) error {
 	err := mediatr.RegisterRequestHandler[*v1.CreateProduct, *createProductDtosV1.CreateProductResponseDto](
 		v1.NewCreateProductHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,
@@ -39,7 +42,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*deleteProductCommandV1.DeleteProduct, *mediatr.Unit](
 		deleteProductCommandV1.NewDeleteProductHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,
@@ -51,7 +54,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*updateProductCommandV1.UpdateProduct, *mediatr.Unit](
 		updateProductCommandV1.NewUpdateProductHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,
@@ -62,7 +65,7 @@ func ConfigProductsMediator(
 	}
 
 	err = mediatr.RegisterRequestHandler[*getProductsQueryV1.GetProducts, *getProductsDtoV1.GetProductsResponseDto](
-		getProductsQueryV1.NewGetProductsHandler(logger, mongoProductRepository, tracer),
+		getProductsQueryV1.NewGetProductsHandler(log, mongoProductRepository, tracer),
 	)
 	if err != nil {
 		return errors.WrapIf(err, "error while registering handlers in the mediator")
@@ -70,7 +73,7 @@ func ConfigProductsMediator(
 
 	err = mediatr.RegisterRequestHandler[*searchProductsQueryV1.SearchProducts, *searchProductsDtosV1.SearchProductsResponseDto](
 		searchProductsQueryV1.NewSearchProductsHandler(
-			logger,
+			log,
 			mongoProductRepository,
 			tracer,
 		),
@@ -79,9 +82,9 @@ func ConfigProductsMediator(
 		return errors.WrapIf(err, "error while registering handlers in the mediator")
 	}
 
-	err = mediatr.RegisterRequestHandler[*getProductByIdQueryV1.GetProductById, *getProductByIdDtosV1.GetProductByIdResponseDto](
-		getProductByIdQueryV1.NewGetProductByIdHandler(
-			logger,
+	err = mediatr.RegisterRequestHandler[*getProductByIdQueryV1.GetProductByID, *getProductByIdDtosV1.GetProductByIDResponseDto](
+		getProductByIdQueryV1.NewGetProductByIDHandler(
+			log,
 			mongoProductRepository,
 			cacheProductRepository,
 			tracer,

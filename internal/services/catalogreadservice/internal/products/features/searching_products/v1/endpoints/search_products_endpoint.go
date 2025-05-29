@@ -1,33 +1,38 @@
+// Package endpoints contains the search products endpoint.
 package endpoints
 
 import (
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/params"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/queries"
-
-	"emperror.dev/errors"
-	"github.com/labstack/echo/v4"
-	"github.com/mehdihadeli/go-mediatr"
 )
 
-type searchProductsEndpoint struct {
+// SearchProductsEndpoint is a struct that contains the search products endpoint.
+type SearchProductsEndpoint struct {
 	params.ProductRouteParams
 }
 
+// NewSearchProductsEndpoint creates a new SearchProductsEndpoint.
 func NewSearchProductsEndpoint(
-	params params.ProductRouteParams,
+	p params.ProductRouteParams,
 ) route.Endpoint {
-	return &searchProductsEndpoint{
-		ProductRouteParams: params,
+	return &SearchProductsEndpoint{
+		ProductRouteParams: p,
 	}
 }
 
-func (ep *searchProductsEndpoint) MapEndpoint() {
+// MapEndpoint maps the endpoint to the router.
+func (ep *SearchProductsEndpoint) MapEndpoint() {
 	ep.ProductsGroup.GET("/search", ep.handler())
 }
 
@@ -39,8 +44,8 @@ func (ep *searchProductsEndpoint) MapEndpoint() {
 // @Produce json
 // @Param searchProductsRequestDto query dtos.SearchProductsRequestDto false "SearchProductsRequestDto"
 // @Success 200 {object} dtos.SearchProductsResponseDto
-// @Router /api/v1/products/search [get]
-func (ep *searchProductsEndpoint) handler() echo.HandlerFunc {
+// @Router /api/v1/products/search [get].
+func (ep *SearchProductsEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
 

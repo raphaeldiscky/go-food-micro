@@ -11,45 +11,84 @@ on:
 
 jobs:
   build-test:
+    name: Build and Test
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-        # https://github.com/actions/setup-go/issues/326
-        # https://github.com/testcontainers/testcontainers-go/issues/1359
       - name: Setup Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
-          go-version: 1.23.x
-        id: go
+          go-version: "1.22.x" # Latest stable version as of March 2024
+          check-latest: true
+          cache: true # Enable Go's built-in caching
 
+      - name: Verify Go Version
+        run: go version
+
+      # Cache Go modules and tools
       - name: Cache Go Modules
-        id: cache
-        uses: actions/cache@preview
+        uses: actions/cache@v4 # Using stable v4 instead of preview
+        id: go-mod-cache
         with:
-          path: ~/go/pkg/mod
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Install Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: make install-dependencies
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
 
-        # https://pkg.go.dev/cmd/go#hdr-Compile_packages_and_dependencies
-        # https://pkg.go.dev/cmd/go#hdr-Package_lists_and_patterns
-      - name: Build
-        run: make build
+      - name: Install Formatting and Linting Tools
+        if: steps.go-mod-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
+          go install github.com/mgechev/revive@latest
+          go install honnef.co/go/tools/cmd/staticcheck@latest
+          go install github.com/kisielk/errcheck@latest
 
-        # https://go.dev/doc/articles/race_detector
-        # https://dev.to/s0xzwasd/run-tests-with-race-flag-in-goland-512j
-      - name: Unit Tests
-        run:
-          make unit-test
+      - name: Install Project Dependencies
+        if: steps.go-mod-cache.outputs.cache-hit != 'true'
+        run: task install_deps
 
-          # there are some problem with test-container library in the github-actions!! locally all tests will pass
-      - name: Integration Tests
-        run: make integration-test
+      - name: Format and Lint Code
+        run: task format
+        continue-on-error: false
 
-      - name: End-To-End Tests
-        run: make e2e-test
+      - name: Build Project
+        run: task build
+        continue-on-error: false # Fail if build fails
+
+      - name: Run Unit Tests
+        run: task unit_test
+        continue-on-error: false # Fail if unit tests fail
+
+      - name: Run Integration Tests
+        run: task integration_test
+        continue-on-error: false # Fail if integration tests fail
+        # Note: Integration tests might fail in CI due to testcontainers issues
+        # Consider adding a condition to skip these in CI if needed
+
+      - name: Run End-to-End Tests
+        run: task e2e_test
+        continue-on-error: false # Fail if e2e tests fail
+        # Note: E2E tests might require additional setup
+        # Consider adding a condition to skip these in CI if needed
+
+      # Add a final step to report job status
+      - name: Report Job Status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ All checks passed successfully"
+          else
+            echo "❌ Some checks failed. Please review the logs above."
+            exit 1
+          fi

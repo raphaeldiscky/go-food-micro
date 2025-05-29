@@ -1,3 +1,4 @@
+// Package integration contains the integration test fixture.
 package integration
 
 import (
@@ -5,25 +6,27 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.opentelemetry.io/otel/trace"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	rabbithole "github.com/michaelklishin/rabbit-hole"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
-
-	"emperror.dev/errors"
-	"github.com/brianvoe/gofakeit/v6"
-	rabbithole "github.com/michaelklishin/rabbit-hole"
-	uuid "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.opentelemetry.io/otel/trace"
 )
 
-type IntegrationTestSharedFixture struct {
+// CatalogReadIntegrationTestSharedFixture is a shared fixture for integration tests.
+type CatalogReadIntegrationTestSharedFixture struct {
 	Cfg                    *config.Config
 	Log                    logger.Logger
 	Bus                    bus.Bus
@@ -39,10 +42,12 @@ type IntegrationTestSharedFixture struct {
 	Tracer                 trace.Tracer
 }
 
-func NewIntegrationTestSharedFixture(
+// NewCatalogReadIntegrationTestSharedFixture creates a new CatalogReadIntegrationTestSharedFixture.
+func NewCatalogReadIntegrationTestSharedFixture(
 	t *testing.T,
-) *IntegrationTestSharedFixture {
-	result := test.NewTestApp().Run(t)
+) *CatalogReadIntegrationTestSharedFixture {
+	t.Helper()
+	result := test.NewCatalogReadTestApp().Run(t)
 
 	// Log the RabbitMQ connection details for debugging
 	result.Logger.Infow(
@@ -66,7 +71,7 @@ func NewIntegrationTestSharedFixture(
 		t.Fatalf("Failed to create RabbitMQ management client: %v", err)
 	}
 
-	shared := &IntegrationTestSharedFixture{
+	shared := &CatalogReadIntegrationTestSharedFixture{
 		Log:                    result.Logger,
 		Container:              result.Container,
 		Cfg:                    result.Cfg,
@@ -76,7 +81,7 @@ func NewIntegrationTestSharedFixture(
 		Bus:                    result.Bus,
 		rabbitmqOptions:        result.RabbitmqOptions,
 		MongoOptions:           result.MongoDbOptions,
-		BaseAddress:            result.EchoHttpOptions.BasePathAddress(),
+		BaseAddress:            result.EchoHTTPOptions.BasePathAddress(),
 		mongoClient:            result.MongoClient,
 		Tracer:                 result.Tracer,
 	}
@@ -92,6 +97,7 @@ func NewIntegrationTestSharedFixture(
 		if startErr == nil {
 			// Wait longer for the bus to be fully ready
 			time.Sleep(10 * time.Second)
+
 			break
 		}
 		result.Logger.Warn(
@@ -115,7 +121,10 @@ func NewIntegrationTestSharedFixture(
 	return shared
 }
 
-func (i *IntegrationTestSharedFixture) SetupTest(t *testing.T) {
+// SetupTest sets up the test data.
+func (i *CatalogReadIntegrationTestSharedFixture) SetupTest(t *testing.T) {
+	t.Helper()
+
 	i.Log.Info("SetupTest started")
 
 	// Clean up any existing data first
@@ -144,7 +153,8 @@ func (i *IntegrationTestSharedFixture) SetupTest(t *testing.T) {
 	)
 }
 
-func (i *IntegrationTestSharedFixture) TearDownTest() {
+// TearDownTest tears down the test data.
+func (i *CatalogReadIntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
 	// Stop the bus gracefully first
@@ -164,6 +174,7 @@ func (i *IntegrationTestSharedFixture) TearDownTest() {
 	// This ensures we don't have race conditions between cleanup and setup
 }
 
+// seedData seeds the test data.
 func seedData(
 	db *mongo.Client,
 	databaseName string,
@@ -171,20 +182,34 @@ func seedData(
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	product := &models.Product{
-		Id:          uuid.NewV4().String(),
-		ProductId:   uuid.NewV4().String(),
-		Name:        gofakeit.Name(),
-		CreatedAt:   time.Now(),
-		Description: gofakeit.AdjectiveDescriptive(),
-		Price:       gofakeit.Price(100, 1000),
+	// Create 2 products for testing
+	products := []*models.Product{
+		{
+			ID:          uuid.NewV4().String(),
+			ProductID:   uuid.NewV4().String(),
+			Name:        gofakeit.Name(),
+			CreatedAt:   time.Now(),
+			Description: gofakeit.AdjectiveDescriptive(),
+			Price:       gofakeit.Price(100, 1000),
+		},
+		{
+			ID:          uuid.NewV4().String(),
+			ProductID:   uuid.NewV4().String(),
+			Name:        gofakeit.Name(),
+			CreatedAt:   time.Now(),
+			Description: gofakeit.AdjectiveDescriptive(),
+			Price:       gofakeit.Price(100, 1000),
+		},
 	}
 
 	collection := db.Database(databaseName).Collection("products")
 
-	_, err := collection.InsertOne(ctx, product)
-	if err != nil {
-		return nil, errors.WrapIf(err, "failed to insert test product")
+	// Insert both products
+	for _, product := range products {
+		_, err := collection.InsertOne(ctx, product)
+		if err != nil {
+			return nil, errors.WrapIf(err, "failed to insert test product")
+		}
 	}
 
 	// Retrieve all products for debugging
@@ -193,15 +218,13 @@ func seedData(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to find products after seeding")
 	}
-	defer cursor.Close(ctx)
+	err = cursor.Close(ctx)
+	if err != nil {
+		return nil, errors.WrapIf(err, "failed to close cursor")
+	}
 
 	if err := cursor.All(ctx, &allProducts); err != nil {
 		return nil, errors.WrapIf(err, "failed to decode products after seeding")
-	}
-
-	// Log all products for debugging
-	for i, p := range allProducts {
-		println("[DEBUG] Seeded Product", i, "Id:", p.Id, "ProductId:", p.ProductId, "Name:", p.Name, "Price:", p.Price)
 	}
 
 	if len(allProducts) == 0 {
@@ -211,7 +234,8 @@ func seedData(
 	return allProducts, nil
 }
 
-func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
+// cleanupRabbitmqData cleans up the rabbitmq data.
+func (i *CatalogReadIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
 	queues, err := i.RabbitmqCleaner.ListQueuesIn(
@@ -221,11 +245,11 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 		return err
 	}
 
-	// clear each queue
-	for _, queue := range queues {
+	// clear each queue using index-based iteration
+	for idx := range queues {
 		_, err = i.RabbitmqCleaner.PurgeQueue(
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
-			queue.Name,
+			queues[idx].Name,
 		)
 
 		return err
@@ -234,7 +258,8 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	return nil
 }
 
-func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
+// cleanupMongoData cleans up the mongodb data.
+func (i *CatalogReadIntegrationTestSharedFixture) cleanupMongoData() error {
 	collections := []string{"products"}
 	err := cleanupCollections(
 		i.mongoClient,
@@ -244,9 +269,11 @@ func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 	if err != nil {
 		return errors.WrapIf(err, "failed to cleanup MongoDB collections")
 	}
+
 	return nil
 }
 
+// cleanupCollections cleans up the collections.
 func cleanupCollections(
 	db *mongo.Client,
 	collections []string,
@@ -264,5 +291,6 @@ func cleanupCollections(
 			return errors.WrapIf(err, "failed to delete documents from collection: "+collectionName)
 		}
 	}
+
 	return nil
 }

@@ -1,14 +1,18 @@
+// Package app contains the app.
 package app
 
 import "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
 
-type App struct{}
+// OrderApp is a struct that contains the app.
+type OrderApp struct{}
 
-func NewApp() *App {
-	return &App{}
+// NewOrderApp creates a new OrderApp.
+func NewOrderApp() *OrderApp {
+	return &OrderApp{}
 }
 
-func (a *App) Run() {
+// Run runs the app.
+func (a *OrderApp) Run() {
 	// configure dependencies
 	appBuilder := NewOrdersApplicationBuilder()
 	appBuilder.ProvideModule(orders.OrderServiceModule)

@@ -147,7 +147,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raphaeldiscky_go-food-micro_internal_services_catalogwriteservice_internal_products_features_getting_product_by_id_v1_dtos.GetProductByIdResponseDto"
+                            "$ref": "#/definitions/github_com_raphaeldiscky_go-food-micro_internal_services_catalogwriteservice_internal_products_features_getting_product_by_id_v1_dtos.GetProductByIDResponseDto"
                         }
                     }
                 }
@@ -263,7 +263,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raphaeldiscky_go-food-micro_internal_services_catalogwriteservice_internal_products_features_getting_product_by_id_v1_dtos.GetProductByIdResponseDto": {
+        "github_com_raphaeldiscky_go-food-micro_internal_services_catalogwriteservice_internal_products_features_getting_product_by_id_v1_dtos.GetProductByIDResponseDto": {
             "type": "object",
             "properties": {
                 "product": {

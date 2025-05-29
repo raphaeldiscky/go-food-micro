@@ -1,6 +1,6 @@
 package cqrs
 
-import "github.com/mehdihadeli/go-mediatr"
+import mediatr "github.com/mehdihadeli/go-mediatr"
 
 // HandlerRegisterer for registering `RequestHandler` to mediatr registry, if handler implements this interface it will be registered automatically
 type HandlerRegisterer interface {

@@ -15,7 +15,7 @@ require (
 	github.com/mehdihadeli/go-mediatr v1.3.0
 	github.com/michaelklishin/rabbit-hole v1.5.0
 	github.com/pterm/pterm v0.12.69
-	github.com/raphaeldiscky/go-food-micro/internal/pkg v0.0.0-20230831075934-be8df319f588
+	github.com/raphaeldiscky/go-food-micro/internal/pkg v0.0.0
 	github.com/redis/go-redis/v9 v9.2.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/smartystreets/goconvey v1.8.1

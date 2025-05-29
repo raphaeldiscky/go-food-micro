@@ -1,23 +1,27 @@
+// Package v1 contains the search products endpoint.
 package v1
 
 import (
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/searchingproduct/v1/dtos"
-
-	"emperror.dev/errors"
-	"github.com/labstack/echo/v4"
-	"github.com/mehdihadeli/go-mediatr"
 )
 
+// searchProductsEndpoint is a struct that contains the search products endpoint.
 type searchProductsEndpoint struct {
 	fxparams.ProductRouteParams
 }
 
+// NewSearchProductsEndpoint is a constructor for the searchProductsEndpoint.
 func NewSearchProductsEndpoint(
 	params fxparams.ProductRouteParams,
 ) route.Endpoint {
@@ -36,7 +40,7 @@ func (ep *searchProductsEndpoint) MapEndpoint() {
 // @Produce json
 // @Param searchProductsRequestDto query dtos.SearchProductsRequestDto false "SearchProductsRequestDto"
 // @Success 200 {object} dtos.SearchProductsResponseDto
-// @Router /api/v1/products/search [get]
+// @Router /api/v1/products/search [get].
 func (ep *searchProductsEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()

@@ -1,9 +1,9 @@
 package domainExceptions
 
 import (
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 type invalidEmailAddressError struct {

@@ -8,15 +8,15 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	"github.com/brianvoe/gofakeit/v6"
-	"github.com/gavv/httpexpect/v2"
-	uuid "github.com/satori/go.uuid"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	httpexpect "github.com/gavv/httpexpect/v2"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -39,7 +39,7 @@ var _ = Describe("UpdateProductE2ETest Suite", func() {
 
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {

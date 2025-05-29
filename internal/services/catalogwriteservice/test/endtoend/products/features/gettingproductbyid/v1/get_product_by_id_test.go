@@ -8,13 +8,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
-
-	"github.com/gavv/httpexpect/v2"
-	uuid "github.com/satori/go.uuid"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+
+	httpexpect "github.com/gavv/httpexpect/v2"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -22,10 +22,10 @@ var integrationFixture *integration.IntegrationTestSharedFixture
 func TestGetProductByIdEndpoint(t *testing.T) {
 	RegisterFailHandler(Fail)
 	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
-	RunSpecs(t, "GetProductById Endpoint EndToEnd Tests")
+	RunSpecs(t, "GetProductByID Endpoint EndToEnd Tests")
 }
 
-var _ = Describe("Get Product By Id Feature", func() {
+var _ = Describe("Get Product By ID Feature", func() {
 	var (
 		ctx context.Context
 		id  uuid.UUID
@@ -37,7 +37,7 @@ var _ = Describe("Get Product By Id Feature", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		id = integrationFixture.Items[0].Id
+		id = integrationFixture.Items[0].ID
 	})
 
 	_ = AfterEach(func() {

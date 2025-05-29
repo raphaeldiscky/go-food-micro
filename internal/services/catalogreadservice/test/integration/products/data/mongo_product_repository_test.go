@@ -8,15 +8,16 @@ import (
 	"testing"
 	"time"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
-
-	"github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
 
 	. "github.com/smartystreets/goconvey/convey"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
 func TestProductPostgresRepository(t *testing.T) {
@@ -29,24 +30,27 @@ func TestProductPostgresRepository(t *testing.T) {
 
 		Convey("When we create the new product in the database", func() {
 			product := &models.Product{
-				Id:          uuid.NewV4().String(),
-				ProductId:   uuid.NewV4().String(),
+				ID:          uuid.NewV4().String(),
+				ProductID:   uuid.NewV4().String(),
 				Name:        gofakeit.Name(),
 				Description: gofakeit.AdjectiveDescriptive(),
 				Price:       gofakeit.Price(100, 1000),
 				CreatedAt:   time.Now(),
 			}
 
-			createdProduct, err := integrationTestSharedFixture.ProductRepository.CreateProduct(ctx, product)
+			createdProduct, err := integrationTestSharedFixture.ProductRepository.CreateProduct(
+				ctx,
+				product,
+			)
 
 			Convey("Then the product should be created successfully", func() {
 				// Assert that there is no error during creation.
 				So(err, ShouldBeNil)
 
 				Convey("And we should be able to retrieve the product by ID", func() {
-					retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductById(
+					retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
 						ctx,
-						createdProduct.Id,
+						createdProduct.ID,
 					)
 
 					Convey("And retrieved product should match the created product", func() {
@@ -54,14 +58,14 @@ func TestProductPostgresRepository(t *testing.T) {
 						So(err, ShouldBeNil)
 
 						// Assert that the retrieved product matches the created product.
-						So(retrievedProduct.Id, ShouldEqual, createdProduct.Id)
+						So(retrievedProduct.ID, ShouldEqual, createdProduct.ID)
 					})
 				})
 			})
 		})
 
 		Convey("When we delete the existing product", func() {
-			id := integrationTestSharedFixture.Items[0].Id
+			id := integrationTestSharedFixture.Items[0].ID
 			err := integrationTestSharedFixture.ProductRepository.DeleteProductByID(ctx, id)
 
 			Convey("Then the product should be deleted successfully", func() {
@@ -69,7 +73,10 @@ func TestProductPostgresRepository(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				Convey("And when we attempt to retrieve the product by ID", func() {
-					product, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, id)
+					product, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
+						ctx,
+						id,
+					)
 
 					Convey("And error should occur indicating the product is not found", func() {
 						// Verify that there is an error.
@@ -87,8 +94,11 @@ func TestProductPostgresRepository(t *testing.T) {
 
 		Convey("When we update the existing product", func() {
 			Convey("Then the product should be updated successfully", func() {
-				id := integrationTestSharedFixture.Items[0].Id
-				existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, id)
+				id := integrationTestSharedFixture.Items[0].ID
+				existingProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
+					ctx,
+					id,
+				)
 
 				// Make sure the existing product exists and there is no error.
 				So(err, ShouldBeNil)
@@ -98,13 +108,19 @@ func TestProductPostgresRepository(t *testing.T) {
 				existingProduct.Name = "test_update_product"
 
 				// Update the product in the database.
-				_, err = integrationTestSharedFixture.ProductRepository.UpdateProduct(ctx, existingProduct)
+				_, err = integrationTestSharedFixture.ProductRepository.UpdateProduct(
+					ctx,
+					existingProduct,
+				)
 
 				// Ensure there is no error during the update.
 				So(err, ShouldBeNil)
 
 				// Retrieve the updated product from the database.
-				updatedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, id)
+				updatedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
+					ctx,
+					id,
+				)
 				So(err, ShouldBeNil)
 
 				// Verify that the updated product's name matches the new name.
@@ -113,7 +129,10 @@ func TestProductPostgresRepository(t *testing.T) {
 		})
 
 		Convey("When attempting to get a product that does not exist", func() {
-			res, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, uuid.NewV4().String())
+			res, err := integrationTestSharedFixture.ProductRepository.GetProductByID(
+				ctx,
+				uuid.NewV4().String(),
+			)
 
 			Convey("Then it should return a NotFound error and nil result", func() {
 				// Verify that there is an error.
@@ -128,8 +147,8 @@ func TestProductPostgresRepository(t *testing.T) {
 		})
 
 		Convey("When attempting to get an existing product from the database", func() {
-			id := integrationTestSharedFixture.Items[0].Id
-			res, err := integrationTestSharedFixture.ProductRepository.GetProductById(ctx, id)
+			id := integrationTestSharedFixture.Items[0].ID
+			res, err := integrationTestSharedFixture.ProductRepository.GetProductByID(ctx, id)
 
 			Convey("Then it should return the product and no error", func() {
 				// Ensure there is no error.
@@ -139,18 +158,21 @@ func TestProductPostgresRepository(t *testing.T) {
 				So(res, ShouldNotBeNil)
 
 				// Verify that the retrieved product's ID matches the expected ID.
-				So(res.Id, ShouldEqual, id)
+				So(res.ID, ShouldEqual, id)
 			})
 		})
 
 		Convey("When attempting to get all existing products from the database", func() {
-			res, err := integrationTestSharedFixture.ProductRepository.GetAllProducts(ctx, utils.NewListQuery(10, 1))
+			res, err := integrationTestSharedFixture.ProductRepository.GetAllProducts(
+				ctx,
+				utils.NewListQuery(10, 1),
+			)
 
 			Convey("Then it should return the list of products and no error", func() {
 				// Ensure there is no error.
 				So(err, ShouldBeNil)
 
-				// Verify the expected number of products in the list.
+				// Verify the expected number of products in the list (2 products are seeded in SetupTest).
 				So(len(res.Items), ShouldEqual, 2)
 			})
 		})

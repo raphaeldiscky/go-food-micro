@@ -254,12 +254,12 @@ func (_c *IHaveEventSourcedAggregate_HasUncommittedEvents_Call) RunAndReturn(run
 	return _c
 }
 
-// Id provides a mock function with given fields:
-func (_m *IHaveEventSourcedAggregate) Id() uuid.UUID {
+// ID provides a mock function with given fields:
+func (_m *IHaveEventSourcedAggregate) ID() uuid.UUID {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for Id")
+		panic("no return value specified for ID")
 	}
 
 	var r0 uuid.UUID
@@ -274,14 +274,14 @@ func (_m *IHaveEventSourcedAggregate) Id() uuid.UUID {
 	return r0
 }
 
-// IHaveEventSourcedAggregate_Id_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Id'
+// IHaveEventSourcedAggregate_Id_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ID'
 type IHaveEventSourcedAggregate_Id_Call struct {
 	*mock.Call
 }
 
-// Id is a helper method to define mock.On call
-func (_e *IHaveEventSourcedAggregate_Expecter) Id() *IHaveEventSourcedAggregate_Id_Call {
-	return &IHaveEventSourcedAggregate_Id_Call{Call: _e.mock.On("Id")}
+// ID is a helper method to define mock.On call
+func (_e *IHaveEventSourcedAggregate_Expecter) ID() *IHaveEventSourcedAggregate_Id_Call {
+	return &IHaveEventSourcedAggregate_Id_Call{Call: _e.mock.On("ID")}
 }
 
 func (_c *IHaveEventSourcedAggregate_Id_Call) Run(run func()) *IHaveEventSourcedAggregate_Id_Call {

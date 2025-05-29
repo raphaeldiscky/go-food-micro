@@ -2,7 +2,7 @@ package elasticsearch
 
 import (
 	"emperror.dev/errors"
-	"github.com/elastic/go-elasticsearch/v8"
+	elasticsearch "github.com/elastic/go-elasticsearch/v8"
 )
 
 func NewElasticClient(cfg *ElasticOptions) (*elasticsearch.Client, error) {

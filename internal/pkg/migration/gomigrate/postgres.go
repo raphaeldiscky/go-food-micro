@@ -12,7 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
 
 	"emperror.dev/errors"
-	"github.com/golang-migrate/migrate/v4"
+	migrate "github.com/golang-migrate/migrate/v4"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"

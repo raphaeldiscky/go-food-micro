@@ -7,7 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
-	"github.com/redis/go-redis/v9"
+	redis "github.com/redis/go-redis/v9"
 	"go.uber.org/fx"
 )
 
