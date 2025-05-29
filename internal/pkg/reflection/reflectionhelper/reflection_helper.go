@@ -132,7 +132,9 @@ func SetFieldValueByIndex[T any](object T, index int, value interface{}) {
 		}
 		if field.CanInterface() && field.CanAddr() && field.CanSet() {
 			field.Set(reflect.ValueOf(value))
-			object = val.Interface().(T)
+			if val, ok := val.Interface().(T); ok {
+				object = val
+			}
 		} else {
 			// for all unexported fields (private)
 			rs2 := reflect.New(val.Type()).Elem()
@@ -172,7 +174,9 @@ func SetFieldValueByName[T any](object T, name string, value interface{}) {
 		}
 		if field.CanInterface() && field.CanAddr() && field.CanSet() {
 			field.Set(reflect.ValueOf(value))
-			object = val.Interface().(T)
+			if val, ok := val.Interface().(T); ok {
+				object = val
+			}
 		} else {
 			// for all unexported fields (private)
 			rs2 := reflect.New(val.Type()).Elem()

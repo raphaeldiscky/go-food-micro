@@ -251,7 +251,10 @@ func (a *EventSourcedAggregateRoot) String() string {
 		EntityDataModel: a.ToDataModel(),
 		OriginalVersion: a.originalVersion,
 	}
-	j, _ := json.Marshal(data)
+	j, err := json.Marshal(data)
+	if err != nil {
+		return fmt.Sprintf("Aggregate json: %v", err)
+	}
 
 	return fmt.Sprintf("Aggregate json: %s", string(j))
 }

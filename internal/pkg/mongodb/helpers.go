@@ -3,6 +3,7 @@ package mongodb
 
 import (
 	"context"
+	"log"
 
 	"emperror.dev/errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -44,7 +45,11 @@ func Paginate[T any](
 		return nil, err
 	}
 
-	defer cursor.Close(ctx)
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			log.Fatalf("Error closing cursor: %v", err)
+		}
+	}()
 
 	var items []T
 

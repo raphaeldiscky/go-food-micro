@@ -4,6 +4,7 @@ package customerrors
 import (
 	"fmt"
 	"io"
+	"log"
 
 	"emperror.dev/errors"
 
@@ -91,14 +92,18 @@ func (e *customError) Format(s fmt.State, verb rune) {
 			// %+v	one error message per line and stack trace (if any)
 
 			// if we have a call-stacked error, +v shows callstack for this error
-			fmt.Fprintf(s, "%+v", e.Cause())
+			if _, err := fmt.Fprintf(s, "%+v", e.Cause()); err != nil {
+				log.Printf("Error writing error string: %v", err)
+			}
 			// io.WriteString(s, e.message)
 			return
 		}
 
 		fallthrough
 	case 's', 'q':
-		io.WriteString(s, e.Error())
+		if _, err := io.WriteString(s, e.Error()); err != nil {
+			log.Printf("Error writing error string: %v", err)
+		}
 	}
 }
 

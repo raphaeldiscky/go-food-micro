@@ -15,13 +15,23 @@ import (
 
 // FixProjectRootWorkingDirectoryPath fixes the project root working directory path.
 func FixProjectRootWorkingDirectoryPath() {
-	currentWD, _ := os.Getwd()
+	currentWD, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
 	log.Printf("Current working directory is: `%s`", currentWD)
 
 	rootDir := GetProjectRootWorkingDirectory()
 	// change working directory
-	_ = os.Chdir(rootDir)
-	newWD, _ := os.Getwd()
+	err = os.Chdir(rootDir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	newWD, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	log.Printf("New fixed working directory is: `%s`", newWD)
 }
@@ -36,7 +46,10 @@ func GetProjectRootWorkingDirectory() string {
 	if pn != "" {
 		rootWorkingDirectory = getProjectRootDirectoryFromProjectName(pn)
 	} else {
-		wd, _ := os.Getwd()
+		wd, err := os.Getwd()
+		if err != nil {
+			log.Fatal(err)
+		}
 		dir, err := searchRootDirectory(wd)
 		if err != nil {
 			log.Fatal(err)
@@ -44,7 +57,10 @@ func GetProjectRootWorkingDirectory() string {
 		rootWorkingDirectory = dir
 	}
 
-	absoluteRootWorkingDirectory, _ := filepath.Abs(rootWorkingDirectory)
+	absoluteRootWorkingDirectory, err := filepath.Abs(rootWorkingDirectory)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return absoluteRootWorkingDirectory
 }
@@ -53,7 +69,10 @@ func GetProjectRootWorkingDirectory() string {
 func getProjectRootDirectoryFromProjectName(pn string) string {
 	// set root working directory of our app in the viper
 	// https://stackoverflow.com/a/47785436/581476
-	wd, _ := os.Getwd()
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	for !strings.HasSuffix(wd, pn) {
 		wd = filepath.Dir(wd)

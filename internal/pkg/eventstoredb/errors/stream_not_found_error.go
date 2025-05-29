@@ -27,8 +27,14 @@ func NewStreamNotFoundError(err error, streamID string) error {
 		fmt.Sprintf("stream with streamId %s not found", streamID),
 	)
 	customErr := customErrors.GetCustomError(notFound)
+
+	notFoundErr, ok := customErr.(customErrors.NotFoundError)
+	if !ok {
+		return errors.Wrap(err, "failed to convert error to NotFoundError")
+	}
+
 	br := &streamNotFoundError{
-		NotFoundError: customErr.(customErrors.NotFoundError),
+		NotFoundError: notFoundErr,
 	}
 
 	return errors.WithStackIf(br)

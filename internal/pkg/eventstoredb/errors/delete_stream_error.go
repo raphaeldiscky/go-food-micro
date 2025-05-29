@@ -28,8 +28,16 @@ func NewDeleteStreamError(err error, streamID string) error {
 	)
 	customErr := customErrors.GetCustomError(internal)
 
+	internalServerErr, ok := customErr.(customErrors.InternalServerError)
+	if !ok {
+		return errors.Wrap(
+			err,
+			fmt.Sprintf("failed to convert error to InternalServerError: %v", customErr),
+		)
+	}
+
 	br := &deleteStreamError{
-		InternalServerError: customErr.(customErrors.InternalServerError),
+		InternalServerError: internalServerErr,
 	}
 
 	return errors.WithStackIf(br)

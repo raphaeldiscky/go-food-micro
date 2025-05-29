@@ -135,7 +135,8 @@ func TestAddRabbitMQ(t *testing.T) {
 	})
 	assert.NoError(t, err)
 
-	b.Stop()
+	err = b.Stop()
+	require.NoError(t, err)
 }
 
 // ProducerConsumerMessage is the message for the producer consumer.
@@ -165,7 +166,10 @@ func (t *TestMessageHandler) Handle(
 	ctx context.Context,
 	consumeContext types3.MessageConsumeContext,
 ) error {
-	message := consumeContext.Message().(*ProducerConsumerMessage)
+	message, ok := consumeContext.Message().(*ProducerConsumerMessage)
+	if !ok {
+		return fmt.Errorf("failed to type assert message to *ProducerConsumerMessage")
+	}
 	fmt.Println(message)
 
 	return nil

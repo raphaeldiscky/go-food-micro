@@ -4,6 +4,7 @@ package producer
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -81,7 +82,9 @@ func FinishProducerSpan(span trace.Span, err error) error {
 				messageName,
 			),
 		)
-		_ = utils.TraceErrStatusFromSpan(span, err)
+		if traceErr := utils.TraceErrStatusFromSpan(span, err); traceErr != nil {
+			log.Printf("Failed to trace error status: %v", traceErr)
+		}
 	}
 	span.SetAttributes(
 		attribute.Key(constants.TraceId).
@@ -149,15 +152,27 @@ func addAfterBaggage(
 ) context.Context {
 	correlationId := messageHeader.GetCorrelationId(*meta)
 
-	correlationIdBag, _ := baggage.NewMember(
+	correlationIdBag, err := baggage.NewMember(
 		string(semconv.MessagingMessageConversationIDKey),
 		correlationId,
 	)
-	messageIdBag, _ := baggage.NewMember(
+	if err != nil {
+		log.Printf("Failed to create correlationIdBag: %v", err)
+	}
+	messageIdBag, err := baggage.NewMember(
 		string(semconv.MessageIDKey),
 		message.GeMessageId(),
 	)
-	b, _ := baggage.New(correlationIdBag, messageIdBag)
+	if err != nil {
+		log.Printf("Failed to create messageIdBag: %v", err)
+	}
+	b, err := baggage.New(correlationIdBag, messageIdBag)
+	if err != nil {
+		// Log the error but continue with the original context
+		// since baggage is optional for tracing
+		log.Printf("Failed to create baggage: %v", err)
+		return ctx
+	}
 	ctx = baggage.ContextWithBaggage(ctx, b)
 
 	// new context including baggage

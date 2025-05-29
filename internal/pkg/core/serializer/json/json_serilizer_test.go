@@ -40,14 +40,21 @@ func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
 
 	t.Log(jsonMap)
 
-	for key, value := range jsonMap.(map[string]interface{}) {
+	var jsonMapTyped map[string]interface{}
+	var ok bool
+	jsonMapTyped, ok = jsonMap.(map[string]interface{})
+	if !ok {
+		t.Fatal("Failed to convert to map[string]interface{}")
+	}
+
+	for key, value := range jsonMapTyped {
 		t.Log(key, value)
 	}
 
-	assert.True(t, reflect.TypeOf(jsonMap).Kind() == reflect.Map)
-	assert.True(t, reflect.TypeOf(jsonMap) == reflect.TypeOf(map[string]interface{}(nil)))
-	assert.True(t, jsonMap.(map[string]interface{})["ShortTypeName"] == "John")
-	assert.True(t, jsonMap.(map[string]interface{})["Age"] == float64(30))
+	assert.True(t, reflect.TypeOf(jsonMapTyped).Kind() == reflect.Map)
+	assert.True(t, reflect.TypeOf(jsonMapTyped) == reflect.TypeOf(map[string]interface{}(nil)))
+	assert.True(t, jsonMapTyped["ShortTypeName"] == "John")
+	assert.True(t, jsonMapTyped["Age"] == float64(30))
 }
 
 // TestDeserializeUnstructuredDataIntoMap tests the deserialize unstructured data into map.
@@ -62,12 +69,12 @@ func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 
 	marshal, err := currentSerializer.Marshal(person{"John", 30})
 	if err != nil {
-		return
+		t.Fatal(err)
 	}
 
 	err = currentSerializer.Unmarshal(marshal, &jsonMap)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	t.Log(jsonMap)
@@ -132,8 +139,13 @@ func TestDeserializeStructuredDataStruct2(t *testing.T) {
 		panic(err)
 	}
 
-	assert.True(t, jsonMap.(*person).Name == "John")
-	assert.True(t, jsonMap.(*person).Age == 30)
+	personMap, ok := jsonMap.(*person)
+	if !ok {
+		t.Fatal("Failed to convert to *person")
+	}
+
+	assert.True(t, personMap.Name == "John")
+	assert.True(t, personMap.Age == 30)
 	assert.True(t, reflect.TypeOf(jsonMap).Elem() == reflect.TypeOf(person{}))
 }
 
@@ -169,14 +181,14 @@ func TestDecodeToMap(t *testing.T) {
 	serializedObj := person{Name: "John", Age: 30}
 	marshal, err := currentSerializer.Marshal(serializedObj)
 	if err != nil {
-		return
+		t.Fatal(err)
 	}
 
 	// https://pkg.go.dev/encoding/json#Unmarshal
 	// To unmarshal a JSON object into a map, Unmarshal first establishes a map to use. If the map is nil, Unmarshal allocates a new map. Otherwise Unmarshal reuses the existing map, keeping existing entries. Unmarshal then stores key-value pairs from the JSON object into the map.
 	err = currentSerializer.UnmarshalToMap(marshal, &jsonMap)
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	assert.True(t, jsonMap["ShortTypeName"] == "John")

@@ -62,7 +62,7 @@ func (m *mediatorTransactionPipeline) Handle(
 		if r := recover(); r != nil {
 			tx.WithContext(ctx).Rollback()
 
-			if err, _ := r.(error); err != nil {
+			if err, ok := r.(error); ok && err != nil {
 				m.logger.Errorf(
 					"panic tn the transaction, rolling back transaction with panic err: %+v",
 					err,

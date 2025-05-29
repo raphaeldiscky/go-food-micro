@@ -4,6 +4,7 @@ package consumer
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"go.opentelemetry.io/otel"
@@ -71,7 +72,9 @@ func FinishConsumerSpan(span trace.Span, err error) error {
 
 	if err != nil {
 		span.AddEvent(fmt.Sprintf("failed to consume message '%s' from the broker", messageName))
-		_ = utils.TraceErrStatusFromSpan(span, err)
+		if traceErr := utils.TraceErrStatusFromSpan(span, err); traceErr != nil {
+			log.Printf("Failed to trace error status: %v", traceErr)
+		}
 	}
 
 	span.SetAttributes(
@@ -127,15 +130,27 @@ func getTraceOptions(
 func addAfterBaggage(ctx context.Context, meta *metadata.Metadata) context.Context {
 	correlationId := messageHeader.GetCorrelationId(*meta)
 
-	correlationIdBag, _ := baggage.NewMember(
+	correlationIdBag, err := baggage.NewMember(
 		string(semconv.MessagingMessageConversationIDKey),
 		correlationId,
 	)
-	messageIdBag, _ := baggage.NewMember(
+	if err != nil {
+		log.Printf("Failed to create correlationIdBag: %v", err)
+	}
+	messageIdBag, err := baggage.NewMember(
 		string(semconv.MessageIDKey),
 		messageHeader.GetMessageId(*meta),
 	)
-	b, _ := baggage.New(correlationIdBag, messageIdBag)
+	if err != nil {
+		log.Printf("Failed to create messageIdBag: %v", err)
+	}
+	b, err := baggage.New(correlationIdBag, messageIdBag)
+	if err != nil {
+		// Log the error but continue with the original context
+		// since baggage is optional for tracing
+		log.Printf("Failed to create baggage: %v", err)
+		return ctx
+	}
 	ctx = baggage.ContextWithBaggage(ctx, b)
 
 	// new context including baggage

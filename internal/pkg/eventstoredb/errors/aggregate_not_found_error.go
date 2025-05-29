@@ -32,8 +32,17 @@ func NewAggregateNotFoundError(err error, id uuid.UUID) error {
 		fmt.Sprintf("aggregtae with id %s not found", id.String()),
 	)
 	customErr := customErrors.GetCustomError(notFound)
+
+	notFoundErr, ok := customErr.(customErrors.NotFoundError)
+	if !ok {
+		return errors.Wrap(
+			err,
+			fmt.Sprintf("failed to convert error to NotFoundError: %v", customErr),
+		)
+	}
+
 	br := &aggregateNotFoundError{
-		NotFoundError: customErr.(customErrors.NotFoundError),
+		NotFoundError: notFoundErr,
 	}
 
 	return errors.WithStackIf(br)

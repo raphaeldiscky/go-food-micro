@@ -315,7 +315,16 @@ func GetParentSpanAttribute(
 	att := linq.From(readWriteSpan.Attributes()).
 		FirstWithT(func(att attribute.KeyValue) bool { return string(att.Key) == parentAttributeName })
 
-	return att.(attribute.KeyValue)
+	if att == nil {
+		return *new(attribute.KeyValue)
+	}
+
+	attVal, ok := att.(attribute.KeyValue)
+	if !ok {
+		return *new(attribute.KeyValue)
+	}
+
+	return attVal
 }
 
 // GetSpanAttributeFromCurrentContext gets the span attribute from the current context.
@@ -331,7 +340,16 @@ func GetSpanAttributeFromCurrentContext(
 	att := linq.From(readWriteSpan.Attributes()).
 		FirstWithT(func(att attribute.KeyValue) bool { return string(att.Key) == attributeName })
 
-	return att.(attribute.KeyValue)
+	if att == nil {
+		return *new(attribute.KeyValue)
+	}
+
+	attVal, ok := att.(attribute.KeyValue)
+	if !ok {
+		return *new(attribute.KeyValue)
+	}
+
+	return attVal
 }
 
 // GetSpanAttribute gets the span attribute.
@@ -347,7 +365,12 @@ func GetSpanAttribute(
 	att := linq.From(readWriteSpan.Attributes()).
 		FirstWithT(func(att attribute.KeyValue) bool { return string(att.Key) == attributeName })
 
-	return att.(attribute.KeyValue)
+	attVal, ok := att.(attribute.KeyValue)
+	if !ok {
+		return *new(attribute.KeyValue)
+	}
+
+	return attVal
 }
 
 // MapsToAttributes maps a maps to attributes.
@@ -380,7 +403,12 @@ func MapsToAttributes(maps map[string]interface{}) []attribute.KeyValue {
 func MetadataToSet(meta metadata.Metadata) attribute.Set {
 	var keyValue []attribute.KeyValue
 	for key, val := range meta {
-		keyValue = append(keyValue, attribute.String(key, val.(string)))
+		strVal, ok := val.(string)
+		if !ok {
+			// Skip non-string values or log an error
+			continue
+		}
+		keyValue = append(keyValue, attribute.String(key, strVal))
 	}
 
 	return attribute.NewSet(keyValue...)

@@ -70,29 +70,69 @@ func TestGetFullTypeName(t *testing.T) {
 
 // TestInstanceByTypeName tests the instance by type name.
 func TestInstanceByTypeName(t *testing.T) {
-	s1 := InstanceByTypeName("typemapper.Test").(Test)
+	instance := InstanceByTypeName("typemapper.Test")
+	if instance == nil {
+		t.Fatal("Failed to create instance: got nil")
+	}
+	s1, ok := instance.(Test)
+	if !ok {
+		t.Fatal("Failed to convert to Test")
+	}
 	s1.A = 100
 	assert.NotNil(t, s1)
 	assert.NotZero(t, s1.A)
 
-	s2 := InstanceByTypeName("*typemapper.Test").(*Test)
+	instance = InstanceByTypeName("*typemapper.Test")
+	if instance == nil {
+		t.Fatal("Failed to create instance: got nil")
+	}
+	s2, ok := instance.(*Test)
+	if !ok {
+		t.Fatal("Failed to convert to *Test")
+	}
 	s2.A = 100
 	assert.NotNil(t, s2)
 	assert.NotZero(t, s2.A)
 
-	s3 := InstanceByTypeName("*Test").(*Test)
+	instance = InstanceByTypeName("*Test")
+	if instance == nil {
+		t.Fatal("Failed to create instance: got nil")
+	}
+	s3, ok := instance.(*Test)
+	if !ok {
+		t.Fatal("Failed to convert to *Test")
+	}
 	assert.NotNil(t, s3)
 
-	s4 := InstanceByTypeName("Test").(Test)
+	instance = InstanceByTypeName("Test")
+	if instance == nil {
+		t.Fatal("Failed to create instance: got nil")
+	}
+	s4, ok := instance.(Test)
+	if !ok {
+		t.Fatal("Failed to convert to Test")
+	}
 	assert.NotNil(t, s4)
 }
 
 // TestInstancePointerByTypeName tests the instance pointer by type name.
 func TestInstancePointerByTypeName(t *testing.T) {
-	s1 := InstancePointerByTypeName("*typemapper.Test").(*Test)
-	s2 := InstancePointerByTypeName("typemapper.Test").(*Test)
-	s3 := InstancePointerByTypeName("*Test").(*Test)
-	s4 := InstancePointerByTypeName("Test").(*Test)
+	s1, ok := InstancePointerByTypeName("*typemapper.Test").(*Test)
+	if !ok {
+		t.Fatal("Failed to convert to *Test")
+	}
+	s2, ok := InstancePointerByTypeName("typemapper.Test").(*Test)
+	if !ok {
+		t.Fatal("Failed to convert to *Test")
+	}
+	s3, ok := InstancePointerByTypeName("*Test").(*Test)
+	if !ok {
+		t.Fatal("Failed to convert to *Test")
+	}
+	s4, ok := InstancePointerByTypeName("Test").(*Test)
+	if !ok {
+		t.Fatal("Failed to convert to *Test")
+	}
 
 	assert.NotNil(t, s1)
 	assert.NotNil(t, s2)

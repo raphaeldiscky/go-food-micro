@@ -74,9 +74,12 @@ func (g *mongoDockerTest) PopulateContainerOptions(
 	} // Tell docker to hard kill the container in 120 seconds exponential backoff-retry, because the application_exceptions in the container might not be ready to accept connections yet
 
 	g.resource = resource
-	port, _ := strconv.Atoi(
+	port, err := strconv.Atoi(
 		resource.GetPort(fmt.Sprintf("%s/tcp", g.defaultOptions.Port)),
 	)
+	if err != nil {
+		log.Fatalf("Error converting port to int: %v", err)
+	}
 	g.defaultOptions.HostPort = port
 
 	t.Cleanup(func() {

@@ -27,8 +27,17 @@ func NewAppendToStreamError(err error, streamID string) error {
 		fmt.Sprintf("unable to append events to stream %s", streamID),
 	)
 	customErr := customErrors.GetCustomError(bad)
+
+	badRequestErr, ok := customErr.(customErrors.BadRequestError)
+	if !ok {
+		return errors.Wrap(
+			err,
+			fmt.Sprintf("failed to convert error to BadRequestError: %v", customErr),
+		)
+	}
+
 	br := &appendToStreamError{
-		BadRequestError: customErr.(customErrors.BadRequestError),
+		BadRequestError: badRequestErr,
 	}
 
 	return errors.WithStackIf(br)

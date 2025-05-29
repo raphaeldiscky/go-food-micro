@@ -113,7 +113,10 @@ func (a *AggregateRoot) GetUncommittedEvents() []IDomainEvent {
 }
 
 func (a *AggregateRoot) String() string {
-	j, _ := json.Marshal(a)
+	j, err := json.Marshal(a)
+	if err != nil {
+		return fmt.Sprintf("Aggregate json: %v", err)
+	}
 
 	return fmt.Sprintf("Aggregate json: %s", string(j))
 }

@@ -107,7 +107,14 @@ func (m *DefaultMessageJSONSerializer) Deserialize(
 		return nil, errors.WrapIff(err, "error in Unmarshaling: `%s`", messageType)
 	}
 
-	return targetMessagePointer.(types.IMessage), nil
+	message, ok := targetMessagePointer.(types.IMessage)
+	if !ok {
+		return nil, errors.Errorf(
+			"failed to convert message to IMessage: %v",
+			targetMessagePointer,
+		)
+	}
+	return message, nil
 }
 
 // DeserializeObject is a function that deserializes an object.

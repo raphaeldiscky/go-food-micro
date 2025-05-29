@@ -78,7 +78,15 @@ func (s *DefaultEventJSONSerializer) Deserialize(
 		return nil, errors.WrapIff(err, "error in Unmarshaling: `%s`", eventType)
 	}
 
-	return targetEventPointer.(domain.IDomainEvent), nil
+	domainEvent, ok := targetEventPointer.(domain.IDomainEvent)
+	if !ok {
+		return nil, errors.Errorf(
+			"failed to convert event to IDomainEvent: %v",
+			targetEventPointer,
+		)
+	}
+
+	return domainEvent, nil
 }
 
 // DeserializeObject is a function that deserializes an object.

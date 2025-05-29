@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -37,9 +38,18 @@ type Sqlx struct {
 // Migration will be omitted if appropriate config parameter set.
 func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 	// Define database connection settings.
-	maxConn, _ := strconv.Atoi(os.Getenv("DB_MAX_CONNECTIONS"))
-	maxIdleConn, _ := strconv.Atoi(os.Getenv("DB_MAX_IDLE_CONNECTIONS"))
-	maxLifetimeConn, _ := strconv.Atoi(os.Getenv("DB_MAX_LIFETIME_CONNECTIONS"))
+	maxConn, err := strconv.Atoi(os.Getenv("DB_MAX_CONNECTIONS"))
+	if err != nil {
+		return nil, errors.New("error in converting DB_MAX_CONNECTIONS to int")
+	}
+	maxIdleConn, err := strconv.Atoi(os.Getenv("DB_MAX_IDLE_CONNECTIONS"))
+	if err != nil {
+		return nil, errors.New("error in converting DB_MAX_IDLE_CONNECTIONS to int")
+	}
+	maxLifetimeConn, err := strconv.Atoi(os.Getenv("DB_MAX_LIFETIME_CONNECTIONS"))
+	if err != nil {
+		return nil, errors.New("error in converting DB_MAX_LIFETIME_CONNECTIONS to int")
+	}
 
 	var dataSourceName string
 
@@ -47,7 +57,7 @@ func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 		return nil, errors.New("dbname is required in the config.")
 	}
 
-	err := createDB(cfg)
+	err = createDB(cfg)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +84,11 @@ func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 
 	// Try to ping database.
 	if err := db.Ping(); err != nil {
-		defer db.Close() // close database connection
+		defer func() {
+			if err := db.Close(); err != nil {
+				log.Fatalf("Error closing database: %v", err)
+			}
+		}()
 
 		return nil, fmt.Errorf("error, not sent ping to database, %w", err)
 	}
@@ -135,7 +149,11 @@ func createDB(cfg *PostgresSqlxOptions) error {
 		return err
 	}
 
-	defer sqldb.Close()
+	defer func() {
+		if err := sqldb.Close(); err != nil {
+			log.Fatalf("Error closing database: %v", err)
+		}
+	}()
 
 	return nil
 }

@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"time"
 
 	"emperror.dev/errors"
@@ -124,8 +125,10 @@ func NewPgx(cfg *PostgresPgxOptions) (*Pgx, error) {
 
 // Close closes the database connection.
 func (db *Pgx) Close() {
-	db.ConnPool.Close()
-	_ = db.DB.Close()
+	db.ConnPool.Close() // Ignore error as per pgx documentation
+	if err := db.DB.Close(); err != nil {
+		log.Fatalf("Error closing database: %v", err)
+	}
 }
 
 // createDB creates the database.
@@ -165,7 +168,11 @@ func createDB(cfg *PostgresPgxOptions) error {
 		return err
 	}
 
-	defer sqldb.Close()
+	defer func() {
+		if err := sqldb.Close(); err != nil {
+			log.Fatalf("Error closing database: %v", err)
+		}
+	}()
 
 	return nil
 }

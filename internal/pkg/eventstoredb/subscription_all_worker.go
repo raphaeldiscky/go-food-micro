@@ -142,7 +142,9 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 					s.subscriptionId,
 					event.SubscriptionDropped.Error,
 				)
-				stream.Close()
+				if err := stream.Close(); err != nil {
+					s.log.Errorf("error closing stream: %v", err)
+				}
 
 				break
 			}

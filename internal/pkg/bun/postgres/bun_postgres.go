@@ -4,6 +4,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"emperror.dev/errors"
 	"github.com/uptrace/bun"
@@ -94,7 +95,11 @@ func createDB(cfg *bun2.BunConfig) error {
 		return err
 	}
 
-	defer sqldb.Close()
+	defer func() {
+		if err := sqldb.Close(); err != nil {
+			log.Printf("Error closing database: %v", err)
+		}
+	}()
 
 	return nil
 }

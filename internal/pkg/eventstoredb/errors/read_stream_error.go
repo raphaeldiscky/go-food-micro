@@ -23,8 +23,16 @@ func NewReadStreamError(err error) error {
 	internal := customErrors.NewInternalServerErrorWrap(err, "unable to read events from stream")
 	customErr := customErrors.GetCustomError(internal)
 
+	internalServerErr, ok := customErr.(customErrors.InternalServerError)
+	if !ok {
+		return errors.Wrap(
+			err,
+			"failed to convert error to InternalServerError",
+		)
+	}
+
 	br := &readStreamError{
-		InternalServerError: customErr.(customErrors.InternalServerError),
+		InternalServerError: internalServerErr,
 	}
 
 	return errors.WithStackIf(br)

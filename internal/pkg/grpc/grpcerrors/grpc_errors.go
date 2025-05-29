@@ -132,7 +132,10 @@ func (p *grpcErr) ToJSON() string {
 }
 
 func (p *grpcErr) json() []byte {
-	b, _ := json.Marshal(&p)
+	b, err := json.Marshal(&p)
+	if err != nil {
+		return []byte{}
+	}
 
 	return b
 }

@@ -4,6 +4,7 @@ package postgresgorm
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	"emperror.dev/errors"
 	"github.com/glebarez/sqlite"
@@ -158,7 +159,11 @@ func createPostgresDB(cfg *GormOptions) error {
 		return err
 	}
 
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Fatalf("Error closing database: %v", err)
+		}
+	}()
 
 	return nil
 }

@@ -217,7 +217,27 @@ func Map[TDes any, TSrc any](src TSrc) (TDes, error) {
 			return des, nil
 		}
 
-		return fnReflect.Call([]reflect.Value{reflect.ValueOf(src)})[0].Interface().(TDes), nil
+		results := fnReflect.Call([]reflect.Value{reflect.ValueOf(src)})
+		if len(results) != 2 {
+			return *new(TDes), fmt.Errorf(
+				"expected 2 return values from mapping function, got %d",
+				len(results),
+			)
+		}
+		if !results[1].IsNil() {
+			err, ok := results[1].Interface().(error)
+			if !ok {
+				return *new(TDes), errors.New("expected error return value from mapping function")
+			}
+			if err != nil {
+				return *new(TDes), err
+			}
+		}
+		val, ok := results[0].Interface().(TDes)
+		if !ok {
+			return *new(TDes), errors.New("type assertion failed for mapping result")
+		}
+		return val, nil
 	}
 
 	desTypeValue := reflect.ValueOf(&des).Elem()
@@ -392,7 +412,10 @@ func mapStructs[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 			sourceFiledValue = reflectionHelper.GetFieldValueFromMethodAndReflectValue(src.Addr(), strcase.ToCamel(keys[SrcKeyIndex]))
 		}
 
-		processValues[TDes, TSrc](sourceFiledValue, destinationField)
+		if err := processValues[TDes, TSrc](sourceFiledValue, destinationField); err != nil {
+			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+			return
+		}
 	}
 }
 
@@ -407,7 +430,10 @@ func mapSlices[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 		srcVal := src.Index(i)
 		destVal := dest.Index(i)
 
-		processValues[TDes, TSrc](srcVal, destVal)
+		if err := processValues[TDes, TSrc](srcVal, destVal); err != nil {
+			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+			return
+		}
 	}
 }
 
@@ -416,7 +442,10 @@ func mapPointers[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	// create new struct from provided dest type
 	val := reflect.New(dest.Type().Elem()).Elem()
 
-	processValues[TDes, TSrc](src.Elem(), val)
+	if err := processValues[TDes, TSrc](src.Elem(), val); err != nil {
+		defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+		return
+	}
 
 	// assign address of instantiated struct to destination
 	dest.Set(val.Addr())
@@ -435,8 +464,14 @@ func mapMaps[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 	for destMapIter.Next() && srcMapIter.Next() {
 		destKey := reflect.New(destMapIter.Key().Type()).Elem()
 		destValue := reflect.New(destMapIter.Value().Type()).Elem()
-		processValues[TDes, TSrc](srcMapIter.Key(), destKey)
-		processValues[TDes, TSrc](srcMapIter.Value(), destValue)
+		if err := processValues[TDes, TSrc](srcMapIter.Key(), destKey); err != nil {
+			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+			return
+		}
+		if err := processValues[TDes, TSrc](srcMapIter.Value(), destValue); err != nil {
+			defaultLogger.GetLogger().Errorf("error processing values: %v", err)
+			return
+		}
 
 		dest.SetMapIndex(destKey, destValue)
 	}

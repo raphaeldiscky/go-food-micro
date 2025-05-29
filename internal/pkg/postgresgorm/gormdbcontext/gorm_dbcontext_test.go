@@ -46,7 +46,10 @@ func (p *ProductDataModel) TableName() string {
 
 // String returns the string representation of the product data model.
 func (p *ProductDataModel) String() string {
-	j, _ := json.Marshal(p)
+	j, err := json.Marshal(p)
+	if err != nil {
+		return ""
+	}
 
 	return string(j)
 }
@@ -277,12 +280,17 @@ func (s *GormDBContextTestSuite) initDB() {
 
 // cleanupDB cleans up the database.
 func (s *GormDBContextTestSuite) cleanupDB() error {
-	sqldb, _ := s.dbContext.DB().DB()
-	e := sqldb.Close()
-	s.Require().NoError(e)
+	sqldb, err := s.dbContext.DB().DB()
+	if err != nil {
+		return err
+	}
+	err = sqldb.Close()
+	if err != nil {
+		return err
+	}
 
 	// removing sql-lite file
-	err := os.Remove(s.dbFilePath)
+	err = os.Remove(s.dbFilePath)
 
 	return err
 }

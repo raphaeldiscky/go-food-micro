@@ -69,7 +69,7 @@ func (c *gormDBContext) RunInTx(
 		if r := recover(); r != nil {
 			tx.WithContext(ctx).Rollback()
 
-			if err, _ := r.(error); err != nil {
+			if err, ok := r.(error); ok && err != nil {
 				defaultlogger.GetLogger().Errorf(
 					"panic tn the transaction, rolling back transaction with panic err: %+v",
 					err,

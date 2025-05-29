@@ -239,7 +239,12 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 func (r *rabbitMQConsumer) Stop() error {
 	defer func() {
 		if r.channel != nil && !r.channel.IsClosed() {
-			r.channel.Cancel(r.rabbitmqConsumerOptions.ConsumerId, false)
+			if err := r.channel.Cancel(r.rabbitmqConsumerOptions.ConsumerId, false); err != nil {
+				r.logger.Error(
+					"error in canceling consumer: %v",
+					err,
+				)
+			}
 			if err := r.channel.Close(); err != nil {
 				r.logger.Error(
 					"error in closing channel: %v",
@@ -450,7 +455,12 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 					}
 				})
 
-			v := aggregateResult.(pipeline.ConsumerHandlerFunc)
+			v, ok := aggregateResult.(pipeline.ConsumerHandlerFunc)
+			if !ok {
+				return errors.New(
+					"failed to convert aggregateResult to pipeline.ConsumerHandlerFunc",
+				)
+			}
 			err := v(ctx)
 			if err != nil {
 				return errors.Wrap(

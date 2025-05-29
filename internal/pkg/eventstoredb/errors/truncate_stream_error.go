@@ -27,8 +27,14 @@ func NewTruncateStreamError(err error, streamID string) error {
 		fmt.Sprintf("unable to truncate stream %s", streamID),
 	)
 	customErr := customErrors.GetCustomError(internal)
+
+	internalServerErr, ok := customErr.(customErrors.InternalServerError)
+	if !ok {
+		return errors.Wrap(err, "failed to convert error to InternalServerError")
+	}
+
 	br := &truncateStreamError{
-		InternalServerError: customErr.(customErrors.InternalServerError),
+		InternalServerError: internalServerErr,
 	}
 
 	return errors.WithStackIf(br)

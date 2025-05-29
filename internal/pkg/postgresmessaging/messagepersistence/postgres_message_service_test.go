@@ -179,12 +179,17 @@ func (c *postgresMessageServiceTest) initDB() {
 
 // cleanupDB cleans up the database.
 func (c *postgresMessageServiceTest) cleanupDB() error {
-	sqldb, _ := c.dbContext.DB().DB()
-	e := sqldb.Close()
-	c.Require().NoError(e)
+	sqldb, err := c.dbContext.DB().DB()
+	if err != nil {
+		return err
+	}
+	err = sqldb.Close()
+	if err != nil {
+		return err
+	}
 
 	// removing sql-lite file
-	err := os.Remove(c.dbFilePath)
+	err = os.Remove(c.dbFilePath)
 
 	return err
 }

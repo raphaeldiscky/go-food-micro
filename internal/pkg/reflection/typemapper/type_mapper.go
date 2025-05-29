@@ -353,7 +353,12 @@ func GenericInstanceByT[T any]() T {
 	// https://stackoverflow.com/questions/7132848/how-to-get-the-reflect-type-of-an-interface
 	typ := GetGenericTypeByT[T]()
 
-	return getInstanceFromType(typ).(T)
+	res, ok := getInstanceFromType(typ).(T)
+	if !ok {
+		return *new(T)
+	}
+
+	return res
 }
 
 // InstanceByType returns the instance by type.
