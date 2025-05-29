@@ -20,6 +20,7 @@ var currentSerializer = NewDefaultJsonSerializer()
 
 // TestDeserializeUnstructuredDataIntoEmptyInterface tests the deserialize unstructured data into empty interface.
 func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
+	t.Helper()
 	// https://www.sohamkamani.com/golang/json/#decoding-json-to-maps---unstructured-data
 	// https://developpaper.com/mapstructure-of-go/
 	// https://pkg.go.dev/encoding/json#Unmarshal
@@ -60,6 +61,8 @@ func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
 // TestDeserializeUnstructuredDataIntoMap tests the deserialize unstructured data into map.
 func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 	// https://www.sohamkamani.com/golang/json/#decoding-json-to-maps---unstructured-data
+	t.Helper()
+
 	// https://developpaper.com/mapstructure-of-go/
 	// https://pkg.go.dev/encoding/json#Unmarshal
 	// when we assign an object type to interface is not pointer object or we don't assign interface, defaultLogger unmarshaler can't deserialize it to the object type and serialize it to map[string]interface{}
@@ -92,6 +95,8 @@ func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 // TestDeserializeStructuredDataStruct tests the deserialize structured data into struct.
 func TestDeserializeStructuredDataStruct(t *testing.T) {
 	// https://pkg.go.dev/encoding/json#Unmarshal
+	t.Helper()
+
 	// when we assign object to explicit struct type, defaultLogger unmarshaler can deserialize it to the struct
 
 	// To unmarshal JSON into a struct, Unmarshal matches incoming object keys to the keys used by Marshal (either the struct field name or its tag), preferring an exact match but also accepting a case-insensitive match.
@@ -123,6 +128,8 @@ func TestDeserializeStructuredDataStruct(t *testing.T) {
 // TestDeserializeStructuredDataStruct2 tests the deserialize structured data into struct.
 func TestDeserializeStructuredDataStruct2(t *testing.T) {
 	// https://pkg.go.dev/encoding/json#Unmarshal
+	t.Helper()
+
 	// when we assign object to explicit struct type, defaultLogger unmarshaler can deserialize it to the struct
 
 	// To unmarshal JSON into a struct, Unmarshal matches incoming object keys to the keys used by Marshal (either the struct field name or its tag), preferring an exact match but also accepting a case-insensitive match.
@@ -152,6 +159,8 @@ func TestDeserializeStructuredDataStruct2(t *testing.T) {
 // TestDeserializeStructuredDataPointer tests the deserialize structured data into pointer.
 func TestDeserializeStructuredDataPointer(t *testing.T) {
 	// https://pkg.go.dev/encoding/json#Unmarshal
+	t.Helper()
+
 	// when we assign object to explicit struct type, defaultLogger unmarshaler can deserialize it to the struct
 
 	// To unmarshal JSON into a pointer, Unmarshal first handles the case of the JSON being the JSON literal null. In that case, Unmarshal sets the pointer to nil. Otherwise, Unmarshal unmarshals the JSON into the value pointed at by the pointer. If the pointer is nil, Unmarshal allocates a new value for it to point to.To unmarshal JSON into a struct, Unmarshal matches incoming object keys to the keys used by Marshal (either the struct field name or its tag), preferring an exact match but also accepting a case-insensitive match.
@@ -176,6 +185,8 @@ func TestDeserializeStructuredDataPointer(t *testing.T) {
 
 // TestDecodeToMap tests the decode to map.
 func TestDecodeToMap(t *testing.T) {
+	t.Helper()
+
 	var jsonMap map[string]interface{}
 
 	serializedObj := person{Name: "John", Age: 30}

@@ -75,6 +75,42 @@ func NewEsdbSubscriptionAllWorker(
 	}
 }
 
+// handleSubscriptionEvent processes a single subscription event and updates the position.
+func (s *esdbSubscriptionAllWorker) handleSubscriptionEvent(
+	ctx context.Context,
+	event *esdb.SubscriptionEvent,
+	options *esdb.SubscribeToAllOptions,
+) error {
+	if event.SubscriptionDropped != nil {
+		s.log.Errorf(
+			"subscription to all '%s' dropped: %s",
+			s.subscriptionId,
+			event.SubscriptionDropped.Error,
+		)
+
+		return event.SubscriptionDropped.Error
+	}
+
+	if event.EventAppeared != nil {
+		streamID := event.EventAppeared.OriginalEvent().StreamID
+		revision := event.EventAppeared.OriginalEvent().EventNumber
+		s.log.Info(
+			fmt.Sprintf(
+				"event appeared in subscription to all '%s'. streamId: %s, revision: %d",
+				s.subscriptionId,
+				streamID,
+				revision,
+			),
+		)
+
+		options.From = event.EventAppeared.OriginalEvent().Position
+
+		return s.handleEvent(ctx, event.EventAppeared)
+	}
+
+	return nil
+}
+
 // SubscribeAll subscribes to all.
 func (s *esdbSubscriptionAllWorker) SubscribeAll(
 	ctx context.Context,
@@ -118,9 +154,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 		From:               from,
 		CheckpointInterval: 1,
 	}
-	// https://developers.eventstore.com/clients/grpc/subscriptions.html#subscribing-to-all-1
-	// https://github.com/EventStore/EventStore-Client-Go/blob/master/samples/subscribingToStream.go#L113
-	// https://developers.eventstore.com/clients/grpc/subscriptions.html#handling-subscription-drops
+
 	for {
 		stream, err := s.db.SubscribeToAll(ctx, options)
 		if err != nil {
@@ -135,45 +169,15 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 
 		for {
 			event := stream.Recv()
-
-			if event.SubscriptionDropped != nil {
-				s.log.Errorf(
-					"subscription to all '%s' dropped: %s",
-					s.subscriptionId,
-					event.SubscriptionDropped.Error,
-				)
+			if err := s.handleSubscriptionEvent(ctx, event, &options); err != nil {
 				if err := stream.Close(); err != nil {
 					s.log.Errorf("error closing stream: %v", err)
 				}
 
-				break
-			}
-
-			if event.EventAppeared != nil {
-				streamID := event.EventAppeared.OriginalEvent().StreamID
-				revision := event.EventAppeared.OriginalEvent().EventNumber
-				s.log.Info(
-					fmt.Sprintf(
-						"event appeared in subscription to all '%s'. streamId: %s, revision: %d",
-						s.subscriptionId,
-						streamID,
-						revision,
-					),
-				)
-
-				options.From = event.EventAppeared.OriginalEvent().Position
-
-				// handles the event...
-				err := s.handleEvent(ctx, event.EventAppeared)
-				if err != nil {
-					return err
-				}
+				return err
 			}
 		}
 
-		<-ctx.Done()
-		time.Sleep(1 * time.Second)
-		// context canceled or deadlined
 		return ctx.Err()
 	}
 }

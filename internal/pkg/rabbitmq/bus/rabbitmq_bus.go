@@ -193,6 +193,31 @@ func (r *rabbitmqBus) ConnectRabbitMQConsumer(
 	return nil
 }
 
+// createNewConsumer creates a new consumer for the given message type and handler.
+func (r *rabbitmqBus) createNewConsumer(
+	messageType types.IMessage,
+	consumerHandler consumer2.ConsumerHandler,
+) (consumer2.Consumer, error) {
+	consumerBuilder := consumerConfigurations.NewRabbitMQConsumerConfigurationBuilder(messageType)
+	consumerBuilder.WithHandlers(func(builder consumer2.ConsumerHandlerConfigurationBuilder) {
+		builder.AddHandler(consumerHandler)
+	})
+	consumerConfig := consumerBuilder.Build()
+
+	return r.consumerFactory.CreateConsumer(
+		consumerConfig,
+		func(message types.IMessage) {
+			if len(r.isConsumedNotifications) > 0 {
+				for _, notification := range r.isConsumedNotifications {
+					if notification != nil {
+						notification(message)
+					}
+				}
+			}
+		},
+	)
+}
+
 // ConnectConsumerHandler adds a handler to existing consumer. creates new consumer if not exist.
 func (r *rabbitmqBus) ConnectConsumerHandler(
 	messageType types.IMessage,
@@ -201,37 +226,20 @@ func (r *rabbitmqBus) ConnectConsumerHandler(
 	typeName := utils.GetMessageBaseReflectType(messageType)
 
 	consumersForType := r.messageTypeConsumers[typeName]
-	// if there is a consumer for a message type, we should add handler to existing consumers
 	if consumersForType != nil {
 		for _, c := range consumersForType {
 			c.ConnectHandler(consumerHandler)
 		}
-	} else {
-		// if there is no consumer for a message type, we should create new one and add handler to the consumer
-		consumerBuilder := consumerConfigurations.NewRabbitMQConsumerConfigurationBuilder(messageType)
-		consumerBuilder.WithHandlers(func(builder consumer2.ConsumerHandlerConfigurationBuilder) {
-			builder.AddHandler(consumerHandler)
-		})
-		consumerConfig := consumerBuilder.Build()
-		mqConsumer, err := r.consumerFactory.CreateConsumer(
-			consumerConfig,
-			// IsConsumed Notification
-			func(message types.IMessage) {
-				if len(r.isConsumedNotifications) > 0 {
-					for _, notification := range r.isConsumedNotifications {
-						if notification != nil {
-							notification(message)
-						}
-					}
-				}
-			},
-		)
-		if err != nil {
-			return err
-		}
 
-		r.messageTypeConsumers[typeName] = append(r.messageTypeConsumers[typeName], mqConsumer)
+		return nil
 	}
+
+	mqConsumer, err := r.createNewConsumer(messageType, consumerHandler)
+	if err != nil {
+		return err
+	}
+
+	r.messageTypeConsumers[typeName] = append(r.messageTypeConsumers[typeName], mqConsumer)
 
 	return nil
 }

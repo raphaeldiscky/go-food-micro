@@ -17,14 +17,14 @@ import (
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
-	Module = fx.Module( //nolint:gochecknoglobals
+	Module = fx.Module(
 		"otelmetrixfx",
 		metricsProviders,
 		metricsInvokes,
 	)
 
 	// metricsProviders is a module for the metrics.
-	metricsProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
+	metricsProviders = fx.Options(fx.Provide(
 		ProvideMetricsConfig,
 		NewOtelMetrics,
 		fx.Annotate(
@@ -35,7 +35,7 @@ var (
 	))
 
 	// metricsInvokes is a module for the metrics.
-	metricsInvokes = fx.Options( //nolint:gochecknoglobals
+	metricsInvokes = fx.Options(
 		fx.Invoke(registerHooks),
 		fx.Invoke(func(m *OtelMetrics, server contracts.EchoHTTPServer) {
 			m.RegisterMetricsEndpoint(server)

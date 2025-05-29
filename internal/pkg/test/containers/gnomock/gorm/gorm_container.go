@@ -101,30 +101,34 @@ func (g *gnoMockGormContainer) Cleanup(_ context.Context) error {
 	return gnomock.Stop(g.container)
 }
 
+// updateOptions updates the default options with provided options.
+func (g *gnoMockGormContainer) updateOptions(option *contracts.PostgresContainerOptions) {
+	if option.ImageName != "" {
+		g.defaultOptions.ImageName = option.ImageName
+	}
+	if option.Host != "" {
+		g.defaultOptions.Host = option.Host
+	}
+	if option.Port != "" {
+		g.defaultOptions.Port = option.Port
+	}
+	if option.UserName != "" {
+		g.defaultOptions.UserName = option.UserName
+	}
+	if option.Password != "" {
+		g.defaultOptions.Password = option.Password
+	}
+	if option.Tag != "" {
+		g.defaultOptions.Tag = option.Tag
+	}
+}
+
 // getRunOptions gets the run options.
 func (g *gnoMockGormContainer) getRunOptions(
 	opts ...*contracts.PostgresContainerOptions,
 ) gnomock.Preset {
-	if len(opts) > 0 && opts[0] != nil {
-		option := opts[0]
-		if option.ImageName != "" {
-			g.defaultOptions.ImageName = option.ImageName
-		}
-		if option.Host != "" {
-			g.defaultOptions.Host = option.Host
-		}
-		if option.Port != "" {
-			g.defaultOptions.Port = option.Port
-		}
-		if option.UserName != "" {
-			g.defaultOptions.UserName = option.UserName
-		}
-		if option.Password != "" {
-			g.defaultOptions.Password = option.Password
-		}
-		if option.Tag != "" {
-			g.defaultOptions.Tag = option.Tag
-		}
+	if len(opts) > 0 {
+		g.updateOptions(opts[0])
 	}
 
 	p := postgres.Preset(

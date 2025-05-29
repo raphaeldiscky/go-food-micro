@@ -6,7 +6,7 @@ import (
 )
 
 // Module is a fx.Options that provides the health check module.
-var Module = fx.Options( //nolint:gochecknoglobals
+var Module = fx.Options(
 	fx.Provide(
 		NewHealthService,
 		NewHealthCheckEndpoint,

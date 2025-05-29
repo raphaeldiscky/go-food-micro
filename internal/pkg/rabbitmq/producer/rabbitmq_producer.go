@@ -80,24 +80,13 @@ func (r *rabbitMQProducer) getProducerConfigurationByMessage(
 	return r.producersConfigurations[messageType.String()]
 }
 
-// PublishMessageWithTopicName publishes a message to the rabbitmq with topic name.
-func (r *rabbitMQProducer) PublishMessageWithTopicName(
-	ctx context.Context,
+// getExchangeAndRoutingKey determines the exchange and routing key for message publishing.
+func (r *rabbitMQProducer) getExchangeAndRoutingKey(
 	message types2.IMessage,
-	meta metadata.Metadata,
+	producerConfiguration *configurations.RabbitMQProducerConfiguration,
 	topicOrExchangeName string,
-) error {
-	producerConfiguration := r.getProducerConfigurationByMessage(message)
-
-	if producerConfiguration == nil {
-		producerConfiguration = configurations.NewDefaultRabbitMQProducerConfiguration(
-			message,
-		)
-	}
-
+) (string, string) {
 	var exchange string
-	var routingKey string
-
 	if topicOrExchangeName != "" {
 		exchange = topicOrExchangeName
 	} else if producerConfiguration != nil && producerConfiguration.ExchangeOptions.Name != "" {
@@ -106,12 +95,89 @@ func (r *rabbitMQProducer) PublishMessageWithTopicName(
 		exchange = utils.GetTopicOrExchangeName(message)
 	}
 
+	var routingKey string
 	if producerConfiguration != nil && producerConfiguration.RoutingKey != "" {
 		routingKey = producerConfiguration.RoutingKey
 	} else {
 		routingKey = utils.GetRoutingKey(message)
 	}
 
+	return exchange, routingKey
+}
+
+// setupChannel sets up the channel for publishing with confirmation.
+func (r *rabbitMQProducer) setupChannel(
+	producerConfiguration *configurations.RabbitMQProducerConfiguration,
+	exchange string,
+) (*amqp091.Channel, chan amqp091.Confirmation, error) {
+	if r.connection == nil {
+		return nil, nil, errors.New("connection is nil")
+	}
+
+	if r.connection.IsClosed() {
+		return nil, nil, errors.New("connection is closed, wait for connection alive")
+	}
+
+	channel, err := r.connection.Channel()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if err := r.ensureExchange(producerConfiguration, channel, exchange); err != nil {
+		channel.Close()
+
+		return nil, nil, err
+	}
+
+	if err := channel.Confirm(false); err != nil {
+		channel.Close()
+
+		return nil, nil, err
+	}
+
+	confirms := make(chan amqp091.Confirmation)
+	channel.NotifyPublish(confirms)
+
+	return channel, confirms, nil
+}
+
+// publishMessageToChannel publishes a message to the channel and handles confirmation.
+func (r *rabbitMQProducer) publishMessageToChannel(
+	ctx context.Context,
+	channel *amqp091.Channel,
+	confirms chan amqp091.Confirmation,
+	exchange string,
+	routingKey string,
+	props amqp091.Publishing,
+) error {
+	if err := channel.PublishWithContext(ctx, exchange, routingKey, true, false, props); err != nil {
+		return err
+	}
+
+	if confirmed := <-confirms; !confirmed.Ack {
+		return errors.New("ack not confirmed")
+	}
+
+	return nil
+}
+
+// PublishMessageWithTopicName publishes a message to the rabbitmq with topic name.
+func (r *rabbitMQProducer) PublishMessageWithTopicName(
+	ctx context.Context,
+	message types2.IMessage,
+	meta metadata.Metadata,
+	topicOrExchangeName string,
+) error {
+	producerConfiguration := r.getProducerConfigurationByMessage(message)
+	if producerConfiguration == nil {
+		producerConfiguration = configurations.NewDefaultRabbitMQProducerConfiguration(message)
+	}
+
+	exchange, routingKey := r.getExchangeAndRoutingKey(
+		message,
+		producerConfiguration,
+		topicOrExchangeName,
+	)
 	meta = r.getMetadata(message, meta)
 
 	producerOptions := &producer3.ProducerTracingOptions{
@@ -136,23 +202,7 @@ func (r *rabbitMQProducer) PublishMessageWithTopicName(
 		producerOptions,
 	)
 
-	// https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/go/publisher_confirms.go
-	if r.connection == nil {
-		return producer3.FinishProducerSpan(
-			beforeProduceSpan,
-			errors.New("connection is nil"),
-		)
-	}
-
-	if r.connection.IsClosed() {
-		return producer3.FinishProducerSpan(
-			beforeProduceSpan,
-			errors.New("connection is closed, wait for connection alive"),
-		)
-	}
-
-	// create a unique channel on the connection and in the end close the channel
-	channel, err := r.connection.Channel()
+	channel, confirms, err := r.setupChannel(producerConfiguration, exchange)
 	if err != nil {
 		return producer3.FinishProducerSpan(beforeProduceSpan, err)
 	}
@@ -162,24 +212,12 @@ func (r *rabbitMQProducer) PublishMessageWithTopicName(
 		}
 	}()
 
-	err = r.ensureExchange(producerConfiguration, channel, exchange)
-	if err != nil {
-		return producer3.FinishProducerSpan(beforeProduceSpan, err)
-	}
-
-	if err := channel.Confirm(false); err != nil {
-		return producer3.FinishProducerSpan(beforeProduceSpan, err)
-	}
-
-	confirms := make(chan amqp091.Confirmation)
-	channel.NotifyPublish(confirms)
-
 	props := amqp091.Publishing{
 		CorrelationId:   messageHeader.GetCorrelationId(meta),
 		MessageId:       message.GeMessageId(),
 		Timestamp:       time.Now(),
 		Headers:         metadata.MetadataToMap(meta),
-		Type:            message.GetMessageTypeName(), // typeMapper.GetTypeName(message) - just message type name not full type name because in other side package name for type could be different
+		Type:            message.GetMessageTypeName(),
 		ContentType:     serializedObj.ContentType,
 		Body:            serializedObj.Data,
 		DeliveryMode:    producerConfiguration.DeliveryMode,
@@ -190,34 +228,17 @@ func (r *rabbitMQProducer) PublishMessageWithTopicName(
 		ContentEncoding: producerConfiguration.ContentEncoding,
 	}
 
-	err = channel.PublishWithContext(
-		ctx,
-		exchange,
-		routingKey,
-		true,
-		false,
-		props,
-	)
-	if err != nil {
+	if err := r.publishMessageToChannel(ctx, channel, confirms, exchange, routingKey, props); err != nil {
 		return producer3.FinishProducerSpan(beforeProduceSpan, err)
 	}
 
-	if confirmed := <-confirms; !confirmed.Ack {
-		return producer3.FinishProducerSpan(
-			beforeProduceSpan,
-			errors.New("ack not confirmed"),
-		)
-	}
-
-	if len(r.isProducedNotifications) > 0 {
-		for _, notification := range r.isProducedNotifications {
-			if notification != nil {
-				notification(message)
-			}
+	for _, notification := range r.isProducedNotifications {
+		if notification != nil {
+			notification(message)
 		}
 	}
 
-	return producer3.FinishProducerSpan(beforeProduceSpan, err)
+	return producer3.FinishProducerSpan(beforeProduceSpan, nil)
 }
 
 // getMetadata gets the metadata.

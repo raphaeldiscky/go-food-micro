@@ -11,6 +11,8 @@ import (
 
 // RabbitmqContainerOptionsDecorator is a decorator for the rabbitmq container options.
 var RabbitmqContainerOptionsDecorator = func(t *testing.T, ctx context.Context) interface{} {
+	t.Helper()
+
 	return func(c *config.RabbitmqOptions, logger logger.Logger) (*config.RabbitmqOptions, error) {
 		rabbitmqHostOptions, err := NewRabbitMQTestContainers(
 			logger,

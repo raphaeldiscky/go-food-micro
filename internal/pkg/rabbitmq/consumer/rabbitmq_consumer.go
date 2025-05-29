@@ -102,63 +102,112 @@ func (r *rabbitMQConsumer) IsConsumed(h func(message messagingTypes.IMessage)) {
 	r.isConsumedNotifications = append(r.isConsumedNotifications, h)
 }
 
-// Start starts the rabbitmq consumer.
-func (r *rabbitMQConsumer) Start(ctx context.Context) error {
-	// https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/go/receive.go
-	if r.connection == nil {
-		return errors.New("connection is nil")
-	}
-
-	var exchange string
-	var queue string
-	var routingKey string
-
+// getExchangeName returns the exchange name for the consumer.
+func (r *rabbitMQConsumer) getExchangeName() string {
 	if r.rabbitmqConsumerOptions.ExchangeOptions.Name != "" {
-		exchange = r.rabbitmqConsumerOptions.ExchangeOptions.Name
-	} else {
-		exchange = utils.GetTopicOrExchangeNameFromType(r.rabbitmqConsumerOptions.ConsumerMessageType)
+		return r.rabbitmqConsumerOptions.ExchangeOptions.Name
 	}
 
+	return utils.GetTopicOrExchangeNameFromType(r.rabbitmqConsumerOptions.ConsumerMessageType)
+}
+
+// getRoutingKey returns the routing key for the consumer.
+func (r *rabbitMQConsumer) getRoutingKey() string {
 	if r.rabbitmqConsumerOptions.BindingOptions.RoutingKey != "" {
-		routingKey = r.rabbitmqConsumerOptions.BindingOptions.RoutingKey
-	} else {
-		routingKey = utils.GetRoutingKeyFromType(r.rabbitmqConsumerOptions.ConsumerMessageType)
+		return r.rabbitmqConsumerOptions.BindingOptions.RoutingKey
 	}
 
+	return utils.GetRoutingKeyFromType(r.rabbitmqConsumerOptions.ConsumerMessageType)
+}
+
+// getQueueName returns the queue name for the consumer.
+func (r *rabbitMQConsumer) getQueueName() string {
 	if r.rabbitmqConsumerOptions.QueueOptions.Name != "" {
-		queue = r.rabbitmqConsumerOptions.QueueOptions.Name
-	} else {
-		queue = utils.GetQueueNameFromType(r.rabbitmqConsumerOptions.ConsumerMessageType)
+		return r.rabbitmqConsumerOptions.QueueOptions.Name
 	}
 
-	r.reConsumeOnDropConnection(ctx)
+	return utils.GetQueueNameFromType(r.rabbitmqConsumerOptions.ConsumerMessageType)
+}
 
-	// get a new channel on the connection - channel is unique for each consumer
-	ch, err := r.connection.Channel()
+// setupChannel sets up the channel for the consumer.
+func (r *rabbitMQConsumer) setupChannel() error {
+	var err error
+	r.channel, err = r.connection.Channel()
 	if err != nil {
 		return rabbitmqerrors.ErrDisconnected
 	}
-	r.channel = ch
 
-	// The prefetch count tells the Rabbit connection how many messages to retrieve from the server per request.
 	prefetchCount := r.rabbitmqConsumerOptions.ConcurrencyLimit * r.rabbitmqConsumerOptions.PrefetchCount
-	if err := r.channel.Qos(prefetchCount, 0, false); err != nil {
-		return err
-	}
 
-	err = r.channel.ExchangeDeclare(
+	return r.channel.Qos(prefetchCount, 0, false)
+}
+
+// setupExchange sets up the exchange for the consumer.
+func (r *rabbitMQConsumer) setupExchange(exchange string) error {
+	return r.channel.ExchangeDeclare(
 		exchange,
 		string(r.rabbitmqConsumerOptions.ExchangeOptions.Type),
 		r.rabbitmqConsumerOptions.ExchangeOptions.Durable,
 		r.rabbitmqConsumerOptions.ExchangeOptions.AutoDelete,
 		false,
 		r.rabbitmqConsumerOptions.NoWait,
-		r.rabbitmqConsumerOptions.ExchangeOptions.Args)
-	if err != nil {
+		r.rabbitmqConsumerOptions.ExchangeOptions.Args,
+	)
+}
+
+// handleMessages handles messages from the channel.
+func (r *rabbitMQConsumer) handleMessages(
+	ctx context.Context,
+	msgs <-chan amqp091.Delivery,
+	chClosedCh chan *amqp091.Error,
+) {
+	for {
+		select {
+		case <-ctx.Done():
+			r.logger.Info("shutting down consumer")
+
+			return
+		case amqErr := <-chClosedCh:
+			// This case handles the event of closed channel e.g. abnormal shutdown
+			r.logger.Errorf("AMQP Channel closed due to: %s", amqErr)
+
+			// Re-set channel to receive notifications
+			chClosedCh = make(chan *amqp091.Error, 1)
+			r.channel.NotifyClose(chClosedCh)
+		case msg, ok := <-msgs:
+			if !ok {
+				r.logger.Info("consumer connection dropped")
+
+				return
+			}
+
+			// handle received message and remove message form queue with a manual ack
+			r.handleReceived(ctx, msg)
+		}
+	}
+}
+
+// Start starts the rabbitmq consumer.
+func (r *rabbitMQConsumer) Start(ctx context.Context) error {
+	if r.connection == nil {
+		return errors.New("connection is nil")
+	}
+
+	exchange := r.getExchangeName()
+	routingKey := r.getRoutingKey()
+	queue := r.getQueueName()
+
+	r.reConsumeOnDropConnection(ctx)
+
+	if err := r.setupChannel(); err != nil {
 		return err
 	}
 
-	_, err = r.channel.QueueDeclare(
+	if err := r.setupExchange(exchange); err != nil {
+		return err
+	}
+
+	_, err := r.channel.QueueDeclare(
 		queue,
 		r.rabbitmqConsumerOptions.QueueOptions.Durable,
 		r.rabbitmqConsumerOptions.QueueOptions.AutoDelete,
@@ -182,7 +231,7 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 	msgs, err := r.channel.Consume(
 		queue,
 		r.rabbitmqConsumerOptions.ConsumerId,
-		r.rabbitmqConsumerOptions.AutoAck, // When autoAck (also known as noAck) is true, the server will acknowledge deliveries to this consumer prior to writing the delivery to the network. When autoAck is true, the consumer should not call Delivery.Ack.
+		r.rabbitmqConsumerOptions.AutoAck,
 		r.rabbitmqConsumerOptions.QueueOptions.Exclusive,
 		r.rabbitmqConsumerOptions.NoLocal,
 		r.rabbitmqConsumerOptions.NoWait,
@@ -193,44 +242,12 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 	}
 
 	// This channel will receive a notification when a channel closed event happens.
-	// https://github.com/streadway/amqp/blob/v1.0.0/channel.go#L447
-	// https://github.com/rabbitmq/amqp091-go/blob/main/example_client_test.go#L75
 	chClosedCh := make(chan *amqp091.Error, 1)
-	ch.NotifyClose(chClosedCh)
+	r.channel.NotifyClose(chClosedCh)
 
-	// https://blog.boot.dev/golang/connecting-to-rabbitmq-in-golang/
-	// https://levelup.gitconnected.com/connecting-a-service-in-golang-to-a-rabbitmq-server-835294d8c914
-	// https://www.ribice.ba/golang-rabbitmq-client/
-	// https://medium.com/@dhanushgopinath/automatically-recovering-rabbitmq-connections-in-go-applications-7795a605ca59
-	// https://github.com/rabbitmq/amqp091-go/blob/main/_examples/pubsub/pubsub.go
 	for i := 0; i < r.rabbitmqConsumerOptions.ConcurrencyLimit; i++ {
 		r.logger.Infof("Processing messages on thread %d", i)
-		go func() {
-			for {
-				select {
-				case <-ctx.Done():
-					r.logger.Info("shutting down consumer")
-
-					return
-				case amqErr := <-chClosedCh:
-					// This case handles the event of closed channel e.g. abnormal shutdown
-					r.logger.Errorf("AMQP Channel closed due to: %s", amqErr)
-
-					// Re-set channel to receive notifications
-					chClosedCh = make(chan *amqp091.Error, 1)
-					ch.NotifyClose(chClosedCh)
-				case msg, ok := <-msgs:
-					if !ok {
-						r.logger.Info("consumer connection dropped")
-
-						return
-					}
-
-					// handle received message and remove message form queue with a manual ack
-					r.handleReceived(ctx, msg)
-				}
-			}
-		}()
+		go r.handleMessages(ctx, msgs, chClosedCh)
 	}
 
 	return nil

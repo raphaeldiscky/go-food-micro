@@ -12,6 +12,7 @@ import (
 
 // TestQuery tests the query.
 func TestQuery(t *testing.T) {
+	t.Helper()
 	query := &GetProductByID{
 		Query:     NewQueryByT[*GetProductByID](),
 		ProductID: uuid.NewV4(),

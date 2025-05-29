@@ -13,6 +13,8 @@ import (
 
 // TestDomainErr tests the domain error.
 func TestDomainErr(t *testing.T) {
+	t.Helper()
+
 	domainErr := NewDomainProblemDetail(
 		http.StatusBadRequest,
 		"Order with id '1' already completed",
@@ -28,6 +30,8 @@ func TestDomainErr(t *testing.T) {
 
 // TestApplicationErr tests the application error.
 func TestApplicationErr(t *testing.T) {
+	t.Helper()
+
 	applicationErr := NewApplicationProblemDetail(
 		http.StatusBadRequest,
 		"application_exceptions error",
@@ -43,6 +47,8 @@ func TestApplicationErr(t *testing.T) {
 
 // TestBadRequestErr tests the bad request error.
 func TestBadRequestErr(t *testing.T) {
+	t.Helper()
+
 	badRequestError := NewBadRequestProblemDetail("bad-request error", "stack")
 
 	assert.Equal(t, "bad-request error", badRequestError.GetDetail())
@@ -54,6 +60,8 @@ func TestBadRequestErr(t *testing.T) {
 
 // TestParseError tests the parse error.
 func TestParseError(t *testing.T) {
+	t.Helper()
+
 	// Bad-Request ProblemDetail
 	badRequestError := errors.WrapIf(
 		customErrors.NewBadRequestError("bad-request error"),
@@ -72,6 +80,8 @@ func TestParseError(t *testing.T) {
 
 // TestMap tests the map.
 func TestMap(t *testing.T) {
+	t.Helper()
+
 	Map[customErrors.BadRequestError](func(err customErrors.BadRequestError) ProblemDetailErr {
 		return NewBadRequestProblemDetail(err.Message(), err.Error())
 	})

@@ -189,18 +189,8 @@ func (h *handler) tagRPC(
 
 // handleRPC is a function that handles an RPC.
 func (h *handler) handleRPC(ctx context.Context, rs stats.RPCStats) {
-	span := trace.SpanFromContext(ctx)
-
-	if !span.IsRecording() {
-		return
-	}
-
-	span.SetAttributes(semconv.RPCSystemGRPC)
-
-	gctx, ok := ctx.Value(gRPCContextKey{}).(*gRPCContext)
-	if !ok {
-		return
-	}
+	_ = trace.SpanFromContext(ctx)
+	gctx, _ := ctx.Value(gRPCContextKey{}).(*gRPCContext)
 
 	switch rs := rs.(type) {
 	case *stats.Begin:

@@ -28,6 +28,8 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
+var defaultLogger = defaultlogger.GetLogger()
+
 // TestAddRabbitMQ tests the add rabbitmq.
 func TestAddRabbitMQ(t *testing.T) {
 	testUtils.SkipCI(t)
@@ -170,7 +172,10 @@ func (t *TestMessageHandler) Handle(
 	if !ok {
 		return fmt.Errorf("failed to type assert message to *ProducerConsumerMessage")
 	}
-	fmt.Println(message)
+	defaultLogger.Infof(
+		"Message received: %s",
+		string(message.Data),
+	)
 
 	return nil
 }
@@ -184,7 +189,7 @@ func (t *TestMessageHandler2) Handle(
 	consumeContext types3.MessageConsumeContext,
 ) error {
 	message := consumeContext.Message()
-	fmt.Println(message)
+	defaultLogger.Infof("Message received: %s", message)
 
 	return nil
 }

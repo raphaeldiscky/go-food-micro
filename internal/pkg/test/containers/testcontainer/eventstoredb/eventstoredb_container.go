@@ -50,6 +50,8 @@ func (g *eventstoredbTestContainers) PopulateContainerOptions(
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
 ) (*config.EventStoreDbOptions, error) {
+	t.Helper()
+
 	containerReq := g.getRunOptions(options...)
 
 	// @TODO: Using Parallel Container
@@ -107,6 +109,7 @@ func (g *eventstoredbTestContainers) Start(
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
 ) (*esdb.Client, error) {
+	t.Helper()
 	eventstoredbOptions, err := g.PopulateContainerOptions(ctx, t, options...)
 	if err != nil {
 		return nil, err

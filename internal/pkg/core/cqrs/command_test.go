@@ -15,6 +15,8 @@ import (
 
 // TestCommand tests the command.
 func TestCommand(t *testing.T) {
+	t.Helper()
+
 	command := &CreateProductTest{
 		Command:     NewCommandByT[*CreateProductTest](),
 		ProductID:   uuid.NewV4(),

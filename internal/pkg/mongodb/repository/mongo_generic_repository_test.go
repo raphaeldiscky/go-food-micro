@@ -51,6 +51,7 @@ type mongoGenericRepositoryTest struct {
 
 // TestMongoGenericRepository tests the mongodb generic repository.
 func TestMongoGenericRepository(t *testing.T) {
+	t.Helper()
 	suite.Run(
 		t,
 		&mongoGenericRepositoryTest{

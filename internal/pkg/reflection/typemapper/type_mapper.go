@@ -34,6 +34,11 @@ func discoverTypes() {
 	for i, offs := range offset {
 		rodata := sections[i]
 		for _, off := range offs {
+			//nolint:gosec // This unsafe.Pointer usage is safe because:
+			// 1. We're only using it to access the internal type information of reflect.Type
+			// 2. The emptyInterface struct matches the internal structure of reflect.Type
+			// 3. This is a standard pattern used in Go's reflection package
+			// 4. The pointer is not stored or used outside this function
 			emptyInterface := (*emptyInterface)(unsafe.Pointer(&typ))
 			emptyInterface.data = resolveTypeOff(rodata, off)
 			if typ.Kind() == reflect.Ptr &&

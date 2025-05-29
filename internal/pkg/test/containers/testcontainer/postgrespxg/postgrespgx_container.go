@@ -50,11 +50,13 @@ func (g *postgresPgxTestContainers) PopulateContainerOptions(
 	t *testing.T,
 	options ...*contracts.PostgresContainerOptions,
 ) (*postgres.PostgresPgxOptions, error) {
+	t.Helper()
+
 	// https://github.com/testcontainers/testcontainers-go
 	// https://dev.to/remast/go-integration-tests-using-testcontainers-9o5
 	containerReq := g.getRunOptions(options...)
 
-	// TODO: Using Parallel Container
+	// @TODO: Using Parallel Container
 	dbContainer, err := testcontainers.GenericContainer(
 		ctx,
 		testcontainers.GenericContainerRequest{
@@ -104,6 +106,8 @@ func (g *postgresPgxTestContainers) Start(
 	t *testing.T,
 	options ...*contracts.PostgresContainerOptions,
 ) (*postgres.Pgx, error) {
+	t.Helper()
+
 	postgresPgxOptions, err := g.PopulateContainerOptions(ctx, t, options...)
 	if err != nil {
 		return nil, err
@@ -126,37 +130,35 @@ func (g *postgresPgxTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// updateOptions updates the default options with provided options.
+func (g *postgresPgxTestContainers) updateOptions(option *contracts.PostgresContainerOptions) {
+	if option.ImageName != "" {
+		g.defaultOptions.ImageName = option.ImageName
+	}
+	if option.Host != "" {
+		g.defaultOptions.Host = option.Host
+	}
+	if option.Port != "" {
+		g.defaultOptions.Port = option.Port
+	}
+	if option.UserName != "" {
+		g.defaultOptions.UserName = option.UserName
+	}
+	if option.Password != "" {
+		g.defaultOptions.Password = option.Password
+	}
+	if option.Tag != "" {
+		g.defaultOptions.Tag = option.Tag
+	}
+}
+
 // getRunOptions gets the run options.
 func (g *postgresPgxTestContainers) getRunOptions(
 	opts ...*contracts.PostgresContainerOptions,
 ) testcontainers.ContainerRequest {
-	if len(opts) > 0 && opts[0] != nil {
-		option := opts[0]
-		if option.ImageName != "" {
-			g.defaultOptions.ImageName = option.ImageName
-		}
-		if option.Host != "" {
-			g.defaultOptions.Host = option.Host
-		}
-		if option.Port != "" {
-			g.defaultOptions.Port = option.Port
-		}
-		if option.UserName != "" {
-			g.defaultOptions.UserName = option.UserName
-		}
-		if option.Password != "" {
-			g.defaultOptions.Password = option.Password
-		}
-		if option.Tag != "" {
-			g.defaultOptions.Tag = option.Tag
-		}
+	if len(opts) > 0 {
+		g.updateOptions(opts[0])
 	}
-
-	// hostFreePort, err := freeport.GetFreePort()
-	// if err != nil {
-	//	log.Fatal(err)
-	//}
-	// g.defaultOptions.HostPort = hostFreePort
 
 	containerReq := testcontainers.ContainerRequest{
 		Image:        fmt.Sprintf("%s:%s", g.defaultOptions.ImageName, g.defaultOptions.Tag),

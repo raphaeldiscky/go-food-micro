@@ -48,6 +48,7 @@ func (g *redisTestContainers) PopulateContainerOptions(
 	t *testing.T,
 	options ...*contracts.RedisContainerOptions,
 ) (*redis2.RedisOptions, error) {
+	t.Helper()
 	// https://github.com/testcontainers/testcontainers-go
 	// https://dev.to/remast/go-integration-tests-using-testcontainers-9o5
 	containerReq := g.getRunOptions(options...)

@@ -243,6 +243,35 @@ func (r *gormGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 	return *new(TEntity), nil
 }
 
+// updateEntity updates an entity directly when types match.
+func (r *gormGenericRepository[TDataModel, TEntity]) updateEntity(
+	ctx context.Context,
+	entity TEntity,
+) error {
+	return r.db.WithContext(ctx).Save(entity).Error
+}
+
+// updateWithMapping updates an entity using mapping between types.
+func (r *gormGenericRepository[TDataModel, TEntity]) updateWithMapping(
+	ctx context.Context,
+	entity TEntity,
+) error {
+	dataModel, err := mapper.Map[TDataModel](entity)
+	if err != nil {
+		return err
+	}
+	if err := r.db.WithContext(ctx).Save(dataModel).Error; err != nil {
+		return err
+	}
+	e, err := mapper.Map[TEntity](dataModel)
+	if err != nil {
+		return err
+	}
+	reflectionHelper.SetValue[TEntity](entity, e)
+
+	return nil
+}
+
 // Update updates an entity in the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) Update(
 	ctx context.Context,
@@ -250,28 +279,12 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Update(
 ) error {
 	dataModelType := typeMapper.GetGenericTypeByT[TDataModel]()
 	modelType := typeMapper.GetGenericTypeByT[TEntity]()
+
 	if modelType == dataModelType {
-		err := r.db.WithContext(ctx).Save(entity).Error
-		if err != nil {
-			return err
-		}
-	} else {
-		dataModel, err := mapper.Map[TDataModel](entity)
-		if err != nil {
-			return err
-		}
-		err = r.db.WithContext(ctx).Save(dataModel).Error
-		if err != nil {
-			return err
-		}
-		e, err := mapper.Map[TEntity](dataModel)
-		if err != nil {
-			return err
-		}
-		reflectionHelper.SetValue[TEntity](entity, e)
+		return r.updateEntity(ctx, entity)
 	}
 
-	return nil
+	return r.updateWithMapping(ctx, entity)
 }
 
 // UpdateAll updates all the entities in the database.

@@ -28,7 +28,9 @@ import (
 // with a real *testing.T instance and shared across all test cases. This is the established pattern
 // used throughout the codebase for integration tests.
 //
-//nolint:gochecknoglobals // fixture is a global variable because it needs to be initialized in TestUpdateProduct
+// fixture is a global variable because it needs to be initialized in TestUpdateProduct.
+//
+//nolint:gochecknoglobals // This is an established pattern for integration tests
 var fixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestUpdateProduct(t *testing.T) {

@@ -14,14 +14,14 @@ import (
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
-	Module = fx.Module( //nolint:gochecknoglobals
+	Module = fx.Module(
 		"oteltracingfx",
 		tracingProviders,
 		tracingInvokes,
 	)
 
 	// tracingProviders is a module for the tracing.
-	tracingProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
+	tracingProviders = fx.Options(fx.Provide(
 		ProvideTracingConfig,
 		NewOtelTracing,
 		fx.Annotate(

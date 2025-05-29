@@ -16,7 +16,7 @@ import (
 // Module provided to fxlog
 // https://uber-go.github.io/fx/modules.html
 var (
-	Module = fx.Module( //nolint:gochecknoglobals
+	Module = fx.Module(
 		"customechofx",
 
 		echoProviders,
@@ -26,7 +26,7 @@ var (
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
 	// - execute its func only if it requested.
-	echoProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
+	echoProviders = fx.Options(fx.Provide(
 		config.ProvideConfig,
 		// https://uber-go.github.io/fx/value-groups/consume.html#with-annotated-functions
 		// https://uber-go.github.io/fx/annotate.html
@@ -40,7 +40,7 @@ var (
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
 	// - return value will be discarded and can not be provided.
-	echoInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
+	echoInvokes = fx.Options(fx.Invoke(registerHooks))
 )
 
 // registerHooks registers the hooks.

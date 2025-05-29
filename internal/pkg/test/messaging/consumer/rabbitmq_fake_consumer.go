@@ -3,11 +3,13 @@ package consumer
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 )
+
+var defaultLogger = defaultlogger.GetLogger()
 
 // RabbitMQFakeTestConsumerHandler represents a rabbitmq fake test consumer handler.
 type RabbitMQFakeTestConsumerHandler[T any] struct {
@@ -26,7 +28,7 @@ func NewRabbitMQFakeTestConsumerHandlerWithHypothesis[T any](
 
 // NewRabbitMQFakeTestConsumerHandler creates a new rabbitmq fake test consumer handler.
 func NewRabbitMQFakeTestConsumerHandler[T any]() *RabbitMQFakeTestConsumerHandler[T] {
-	fmt.Println("NewRabbitMQFakeTestConsumerHandler created.")
+	defaultLogger.Info("NewRabbitMQFakeTestConsumerHandler created.")
 
 	return &RabbitMQFakeTestConsumerHandler[T]{}
 }

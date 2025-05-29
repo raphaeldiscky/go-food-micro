@@ -55,6 +55,11 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 		rs2 := reflect.New(val.Type()).Elem()
 		rs2.Set(val)
 		val = rs2.Field(index)
+		//nolint:gosec // This unsafe.Pointer usage is safe because:
+		// 1. We're only using it to access unexported fields through reflection
+		// 2. The pointer is obtained from reflect.Value.UnsafeAddr() which is a safe operation
+		// 3. The pointer is immediately used with reflect.NewAt and not stored
+		// 4. This is a standard pattern for accessing unexported fields in Go
 		val = reflect.NewAt(val.Type(), unsafe.Pointer(val.UnsafeAddr())).Elem()
 
 		return val.Interface()

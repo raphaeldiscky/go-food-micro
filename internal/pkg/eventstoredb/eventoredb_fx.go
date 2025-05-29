@@ -15,7 +15,7 @@ import (
 var (
 	// ModuleFunc provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
-	ModuleFunc = func(projectionBuilderConstructor interface{}) fx.Option { //nolint:gochecknoglobals
+	ModuleFunc = func(projectionBuilderConstructor interface{}) fx.Option {
 		return fx.Module(
 			"eventstoredbfx",
 			fx.Provide(projectionBuilderConstructor),
@@ -27,7 +27,7 @@ var (
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
 	// - execute its func only if it requested.
-	eventstoreProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
+	eventstoreProviders = fx.Options(fx.Provide(
 		config.ProvideConfig,
 		NewEsdbSerializer,
 		NewEventStoreDB,
@@ -40,7 +40,7 @@ var (
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
 	// - return value will be discarded and can not be provided.
-	eventstoreInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
+	eventstoreInvokes = fx.Options(fx.Invoke(registerHooks))
 )
 
 // registerHooks registers hooks for the event store db.

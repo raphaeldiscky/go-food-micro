@@ -55,6 +55,8 @@ func (g *rabbitmqTestContainers) PopulateContainerOptions(
 	t *testing.T,
 	options ...*contracts.RabbitMQContainerOptions,
 ) (*config.RabbitmqHostOptions, error) {
+	t.Helper()
+
 	maxRetries := 5
 	for i := 0; i < maxRetries; i++ {
 		containerReq := g.getRunOptions(options...)
@@ -146,31 +148,36 @@ func (g *rabbitmqTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// updateOptions updates the default options with provided options.
+func (g *rabbitmqTestContainers) updateOptions(option *contracts.RabbitMQContainerOptions) {
+	if option.ImageName != "" {
+		g.defaultOptions.ImageName = option.ImageName
+	}
+	if option.Host != "" {
+		g.defaultOptions.Host = option.Host
+	}
+	if len(option.Ports) > 0 {
+		g.defaultOptions.Ports = option.Ports
+	}
+	if option.UserName != "" {
+		g.defaultOptions.UserName = option.UserName
+	}
+	if option.Password != "" {
+		g.defaultOptions.Password = option.Password
+	}
+	if option.Tag != "" {
+		g.defaultOptions.Tag = option.Tag
+	}
+}
+
 // getRunOptions gets the run options.
 func (g *rabbitmqTestContainers) getRunOptions(
 	opts ...*contracts.RabbitMQContainerOptions,
 ) testcontainers.ContainerRequest {
-	if len(opts) > 0 && opts[0] != nil {
-		option := opts[0]
-		if option.ImageName != "" {
-			g.defaultOptions.ImageName = option.ImageName
-		}
-		if option.Host != "" {
-			g.defaultOptions.Host = option.Host
-		}
-		if len(option.Ports) > 0 {
-			g.defaultOptions.Ports = option.Ports
-		}
-		if option.UserName != "" {
-			g.defaultOptions.UserName = option.UserName
-		}
-		if option.Password != "" {
-			g.defaultOptions.Password = option.Password
-		}
-		if option.Tag != "" {
-			g.defaultOptions.Tag = option.Tag
-		}
+	if len(opts) > 0 {
+		g.updateOptions(opts[0])
 	}
+
 	containerReq := testcontainers.ContainerRequest{
 		Image: fmt.Sprintf(
 			"%s:%s",

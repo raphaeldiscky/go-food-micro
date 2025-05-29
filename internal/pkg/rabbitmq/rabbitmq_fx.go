@@ -22,7 +22,7 @@ import (
 var (
 	// ModuleFunc provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
-	ModuleFunc = func(rabbitMQConfigurationConstructor interface{}) fx.Option { //nolint:gochecknoglobals
+	ModuleFunc = func(rabbitMQConfigurationConstructor interface{}) fx.Option {
 		return fx.Module(
 			"rabbitmqfx",
 			fx.Provide(rabbitMQConfigurationConstructor),

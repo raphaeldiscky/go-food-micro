@@ -24,7 +24,7 @@ var (
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
 	// - execute its func only if it requested.
-	grpcProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
+	grpcProviders = fx.Options(fx.Provide(
 		config.ProvideConfig,
 		// https://uber-go.github.io/fx/value-groups/consume.html#with-annotated-functions
 		// https://uber-go.github.io/fx/annotate.html
@@ -40,7 +40,7 @@ var (
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
 	// - return value will be discarded and can not be provided.
-	grpcInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
+	grpcInvokes = fx.Options(fx.Invoke(registerHooks))
 )
 
 // registerHooks is a function that registers the grpc module.
