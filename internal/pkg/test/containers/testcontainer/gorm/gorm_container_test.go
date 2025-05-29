@@ -78,6 +78,9 @@ func Test_Builtin_Postgres_Container(t *testing.T) {
 		User:     "postgres",
 	}
 	db, err := gormPostgres.NewGorm(gormOptions)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	assert.NotNil(t, db)
 }

@@ -125,7 +125,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 			fmt.Sprintf("subscription to all '%s' started.", subscriptionOption.SubscriptionId),
 		)
 
-		for true {
+		for {
 			event := stream.Recv()
 
 			if event.SubscriptionDropped != nil {

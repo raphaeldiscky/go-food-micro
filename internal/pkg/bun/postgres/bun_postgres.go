@@ -10,8 +10,6 @@ import (
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
-
-	_ "github.com/uptrace/bun/driver/pgdriver"
 )
 
 func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {

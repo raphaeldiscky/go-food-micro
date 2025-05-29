@@ -104,6 +104,10 @@ func (g *postgresPgxTestContainers) Start(
 
 	db, err := postgres.NewPgx(postgresPgxOptions)
 
+	if err != nil {
+		return nil, err
+	}
+
 	return db, nil
 }
 

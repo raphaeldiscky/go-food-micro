@@ -59,6 +59,9 @@ func NewGorm(cfg *GormOptions) (*gorm.DB, error) {
 	// add tracing to gorm
 	if cfg.EnableTracing {
 		err = gormDb.Use(tracing.NewPlugin())
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return gormDb, nil

@@ -75,7 +75,7 @@ func GetRoutingKeyFromType(message reflect.Type) string {
 }
 
 func RegisterCustomMessageTypesToRegistrty(typesMap map[string]types.IMessage) {
-	if typesMap == nil || len(typesMap) == 0 {
+	if len(typesMap) == 0 {
 		return
 	}
 

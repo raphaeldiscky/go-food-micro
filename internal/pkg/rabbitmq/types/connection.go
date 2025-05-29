@@ -16,7 +16,6 @@ type internalConnection struct {
 	*amqp091.Connection
 	isConnected       bool
 	errConnectionChan chan error
-	errChannelChan    chan error
 	reconnectedChan   chan struct{}
 }
 
@@ -75,7 +74,7 @@ func (c *internalConnection) ReconnectedChannel() chan struct{} {
 }
 
 func (c *internalConnection) ReConnect() error {
-	if c.Connection.IsClosed() == false {
+	if !c.Connection.IsClosed() {
 		return nil
 	}
 
@@ -127,25 +126,21 @@ func (c *internalConnection) connect() error {
 
 func (c *internalConnection) handleReconnecting() {
 	defer errorUtils.HandlePanic()
-	for {
-		select {
-		case err := <-c.errConnectionChan:
+	for err := range c.errConnectionChan {
+		if err != nil {
+			defaultLogger.GetLogger().
+				Info("Rabbitmq Connection Reconnecting started")
+			err := c.connect()
 			if err != nil {
 				defaultLogger.GetLogger().
-					Info("Rabbitmq Connection Reconnecting started")
-				err := c.connect()
-				if err != nil {
-					defaultLogger.GetLogger().
-						Error(fmt.Sprintf("Error in reconnecting, %s", err))
-					continue
-				}
-
-				defaultLogger.GetLogger().
-					Info("Rabbitmq Connection Reconnected")
-				c.isConnected = true
-				c.reconnectedChan <- struct{}{}
+					Error(fmt.Sprintf("Error in reconnecting, %s", err))
 				continue
 			}
+
+			defaultLogger.GetLogger().
+				Info("Rabbitmq Connection Reconnected")
+			c.isConnected = true
+			c.reconnectedChan <- struct{}{}
 		}
 	}
 }

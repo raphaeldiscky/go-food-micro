@@ -42,7 +42,6 @@ var retryOptions = []retry.Option{
 type rabbitMQConsumer struct {
 	rabbitmqConsumerOptions *configurations.RabbitMQConsumerConfiguration
 	connection              types.IConnection
-	handlerDefault          consumer.ConsumerHandler
 	channel                 *amqp091.Channel
 	deliveryRoutines        chan struct{} // chan should init before using channel
 	messageSerializer       serializer.MessageSerializer
@@ -231,7 +230,7 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 
 func (r *rabbitMQConsumer) Stop() error {
 	defer func() {
-		if r.channel != nil && r.channel.IsClosed() == false {
+		if r.channel != nil && !r.channel.IsClosed() {
 			r.channel.Cancel(r.rabbitmqConsumerOptions.ConsumerId, false)
 			r.channel.Close()
 		}
@@ -264,25 +263,24 @@ func (r *rabbitMQConsumer) GetName() string {
 func (r *rabbitMQConsumer) reConsumeOnDropConnection(ctx context.Context) {
 	go func() {
 		defer errorutils.HandlePanic()
-		for {
-			select {
-			case reconnect := <-r.connection.ReconnectedChannel():
-				if reflect.ValueOf(reconnect).IsValid() {
-					r.logger.Info("reconsume_on_drop_connection started")
-					err := r.Start(ctx)
-					if err != nil {
-						r.logger.Error(
-							"reconsume_on_drop_connection finished with error: %v",
-							err,
-						)
-						continue
-					}
-					r.logger.Info(
-						"reconsume_on_drop_connection finished successfully",
-					)
-					return
-				}
+		for reconnect := range r.connection.ReconnectedChannel() {
+			if !reflect.ValueOf(reconnect).IsValid() {
+				continue
 			}
+
+			r.logger.Info("reconsume_on_drop_connection started")
+			err := r.Start(ctx)
+			if err != nil {
+				r.logger.Error(
+					"reconsume_on_drop_connection finished with error: %v",
+					err,
+				)
+				continue
+			}
+			r.logger.Info(
+				"reconsume_on_drop_connection finished successfully",
+			)
+			return
 		}
 	}()
 }
@@ -328,7 +326,7 @@ func (r *rabbitMQConsumer) handleReceived(
 	var nack func()
 
 	// if auto-ack is enabled we should not call Ack method manually it could create some unexpected errors
-	if r.rabbitmqConsumerOptions.AutoAck == false {
+	if !r.rabbitmqConsumerOptions.AutoAck {
 		ack = func() {
 			if err := delivery.Ack(false); err != nil {
 				r.logger.Error(
@@ -380,10 +378,10 @@ func (r *rabbitMQConsumer) handle(
 		r.logger.Error(
 			"[rabbitMQConsumer.Handle] error in handling consume message of RabbitmqMQ, prepare for nacking message",
 		)
-		if nack != nil && r.rabbitmqConsumerOptions.AutoAck == false {
+		if nack != nil && !r.rabbitmqConsumerOptions.AutoAck {
 			nack()
 		}
-	} else if err == nil && ack != nil && r.rabbitmqConsumerOptions.AutoAck == false {
+	} else if err == nil && ack != nil && !r.rabbitmqConsumerOptions.AutoAck {
 		ack()
 	}
 }
@@ -396,7 +394,7 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 	err := retry.Do(func() error {
 		var lastHandler pipeline.ConsumerHandlerFunc
 
-		if r.pipelines != nil && len(r.pipelines) > 0 {
+		if len(r.pipelines) > 0 {
 			reversPipes := r.reversOrder(r.pipelines)
 			lastHandler = func(ctx context.Context) error {
 				handler := handler.(consumer.ConsumerHandler)
@@ -483,7 +481,7 @@ func (r *rabbitMQConsumer) deserializeData(
 		contentType = "application/json"
 	}
 
-	if body == nil || len(body) == 0 {
+	if len(body) == 0 {
 		r.logger.Error("message body is nil or empty in the consumer")
 		return nil
 	}
@@ -522,14 +520,4 @@ func (r *rabbitMQConsumer) reversOrder(
 	}
 
 	return reverseValues
-}
-
-func (r *rabbitMQConsumer) existsPipeType(p reflect.Type) bool {
-	for _, pipe := range r.pipelines {
-		if reflect.TypeOf(pipe) == p {
-			return true
-		}
-	}
-
-	return false
 }

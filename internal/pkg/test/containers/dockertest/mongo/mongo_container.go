@@ -74,12 +74,9 @@ func (g *mongoDockerTest) PopulateContainerOptions(
 	t.Cleanup(func() { _ = resource.Close() })
 
 	go func() {
-		for {
-			select {
-			case <-ctx.Done():
-				_ = resource.Close()
-				return
-			}
+		for range ctx.Done() {
+			_ = resource.Close()
+			return
 		}
 	}()
 

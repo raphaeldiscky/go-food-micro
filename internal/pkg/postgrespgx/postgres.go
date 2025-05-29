@@ -56,8 +56,7 @@ func NewPgx(cfg *PostgresPgxOptions) (*Pgx, error) {
 		return nil, err
 	}
 
-	var dataSourceName string
-	dataSourceName = fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
+	dataSourceName := fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s",
 		cfg.Host,
 		cfg.Port,
 		cfg.User,

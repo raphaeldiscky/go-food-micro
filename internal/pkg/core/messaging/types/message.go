@@ -18,7 +18,6 @@ type Message struct {
 	MessageId string    `json:"messageId,omitempty"`
 	Created   time.Time `json:"created"`
 	EventType string    `json:"eventType"`
-	isMessage bool
 }
 
 func NewMessage(messageId string) *Message {

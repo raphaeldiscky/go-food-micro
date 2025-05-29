@@ -173,7 +173,7 @@ func (e *EsdbSerializer) ResolvedEventsToStreamEvents(
 	var streamEvents []*models.StreamEvent
 
 	linq.From(resolveEvents).WhereT(func(item *esdb.ResolvedEvent) bool {
-		return strings.HasPrefix(item.Event.EventType, "$") == false
+		return !strings.HasPrefix(item.Event.EventType, "$")
 	}).SelectT(func(item *esdb.ResolvedEvent) *models.StreamEvent {
 		event, err := e.ResolvedEventToStreamEvent(item)
 		if err != nil {
@@ -206,6 +206,10 @@ func (e *EsdbSerializer) Serialize(
 	}
 
 	id, err := uuid.NewV4()
+	if err != nil {
+		return nil, err
+	}
+
 	return &esdb.EventData{
 		EventID:     id,
 		EventType:   typeMapper.GetTypeName(data),
@@ -230,6 +234,10 @@ func (e *EsdbSerializer) SerializeObject(
 	}
 
 	id, err := uuid.NewV4()
+	if err != nil {
+		return nil, err
+	}
+
 	return &esdb.EventData{
 		EventID:     id,
 		EventType:   typeMapper.GetTypeName(data),

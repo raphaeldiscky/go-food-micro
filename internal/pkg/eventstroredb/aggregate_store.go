@@ -278,7 +278,7 @@ func (a *esdbAggregateStore[T]) getStreamEvents(
 	pageSize := 500
 	var streamEvents []*models.StreamEvent
 
-	for true {
+	for {
 		events, err := a.eventStore.ReadEvents(
 			streamId,
 			position,

@@ -60,6 +60,6 @@ func TestMap(t *testing.T) {
 		return NewBadRequestProblemDetail(err.Message(), err.Error())
 	})
 	s := ResolveProblemDetail(customErrors.NewBadRequestError(""))
-	_, ok := s.(ProblemDetailErr)
-	assert.True(t, ok)
+	assert.NotNil(t, s)
+	assert.IsType(t, (*ProblemDetailErr)(nil), s)
 }

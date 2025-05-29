@@ -76,6 +76,9 @@ func (g *gnoMockGormContainer) Start(
 	}
 
 	db, err := gormPostgres.NewGorm(gormOptions)
+	if err != nil {
+		return nil, err
+	}
 
 	return db, nil
 }

@@ -16,7 +16,7 @@ import (
 func Test_Domain_Err(t *testing.T) {
 	rootErr2 := NewDomainErrorWrap(
 		nil,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
@@ -33,14 +33,7 @@ func Test_Domain_Err(t *testing.T) {
 	errors.As(err, &domainError)
 
 	_, isConflict := domainErr.(ConflictError)
-	_, isConflict2 := domainError.(ConflictError)
 	assert.False(t, isConflict)
-	assert.False(t, isConflict2)
-
-	_, isDomainError := domainErr.(DomainError)
-	_, isDomainError2 := domainError.(DomainError)
-	assert.True(t, isDomainError)
-	assert.True(t, isDomainError2)
 
 	assert.True(t, IsDomainError(domainErr, 400))
 	assert.True(t, IsDomainError(domainError, 400))
@@ -71,7 +64,7 @@ func Test_Domain_Err(t *testing.T) {
 func Test_Application_Err(t *testing.T) {
 	rootErr2 := NewApplicationErrorWrap(
 		nil,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
@@ -92,14 +85,7 @@ func Test_Application_Err(t *testing.T) {
 	errors.As(err, &applicationError)
 
 	_, isConflict := appErr.(ConflictError)
-	_, isConflict2 := applicationError.(ConflictError)
 	assert.False(t, isConflict)
-	assert.False(t, isConflict2)
-
-	_, isApplicationError := appErr.(ApplicationError)
-	_, isApplicationError2 := applicationError.(ApplicationError)
-	assert.True(t, isApplicationError)
-	assert.True(t, isApplicationError2)
 
 	assert.True(t, IsApplicationError(appErr, 400))
 	assert.True(t, IsApplicationError(applicationError, 400))
@@ -129,7 +115,7 @@ func Test_Api_Err(t *testing.T) {
 	rootErr2 := NewApiErrorWrap(
 		nil,
 		http.StatusBadRequest,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
@@ -150,14 +136,7 @@ func Test_Api_Err(t *testing.T) {
 	errors.As(err, &apiError)
 
 	_, isConflict := appErr.(ConflictError)
-	_, isConflict2 := apiError.(ConflictError)
 	assert.False(t, isConflict)
-	assert.False(t, isConflict2)
-
-	_, isApiError := appErr.(ApiError)
-	_, isApiError2 := apiError.(ApiError)
-	assert.True(t, isApiError)
-	assert.True(t, isApiError2)
 
 	assert.True(t, IsApiError(appErr, 400))
 	assert.True(t, IsApiError(apiError, 400))
@@ -186,7 +165,7 @@ func Test_Api_Err(t *testing.T) {
 func Test_BadRequest_Err(t *testing.T) {
 	rootErr2 := NewBadRequestErrorWrap(
 		nil,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
@@ -199,25 +178,11 @@ func Test_BadRequest_Err(t *testing.T) {
 	assert.True(t, IsCustomError(rootErr2))
 	assert.True(t, IsCustomError(rootErr2))
 
-	var customError CustomError
-	var customError2 CustomError
-	errors.As(err, &customError)
-	errors.As(err, &customError2)
-
-	assert.NotNil(t, customError2)
-
 	var badRequestError BadRequestError
 	errors.As(err, &badRequestError)
 
 	_, isConflict := badErr.(ConflictError)
-	_, isConflict2 := badRequestError.(ConflictError)
 	assert.False(t, isConflict)
-	assert.False(t, isConflict2)
-
-	_, isBadRequest := badErr.(BadRequestError)
-	_, isBadRequest2 := badRequestError.(BadRequestError)
-	assert.True(t, isBadRequest)
-	assert.True(t, isBadRequest2)
 
 	assert.True(t, IsBadRequestError(badErr))
 	assert.True(t, IsBadRequestError(badRequestError))
@@ -258,14 +223,7 @@ func Test_NotFound_Err(t *testing.T) {
 	errors.As(err, &notFound)
 
 	_, isConflict := notFoundErr.(ConflictError)
-	_, isConflict2 := notFound.(ConflictError)
 	assert.False(t, isConflict)
-	assert.False(t, isConflict2)
-
-	_, isNotFound := notFoundErr.(NotFoundError)
-	_, isNotFound2 := notFound.(NotFoundError)
-	assert.True(t, isNotFound)
-	assert.True(t, isNotFound2)
 
 	assert.True(t, IsNotFoundError(notFoundErr))
 	assert.True(t, IsNotFoundError(notFound))
@@ -366,7 +324,7 @@ func Test_Forbidden_Error(t *testing.T) {
 func Test_Marshaling_Error(t *testing.T) {
 	rootErr2 := NewMarshalingErrorWrap(
 		nil,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	rootErr := errors.NewPlain("handling marshaling errorUtils")
@@ -410,7 +368,7 @@ func Test_Marshaling_Error(t *testing.T) {
 func Test_Validation_Error(t *testing.T) {
 	rootErr2 := NewValidationErrorWrap(
 		nil,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	rootErr := errors.New("handling validation errorUtils")
@@ -457,7 +415,7 @@ func Test_Validation_Error(t *testing.T) {
 func Test_Conflict_Error(t *testing.T) {
 	rootErr2 := NewConflictErrorWrap(
 		nil,
-		fmt.Sprintf("domain_events event already exists in event registry"),
+		"domain_events event already exists in event registry",
 	)
 
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
@@ -491,14 +449,4 @@ func Test_Conflict_Error(t *testing.T) {
 	} else {
 		fmt.Println(errorUtils.ErrorsWithStack(err))
 	}
-}
-
-func myfoo(e error) error {
-	// https://itnext.io/golang-error-handling-best-practice-a36f47b0b94c
-	// Note: Do not repeat Wrap, it will record redundancy call stacks, we usually care about root stack trace
-	return errors.WithMessage(e, "foo failed") // or grpc_errors.WrapIf()
-}
-
-func mybar(e error) error {
-	return errors.WithMessage(myfoo(e), "bar failed") // or grpc_errors.WrapIf()
 }

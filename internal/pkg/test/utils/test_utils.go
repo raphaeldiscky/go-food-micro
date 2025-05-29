@@ -27,13 +27,13 @@ func WaitUntilConditionMet(conditionToMet func() bool, timeout ...time.Duration)
 	startTime := time.Now()
 	timeOutExpired := false
 	meet := conditionToMet()
-	for meet == false {
+	for !meet {
 		if timeOutExpired {
 			return errors.New("Condition not met for the test, timeout exceeded")
 		}
 		time.Sleep(time.Second * 2)
 		meet = conditionToMet()
-		timeOutExpired = time.Now().Sub(startTime) > timeOutTime
+		timeOutExpired = time.Since(startTime) > timeOutTime
 	}
 
 	return nil

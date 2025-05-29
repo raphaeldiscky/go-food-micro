@@ -99,6 +99,10 @@ func GetListQueryFromCtx(c echo.Context) (*ListQuery, error) {
 		String("orderBy", &orderBy).
 		BindError() // returns first binding error
 
+	if err != nil {
+		return nil, err
+	}
+
 	if err = q.SetPage(page); err != nil {
 		return nil, err
 	}

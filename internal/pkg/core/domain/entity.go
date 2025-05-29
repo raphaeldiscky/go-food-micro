@@ -73,3 +73,12 @@ func (e *Entity) SetEntityType(entityType string) {
 func (e *Entity) SetId(id uuid.UUID) {
 	e.id = id
 }
+
+func (e *Entity) ToDataModel() *EntityDataModel {
+	return &EntityDataModel{
+		ID:         e.id,
+		EntityType: e.entityType,
+		CreatedAt:  e.createdAt,
+		UpdatedAt:  e.updatedAt,
+	}
+}

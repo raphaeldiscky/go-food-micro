@@ -67,7 +67,7 @@ func registerHooks(
 	rabbitmqOptions *config.RabbitmqOptions,
 	logger logger.Logger,
 ) {
-	if rabbitmqOptions.AutoStart == false {
+	if !rabbitmqOptions.AutoStart {
 		return
 	}
 

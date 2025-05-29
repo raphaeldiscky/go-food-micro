@@ -15,7 +15,3 @@ type MyString string
 func init() {
 	registerType((*MyString)(nil))
 }
-
-func makeInstance(name string) interface{} {
-	return reflect.New(typeRegistry[name]).Elem().Interface()
-}

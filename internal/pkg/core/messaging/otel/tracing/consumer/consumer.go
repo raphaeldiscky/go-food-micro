@@ -100,7 +100,7 @@ func getTraceOptions(
 		semconv.MessagingSystemKey.String(consumerTracingOptions.MessagingSystem),
 	}
 
-	if consumerTracingOptions.OtherAttributes != nil && len(consumerTracingOptions.OtherAttributes) > 0 {
+	if len(consumerTracingOptions.OtherAttributes) > 0 {
 		attrs = append(attrs, consumerTracingOptions.OtherAttributes...)
 	}
 

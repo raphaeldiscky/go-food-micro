@@ -124,8 +124,7 @@ func getTraceOptions(
 		semconv.MessagingOperationKey.String("send"),
 	}
 
-	if producerTracingOptions.OtherAttributes != nil &&
-		len(producerTracingOptions.OtherAttributes) > 0 {
+	if len(producerTracingOptions.OtherAttributes) > 0 {
 		attrs = append(attrs, producerTracingOptions.OtherAttributes...)
 	}
 

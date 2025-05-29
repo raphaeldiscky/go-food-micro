@@ -172,12 +172,7 @@ func (p Pipeline1) Handle(
 ) error {
 	fmt.Println("PipelineBehaviourTest.Handled")
 
-	fmt.Println(
-		fmt.Sprintf(
-			"pipeline got a message with id '%s'",
-			consumerContext.Message().GeMessageId(),
-		),
-	)
+	fmt.Printf("pipeline got a message with id '%s'\n", consumerContext.Message().GeMessageId())
 
 	err := next(ctx)
 	if err != nil {

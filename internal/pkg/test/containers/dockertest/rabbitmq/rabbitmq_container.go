@@ -13,13 +13,11 @@ import (
 
 	dockertest "github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
-	amqp091 "github.com/rabbitmq/amqp091-go"
 )
 
 type rabbitmqDockerTest struct {
 	resource       *dockertest.Resource
 	defaultOptions *contracts.RabbitMQContainerOptions
-	pool           *dockertest.Pool
 	logger         logger.Logger
 }
 
@@ -74,9 +72,17 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	hostPort, err := strconv.Atoi(
 		resource.GetPort(fmt.Sprintf("%s/tcp", g.defaultOptions.Ports[0])),
 	) // 5672
+
+	if err != nil {
+		return nil, err
+	}
 	httpPort, err := strconv.Atoi(
 		resource.GetPort(fmt.Sprintf("%s/tcp", g.defaultOptions.Ports[1])),
 	) // 15672
+
+	if err != nil {
+		return nil, err
+	}
 
 	g.defaultOptions.HostPort = hostPort
 	g.defaultOptions.HttpPort = httpPort
@@ -149,78 +155,4 @@ func (g *rabbitmqDockerTest) getRunOptions(
 	}
 
 	return runOptions
-}
-
-func isConnectable(
-	logger logger.Logger,
-	options *contracts.RabbitMQContainerOptions,
-) bool {
-	conn, err := amqp091.Dial(
-		fmt.Sprintf(
-			"amqp://%s:%s@%s:%d",
-			options.UserName,
-			options.Password,
-			options.Host,
-			options.HostPort,
-		),
-	)
-	if err != nil {
-		logError(
-			logger,
-			options.UserName,
-			options.Password,
-			options.Host,
-			options.HostPort,
-		)
-
-		return false
-	}
-
-	defer conn.Close()
-
-	if err != nil || (conn != nil && conn.IsClosed()) {
-		logError(
-			logger,
-			options.UserName,
-			options.Password,
-			options.Host,
-			options.HostPort,
-		)
-
-		return false
-	}
-	logger.Infof(
-		"Opened rabbitmq connection on host: %s",
-		fmt.Sprintf(
-			"amqp://%s:%s@%s:%d",
-			options.UserName,
-			options.Password,
-			options.Host,
-			options.HostPort,
-		),
-	)
-
-	return true
-}
-
-func logError(
-	logger logger.Logger,
-	userName string,
-	password string,
-	host string,
-	hostPort int,
-) {
-	// we should not use `t.Error` or `t.Errorf` for logging errors because it will `fail` our test at the end and, we just should use logs without error like log.Error (not log.Fatal)
-	logger.Errorf(
-		fmt.Sprintf(
-			"Error in creating rabbitmq connection with %s",
-			fmt.Sprintf(
-				"amqp://%s:%s@%s:%d",
-				userName,
-				password,
-				host,
-				hostPort,
-			),
-		),
-	)
 }

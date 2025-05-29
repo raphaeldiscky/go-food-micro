@@ -28,7 +28,7 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 	if v.Kind() == reflect.Ptr {
 		val := v.Elem()
 		field := val.Field(index)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return nil
 		}
 		// for all exported fields (public)
@@ -42,7 +42,7 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 		// for all exported fields (public)
 		val := v
 		field := val.Field(index)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return nil
 		}
 		if field.CanInterface() {
@@ -65,7 +65,7 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 	if v.Kind() == reflect.Ptr {
 		val := v.Elem()
 		field := val.FieldByName(name)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return nil
 		}
 		// for all exported fields (public)
@@ -79,7 +79,7 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 		// for all exported fields (public)
 		val := v
 		field := val.FieldByName(name)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return nil
 		}
 		if field.CanInterface() {
@@ -104,7 +104,7 @@ func SetFieldValueByIndex[T any](object T, index int, value interface{}) {
 	if v.Kind() == reflect.Ptr {
 		val := v.Elem()
 		field := val.Field(index)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return
 		}
 		// for all exported fields (public)
@@ -118,7 +118,7 @@ func SetFieldValueByIndex[T any](object T, index int, value interface{}) {
 		// for all exported fields (public)
 		val := v
 		field := val.Field(index)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return
 		}
 		if field.CanInterface() && field.CanAddr() && field.CanSet() {
@@ -143,7 +143,7 @@ func SetFieldValueByName[T any](object T, name string, value interface{}) {
 	if v.Kind() == reflect.Ptr {
 		val := v.Elem()
 		field := val.FieldByName(name)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return
 		}
 		// for all exported fields (public)
@@ -157,7 +157,7 @@ func SetFieldValueByName[T any](object T, name string, value interface{}) {
 		// for all exported fields (public)
 		val := v
 		field := val.FieldByName(name)
-		if field.IsValid() == false {
+		if !field.IsValid() {
 			return
 		}
 		if field.CanInterface() && field.CanAddr() && field.CanSet() {

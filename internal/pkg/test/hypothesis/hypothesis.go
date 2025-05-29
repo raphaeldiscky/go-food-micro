@@ -23,10 +23,7 @@ type hypothesis[T any] struct {
 
 func (h *hypothesis[T]) Validate(ctx context.Context, message string, time time.Duration) {
 	err := testUtils.WaitUntilConditionMet(func() bool {
-		if reflect.ValueOf(h.data).IsZero() {
-			return false
-		}
-		return true
+		return !reflect.ValueOf(h.data).IsZero()
 	}, time)
 	if err != nil {
 		assert.FailNowf(h.t, "hypothesis validation failed, %s", message)

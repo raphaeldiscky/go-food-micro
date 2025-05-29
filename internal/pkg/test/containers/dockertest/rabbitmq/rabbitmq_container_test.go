@@ -15,8 +15,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	rabbitmq2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
-	rabbitmqConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
 	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging/consumer"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
@@ -39,7 +39,7 @@ func Test_RabbitMQ_Container(t *testing.T) {
 		fxlog.FxLogger,
 		core.Module,
 		rabbitmq2.ModuleFunc(
-			func(l logger.Logger) rabbitmqConfigurations.RabbitMQConfigurationBuilderFuc {
+			func(l logger.Logger) configurations.RabbitMQConfigurationBuilderFuc {
 				return func(builder configurations.RabbitMQConfigurationBuilder) {
 					builder.AddConsumer(
 						ProducerConsumerMessage{},

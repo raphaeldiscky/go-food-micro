@@ -59,7 +59,7 @@ func (g *grpcClient) WaitForAvailableConnection() error {
 	}, timeout)
 
 	state := g.conn.GetState()
-	fmt.Println(fmt.Sprintf("grpc state is:%s", state))
+	fmt.Printf("grpc state is:%s\n", state)
 	return err
 }
 
@@ -75,7 +75,7 @@ func waitUntilConditionMet(
 	startTime := time.Now()
 	timeOutExpired := false
 	meet := conditionToMet()
-	for meet == false {
+	for !meet {
 		if timeOutExpired {
 			return errors.New(
 				"grpc connection could not be established in the given timeout.",
@@ -83,7 +83,7 @@ func waitUntilConditionMet(
 		}
 		time.Sleep(time.Second * 2)
 		meet = conditionToMet()
-		timeOutExpired = time.Now().Sub(startTime) > timeOutTime
+		timeOutExpired = time.Since(startTime) > timeOutTime
 	}
 
 	return nil

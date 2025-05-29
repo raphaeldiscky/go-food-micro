@@ -149,6 +149,7 @@ func (c *mongoGenericRepositoryTest) Test_Get_By_Id() {
 
 	p := all.Items[0]
 	id, err := uuid.FromString(p.ID)
+	c.Require().NoError(err)
 	name := p.Name
 
 	testCases := []struct {
@@ -196,6 +197,7 @@ func (c *mongoGenericRepositoryTest) Test_Get_By_Id_With_Data_Model() {
 
 	p := all.Items[0]
 	id, err := uuid.FromString(p.ID)
+	c.Require().NoError(err)
 	name := p.Name
 
 	testCases := []struct {
@@ -408,6 +410,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 	c.Require().NoError(err)
 
 	single, err := c.productRepository.GetById(ctx, id)
+	c.Require().NoError(err)
 	c.Assert().Nil(single)
 }
 

@@ -12,7 +12,7 @@ func NewWorkersRunner(workers []Worker) *WorkersRunner {
 }
 
 func (r *WorkersRunner) Start(ctx context.Context) chan error {
-	if r.workers == nil || len(r.workers) == 0 {
+	if len(r.workers) == 0 {
 		return nil
 	}
 
@@ -40,7 +40,7 @@ func (r *WorkersRunner) Start(ctx context.Context) chan error {
 }
 
 func (r *WorkersRunner) Stop(ctx context.Context) error {
-	if r.workers == nil || len(r.workers) == 0 {
+	if len(r.workers) == 0 {
 		return nil
 	}
 

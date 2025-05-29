@@ -338,17 +338,21 @@ func MapsToAttributes(maps map[string]interface{}) []attribute.KeyValue {
 	var att []attribute.KeyValue
 
 	for key, val := range maps {
-		switch val.(type) {
+		switch v := val.(type) {
 		case string:
-			att = append(att, attribute.String(key, val.(string)))
+			att = append(att, attribute.String(key, v))
 		case int64:
-			att = append(att, attribute.Int64(key, val.(int64)))
-		case int, int32:
-			att = append(att, attribute.Int(key, val.(int)))
-		case float64, float32:
-			att = append(att, attribute.Float64(key, val.(float64)))
+			att = append(att, attribute.Int64(key, v))
+		case int:
+			att = append(att, attribute.Int(key, v))
+		case int32:
+			att = append(att, attribute.Int(key, int(v)))
+		case float64:
+			att = append(att, attribute.Float64(key, v))
+		case float32:
+			att = append(att, attribute.Float64(key, float64(v)))
 		case bool:
-			att = append(att, attribute.Bool(key, val.(bool)))
+			att = append(att, attribute.Bool(key, v))
 		}
 	}
 

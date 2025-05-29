@@ -112,6 +112,9 @@ func (g *gormTestContainers) Start(
 	}
 
 	db, err := gormPostgres.NewGorm(gormOptions)
+	if err != nil {
+		return nil, err
+	}
 
 	return db, nil
 }

@@ -17,7 +17,6 @@ import (
 
 type logrusLogger struct {
 	level      string
-	encoding   string
 	logger     *logrus.Logger
 	logOptions *config2.LogOptions
 }
