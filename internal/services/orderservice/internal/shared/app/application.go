@@ -19,10 +19,10 @@ func NewOrdersApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
-	logger logger.Logger,
-	environment environment.Environment,
+	log logger.Logger,
+	env environment.Environment,
 ) *OrdersApplication {
-	app := fxapp.NewApplication(providers, decorates, options, logger, environment)
+	app := fxapp.NewApplication(providers, decorates, options, log, env)
 
 	return &OrdersApplication{
 		OrdersServiceConfigurator: orders.NewOrdersServiceConfigurator(app),

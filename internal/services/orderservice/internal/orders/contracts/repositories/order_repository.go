@@ -1,3 +1,4 @@
+// Package repositories contains the order repository.
 package repositories
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 )
 
+// orderReadRepository is the read repository for the order.
 type orderReadRepository interface {
 	GetAllOrders(
 		ctx context.Context,
@@ -21,7 +23,7 @@ type orderReadRepository interface {
 		listQuery *utils.ListQuery,
 	) (*utils.ListResult[*readmodels.OrderReadModel], error)
 	GetOrderByID(ctx context.Context, uuid uuid.UUID) (*readmodels.OrderReadModel, error)
-	GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*readmodels.OrderReadModel, error)
+	GetOrderByOrderID(ctx context.Context, orderID uuid.UUID) (*readmodels.OrderReadModel, error)
 	CreateOrder(
 		ctx context.Context,
 		order *readmodels.OrderReadModel,
@@ -33,10 +35,12 @@ type orderReadRepository interface {
 	DeleteOrderByID(ctx context.Context, uuid uuid.UUID) error
 }
 
+// OrderElasticRepository is the elastic repository for the order.
 type OrderElasticRepository interface {
 	orderReadRepository
 }
 
+// OrderMongoRepository is the mongo repository for the order.
 type OrderMongoRepository interface {
 	orderReadRepository
 }

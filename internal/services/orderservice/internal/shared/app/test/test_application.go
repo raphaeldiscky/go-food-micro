@@ -24,7 +24,7 @@ func NewOrdersTestApplication(
 	decorates []interface{},
 	options []fx.Option,
 	logger logger.Logger,
-	environment environment.Environment,
+	env environment.Environment,
 ) *OrdersTestApplication {
 	testApp := test.NewTestApplication(
 		tb,
@@ -32,7 +32,7 @@ func NewOrdersTestApplication(
 		decorates,
 		options,
 		logger,
-		environment,
+		env,
 	)
 
 	orderApplication := &app.OrdersApplication{

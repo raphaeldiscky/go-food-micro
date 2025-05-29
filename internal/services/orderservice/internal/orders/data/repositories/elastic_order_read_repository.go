@@ -25,12 +25,14 @@ const (
 	orderIndex = "orders"
 )
 
+// elasticOrderReadRepository is the repository for the order read model.
 type elasticOrderReadRepository struct {
 	log           logger.Logger
 	elasticClient *elasticsearch.Client
 	tracer        tracing.AppTracer
 }
 
+// NewElasticOrderReadRepository creates a new elastic order read repository.
 func NewElasticOrderReadRepository(
 	log logger.Logger,
 	elasticClient *elasticsearch.Client,
@@ -39,6 +41,7 @@ func NewElasticOrderReadRepository(
 	return &elasticOrderReadRepository{log: log, elasticClient: elasticClient, tracer: tracer}
 }
 
+// GetAllOrders gets all orders.
 func (e elasticOrderReadRepository) GetAllOrders(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -76,7 +79,7 @@ func (e elasticOrderReadRepository) GetAllOrders(
 	defer res.Body.Close()
 
 	if res.IsError() {
-		return nil, errors.New(fmt.Sprintf("search error: %s", res.String()))
+		return nil, fmt.Errorf("search error: %s", res.String())
 	}
 
 	// Parse response
@@ -110,6 +113,7 @@ func (e elasticOrderReadRepository) GetAllOrders(
 	}, nil
 }
 
+// SearchOrders searches for orders.
 func (e elasticOrderReadRepository) SearchOrders(
 	ctx context.Context,
 	searchText string,
@@ -158,7 +162,7 @@ func (e elasticOrderReadRepository) SearchOrders(
 	defer res.Body.Close()
 
 	if res.IsError() {
-		return nil, errors.New(fmt.Sprintf("search error: %s", res.String()))
+		return nil, fmt.Errorf("search error: %s", res.String())
 	}
 
 	// Parse response
@@ -192,6 +196,7 @@ func (e elasticOrderReadRepository) SearchOrders(
 	}, nil
 }
 
+// GetOrderByID gets an order by id.
 func (e elasticOrderReadRepository) GetOrderByID(
 	ctx context.Context,
 	id uuid.UUID,
@@ -215,7 +220,7 @@ func (e elasticOrderReadRepository) GetOrderByID(
 	}
 
 	if res.IsError() {
-		return nil, errors.New(fmt.Sprintf("get error: %s", res.String()))
+		return nil, fmt.Errorf("get error: %s", res.String())
 	}
 
 	var result struct {
@@ -239,19 +244,20 @@ func (e elasticOrderReadRepository) GetOrderByID(
 	return &result.Source, nil
 }
 
-func (e elasticOrderReadRepository) GetOrderByOrderId(
+// GetOrderByOrderID gets an order by order id.
+func (e elasticOrderReadRepository) GetOrderByOrderID(
 	ctx context.Context,
-	orderId uuid.UUID,
+	orderID uuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
-	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.GetOrderByOrderId")
-	span.SetAttributes(attribute2.String("OrderId", orderId.String()))
+	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.GetOrderByOrderID")
+	span.SetAttributes(attribute2.String("OrderID", orderID.String()))
 	defer span.End()
 
 	// Build the search query
 	query := map[string]interface{}{
 		"query": map[string]interface{}{
 			"term": map[string]interface{}{
-				"orderId": orderId.String(),
+				"orderId": orderID.String(),
 			},
 		},
 	}
@@ -274,7 +280,7 @@ func (e elasticOrderReadRepository) GetOrderByOrderId(
 	defer res.Body.Close()
 
 	if res.IsError() {
-		return nil, errors.New(fmt.Sprintf("search error: %s", res.String()))
+		return nil, fmt.Errorf("search error: %s", res.String())
 	}
 
 	// Parse response
@@ -299,15 +305,16 @@ func (e elasticOrderReadRepository) GetOrderByOrderId(
 
 	e.log.Infow(
 		fmt.Sprintf(
-			"[elasticOrderReadRepository.GetOrderByOrderId] order with orderId %s loaded",
-			orderId.String(),
+			"[elasticOrderReadRepository.GetOrderByOrderID] order with orderId %s loaded",
+			orderID.String(),
 		),
-		logger.Fields{"Order": order, "OrderId": orderId},
+		logger.Fields{"Order": order, "OrderID": orderID},
 	)
 
 	return &order, nil
 }
 
+// CreateOrder creates an order.
 func (e elasticOrderReadRepository) CreateOrder(
 	ctx context.Context,
 	order *readmodels.OrderReadModel,
@@ -336,7 +343,7 @@ func (e elasticOrderReadRepository) CreateOrder(
 	defer res.Body.Close()
 
 	if res.IsError() {
-		return nil, errors.New(fmt.Sprintf("index error: %s", res.String()))
+		return nil, fmt.Errorf("index error: %s", res.String())
 	}
 
 	e.log.Infow(
@@ -347,6 +354,7 @@ func (e elasticOrderReadRepository) CreateOrder(
 	return order, nil
 }
 
+// UpdateOrder updates an order.
 func (e elasticOrderReadRepository) UpdateOrder(
 	ctx context.Context,
 	order *readmodels.OrderReadModel,
@@ -375,7 +383,7 @@ func (e elasticOrderReadRepository) UpdateOrder(
 	defer res.Body.Close()
 
 	if res.IsError() {
-		return nil, errors.New(fmt.Sprintf("index error: %s", res.String()))
+		return nil, fmt.Errorf("index error: %s", res.String())
 	}
 
 	e.log.Infow(
@@ -386,6 +394,7 @@ func (e elasticOrderReadRepository) UpdateOrder(
 	return order, nil
 }
 
+// DeleteOrderByID deletes an order by id.
 func (e elasticOrderReadRepository) DeleteOrderByID(ctx context.Context, id uuid.UUID) error {
 	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.DeleteOrderByID")
 	span.SetAttributes(attribute2.String("ID", id.String()))
@@ -407,7 +416,7 @@ func (e elasticOrderReadRepository) DeleteOrderByID(ctx context.Context, id uuid
 	}
 
 	if res.IsError() {
-		return errors.New(fmt.Sprintf("delete error: %s", res.String()))
+		return fmt.Errorf("delete error: %s", res.String())
 	}
 
 	e.log.Infow(

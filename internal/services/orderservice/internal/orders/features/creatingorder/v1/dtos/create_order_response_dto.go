@@ -7,5 +7,5 @@ import uuid "github.com/satori/go.uuid"
 
 // CreateOrderResponseDto is the response dto for the create order command.
 type CreateOrderResponseDto struct {
-	OrderId uuid.UUID `json:"ID"`
+	OrderID uuid.UUID `json:"ID"`
 }

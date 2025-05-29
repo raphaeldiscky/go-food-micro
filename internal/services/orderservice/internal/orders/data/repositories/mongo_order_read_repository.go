@@ -165,12 +165,12 @@ func (m mongoOrderReadRepository) GetOrderByID(
 	return &order, nil
 }
 
-// GetOrderByOrderId gets an order by order id from the database.
-func (m mongoOrderReadRepository) GetOrderByOrderId(
+// GetOrderByOrderID gets an order by order id from the database.
+func (m mongoOrderReadRepository) GetOrderByOrderID(
 	ctx context.Context,
 	orderId uuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
-	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByOrderId")
+	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByOrderID")
 	span.SetAttributes(attribute2.String("OrderId", orderId.String()))
 	defer span.End()
 

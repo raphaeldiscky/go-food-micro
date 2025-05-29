@@ -44,14 +44,14 @@ var grpcMetricsAttr = api.WithAttributes(
 
 // NewOrderGrpcService creates a new order grpc service.
 func NewOrderGrpcService(
-	logger logger.Logger,
-	validator *validator.Validate,
+	log logger.Logger,
+	val *validator.Validate,
 	ordersMetrics *contracts.OrdersMetrics,
 ) *OrderGrpcServiceServer {
 	return &OrderGrpcServiceServer{
 		ordersMetrics: ordersMetrics,
-		logger:        logger,
-		validator:     validator,
+		logger:        log,
+		validator:     val,
 	}
 }
 
@@ -99,16 +99,16 @@ func (o OrderGrpcServiceServer) CreateOrder(
 		o.logger.Errorw(
 			fmt.Sprintf(
 				"[ProductGrpcServiceServer_CreateOrder.Send] id: {%s}, err: %v",
-				command.OrderId,
+				command.OrderID,
 				err,
 			),
-			logger.Fields{"ID": command.OrderId},
+			logger.Fields{"ID": command.OrderID},
 		)
 
 		return nil, err
 	}
 
-	return &grpcOrderService.CreateOrderRes{OrderId: result.OrderId.String()}, nil
+	return &grpcOrderService.CreateOrderRes{OrderId: result.OrderID.String()}, nil
 }
 
 // GetOrderByID gets the order by id.
@@ -120,7 +120,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 	span.SetAttributes(attribute2.Object("Request", req))
 	o.ordersMetrics.GetOrderByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 
-	orderIdUUID, err := uuid.FromString(req.ID)
+	orderIDUUID, err := uuid.FromString(req.ID)
 	if err != nil {
 		badRequestErr := customErrors.NewBadRequestErrorWrap(
 			err,
@@ -136,7 +136,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 		return nil, badRequestErr
 	}
 
-	query, err := GetOrderByIDQueryV1.NewGetOrderByID(orderIdUUID)
+	query, err := GetOrderByIDQueryV1.NewGetOrderByID(orderIDUUID)
 	if err != nil {
 		validationErr := customErrors.NewValidationErrorWrap(
 			err,
@@ -194,7 +194,7 @@ func (o OrderGrpcServiceServer) SubmitOrder(
 
 // UpdateShoppingCart updates the shopping cart.
 func (o OrderGrpcServiceServer) UpdateShoppingCart(
-	ctx context.Context,
+	_ context.Context,
 	_ *grpcOrderService.UpdateShoppingCartReq,
 ) (*grpcOrderService.UpdateShoppingCartRes, error) {
 	return nil, nil

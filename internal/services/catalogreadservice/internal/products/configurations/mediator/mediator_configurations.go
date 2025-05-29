@@ -9,16 +9,16 @@ import (
 	mediatr "github.com/mehdihadeli/go-mediatr"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
-	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1"
-	createProductDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creating_product/v1/dtos"
-	deleteProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deleting_products/v1/commands"
-	getProductByIdDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/dtos"
-	getProductByIdQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/get_product_by_id/v1/queries"
-	getProductsDtoV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/dtos"
-	getProductsQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getting_products/v1/queries"
-	searchProductsDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/dtos"
-	searchProductsQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searching_products/v1/queries"
-	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updating_products/v1/commands"
+	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1"
+	createProductDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1/dtos"
+	deleteProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deletingproducts/v1/commands"
+	getProductByIdDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getproductbyid/v1/dtos"
+	getProductByIdQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/getproductbyid/v1/queries"
+	getProductsDtoV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/gettingproducts/v1/dtos"
+	getProductsQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/gettingproducts/v1/queries"
+	searchProductsDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searchingproducts/v1/dtos"
+	searchProductsQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/searchingproducts/v1/queries"
+	updateProductCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updatingproducts/v1/commands"
 )
 
 // ConfigProductsMediator configures the products mediator.

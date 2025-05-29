@@ -55,7 +55,7 @@ func (q *GetOrderByIDHandler) Handle(
 
 	if order == nil {
 		// get order by order-write id
-		order, err = q.orderMongoRepository.GetOrderByOrderId(ctx, query.ID)
+		order, err = q.orderMongoRepository.GetOrderByOrderID(ctx, query.ID)
 		if err != nil {
 			return nil, customErrors.NewApplicationErrorWrap(
 				err,

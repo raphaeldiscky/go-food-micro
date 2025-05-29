@@ -1,3 +1,4 @@
+// Package endpoints contains the get order by id endpoint.
 package endpoints
 
 import (
@@ -17,14 +18,17 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/queries"
 )
 
+// GetOrderByIDEndpoint is the get order by id endpoint.
 type GetOrderByIDEndpoint struct {
 	params.OrderRouteParams
 }
 
-func NewGetOrderByIDEndpoint(params params.OrderRouteParams) route.Endpoint {
-	return &GetOrderByIDEndpoint{OrderRouteParams: params}
+// NewGetOrderByIDEndpoint creates a new get order by id endpoint.
+func NewGetOrderByIDEndpoint(p params.OrderRouteParams) route.Endpoint {
+	return &GetOrderByIDEndpoint{OrderRouteParams: p}
 }
 
+// MapEndpoint maps the get order by id endpoint.
 func (ep *GetOrderByIDEndpoint) MapEndpoint() {
 	ep.OrdersGroup.GET("/:id", ep.handler())
 }

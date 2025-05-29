@@ -14,7 +14,7 @@ import (
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/commands"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
-	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integration_events"
+	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integrationevents"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 
@@ -150,7 +150,7 @@ var _ = Describe("Create Order Feature", func() {
 			It("Should retrieve created order in MongoDB Read database", func() {
 				// Use a utility function to wait until the order is available in MongoDB Read
 				err = testUtils.WaitUntilConditionMet(func() bool {
-					createdOrder, err = integrationFixture.OrderMongoRepository.GetOrderByOrderId(ctx, result.OrderId)
+					createdOrder, err = integrationFixture.OrderMongoRepository.GetOrderByOrderID(ctx, result.OrderId)
 					Expect(err).ToNot(HaveOccurred())
 					return createdOrder != nil
 				})

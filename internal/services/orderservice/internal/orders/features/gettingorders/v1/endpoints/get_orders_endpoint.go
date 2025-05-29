@@ -24,8 +24,8 @@ type getOrdersEndpoint struct {
 }
 
 // NewGetOrdersEndpoint creates a new get orders endpoint.
-func NewGetOrdersEndpoint(params params.OrderRouteParams) route.Endpoint {
-	return &getOrdersEndpoint{OrderRouteParams: params}
+func NewGetOrdersEndpoint(p params.OrderRouteParams) route.Endpoint {
+	return &getOrdersEndpoint{OrderRouteParams: p}
 }
 
 // MapEndpoint maps the endpoint.

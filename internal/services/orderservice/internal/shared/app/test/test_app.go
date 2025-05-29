@@ -127,10 +127,6 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 		os.Exit(1)
 	}
 
-	//// waiting for grpc endpoint becomes ready in the given timeout
-	// err = result.GrpcClient.WaitForAvailableConnection()
-	// require.NoError(t, err)
-
 	t.Cleanup(func() {
 		// short timeout for handling stop hooks
 		stopCtx, cancel := context.WithTimeout(context.Background(), duration)

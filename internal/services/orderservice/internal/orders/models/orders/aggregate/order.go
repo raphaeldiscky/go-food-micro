@@ -17,8 +17,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	domainExceptions "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/exceptions/domain_exceptions"
-	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/domain_events"
+	domainExceptions "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/exceptions/domainexceptions"
+	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/domainevents"
 	updateOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/updatingshoppingcard/v1/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/valueobject"
 )
@@ -100,7 +100,7 @@ func NewOrder(
 
 // UpdateShoppingCard updates the shopping card.
 func (o *Order) UpdateShoppingCard(shopItems []*valueobject.ShopItem) error {
-	event, err := updateOrderDomainEventsV1.NewShoppingCartUpdatedV1(shopItems)
+	event, err := updateOrderDomainEventsV1.NewShoppingCartUpdatedV1(o.ID(), shopItems)
 	if err != nil {
 		return err
 	}
@@ -118,7 +118,8 @@ func (o *Order) When(event domain.IDomainEvent) error {
 	switch evt := event.(type) {
 	case *createOrderDomainEventsV1.OrderCreatedV1:
 		return o.onOrderCreated(evt)
-
+	case *updateOrderDomainEventsV1.ShoppingCartUpdatedV1:
+		return o.onShoppingCartUpdated(evt)
 	default:
 		return errors.InvalidEventTypeError
 	}
@@ -136,7 +137,14 @@ func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) er
 	o.deliveryAddress = evt.DeliveryAddress
 	o.deliveredTime = evt.DeliveredTime
 	o.createdAt = evt.CreatedAt
-	o.SetId(evt.GetAggregateId()) // o.SetId(evt.ID)
+	o.SetId(evt.GetAggregateID())
+
+	return nil
+}
+
+// onShoppingCartUpdated handles the shopping cart updated event.
+func (o *Order) onShoppingCartUpdated(evt *updateOrderDomainEventsV1.ShoppingCartUpdatedV1) error {
+	o.shopItems = evt.ShopItems
 
 	return nil
 }
@@ -146,8 +154,8 @@ func (o *Order) ShopItems() []*valueobject.ShopItem {
 	return o.shopItems
 }
 
-// PaymentId returns the payment id.
-func (o *Order) PaymentId() uuid.UUID {
+// PaymentID returns the payment id.
+func (o *Order) PaymentID() uuid.UUID {
 	return o.paymentId
 }
 

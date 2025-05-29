@@ -1,4 +1,5 @@
-package createOrderV1
+// Package createorderendpointv1 contains the create order endpoint.
+package createorderendpointv1
 
 import (
 	"fmt"
@@ -18,14 +19,17 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
 )
 
+// createOrderEndpoint is the create order endpoint.
 type createOrderEndpoint struct {
 	params.OrderRouteParams
 }
 
-func NewCreteOrderEndpoint(params params.OrderRouteParams) route.Endpoint {
-	return &createOrderEndpoint{OrderRouteParams: params}
+// NewCreateOrderEndpoint creates a new create order endpoint.
+func NewCreateOrderEndpoint(p params.OrderRouteParams) route.Endpoint {
+	return &createOrderEndpoint{OrderRouteParams: p}
 }
 
+// MapEndpoint maps the create order endpoint.
 func (ep *createOrderEndpoint) MapEndpoint() {
 	ep.OrdersGroup.POST("", ep.handler())
 }
@@ -87,10 +91,10 @@ func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 			ep.Logger.Errorw(
 				fmt.Sprintf(
 					"[createOrderEndpoint_handler.Send] id: {%s}, err: %v",
-					command.OrderId,
+					command.OrderID,
 					err,
 				),
-				logger.Fields{"ID": command.OrderId},
+				logger.Fields{"ID": command.OrderID},
 			)
 
 			return err

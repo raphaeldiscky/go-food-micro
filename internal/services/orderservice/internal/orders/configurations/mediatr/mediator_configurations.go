@@ -1,3 +1,4 @@
+// Package mediatr contains the mediator configurations for the orderservice.
 package mediatr
 
 import (
@@ -17,29 +18,30 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
 )
 
+// ConfigOrdersMediator configures the orders mediator.
 func ConfigOrdersMediator(
-	logger logger.Logger,
+	log logger.Logger,
 	mongoOrderReadRepository repositories2.OrderMongoRepository,
 	orderAggregateStore store.AggregateStore[*aggregate.Order],
 	tracer tracing.AppTracer,
 ) error {
 	// https://stackoverflow.com/questions/72034479/how-to-implement-generic-interfaces
 	err := mediatr.RegisterRequestHandler[*createOrderCommandV1.CreateOrder, *createOrderDtosV1.CreateOrderResponseDto](
-		createOrderCommandV1.NewCreateOrderHandler(logger, orderAggregateStore, tracer),
+		createOrderCommandV1.NewCreateOrderHandler(log, orderAggregateStore, tracer),
 	)
 	if err != nil {
 		return err
 	}
 
 	err = mediatr.RegisterRequestHandler[*GetOrderByIDQueryV1.GetOrderByID, *GetOrderByIDDtosV1.GetOrderByIDResponseDto](
-		GetOrderByIDQueryV1.NewGetOrderByIDHandler(logger, mongoOrderReadRepository, tracer),
+		GetOrderByIDQueryV1.NewGetOrderByIDHandler(log, mongoOrderReadRepository, tracer),
 	)
 	if err != nil {
 		return err
 	}
 
 	err = mediatr.RegisterRequestHandler[*getOrdersQueryV1.GetOrders, *getOrdersDtosV1.GetOrdersResponseDto](
-		getOrdersQueryV1.NewGetOrdersHandler(logger, mongoOrderReadRepository, tracer),
+		getOrdersQueryV1.NewGetOrdersHandler(log, mongoOrderReadRepository, tracer),
 	)
 	if err != nil {
 		return err

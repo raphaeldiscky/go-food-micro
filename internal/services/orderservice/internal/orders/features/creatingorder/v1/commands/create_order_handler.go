@@ -1,4 +1,5 @@
-package createOrderCommandV1
+// Package createordercommandv1 contains the create order command.
+package createordercommandv1
 
 import (
 	"context"
@@ -16,13 +17,15 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/valueobject"
 )
 
+// CreateOrderHandler is the create order handler.
 type CreateOrderHandler struct {
-	log logger.Logger
-	// goland can't detect this generic type, but it is ok in vscode
+	log            logger.Logger
 	aggregateStore store.AggregateStore[*aggregate.Order]
 	tracer         tracing.AppTracer
+	// goland can't detect this generic type, but it is ok in vscode
 }
 
+// NewCreateOrderHandler creates a new create order handler.
 func NewCreateOrderHandler(
 	log logger.Logger,
 	aggregateStore store.AggregateStore[*aggregate.Order],
@@ -31,6 +34,7 @@ func NewCreateOrderHandler(
 	return &CreateOrderHandler{log: log, aggregateStore: aggregateStore, tracer: tracer}
 }
 
+// Handle handles the create order command.
 func (c *CreateOrderHandler) Handle(
 	ctx context.Context,
 	command *CreateOrder,
@@ -45,7 +49,7 @@ func (c *CreateOrderHandler) Handle(
 	}
 
 	order, err := aggregate.NewOrder(
-		command.OrderId,
+		command.OrderID,
 		shopItems,
 		command.AccountEmail,
 		command.DeliveryAddress,
@@ -67,11 +71,11 @@ func (c *CreateOrderHandler) Handle(
 		)
 	}
 
-	response := &dtos.CreateOrderResponseDto{OrderId: order.ID()}
+	response := &dtos.CreateOrderResponseDto{OrderID: order.ID()}
 
 	c.log.Infow(
-		fmt.Sprintf("[CreateOrderHandler.Handle] order with id: {%s} created", command.OrderId),
-		logger.Fields{"ProductID": command.OrderId},
+		fmt.Sprintf("[CreateOrderHandler.Handle] order with id: {%s} created", command.OrderID),
+		logger.Fields{"ProductID": command.OrderID},
 	)
 
 	return response, nil

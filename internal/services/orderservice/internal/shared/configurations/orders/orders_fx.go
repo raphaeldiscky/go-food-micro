@@ -1,3 +1,4 @@
+// Package orders contains the orderservice module.
 package orders
 
 import (
@@ -14,6 +15,7 @@ import (
 
 // https://pmihaylov.com/shared-components-go-microservices/
 
+// OrderServiceModule is the module for the orderservice.
 var OrderServiceModule = fx.Module(
 	"ordersfx",
 	// Shared Modules
@@ -29,6 +31,7 @@ var OrderServiceModule = fx.Module(
 
 // ref: https://github.com/open-telemetry/opentelemetry-go/blob/main/example/prometheus/main.go
 
+// configOrdersMetrics configures the orderservice metrics.
 func configOrdersMetrics(
 	cfg *config.Config,
 	meter metric.Meter,
@@ -110,7 +113,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	getOrdersHttpRequests, err := meter.Float64Counter(
+	getOrdersHTTPRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_orders_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of get orders http requests"),
 	)
@@ -118,7 +121,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	createOrderHttpRequests, err := meter.Float64Counter(
+	createOrderHTTPRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_create_order_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of create order http requests"),
 	)
@@ -126,7 +129,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	updateOrderHttpRequests, err := meter.Float64Counter(
+	updateOrderHTTPRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_update_order_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of update order http requests"),
 	)
@@ -134,7 +137,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	payOrderHttpRequests, err := meter.Float64Counter(
+	payOrderHTTPRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_pay_order_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of pay order http requests"),
 	)
@@ -142,7 +145,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	submitOrderHttpRequests, err := meter.Float64Counter(
+	submitOrderHTTPRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_submit_order_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of submit order http requests"),
 	)
@@ -158,7 +161,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	searchOrderHttpRequests, err := meter.Float64Counter(
+	searchOrderHTTPRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_search_order_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of search order http requests"),
 	)
@@ -191,7 +194,7 @@ func configOrdersMetrics(
 	}
 
 	return &contracts.OrdersMetrics{
-		CreateOrderHTTPRequests:     createOrderHttpRequests,
+		CreateOrderHTTPRequests:     createOrderHTTPRequests,
 		SuccessGrpcRequests:         successGrpcRequests,
 		ErrorGrpcRequests:           errorGrpcRequests,
 		CreateOrderGrpcRequests:     createOrderGrpcRequests,
@@ -201,12 +204,12 @@ func configOrdersMetrics(
 		GetOrderByIDGrpcRequests:    GetOrderByIDGrpcRequests,
 		GetOrdersGrpcRequests:       getOrdersGrpcRequests,
 		SearchOrderGrpcRequests:     searchOrderGrpcRequests,
-		GetOrdersHTTPRequests:       getOrdersHttpRequests,
-		UpdateOrderHTTPRequests:     updateOrderHttpRequests,
-		PayOrderHTTPRequests:        payOrderHttpRequests,
-		SubmitOrderHTTPRequests:     submitOrderHttpRequests,
+		GetOrdersHTTPRequests:       getOrdersHTTPRequests,
+		UpdateOrderHTTPRequests:     updateOrderHTTPRequests,
+		PayOrderHTTPRequests:        payOrderHTTPRequests,
+		SubmitOrderHTTPRequests:     submitOrderHTTPRequests,
 		GetOrderByIDHTTPRequests:    GetOrderByIDHttpRequests,
-		SearchOrderHTTPRequests:     searchOrderHttpRequests,
+		SearchOrderHTTPRequests:     searchOrderHTTPRequests,
 		DeleteOrderRabbitMQMessages: deleteOrderRabbitMQMessages,
 		CreateOrderRabbitMQMessages: createOrderRabbitMQMessages,
 		UpdateOrderRabbitMQMessages: updateOrderRabbitMQMessages,

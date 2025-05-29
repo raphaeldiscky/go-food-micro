@@ -1,3 +1,4 @@
+// Package dtos contains the create order request dto.
 package dtos
 
 import (

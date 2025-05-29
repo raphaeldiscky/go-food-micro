@@ -1,3 +1,4 @@
+// Package configurations contains the orders module configurator.
 package configurations
 
 import (
@@ -21,10 +22,12 @@ import (
 	ordersservice "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
 )
 
+// OrdersModuleConfigurator is the orders module configurator.
 type OrdersModuleConfigurator struct {
 	contracts2.Application
 }
 
+// NewOrdersModuleConfigurator creates a new orders module configurator.
 func NewOrdersModuleConfigurator(
 	app contracts2.Application,
 ) *OrdersModuleConfigurator {
@@ -33,10 +36,11 @@ func NewOrdersModuleConfigurator(
 	}
 }
 
+// ConfigureOrdersModule configures the orders module.
 func (c *OrdersModuleConfigurator) ConfigureOrdersModule() {
 	c.ResolveFunc(
 		func(logger logger.Logger,
-			server echocontracts.EchoHttpServer,
+			_ echocontracts.EchoHttpServer,
 			orderRepository repositories.OrderMongoRepository,
 			orderAggregateStore store.AggregateStore[*aggregate.Order],
 			tracer tracing.AppTracer,
@@ -58,6 +62,7 @@ func (c *OrdersModuleConfigurator) ConfigureOrdersModule() {
 	)
 }
 
+// MapOrdersEndpoints maps the orders endpoints.
 func (c *OrdersModuleConfigurator) MapOrdersEndpoints() {
 	// config Orders Http Endpoints
 	c.ResolveFuncWithParamTag(func(endpoints []route.Endpoint) {

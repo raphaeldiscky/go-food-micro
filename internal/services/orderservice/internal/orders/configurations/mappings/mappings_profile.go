@@ -1,3 +1,4 @@
+// Package mappings contains the mappings for the orderservice.
 package mappings
 
 import (
@@ -12,6 +13,7 @@ import (
 	grpcOrderService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
 )
 
+// ConfigureOrdersMappings configures the orders mappings.
 func ConfigureOrdersMappings() error {
 	// Order -> OrderDto
 	err := mapper.CreateMap[*aggregate.Order, *dtosV1.OrderDto]()
@@ -189,7 +191,7 @@ func ConfigureOrdersMappings() error {
 				CreatedAt:       timestamppb.New(order.CreatedAt()),
 				UpdatedAt:       timestamppb.New(order.UpdatedAt()),
 				ShopItems:       items,
-				PaymentId:       order.PaymentId().String(),
+				PaymentId:       order.PaymentID().String(),
 			}
 		},
 	)

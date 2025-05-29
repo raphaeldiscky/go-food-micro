@@ -19,8 +19,8 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/domain_events"
-	createOrderIntegrationEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integration_events"
+	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/domainevents"
+	createOrderIntegrationEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integrationevents"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 )
 
@@ -36,13 +36,13 @@ type mongoOrderProjection struct {
 func NewMongoOrderProjection(
 	mongoOrderRepository repositories.OrderMongoRepository,
 	rabbitmqProducer producer.Producer,
-	logger logger.Logger,
+	log logger.Logger,
 	tracer tracing.AppTracer,
 ) projection.IProjection {
 	return &mongoOrderProjection{
 		mongoOrderRepository: mongoOrderRepository,
 		rabbitmqProducer:     rabbitmqProducer,
-		logger:               logger,
+		logger:               log,
 		tracer:               tracer,
 	}
 }

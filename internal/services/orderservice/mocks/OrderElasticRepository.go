@@ -234,8 +234,8 @@ func (_c *OrderElasticRepository_GetOrderByID_Call) RunAndReturn(run func(contex
 	return _c
 }
 
-// GetOrderByOrderId provides a mock function with given fields: ctx, orderId
-func (_m *OrderElasticRepository) GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*readmodels.OrderReadModel, error) {
+// GetOrderByOrderID provides a mock function with given fields: ctx, orderId
+func (_m *OrderElasticRepository) GetOrderByOrderID(ctx context.Context, orderId uuid.UUID) (*readmodels.OrderReadModel, error) {
 	ret := _m.Called(ctx, orderId)
 
 	var r0 *readmodels.OrderReadModel
@@ -260,16 +260,16 @@ func (_m *OrderElasticRepository) GetOrderByOrderId(ctx context.Context, orderId
 	return r0, r1
 }
 
-// OrderElasticRepository_GetOrderByOrderId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetOrderByOrderId'
+// OrderElasticRepository_GetOrderByOrderId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetOrderByOrderID'
 type OrderElasticRepository_GetOrderByOrderId_Call struct {
 	*mock.Call
 }
 
-// GetOrderByOrderId is a helper method to define mock.On call
+// GetOrderByOrderID is a helper method to define mock.On call
 //   - ctx context.Context
 //   - orderId uuid.UUID
-func (_e *OrderElasticRepository_Expecter) GetOrderByOrderId(ctx interface{}, orderId interface{}) *OrderElasticRepository_GetOrderByOrderId_Call {
-	return &OrderElasticRepository_GetOrderByOrderId_Call{Call: _e.mock.On("GetOrderByOrderId", ctx, orderId)}
+func (_e *OrderElasticRepository_Expecter) GetOrderByOrderID(ctx interface{}, orderId interface{}) *OrderElasticRepository_GetOrderByOrderId_Call {
+	return &OrderElasticRepository_GetOrderByOrderId_Call{Call: _e.mock.On("GetOrderByOrderID", ctx, orderId)}
 }
 
 func (_c *OrderElasticRepository_GetOrderByOrderId_Call) Run(run func(ctx context.Context, orderId uuid.UUID)) *OrderElasticRepository_GetOrderByOrderId_Call {

@@ -14,7 +14,7 @@ type ShopItem struct {
 }
 
 // CreateNewShopItem creates a new shop item.
-func CreateNewShopItem(title string, description string, quantity uint64, price float64) *ShopItem {
+func CreateNewShopItem(title, description string, quantity uint64, price float64) *ShopItem {
 	return &ShopItem{
 		title:       title,
 		description: description,

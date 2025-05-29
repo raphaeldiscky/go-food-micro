@@ -1,4 +1,5 @@
-package createOrderCommandV1
+// Package createordercommandv1 contains the create order command.
+package createordercommandv1
 
 import (
 	"time"
@@ -11,8 +12,10 @@ import (
 
 // https://echo.labstack.com/guide/request/
 // https://github.com/go-playground/validator
+
+// CreateOrder is the create order command.
 type CreateOrder struct {
-	OrderId         uuid.UUID
+	OrderID         uuid.UUID
 	ShopItems       []*dtosV1.ShopItemDto
 	AccountEmail    string
 	DeliveryAddress string
@@ -20,13 +23,14 @@ type CreateOrder struct {
 	CreatedAt       time.Time
 }
 
+// NewCreateOrder creates a new create order command.
 func NewCreateOrder(
 	shopItems []*dtosV1.ShopItemDto,
 	accountEmail, deliveryAddress string,
 	deliveryTime time.Time,
 ) (*CreateOrder, error) {
 	command := &CreateOrder{
-		OrderId:         uuid.NewV4(),
+		OrderID:         uuid.NewV4(),
 		ShopItems:       shopItems,
 		AccountEmail:    accountEmail,
 		DeliveryAddress: deliveryAddress,
@@ -42,9 +46,10 @@ func NewCreateOrder(
 	return command, nil
 }
 
+// Validate validates the create order command.
 func (c CreateOrder) Validate() error {
 	return validation.ValidateStruct(&c,
-		validation.Field(&c.OrderId, validation.Required),
+		validation.Field(&c.OrderID, validation.Required),
 		validation.Field(&c.ShopItems, validation.Required),
 		validation.Field(&c.AccountEmail, validation.Required),
 		validation.Field(&c.DeliveryAddress, validation.Required),

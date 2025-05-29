@@ -36,7 +36,7 @@ var Module = fx.Module(
 	}, fx.ResultTags(`name:"order-echo-group"`))),
 
 	fx.Provide(
-		route.AsRoute(createOrderV1.NewCreteOrderEndpoint, "order-routes"),
+		route.AsRoute(createOrderV1.NewCreateOrderEndpoint, "order-routes"),
 		route.AsRoute(GetOrderByIDV1.NewGetOrderByIDEndpoint, "order-routes"),
 		route.AsRoute(getOrdersV1.NewGetOrdersEndpoint, "order-routes"),
 	),
