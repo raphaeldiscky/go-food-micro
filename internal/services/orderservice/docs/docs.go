@@ -117,7 +117,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_raphaeldiscky_go-food-micro_internal_services_orderservice_internal_orders_features_getting_order_by_id_v1_dtos.GetOrderByIdResponseDto"
+                            "$ref": "#/definitions/github_com_raphaeldiscky_go-food-micro_internal_services_orderservice_internal_orders_features_getting_order_by_id_v1_dtos.GetOrderByIDResponseDto"
                         }
                     }
                 }
@@ -240,7 +240,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_raphaeldiscky_go-food-micro_internal_services_orderservice_internal_orders_features_getting_order_by_id_v1_dtos.GetOrderByIdResponseDto": {
+        "github_com_raphaeldiscky_go-food-micro_internal_services_orderservice_internal_orders_features_getting_order_by_id_v1_dtos.GetOrderByIDResponseDto": {
             "type": "object",
             "properties": {
                 "order": {

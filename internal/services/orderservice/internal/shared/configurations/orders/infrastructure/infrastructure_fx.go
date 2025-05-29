@@ -1,3 +1,4 @@
+// Package infrastructure contains the infrastructure fx.
 package infrastructure
 
 import (
@@ -22,6 +23,7 @@ import (
 
 // https://pmihaylov.com/shared-components-go-microservices/
 
+// Module is the infrastructure fx module.
 var Module = fx.Module(
 	"infrastructurefx",
 	// Modules

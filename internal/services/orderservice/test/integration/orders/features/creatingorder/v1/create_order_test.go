@@ -12,9 +12,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/commands"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
-	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/integration_events"
+	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/commands"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
+	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integration_events"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 

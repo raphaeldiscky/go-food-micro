@@ -8,12 +8,12 @@ import (
 	mediatr "github.com/mehdihadeli/go-mediatr"
 
 	repositories2 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
-	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/commands"
-	createOrderDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
-	getOrderByIdDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/dtos"
-	getOrderByIdQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/queries"
-	getOrdersDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/dtos"
-	getOrdersQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/queries"
+	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/commands"
+	createOrderDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
+	GetOrderByIDDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/dtos"
+	GetOrderByIDQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/queries"
+	getOrdersDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorders/v1/dtos"
+	getOrdersQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorders/v1/queries"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
 )
 
@@ -31,8 +31,8 @@ func ConfigOrdersMediator(
 		return err
 	}
 
-	err = mediatr.RegisterRequestHandler[*getOrderByIdQueryV1.GetOrderById, *getOrderByIdDtosV1.GetOrderByIdResponseDto](
-		getOrderByIdQueryV1.NewGetOrderByIdHandler(logger, mongoOrderReadRepository, tracer),
+	err = mediatr.RegisterRequestHandler[*GetOrderByIDQueryV1.GetOrderByID, *GetOrderByIDDtosV1.GetOrderByIDResponseDto](
+		GetOrderByIDQueryV1.NewGetOrderByIDHandler(logger, mongoOrderReadRepository, tracer),
 	)
 	if err != nil {
 		return err

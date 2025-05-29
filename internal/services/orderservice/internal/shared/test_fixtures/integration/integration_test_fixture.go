@@ -1,3 +1,4 @@
+// Package integration contains the integration test fixture.
 package integration
 
 import (
@@ -32,6 +33,7 @@ const (
 	orderCollection = "orders"
 )
 
+// IntegrationTestSharedFixture is the integration test fixture.
 type IntegrationTestSharedFixture struct {
 	OrderAggregateStore  store.AggregateStore[*aggregate.Order]
 	OrderMongoRepository repositories.OrderMongoRepository
@@ -50,9 +52,11 @@ type IntegrationTestSharedFixture struct {
 	OrdersServiceClient  ordersService.OrdersServiceClient
 }
 
+// NewIntegrationTestSharedFixture creates a new integration test fixture.
 func NewIntegrationTestSharedFixture(
 	t *testing.T,
 ) *IntegrationTestSharedFixture {
+	t.Helper()
 	result := test.NewTestApp().Run(t)
 
 	// https://github.com/michaelklishin/rabbit-hole
@@ -84,6 +88,7 @@ func NewIntegrationTestSharedFixture(
 	return shared
 }
 
+// SetupTest setups the test.
 func (i *IntegrationTestSharedFixture) SetupTest() {
 	i.Log.Info("SetupTest started")
 
@@ -95,6 +100,7 @@ func (i *IntegrationTestSharedFixture) SetupTest() {
 	i.Items = res
 }
 
+// TearDownTest tears down the test.
 func (i *IntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
@@ -108,6 +114,7 @@ func (i *IntegrationTestSharedFixture) TearDownTest() {
 	}
 }
 
+// cleanupRabbitmqData cleans up the rabbitmq data.
 func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
@@ -131,6 +138,7 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	return nil
 }
 
+// cleanupMongoData cleans up the mongodb data.
 func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 	collections := []string{orderCollection}
 	err := cleanupCollections(
@@ -142,6 +150,7 @@ func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 	return err
 }
 
+// cleanupCollections cleans up the collections.
 func cleanupCollections(
 	db *mongo.Client,
 	collections []string,
@@ -163,6 +172,7 @@ func cleanupCollections(
 	return nil
 }
 
+// seedReadModelData seeds the read model data.
 func seedReadModelData(
 	db *mongo.Client,
 	databaseName string,
@@ -235,6 +245,7 @@ func seedReadModelData(
 	return result.Items, nil
 }
 
+// generateShopItems generates the shop items.
 func generateShopItems() []*readmodels.ShopItemReadModel {
 	var shopItems []*readmodels.ShopItemReadModel
 

@@ -10,9 +10,9 @@ import (
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/data/repositories"
-	createOrderV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/endpoints"
-	getOrderByIdV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/endpoints"
-	getOrdersV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/endpoints"
+	createOrderV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/endpoints"
+	GetOrderByIDV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/endpoints"
+	getOrdersV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorders/v1/endpoints"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/projections"
 )
@@ -37,7 +37,7 @@ var Module = fx.Module(
 
 	fx.Provide(
 		route.AsRoute(createOrderV1.NewCreteOrderEndpoint, "order-routes"),
-		route.AsRoute(getOrderByIdV1.NewGetOrderByIdEndpoint, "order-routes"),
+		route.AsRoute(GetOrderByIDV1.NewGetOrderByIDEndpoint, "order-routes"),
 		route.AsRoute(getOrdersV1.NewGetOrdersEndpoint, "order-routes"),
 	),
 

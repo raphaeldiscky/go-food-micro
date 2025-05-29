@@ -11,7 +11,7 @@ import (
 
 	customTypes "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/customtypes"
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"

@@ -1,3 +1,4 @@
+// Package aggregate contains the order aggregate.
 package aggregate
 
 // https://www.eventstore.com/blog/what-is-event-sourcing
@@ -17,11 +18,12 @@ import (
 
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	domainExceptions "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/exceptions/domain_exceptions"
-	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/domain_events"
-	updateOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/updating_shopping_card/v1/events"
+	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/domain_events"
+	updateOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/updatingshoppingcard/v1/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/valueobject"
 )
 
+// Order is the order aggregate.
 type Order struct {
 	*models.EventSourcedAggregateRoot
 	shopItems       []*valueobject.ShopItem
@@ -37,12 +39,14 @@ type Order struct {
 	createdAt       time.Time
 }
 
+// NewEmptyAggregate creates a new empty aggregate.
 func (o *Order) NewEmptyAggregate() {
 	// http://arch-stable.blogspot.com/2012/05/golang-call-inherited-constructor.html
 	base := models.NewEventSourcedAggregateRoot(typeMapper.GetFullTypeName(o), o.When)
 	o.EventSourcedAggregateRoot = base
 }
 
+// NewOrder creates a new order aggregate.
 func NewOrder(
 	id uuid.UUID,
 	shopItems []*valueobject.ShopItem,
@@ -94,6 +98,7 @@ func NewOrder(
 	return order, nil
 }
 
+// UpdateShoppingCard updates the shopping card.
 func (o *Order) UpdateShoppingCard(shopItems []*valueobject.ShopItem) error {
 	event, err := updateOrderDomainEventsV1.NewShoppingCartUpdatedV1(shopItems)
 	if err != nil {
@@ -108,6 +113,7 @@ func (o *Order) UpdateShoppingCard(shopItems []*valueobject.ShopItem) error {
 	return nil
 }
 
+// When handles the event.
 func (o *Order) When(event domain.IDomainEvent) error {
 	switch evt := event.(type) {
 	case *createOrderDomainEventsV1.OrderCreatedV1:
@@ -118,6 +124,7 @@ func (o *Order) When(event domain.IDomainEvent) error {
 	}
 }
 
+// onOrderCreated handles the order created event.
 func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) error {
 	items, err := mapper.Map[[]*valueobject.ShopItem](evt.ShopItems)
 	if err != nil {
@@ -134,60 +141,74 @@ func (o *Order) onOrderCreated(evt *createOrderDomainEventsV1.OrderCreatedV1) er
 	return nil
 }
 
+// ShopItems returns the shop items.
 func (o *Order) ShopItems() []*valueobject.ShopItem {
 	return o.shopItems
 }
 
+// PaymentId returns the payment id.
 func (o *Order) PaymentId() uuid.UUID {
 	return o.paymentId
 }
 
+// AccountEmail returns the account email.
 func (o *Order) AccountEmail() string {
 	return o.accountEmail
 }
 
+// DeliveryAddress returns the delivery address.
 func (o *Order) DeliveryAddress() string {
 	return o.deliveryAddress
 }
 
+// DeliveredTime returns the delivered time.
 func (o *Order) DeliveredTime() time.Time {
 	return o.deliveredTime
 }
 
+// CreatedAt returns the created at.
 func (o *Order) CreatedAt() time.Time {
 	return o.createdAt
 }
 
+// TotalPrice returns the total price.
 func (o *Order) TotalPrice() float64 {
 	return getShopItemsTotalPrice(o.shopItems)
 }
 
+// Paid returns the paid.
 func (o *Order) Paid() bool {
 	return o.paid
 }
 
+// Submitted returns the submitted.
 func (o *Order) Submitted() bool {
 	return o.submitted
 }
 
+// Completed returns the completed.
 func (o *Order) Completed() bool {
 	return o.completed
 }
 
+// Canceled returns the canceled.
 func (o *Order) Canceled() bool {
 	return o.canceled
 }
 
+// CancelReason returns the cancel reason.
 func (o *Order) CancelReason() string {
 	return o.cancelReason
 }
 
+// String returns the string representation of the order.
 func (o *Order) String() string {
 	j, _ := json.Marshal(o)
 
 	return string(j)
 }
 
+// getShopItemsTotalPrice returns the total price of the shop items.
 func getShopItemsTotalPrice(shopItems []*valueobject.ShopItem) float64 {
 	var totalPrice float64 = 0
 	for _, item := range shopItems {

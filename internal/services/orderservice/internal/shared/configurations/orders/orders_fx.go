@@ -86,7 +86,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	getOrderByIdGrpcRequests, err := meter.Float64Counter(
+	GetOrderByIDGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_order_by_id_grpc_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of get order by id grpc requests"),
 	)
@@ -150,7 +150,7 @@ func configOrdersMetrics(
 		return nil, err
 	}
 
-	getOrderByIdHttpRequests, err := meter.Float64Counter(
+	GetOrderByIDHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_order_by_id_http_requests_total", appOptions.ServiceName),
 		metric.WithDescription("The total number of get order by id http requests"),
 	)
@@ -198,14 +198,14 @@ func configOrdersMetrics(
 		UpdateOrderGrpcRequests:     updateOrderGrpcRequests,
 		PayOrderGrpcRequests:        payOrderGrpcRequests,
 		SubmitOrderGrpcRequests:     submitOrderGrpcRequests,
-		GetOrderByIdGrpcRequests:    getOrderByIdGrpcRequests,
+		GetOrderByIDGrpcRequests:    GetOrderByIDGrpcRequests,
 		GetOrdersGrpcRequests:       getOrdersGrpcRequests,
 		SearchOrderGrpcRequests:     searchOrderGrpcRequests,
 		GetOrdersHTTPRequests:       getOrdersHttpRequests,
 		UpdateOrderHTTPRequests:     updateOrderHttpRequests,
 		PayOrderHTTPRequests:        payOrderHttpRequests,
 		SubmitOrderHTTPRequests:     submitOrderHttpRequests,
-		GetOrderByIDHTTPRequests:    getOrderByIdHttpRequests,
+		GetOrderByIDHTTPRequests:    GetOrderByIDHttpRequests,
 		SearchOrderHTTPRequests:     searchOrderHttpRequests,
 		DeleteOrderRabbitMQMessages: deleteOrderRabbitMQMessages,
 		CreateOrderRabbitMQMessages: createOrderRabbitMQMessages,

@@ -1,3 +1,4 @@
+// Package orders contains the orders configurator.
 package orders
 
 import (
@@ -14,12 +15,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders/infrastructure"
 )
 
+// OrdersServiceConfigurator is the orders service configurator.
 type OrdersServiceConfigurator struct {
 	contracts.Application
 	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
 	ordersModuleConfigurator   *configurations.OrdersModuleConfigurator
 }
 
+// NewOrdersServiceConfigurator creates a new orders service configurator.
 func NewOrdersServiceConfigurator(
 	app contracts.Application,
 ) *OrdersServiceConfigurator {
@@ -33,19 +36,13 @@ func NewOrdersServiceConfigurator(
 	}
 }
 
+// ConfigureOrders configures the orders.
 func (ic *OrdersServiceConfigurator) ConfigureOrders() {
-	// Shared
-	// Infrastructure
 	ic.infrastructureConfigurator.ConfigInfrastructures()
-
-	// Shared
-	// Orders service configurations
-
-	// Modules
-	// Order module
 	ic.ordersModuleConfigurator.ConfigureOrdersModule()
 }
 
+// MapOrdersEndpoints maps the orders endpoints.
 func (ic *OrdersServiceConfigurator) MapOrdersEndpoints() {
 	// Shared
 	ic.ResolveFunc(

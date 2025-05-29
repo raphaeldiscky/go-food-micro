@@ -126,12 +126,12 @@ func (m mongoOrderReadRepository) SearchOrders(
 	return result, nil
 }
 
-// GetOrderById gets an order by id from the database.
-func (m mongoOrderReadRepository) GetOrderById(
+// GetOrderByID gets an order by id from the database.
+func (m mongoOrderReadRepository) GetOrderByID(
 	ctx context.Context,
 	id uuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
-	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderById")
+	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByID")
 	span.SetAttributes(attribute2.String("ID", id.String()))
 	defer span.End()
 
@@ -149,7 +149,7 @@ func (m mongoOrderReadRepository) GetOrderById(
 			errors.WrapIf(
 				err,
 				fmt.Sprintf(
-					"[mongoOrderReadRepository_GetOrderById.FindOne] can't find the order with id %s into the database.",
+					"[mongoOrderReadRepository_GetOrderByID.FindOne] can't find the order with id %s into the database.",
 					id,
 				),
 			),
@@ -158,7 +158,7 @@ func (m mongoOrderReadRepository) GetOrderById(
 	span.SetAttributes(attribute.Object("Order", order))
 
 	m.log.Infow(
-		fmt.Sprintf("[mongoOrderReadRepository.GetOrderById] order with id %s laoded", id.String()),
+		fmt.Sprintf("[mongoOrderReadRepository.GetOrderByID] order with id %s laoded", id.String()),
 		logger.Fields{"Order": order, "ID": id},
 	)
 
@@ -188,7 +188,7 @@ func (m mongoOrderReadRepository) GetOrderByOrderId(
 			errors.WrapIf(
 				err,
 				fmt.Sprintf(
-					"[mongoOrderReadRepository_GetOrderById.FindOne] can't find the order with orderId %s into the database.",
+					"[mongoOrderReadRepository_GetOrderByID.FindOne] can't find the order with orderId %s into the database.",
 					orderId.String(),
 				),
 			),
@@ -198,7 +198,7 @@ func (m mongoOrderReadRepository) GetOrderByOrderId(
 
 	m.log.Infow(
 		fmt.Sprintf(
-			"[mongoOrderReadRepository.GetOrderById] order with orderId %s laoded",
+			"[mongoOrderReadRepository.GetOrderByID] order with orderId %s laoded",
 			orderId.String(),
 		),
 		logger.Fields{"Order": order, "orderId": orderId},

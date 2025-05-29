@@ -20,7 +20,7 @@ type orderReadRepository interface {
 		searchText string,
 		listQuery *utils.ListQuery,
 	) (*utils.ListResult[*readmodels.OrderReadModel], error)
-	GetOrderById(ctx context.Context, uuid uuid.UUID) (*readmodels.OrderReadModel, error)
+	GetOrderByID(ctx context.Context, uuid uuid.UUID) (*readmodels.OrderReadModel, error)
 	GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*readmodels.OrderReadModel, error)
 	CreateOrder(
 		ctx context.Context,

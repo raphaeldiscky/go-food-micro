@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/queries"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/queries"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
@@ -21,7 +21,7 @@ import (
 
 var integrationFixture *integration.IntegrationTestSharedFixture
 
-func TestGetOrderById(t *testing.T) {
+func TestGetOrderByID(t *testing.T) {
 	RegisterFailHandler(Fail)
 	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
 	RunSpecs(t, "Get Order By ID Integration Tests")
@@ -30,10 +30,10 @@ func TestGetOrderById(t *testing.T) {
 var _ = Describe("Get Order By ID Feature", func() {
 	var (
 		ctx    context.Context
-		query  *queries.GetOrderById
+		query  *queries.GetOrderByID
 		err    error
 		id     uuid.UUID
-		result *dtos.GetOrderByIdResponseDto
+		result *dtos.GetOrderByIDResponseDto
 	)
 
 	_ = BeforeEach(func() {
@@ -71,7 +71,7 @@ var _ = Describe("Get Order By ID Feature", func() {
 	// "Scenario" for testing the retrieval of an existing order by ID
 	Describe("Retrieving an existing order by ID from the database", func() {
 		BeforeEach(func() {
-			query, err = queries.NewGetOrderById(id)
+			query, err = queries.NewGetOrderByID(id)
 			Expect(err).ToNot(HaveOccurred())
 			Expect(query).ToNot(BeNil())
 		})
@@ -79,7 +79,7 @@ var _ = Describe("Get Order By ID Feature", func() {
 		When("retrieving an existing order by ID", func() {
 			BeforeEach(func() {
 				// "When" step for executing the query to get the order
-				result, err = mediatr.Send[*queries.GetOrderById, *dtos.GetOrderByIdResponseDto](
+				result, err = mediatr.Send[*queries.GetOrderByID, *dtos.GetOrderByIDResponseDto](
 					ctx,
 					query,
 				)

@@ -19,11 +19,12 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/domain_events"
-	createOrderIntegrationEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/integration_events"
+	createOrderDomainEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/domain_events"
+	createOrderIntegrationEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integration_events"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 )
 
+// mongoOrderProjection is the mongo order projection.
 type mongoOrderProjection struct {
 	mongoOrderRepository repositories.OrderMongoRepository
 	rabbitmqProducer     producer.Producer
@@ -31,6 +32,7 @@ type mongoOrderProjection struct {
 	tracer               tracing.AppTracer
 }
 
+// NewMongoOrderProjection creates a new mongo order projection.
 func NewMongoOrderProjection(
 	mongoOrderRepository repositories.OrderMongoRepository,
 	rabbitmqProducer producer.Producer,
@@ -45,6 +47,7 @@ func NewMongoOrderProjection(
 	}
 }
 
+// ProcessEvent processes the event.
 func (m mongoOrderProjection) ProcessEvent(
 	ctx context.Context,
 	streamEvent *models.StreamEvent,
@@ -58,6 +61,7 @@ func (m mongoOrderProjection) ProcessEvent(
 	return nil
 }
 
+// onOrderCreated handles the order created event.
 func (m *mongoOrderProjection) onOrderCreated(
 	ctx context.Context,
 	evt *createOrderDomainEventsV1.OrderCreatedV1,

@@ -192,11 +192,11 @@ func (e elasticOrderReadRepository) SearchOrders(
 	}, nil
 }
 
-func (e elasticOrderReadRepository) GetOrderById(
+func (e elasticOrderReadRepository) GetOrderByID(
 	ctx context.Context,
 	id uuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
-	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.GetOrderById")
+	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.GetOrderByID")
 	span.SetAttributes(attribute2.String("ID", id.String()))
 	defer span.End()
 
@@ -230,7 +230,7 @@ func (e elasticOrderReadRepository) GetOrderById(
 
 	e.log.Infow(
 		fmt.Sprintf(
-			"[elasticOrderReadRepository.GetOrderById] order with id %s loaded",
+			"[elasticOrderReadRepository.GetOrderByID] order with id %s loaded",
 			id.String(),
 		),
 		logger.Fields{"Order": result.Source, "ID": id},

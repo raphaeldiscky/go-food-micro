@@ -1,3 +1,4 @@
+// Package grpc contains the order grpc service server.
 package grpc
 
 import (
@@ -20,16 +21,17 @@ import (
 	api "go.opentelemetry.io/otel/metric"
 
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/commands"
-	createOrderDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
-	getOrderByIdDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/dtos"
-	getOrderByIdQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/queries"
-	getOrdersDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/dtos"
-	getOrdersQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/queries"
+	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/commands"
+	createOrderDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
+	GetOrderByIDDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/dtos"
+	GetOrderByIDQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/queries"
+	getOrdersDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorders/v1/dtos"
+	getOrdersQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorders/v1/queries"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/contracts"
 	grpcOrderService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
 )
 
+// OrderGrpcServiceServer is the order grpc service server.
 type OrderGrpcServiceServer struct {
 	ordersMetrics *contracts.OrdersMetrics
 	logger        logger.Logger
@@ -40,6 +42,7 @@ var grpcMetricsAttr = api.WithAttributes(
 	attribute.Key("MetricsType").String("Grpc"),
 )
 
+// NewOrderGrpcService creates a new order grpc service.
 func NewOrderGrpcService(
 	logger logger.Logger,
 	validator *validator.Validate,
@@ -52,6 +55,7 @@ func NewOrderGrpcService(
 	}
 }
 
+// CreateOrder creates a new order.
 func (o OrderGrpcServiceServer) CreateOrder(
 	ctx context.Context,
 	req *grpcOrderService.CreateOrderReq,
@@ -107,13 +111,14 @@ func (o OrderGrpcServiceServer) CreateOrder(
 	return &grpcOrderService.CreateOrderRes{OrderId: result.OrderId.String()}, nil
 }
 
+// GetOrderByID gets the order by id.
 func (o OrderGrpcServiceServer) GetOrderByID(
 	ctx context.Context,
 	req *grpcOrderService.GetOrderByIDReq,
 ) (*grpcOrderService.GetOrderByIDRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
-	o.ordersMetrics.GetOrderByIdGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GetOrderByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 
 	orderIdUUID, err := uuid.FromString(req.ID)
 	if err != nil {
@@ -131,7 +136,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 		return nil, badRequestErr
 	}
 
-	query, err := getOrderByIdQueryV1.NewGetOrderById(orderIdUUID)
+	query, err := GetOrderByIDQueryV1.NewGetOrderByID(orderIdUUID)
 	if err != nil {
 		validationErr := customErrors.NewValidationErrorWrap(
 			err,
@@ -144,14 +149,14 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 		return nil, validationErr
 	}
 
-	queryResult, err := mediatr.Send[*getOrderByIdQueryV1.GetOrderById, *getOrderByIdDtosV1.GetOrderByIdResponseDto](
+	queryResult, err := mediatr.Send[*GetOrderByIDQueryV1.GetOrderByID, *GetOrderByIDDtosV1.GetOrderByIDResponseDto](
 		ctx,
 		query,
 	)
 	if err != nil {
 		err = errors.WithMessage(
 			err,
-			"[OrderGrpcServiceServer_GetOrderByID.Send] error in sending GetOrderById",
+			"[OrderGrpcServiceServer_GetOrderByID.Send] error in sending GetOrderByID",
 		)
 		o.logger.Errorw(
 			fmt.Sprintf(
@@ -179,20 +184,23 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 	return &grpcOrderService.GetOrderByIDRes{Order: order}, nil
 }
 
+// SubmitOrder submits an order.
 func (o OrderGrpcServiceServer) SubmitOrder(
-	ctx context.Context,
-	req *grpcOrderService.SubmitOrderReq,
+	_ context.Context,
+	_ *grpcOrderService.SubmitOrderReq,
 ) (*grpcOrderService.SubmitOrderRes, error) {
 	return nil, nil
 }
 
+// UpdateShoppingCart updates the shopping cart.
 func (o OrderGrpcServiceServer) UpdateShoppingCart(
 	ctx context.Context,
-	req *grpcOrderService.UpdateShoppingCartReq,
+	_ *grpcOrderService.UpdateShoppingCartReq,
 ) (*grpcOrderService.UpdateShoppingCartRes, error) {
 	return nil, nil
 }
 
+// GetOrders gets the orders.
 func (o OrderGrpcServiceServer) GetOrders(
 	ctx context.Context,
 	req *grpcOrderService.GetOrdersReq,

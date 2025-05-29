@@ -1,3 +1,4 @@
+// Package orders contains the orders configurator swagger.
 package orders
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/docs"
 )
 
+// configSwagger configures the swagger.
 func (ic *OrdersServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Title = "Orders Service Api"

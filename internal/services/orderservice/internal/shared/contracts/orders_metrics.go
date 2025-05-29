@@ -14,7 +14,7 @@ type OrdersMetrics struct {
 	UpdateOrderGrpcRequests  metric.Float64Counter
 	PayOrderGrpcRequests     metric.Float64Counter
 	SubmitOrderGrpcRequests  metric.Float64Counter
-	GetOrderByIdGrpcRequests metric.Float64Counter
+	GetOrderByIDGrpcRequests metric.Float64Counter
 	GetOrdersGrpcRequests    metric.Float64Counter
 	SearchOrderGrpcRequests  metric.Float64Counter
 

@@ -1,3 +1,4 @@
+// Package infrastructure contains the infrastructure configurator.
 package infrastructure
 
 import (
@@ -12,10 +13,12 @@ import (
 	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 )
 
+// InfrastructureConfigurator is the infrastructure configurator.
 type InfrastructureConfigurator struct {
 	contracts.Application
 }
 
+// NewInfrastructureConfigurator creates a new infrastructure configurator.
 func NewInfrastructureConfigurator(
 	app contracts.Application,
 ) *InfrastructureConfigurator {
@@ -24,6 +27,7 @@ func NewInfrastructureConfigurator(
 	}
 }
 
+// ConfigInfrastructures configures the infrastructures.
 func (ic *InfrastructureConfigurator) ConfigInfrastructures() {
 	ic.ResolveFunc(
 		func(l logger.Logger, tracer tracing.AppTracer, metrics metrics.AppMetrics) error {
