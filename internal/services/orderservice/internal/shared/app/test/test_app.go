@@ -7,28 +7,29 @@ import (
 	"testing"
 	"time"
 
+	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
-	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
-	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
-	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/eventstoredb"
-	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/redis"
+	"github.com/stretchr/testify/require"
+	"go.mongodb.org/mongo-driver/mongo"
+
+	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
+	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
 	ordersService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
-
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"github.com/stretchr/testify/require"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 // TestApp is a struct that contains the test app.
@@ -127,8 +128,8 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 	}
 
 	//// waiting for grpc endpoint becomes ready in the given timeout
-	//err = result.GrpcClient.WaitForAvailableConnection()
-	//require.NoError(t, err)
+	// err = result.GrpcClient.WaitForAvailableConnection()
+	// require.NoError(t, err)
 
 	t.Cleanup(func() {
 		// short timeout for handling stop hooks
@@ -139,5 +140,5 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 		require.NoError(t, err)
 	})
 
-	return
+	return result
 }

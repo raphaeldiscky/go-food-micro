@@ -1,31 +1,34 @@
+// Package repositories contains the mongo order read repository.
 package repositories
 
 import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
-	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
-
-	"emperror.dev/errors"
-	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
+	uuid "github.com/satori/go.uuid"
 	attribute2 "go.opentelemetry.io/otel/attribute"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 )
 
 const (
 	orderCollection = "orders"
 )
 
+// mongoOrderReadRepository is the mongo order read repository.
 type mongoOrderReadRepository struct {
 	log          logger.Logger
 	mongoOptions *mongodb.MongoDbOptions
@@ -33,6 +36,7 @@ type mongoOrderReadRepository struct {
 	tracer       tracing.AppTracer
 }
 
+// NewMongoOrderReadRepository creates a new mongo order read repository.
 func NewMongoOrderReadRepository(
 	log logger.Logger,
 	cfg *mongodb.MongoDbOptions,
@@ -47,16 +51,17 @@ func NewMongoOrderReadRepository(
 	}
 }
 
+// GetAllOrders gets all orders from the database.
 func (m mongoOrderReadRepository) GetAllOrders(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
-) (*utils.ListResult[*read_models.OrderReadModel], error) {
+) (*utils.ListResult[*readmodels.OrderReadModel], error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetAllOrders")
 	defer span.End()
 
 	collection := m.mongoClient.Database(m.mongoOptions.Database).Collection(orderCollection)
 
-	result, err := mongodb.Paginate[*read_models.OrderReadModel](ctx, listQuery, collection, nil)
+	result, err := mongodb.Paginate[*readmodels.OrderReadModel](ctx, listQuery, collection, nil)
 	if err != nil {
 		return nil, utils2.TraceStatusFromContext(
 			ctx,
@@ -77,11 +82,12 @@ func (m mongoOrderReadRepository) GetAllOrders(
 	return result, nil
 }
 
+// SearchOrders searches for orders in the database.
 func (m mongoOrderReadRepository) SearchOrders(
 	ctx context.Context,
 	searchText string,
 	listQuery *utils.ListQuery,
-) (*utils.ListResult[*read_models.OrderReadModel], error) {
+) (*utils.ListResult[*readmodels.OrderReadModel], error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.SearchOrders")
 	span.SetAttributes(attribute2.String("SearchText", searchText))
 	defer span.End()
@@ -97,7 +103,7 @@ func (m mongoOrderReadRepository) SearchOrders(
 		}},
 	}
 
-	result, err := mongodb.Paginate[*read_models.OrderReadModel](ctx, listQuery, collection, filter)
+	result, err := mongodb.Paginate[*readmodels.OrderReadModel](ctx, listQuery, collection, filter)
 	if err != nil {
 		return nil, utils2.TraceStatusFromContext(
 			ctx,
@@ -120,22 +126,24 @@ func (m mongoOrderReadRepository) SearchOrders(
 	return result, nil
 }
 
+// GetOrderById gets an order by id from the database.
 func (m mongoOrderReadRepository) GetOrderById(
 	ctx context.Context,
 	id uuid.UUID,
-) (*read_models.OrderReadModel, error) {
+) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderById")
 	span.SetAttributes(attribute2.String("ID", id.String()))
 	defer span.End()
 
 	collection := m.mongoClient.Database(m.mongoOptions.Database).Collection(orderCollection)
 
-	var order read_models.OrderReadModel
+	var order readmodels.OrderReadModel
 	if err := collection.FindOne(ctx, bson.M{"_id": id.String()}).Decode(&order); err != nil {
 		// ErrNoDocuments means that the filter did not match any documents in the collection
-		if err == mongo.ErrNoDocuments {
+		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
 		}
+
 		return nil, utils2.TraceStatusFromContext(
 			ctx,
 			errors.WrapIf(
@@ -157,22 +165,24 @@ func (m mongoOrderReadRepository) GetOrderById(
 	return &order, nil
 }
 
+// GetOrderByOrderId gets an order by order id from the database.
 func (m mongoOrderReadRepository) GetOrderByOrderId(
 	ctx context.Context,
 	orderId uuid.UUID,
-) (*read_models.OrderReadModel, error) {
+) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByOrderId")
 	span.SetAttributes(attribute2.String("OrderId", orderId.String()))
 	defer span.End()
 
 	collection := m.mongoClient.Database(m.mongoOptions.Database).Collection(orderCollection)
 
-	var order read_models.OrderReadModel
+	var order readmodels.OrderReadModel
 	if err := collection.FindOne(ctx, bson.M{"orderId": orderId.String()}).Decode(&order); err != nil {
 		// ErrNoDocuments means that the filter did not match any documents in the collection
-		if err == mongo.ErrNoDocuments {
+		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
 		}
+
 		return nil, utils2.TraceStatusFromContext(
 			ctx,
 			errors.WrapIf(
@@ -197,10 +207,11 @@ func (m mongoOrderReadRepository) GetOrderByOrderId(
 	return &order, nil
 }
 
+// CreateOrder creates an order in the database.
 func (m mongoOrderReadRepository) CreateOrder(
 	ctx context.Context,
-	order *read_models.OrderReadModel,
-) (*read_models.OrderReadModel, error) {
+	order *readmodels.OrderReadModel,
+) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.CreateOrder")
 	defer span.End()
 
@@ -228,10 +239,11 @@ func (m mongoOrderReadRepository) CreateOrder(
 	return order, nil
 }
 
+// UpdateOrder updates an order in the database.
 func (m mongoOrderReadRepository) UpdateOrder(
 	ctx context.Context,
-	order *read_models.OrderReadModel,
-) (*read_models.OrderReadModel, error) {
+	order *readmodels.OrderReadModel,
+) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.UpdateOrder")
 	defer span.End()
 
@@ -241,7 +253,7 @@ func (m mongoOrderReadRepository) UpdateOrder(
 	ops.SetReturnDocument(options.After)
 	ops.SetUpsert(true)
 
-	var updated read_models.OrderReadModel
+	var updated readmodels.OrderReadModel
 	if err := collection.FindOneAndUpdate(ctx, bson.M{"_id": order.OrderId}, bson.M{"$set": order}, ops).Decode(&updated); err != nil {
 		return nil, utils2.TraceStatusFromContext(
 			ctx,
@@ -267,6 +279,7 @@ func (m mongoOrderReadRepository) UpdateOrder(
 	return &updated, nil
 }
 
+// DeleteOrderByID deletes an order by id from the database.
 func (m mongoOrderReadRepository) DeleteOrderByID(ctx context.Context, uuid uuid.UUID) error {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.DeleteOrderByID")
 	span.SetAttributes(attribute2.String("ID", uuid.String()))

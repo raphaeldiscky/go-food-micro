@@ -3,10 +3,12 @@ package queries
 import (
 	"context"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/dtos"

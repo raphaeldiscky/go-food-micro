@@ -3,13 +3,13 @@ package mappings
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"google.golang.org/protobuf/types/known/timestamppb"
+
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/value_objects"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/valueobject"
 	grpcOrderService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
-
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func ConfigureOrdersMappings() error {
@@ -22,13 +22,13 @@ func ConfigureOrdersMappings() error {
 	// OrderDto -> Order
 	err = mapper.CreateCustomMap[*dtosV1.OrderDto, *aggregate.Order](
 		func(orderDto *dtosV1.OrderDto) *aggregate.Order {
-			items, err := mapper.Map[[]*value_objects.ShopItem](orderDto.ShopItems)
+			items, err := mapper.Map[[]*valueobject.ShopItem](orderDto.ShopItems)
 			if err != nil {
 				return nil
 			}
 
-			//payment, err := mapper.Map[*entities.Payment](orderDto.Payment)
-			//if err != nil {
+			// payment, err := mapper.Map[*entities.Payment](orderDto.Payment)
+			// if err != nil {
 			//	return nil
 			//}
 
@@ -51,8 +51,8 @@ func ConfigureOrdersMappings() error {
 		return err
 	}
 
-	// read_models.OrderReadModel -> dtos.OrderReadDto
-	err = mapper.CreateMap[*read_models.OrderReadModel, *dtosV1.OrderReadDto]()
+	// readmodels.OrderReadModel -> dtos.OrderReadDto
+	err = mapper.CreateMap[*readmodels.OrderReadModel, *dtosV1.OrderReadDto]()
 	if err != nil {
 		return err
 	}
@@ -99,15 +99,15 @@ func ConfigureOrdersMappings() error {
 	}
 
 	// ShopItem -> ShopItemDto
-	err = mapper.CreateMap[*value_objects.ShopItem, *dtosV1.ShopItemDto]()
+	err = mapper.CreateMap[*valueobject.ShopItem, *dtosV1.ShopItemDto]()
 	if err != nil {
 		return err
 	}
 
 	// ShopItemDto -> ShopItem
-	err = mapper.CreateCustomMap[*dtosV1.ShopItemDto, *value_objects.ShopItem](
-		func(src *dtosV1.ShopItemDto) *value_objects.ShopItem {
-			return value_objects.CreateNewShopItem(
+	err = mapper.CreateCustomMap[*dtosV1.ShopItemDto, *valueobject.ShopItem](
+		func(src *dtosV1.ShopItemDto) *valueobject.ShopItem {
+			return valueobject.CreateNewShopItem(
 				src.Title,
 				src.Description,
 				src.Quantity,
@@ -119,21 +119,21 @@ func ConfigureOrdersMappings() error {
 		return err
 	}
 
-	// dtos.ShopItemDto -> read_models.ShopItemReadModel
-	err = mapper.CreateMap[*dtosV1.ShopItemDto, *read_models.ShopItemReadModel]()
+	// dtos.ShopItemDto -> readmodels.ShopItemReadModel
+	err = mapper.CreateMap[*dtosV1.ShopItemDto, *readmodels.ShopItemReadModel]()
 	if err != nil {
 		return err
 	}
 
-	// read_models.ShopItemReadModel -> dtos.ShopItemReadDto
-	err = mapper.CreateMap[*read_models.ShopItemReadModel, *dtosV1.ShopItemReadDto]()
+	// readmodels.ShopItemReadModel -> dtos.ShopItemReadDto
+	err = mapper.CreateMap[*readmodels.ShopItemReadModel, *dtosV1.ShopItemReadDto]()
 	if err != nil {
 		return err
 	}
 
-	// value_objects.ShopItem -> grpcOrderService.ShopItem
-	err = mapper.CreateCustomMap[*value_objects.ShopItem, *grpcOrderService.ShopItem](
-		func(src *value_objects.ShopItem) *grpcOrderService.ShopItem {
+	// valueobject.ShopItem -> grpcOrderService.ShopItem
+	err = mapper.CreateCustomMap[*valueobject.ShopItem, *grpcOrderService.ShopItem](
+		func(src *valueobject.ShopItem) *grpcOrderService.ShopItem {
 			return &grpcOrderService.ShopItem{
 				Title:       src.Title(),
 				Description: src.Description(),
@@ -146,10 +146,10 @@ func ConfigureOrdersMappings() error {
 		return err
 	}
 
-	// grpcOrderService.ShopItem -> value_objects.ShopItem
-	err = mapper.CreateCustomMap[*grpcOrderService.ShopItem, *value_objects.ShopItem](
-		func(src *grpcOrderService.ShopItem) *value_objects.ShopItem {
-			return value_objects.CreateNewShopItem(
+	// grpcOrderService.ShopItem -> valueobject.ShopItem
+	err = mapper.CreateCustomMap[*grpcOrderService.ShopItem, *valueobject.ShopItem](
+		func(src *grpcOrderService.ShopItem) *valueobject.ShopItem {
+			return valueobject.CreateNewShopItem(
 				src.Title,
 				src.Description,
 				src.Quantity,
@@ -203,6 +203,7 @@ func ConfigureOrdersMappings() error {
 			if err != nil {
 				return nil
 			}
+
 			return &grpcOrderService.GetOrdersRes{
 				Pagination: &grpcOrderService.Pagination{
 					Size:       int32(orders.Size),

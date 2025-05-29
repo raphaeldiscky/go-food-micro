@@ -1,13 +1,17 @@
 package configurations
 
 import (
+	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
 	contracts2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	grpcServer "github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
 	echocontracts "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+	googleGrpc "google.golang.org/grpc"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/configurations/mappings"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/configurations/mediatr"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
@@ -15,9 +19,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc"
 	ordersservice "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
-
-	"github.com/go-playground/validator"
-	googleGrpc "google.golang.org/grpc"
 )
 
 type OrdersModuleConfigurator struct {
@@ -73,6 +74,7 @@ func (c *OrdersModuleConfigurator) MapOrdersEndpoints() {
 			ordersGrpcServer.GrpcServiceBuilder().RegisterRoutes(func(server *googleGrpc.Server) {
 				ordersservice.RegisterOrdersServiceServer(server, orderGrpcService)
 			})
+
 			return nil
 		},
 	)

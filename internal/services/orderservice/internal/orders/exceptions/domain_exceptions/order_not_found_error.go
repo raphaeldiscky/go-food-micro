@@ -3,9 +3,9 @@ package domainExceptions
 import (
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 type orderNotFoundError struct {

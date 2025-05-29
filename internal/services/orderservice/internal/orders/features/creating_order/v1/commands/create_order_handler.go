@@ -5,13 +5,15 @@ import (
 	"fmt"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/value_objects"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/valueobject"
 )
 
 type CreateOrderHandler struct {
@@ -33,7 +35,7 @@ func (c *CreateOrderHandler) Handle(
 	ctx context.Context,
 	command *CreateOrder,
 ) (*dtos.CreateOrderResponseDto, error) {
-	shopItems, err := mapper.Map[[]*value_objects.ShopItem](command.ShopItems)
+	shopItems, err := mapper.Map[[]*valueobject.ShopItem](command.ShopItems)
 	if err != nil {
 		return nil,
 			customErrors.NewApplicationErrorWrap(

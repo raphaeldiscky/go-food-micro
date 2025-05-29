@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	read_models "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
+	readmodels "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 	mock "github.com/stretchr/testify/mock"
 
 	utils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
@@ -27,23 +27,23 @@ func (_m *OrderMongoRepository) EXPECT() *OrderMongoRepository_Expecter {
 }
 
 // CreateOrder provides a mock function with given fields: ctx, order
-func (_m *OrderMongoRepository) CreateOrder(ctx context.Context, order *read_models.OrderReadModel) (*read_models.OrderReadModel, error) {
+func (_m *OrderMongoRepository) CreateOrder(ctx context.Context, order *readmodels.OrderReadModel) (*readmodels.OrderReadModel, error) {
 	ret := _m.Called(ctx, order)
 
-	var r0 *read_models.OrderReadModel
+	var r0 *readmodels.OrderReadModel
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *read_models.OrderReadModel) (*read_models.OrderReadModel, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *readmodels.OrderReadModel) (*readmodels.OrderReadModel, error)); ok {
 		return rf(ctx, order)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *read_models.OrderReadModel) *read_models.OrderReadModel); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *readmodels.OrderReadModel) *readmodels.OrderReadModel); ok {
 		r0 = rf(ctx, order)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*read_models.OrderReadModel)
+			r0 = ret.Get(0).(*readmodels.OrderReadModel)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *read_models.OrderReadModel) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *readmodels.OrderReadModel) error); ok {
 		r1 = rf(ctx, order)
 	} else {
 		r1 = ret.Error(1)
@@ -59,24 +59,24 @@ type OrderMongoRepository_CreateOrder_Call struct {
 
 // CreateOrder is a helper method to define mock.On call
 //   - ctx context.Context
-//   - order *read_models.OrderReadModel
+//   - order *readmodels.OrderReadModel
 func (_e *OrderMongoRepository_Expecter) CreateOrder(ctx interface{}, order interface{}) *OrderMongoRepository_CreateOrder_Call {
 	return &OrderMongoRepository_CreateOrder_Call{Call: _e.mock.On("CreateOrder", ctx, order)}
 }
 
-func (_c *OrderMongoRepository_CreateOrder_Call) Run(run func(ctx context.Context, order *read_models.OrderReadModel)) *OrderMongoRepository_CreateOrder_Call {
+func (_c *OrderMongoRepository_CreateOrder_Call) Run(run func(ctx context.Context, order *readmodels.OrderReadModel)) *OrderMongoRepository_CreateOrder_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(*read_models.OrderReadModel))
+		run(args[0].(context.Context), args[1].(*readmodels.OrderReadModel))
 	})
 	return _c
 }
 
-func (_c *OrderMongoRepository_CreateOrder_Call) Return(_a0 *read_models.OrderReadModel, _a1 error) *OrderMongoRepository_CreateOrder_Call {
+func (_c *OrderMongoRepository_CreateOrder_Call) Return(_a0 *readmodels.OrderReadModel, _a1 error) *OrderMongoRepository_CreateOrder_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *OrderMongoRepository_CreateOrder_Call) RunAndReturn(run func(context.Context, *read_models.OrderReadModel) (*read_models.OrderReadModel, error)) *OrderMongoRepository_CreateOrder_Call {
+func (_c *OrderMongoRepository_CreateOrder_Call) RunAndReturn(run func(context.Context, *readmodels.OrderReadModel) (*readmodels.OrderReadModel, error)) *OrderMongoRepository_CreateOrder_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -125,19 +125,19 @@ func (_c *OrderMongoRepository_DeleteOrderByID_Call) RunAndReturn(run func(conte
 }
 
 // GetAllOrders provides a mock function with given fields: ctx, listQuery
-func (_m *OrderMongoRepository) GetAllOrders(ctx context.Context, listQuery *utils.ListQuery) (*utils.ListResult[*read_models.OrderReadModel], error) {
+func (_m *OrderMongoRepository) GetAllOrders(ctx context.Context, listQuery *utils.ListQuery) (*utils.ListResult[*readmodels.OrderReadModel], error) {
 	ret := _m.Called(ctx, listQuery)
 
-	var r0 *utils.ListResult[*read_models.OrderReadModel]
+	var r0 *utils.ListResult[*readmodels.OrderReadModel]
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *utils.ListQuery) (*utils.ListResult[*read_models.OrderReadModel], error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *utils.ListQuery) (*utils.ListResult[*readmodels.OrderReadModel], error)); ok {
 		return rf(ctx, listQuery)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *utils.ListQuery) *utils.ListResult[*read_models.OrderReadModel]); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *utils.ListQuery) *utils.ListResult[*readmodels.OrderReadModel]); ok {
 		r0 = rf(ctx, listQuery)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*utils.ListResult[*read_models.OrderReadModel])
+			r0 = ret.Get(0).(*utils.ListResult[*readmodels.OrderReadModel])
 		}
 	}
 
@@ -169,30 +169,30 @@ func (_c *OrderMongoRepository_GetAllOrders_Call) Run(run func(ctx context.Conte
 	return _c
 }
 
-func (_c *OrderMongoRepository_GetAllOrders_Call) Return(_a0 *utils.ListResult[*read_models.OrderReadModel], _a1 error) *OrderMongoRepository_GetAllOrders_Call {
+func (_c *OrderMongoRepository_GetAllOrders_Call) Return(_a0 *utils.ListResult[*readmodels.OrderReadModel], _a1 error) *OrderMongoRepository_GetAllOrders_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *OrderMongoRepository_GetAllOrders_Call) RunAndReturn(run func(context.Context, *utils.ListQuery) (*utils.ListResult[*read_models.OrderReadModel], error)) *OrderMongoRepository_GetAllOrders_Call {
+func (_c *OrderMongoRepository_GetAllOrders_Call) RunAndReturn(run func(context.Context, *utils.ListQuery) (*utils.ListResult[*readmodels.OrderReadModel], error)) *OrderMongoRepository_GetAllOrders_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetOrderById provides a mock function with given fields: ctx, _a1
-func (_m *OrderMongoRepository) GetOrderById(ctx context.Context, _a1 uuid.UUID) (*read_models.OrderReadModel, error) {
+func (_m *OrderMongoRepository) GetOrderById(ctx context.Context, _a1 uuid.UUID) (*readmodels.OrderReadModel, error) {
 	ret := _m.Called(ctx, _a1)
 
-	var r0 *read_models.OrderReadModel
+	var r0 *readmodels.OrderReadModel
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (*read_models.OrderReadModel, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (*readmodels.OrderReadModel, error)); ok {
 		return rf(ctx, _a1)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) *read_models.OrderReadModel); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) *readmodels.OrderReadModel); ok {
 		r0 = rf(ctx, _a1)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*read_models.OrderReadModel)
+			r0 = ret.Get(0).(*readmodels.OrderReadModel)
 		}
 	}
 
@@ -224,30 +224,30 @@ func (_c *OrderMongoRepository_GetOrderById_Call) Run(run func(ctx context.Conte
 	return _c
 }
 
-func (_c *OrderMongoRepository_GetOrderById_Call) Return(_a0 *read_models.OrderReadModel, _a1 error) *OrderMongoRepository_GetOrderById_Call {
+func (_c *OrderMongoRepository_GetOrderById_Call) Return(_a0 *readmodels.OrderReadModel, _a1 error) *OrderMongoRepository_GetOrderById_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *OrderMongoRepository_GetOrderById_Call) RunAndReturn(run func(context.Context, uuid.UUID) (*read_models.OrderReadModel, error)) *OrderMongoRepository_GetOrderById_Call {
+func (_c *OrderMongoRepository_GetOrderById_Call) RunAndReturn(run func(context.Context, uuid.UUID) (*readmodels.OrderReadModel, error)) *OrderMongoRepository_GetOrderById_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetOrderByOrderId provides a mock function with given fields: ctx, orderId
-func (_m *OrderMongoRepository) GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*read_models.OrderReadModel, error) {
+func (_m *OrderMongoRepository) GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*readmodels.OrderReadModel, error) {
 	ret := _m.Called(ctx, orderId)
 
-	var r0 *read_models.OrderReadModel
+	var r0 *readmodels.OrderReadModel
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (*read_models.OrderReadModel, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (*readmodels.OrderReadModel, error)); ok {
 		return rf(ctx, orderId)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) *read_models.OrderReadModel); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) *readmodels.OrderReadModel); ok {
 		r0 = rf(ctx, orderId)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*read_models.OrderReadModel)
+			r0 = ret.Get(0).(*readmodels.OrderReadModel)
 		}
 	}
 
@@ -279,30 +279,30 @@ func (_c *OrderMongoRepository_GetOrderByOrderId_Call) Run(run func(ctx context.
 	return _c
 }
 
-func (_c *OrderMongoRepository_GetOrderByOrderId_Call) Return(_a0 *read_models.OrderReadModel, _a1 error) *OrderMongoRepository_GetOrderByOrderId_Call {
+func (_c *OrderMongoRepository_GetOrderByOrderId_Call) Return(_a0 *readmodels.OrderReadModel, _a1 error) *OrderMongoRepository_GetOrderByOrderId_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *OrderMongoRepository_GetOrderByOrderId_Call) RunAndReturn(run func(context.Context, uuid.UUID) (*read_models.OrderReadModel, error)) *OrderMongoRepository_GetOrderByOrderId_Call {
+func (_c *OrderMongoRepository_GetOrderByOrderId_Call) RunAndReturn(run func(context.Context, uuid.UUID) (*readmodels.OrderReadModel, error)) *OrderMongoRepository_GetOrderByOrderId_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // SearchOrders provides a mock function with given fields: ctx, searchText, listQuery
-func (_m *OrderMongoRepository) SearchOrders(ctx context.Context, searchText string, listQuery *utils.ListQuery) (*utils.ListResult[*read_models.OrderReadModel], error) {
+func (_m *OrderMongoRepository) SearchOrders(ctx context.Context, searchText string, listQuery *utils.ListQuery) (*utils.ListResult[*readmodels.OrderReadModel], error) {
 	ret := _m.Called(ctx, searchText, listQuery)
 
-	var r0 *utils.ListResult[*read_models.OrderReadModel]
+	var r0 *utils.ListResult[*readmodels.OrderReadModel]
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string, *utils.ListQuery) (*utils.ListResult[*read_models.OrderReadModel], error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, *utils.ListQuery) (*utils.ListResult[*readmodels.OrderReadModel], error)); ok {
 		return rf(ctx, searchText, listQuery)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string, *utils.ListQuery) *utils.ListResult[*read_models.OrderReadModel]); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, string, *utils.ListQuery) *utils.ListResult[*readmodels.OrderReadModel]); ok {
 		r0 = rf(ctx, searchText, listQuery)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*utils.ListResult[*read_models.OrderReadModel])
+			r0 = ret.Get(0).(*utils.ListResult[*readmodels.OrderReadModel])
 		}
 	}
 
@@ -335,34 +335,34 @@ func (_c *OrderMongoRepository_SearchOrders_Call) Run(run func(ctx context.Conte
 	return _c
 }
 
-func (_c *OrderMongoRepository_SearchOrders_Call) Return(_a0 *utils.ListResult[*read_models.OrderReadModel], _a1 error) *OrderMongoRepository_SearchOrders_Call {
+func (_c *OrderMongoRepository_SearchOrders_Call) Return(_a0 *utils.ListResult[*readmodels.OrderReadModel], _a1 error) *OrderMongoRepository_SearchOrders_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *OrderMongoRepository_SearchOrders_Call) RunAndReturn(run func(context.Context, string, *utils.ListQuery) (*utils.ListResult[*read_models.OrderReadModel], error)) *OrderMongoRepository_SearchOrders_Call {
+func (_c *OrderMongoRepository_SearchOrders_Call) RunAndReturn(run func(context.Context, string, *utils.ListQuery) (*utils.ListResult[*readmodels.OrderReadModel], error)) *OrderMongoRepository_SearchOrders_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // UpdateOrder provides a mock function with given fields: ctx, order
-func (_m *OrderMongoRepository) UpdateOrder(ctx context.Context, order *read_models.OrderReadModel) (*read_models.OrderReadModel, error) {
+func (_m *OrderMongoRepository) UpdateOrder(ctx context.Context, order *readmodels.OrderReadModel) (*readmodels.OrderReadModel, error) {
 	ret := _m.Called(ctx, order)
 
-	var r0 *read_models.OrderReadModel
+	var r0 *readmodels.OrderReadModel
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *read_models.OrderReadModel) (*read_models.OrderReadModel, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *readmodels.OrderReadModel) (*readmodels.OrderReadModel, error)); ok {
 		return rf(ctx, order)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *read_models.OrderReadModel) *read_models.OrderReadModel); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, *readmodels.OrderReadModel) *readmodels.OrderReadModel); ok {
 		r0 = rf(ctx, order)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*read_models.OrderReadModel)
+			r0 = ret.Get(0).(*readmodels.OrderReadModel)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *read_models.OrderReadModel) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, *readmodels.OrderReadModel) error); ok {
 		r1 = rf(ctx, order)
 	} else {
 		r1 = ret.Error(1)
@@ -378,24 +378,24 @@ type OrderMongoRepository_UpdateOrder_Call struct {
 
 // UpdateOrder is a helper method to define mock.On call
 //   - ctx context.Context
-//   - order *read_models.OrderReadModel
+//   - order *readmodels.OrderReadModel
 func (_e *OrderMongoRepository_Expecter) UpdateOrder(ctx interface{}, order interface{}) *OrderMongoRepository_UpdateOrder_Call {
 	return &OrderMongoRepository_UpdateOrder_Call{Call: _e.mock.On("UpdateOrder", ctx, order)}
 }
 
-func (_c *OrderMongoRepository_UpdateOrder_Call) Run(run func(ctx context.Context, order *read_models.OrderReadModel)) *OrderMongoRepository_UpdateOrder_Call {
+func (_c *OrderMongoRepository_UpdateOrder_Call) Run(run func(ctx context.Context, order *readmodels.OrderReadModel)) *OrderMongoRepository_UpdateOrder_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(*read_models.OrderReadModel))
+		run(args[0].(context.Context), args[1].(*readmodels.OrderReadModel))
 	})
 	return _c
 }
 
-func (_c *OrderMongoRepository_UpdateOrder_Call) Return(_a0 *read_models.OrderReadModel, _a1 error) *OrderMongoRepository_UpdateOrder_Call {
+func (_c *OrderMongoRepository_UpdateOrder_Call) Return(_a0 *readmodels.OrderReadModel, _a1 error) *OrderMongoRepository_UpdateOrder_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *OrderMongoRepository_UpdateOrder_Call) RunAndReturn(run func(context.Context, *read_models.OrderReadModel) (*read_models.OrderReadModel, error)) *OrderMongoRepository_UpdateOrder_Call {
+func (_c *OrderMongoRepository_UpdateOrder_Call) RunAndReturn(run func(context.Context, *readmodels.OrderReadModel) (*readmodels.OrderReadModel, error)) *OrderMongoRepository_UpdateOrder_Call {
 	_c.Call.Return(run)
 	return _c
 }

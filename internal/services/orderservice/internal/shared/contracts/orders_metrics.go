@@ -1,9 +1,11 @@
+// Package contracts contains the orders metrics.
 package contracts
 
 import (
 	"go.opentelemetry.io/otel/metric"
 )
 
+// OrdersMetrics is the metrics for the orders.
 type OrdersMetrics struct {
 	SuccessGrpcRequests metric.Float64Counter
 	ErrorGrpcRequests   metric.Float64Counter
@@ -16,16 +18,16 @@ type OrdersMetrics struct {
 	GetOrdersGrpcRequests    metric.Float64Counter
 	SearchOrderGrpcRequests  metric.Float64Counter
 
-	SuccessHttpRequests metric.Float64Counter
-	ErrorHttpRequests   metric.Float64Counter
+	SuccessHTTPRequests metric.Float64Counter
+	ErrorHTTPRequests   metric.Float64Counter
 
-	CreateOrderHttpRequests  metric.Float64Counter
-	UpdateOrderHttpRequests  metric.Float64Counter
-	PayOrderHttpRequests     metric.Float64Counter
-	SubmitOrderHttpRequests  metric.Float64Counter
-	GetOrderByIdHttpRequests metric.Float64Counter
-	SearchOrderHttpRequests  metric.Float64Counter
-	GetOrdersHttpRequests    metric.Float64Counter
+	CreateOrderHTTPRequests  metric.Float64Counter
+	UpdateOrderHTTPRequests  metric.Float64Counter
+	PayOrderHTTPRequests     metric.Float64Counter
+	SubmitOrderHTTPRequests  metric.Float64Counter
+	GetOrderByIDHTTPRequests metric.Float64Counter
+	SearchOrderHTTPRequests  metric.Float64Counter
+	GetOrdersHTTPRequests    metric.Float64Counter
 
 	SuccessRabbitMQMessages metric.Float64Counter
 	ErrorRabbitMQMessages   metric.Float64Counter

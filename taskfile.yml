@@ -21,7 +21,7 @@ tasks:
       - chmod +x ./scripts/install-tools.sh
       - ./scripts/install-tools.sh
 
-  install_dependencies:
+  install_deps:
     desc: Install project dependencies
     cmds:
       - sh ./scripts/install-dependencies.sh pkg

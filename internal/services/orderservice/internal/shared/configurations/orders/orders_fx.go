@@ -3,14 +3,13 @@ package orders
 import (
 	"fmt"
 
+	"go.opentelemetry.io/otel/metric"
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders/infrastructure"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/contracts"
-
-	"go.opentelemetry.io/otel/metric"
-	api "go.opentelemetry.io/otel/metric"
-	"go.uber.org/fx"
 )
 
 // https://pmihaylov.com/shared-components-go-microservices/
@@ -41,7 +40,7 @@ func configOrdersMetrics(
 	appOptions := cfg.AppOptions
 	successGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_success_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of success grpc requests"),
+		metric.WithDescription("The total number of success grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -49,7 +48,7 @@ func configOrdersMetrics(
 
 	errorGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_error_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of error grpc requests"),
+		metric.WithDescription("The total number of error grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -57,7 +56,7 @@ func configOrdersMetrics(
 
 	createOrderGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_create_order_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of create order grpc requests"),
+		metric.WithDescription("The total number of create order grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -65,7 +64,7 @@ func configOrdersMetrics(
 
 	updateOrderGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_update_order_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of update order grpc requests"),
+		metric.WithDescription("The total number of update order grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -73,7 +72,7 @@ func configOrdersMetrics(
 
 	payOrderGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_pay_order_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of pay order grpc requests"),
+		metric.WithDescription("The total number of pay order grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -81,7 +80,7 @@ func configOrdersMetrics(
 
 	submitOrderGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_submit_order_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of submit order grpc requests"),
+		metric.WithDescription("The total number of submit order grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -89,7 +88,7 @@ func configOrdersMetrics(
 
 	getOrderByIdGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_order_by_id_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of get order by id grpc requests"),
+		metric.WithDescription("The total number of get order by id grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -97,7 +96,7 @@ func configOrdersMetrics(
 
 	getOrdersGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_orders_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of get orders grpc requests"),
+		metric.WithDescription("The total number of get orders grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -105,7 +104,7 @@ func configOrdersMetrics(
 
 	searchOrderGrpcRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_search_order_grpc_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of search order grpc requests"),
+		metric.WithDescription("The total number of search order grpc requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -113,7 +112,7 @@ func configOrdersMetrics(
 
 	getOrdersHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_orders_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of get orders http requests"),
+		metric.WithDescription("The total number of get orders http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -121,7 +120,7 @@ func configOrdersMetrics(
 
 	createOrderHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_create_order_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of create order http requests"),
+		metric.WithDescription("The total number of create order http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -129,7 +128,7 @@ func configOrdersMetrics(
 
 	updateOrderHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_update_order_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of update order http requests"),
+		metric.WithDescription("The total number of update order http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -137,7 +136,7 @@ func configOrdersMetrics(
 
 	payOrderHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_pay_order_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of pay order http requests"),
+		metric.WithDescription("The total number of pay order http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -145,7 +144,7 @@ func configOrdersMetrics(
 
 	submitOrderHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_submit_order_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of submit order http requests"),
+		metric.WithDescription("The total number of submit order http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -153,7 +152,7 @@ func configOrdersMetrics(
 
 	getOrderByIdHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_get_order_by_id_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of get order by id http requests"),
+		metric.WithDescription("The total number of get order by id http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -161,7 +160,7 @@ func configOrdersMetrics(
 
 	searchOrderHttpRequests, err := meter.Float64Counter(
 		fmt.Sprintf("%s_search_order_http_requests_total", appOptions.ServiceName),
-		api.WithDescription("The total number of search order http requests"),
+		metric.WithDescription("The total number of search order http requests"),
 	)
 	if err != nil {
 		return nil, err
@@ -169,7 +168,7 @@ func configOrdersMetrics(
 
 	deleteOrderRabbitMQMessages, err := meter.Float64Counter(
 		fmt.Sprintf("%s_delete_order_rabbitmq_messages_total", appOptions.ServiceName),
-		api.WithDescription("The total number of delete order rabbirmq messages"),
+		metric.WithDescription("The total number of delete order rabbirmq messages"),
 	)
 	if err != nil {
 		return nil, err
@@ -177,7 +176,7 @@ func configOrdersMetrics(
 
 	createOrderRabbitMQMessages, err := meter.Float64Counter(
 		fmt.Sprintf("%s_create_order_rabbitmq_messages_total", appOptions.ServiceName),
-		api.WithDescription("The total number of create order rabbirmq messages"),
+		metric.WithDescription("The total number of create order rabbirmq messages"),
 	)
 	if err != nil {
 		return nil, err
@@ -185,14 +184,14 @@ func configOrdersMetrics(
 
 	updateOrderRabbitMQMessages, err := meter.Float64Counter(
 		fmt.Sprintf("%s_update_order_rabbitmq_messages_total", appOptions.ServiceName),
-		api.WithDescription("The total number of update order rabbirmq messages"),
+		metric.WithDescription("The total number of update order rabbirmq messages"),
 	)
 	if err != nil {
 		return nil, err
 	}
 
 	return &contracts.OrdersMetrics{
-		CreateOrderHttpRequests:     createOrderHttpRequests,
+		CreateOrderHTTPRequests:     createOrderHttpRequests,
 		SuccessGrpcRequests:         successGrpcRequests,
 		ErrorGrpcRequests:           errorGrpcRequests,
 		CreateOrderGrpcRequests:     createOrderGrpcRequests,
@@ -202,12 +201,12 @@ func configOrdersMetrics(
 		GetOrderByIdGrpcRequests:    getOrderByIdGrpcRequests,
 		GetOrdersGrpcRequests:       getOrdersGrpcRequests,
 		SearchOrderGrpcRequests:     searchOrderGrpcRequests,
-		GetOrdersHttpRequests:       getOrdersHttpRequests,
-		UpdateOrderHttpRequests:     updateOrderHttpRequests,
-		PayOrderHttpRequests:        payOrderHttpRequests,
-		SubmitOrderHttpRequests:     submitOrderHttpRequests,
-		GetOrderByIdHttpRequests:    getOrderByIdHttpRequests,
-		SearchOrderHttpRequests:     searchOrderHttpRequests,
+		GetOrdersHTTPRequests:       getOrdersHttpRequests,
+		UpdateOrderHTTPRequests:     updateOrderHttpRequests,
+		PayOrderHTTPRequests:        payOrderHttpRequests,
+		SubmitOrderHTTPRequests:     submitOrderHttpRequests,
+		GetOrderByIDHTTPRequests:    getOrderByIdHttpRequests,
+		SearchOrderHTTPRequests:     searchOrderHttpRequests,
 		DeleteOrderRabbitMQMessages: deleteOrderRabbitMQMessages,
 		CreateOrderRabbitMQMessages: createOrderRabbitMQMessages,
 		UpdateOrderRabbitMQMessages: updateOrderRabbitMQMessages,

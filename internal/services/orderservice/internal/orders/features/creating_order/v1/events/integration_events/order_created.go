@@ -2,9 +2,10 @@ package integrationEvents
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 
 	uuid "github.com/satori/go.uuid"
+
+	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 )
 
 type OrderCreatedV1 struct {

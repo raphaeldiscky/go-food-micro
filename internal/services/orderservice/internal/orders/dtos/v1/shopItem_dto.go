@@ -1,5 +1,7 @@
-package dtosV1
+// Package dtosv1 contains the shop item dto.
+package dtosv1
 
+// ShopItemDto is the dto for the shop item.
 type ShopItemDto struct {
 	Title       string  `json:"title"`
 	Description string  `json:"description"`

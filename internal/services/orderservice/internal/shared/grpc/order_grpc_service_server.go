@@ -4,12 +4,21 @@ import (
 	"context"
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	"emperror.dev/errors"
+	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	attribute2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	uuid "github.com/satori/go.uuid"
+	api "go.opentelemetry.io/otel/metric"
+
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/commands"
 	createOrderDtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
@@ -19,14 +28,6 @@ import (
 	getOrdersQueryV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/queries"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/contracts"
 	grpcOrderService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
-
-	"emperror.dev/errors"
-	"github.com/go-playground/validator"
-	mediatr "github.com/mehdihadeli/go-mediatr"
-	uuid "github.com/satori/go.uuid"
-	"go.opentelemetry.io/otel/attribute"
-	api "go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/trace"
 )
 
 type OrderGrpcServiceServer struct {
@@ -78,6 +79,7 @@ func (o OrderGrpcServiceServer) CreateOrder(
 		o.logger.Errorf(
 			fmt.Sprintf("[OrderGrpcServiceServer_CreateOrder.StructCtx] err: %v", validationErr),
 		)
+
 		return nil, validationErr
 	}
 
@@ -98,6 +100,7 @@ func (o OrderGrpcServiceServer) CreateOrder(
 			),
 			logger.Fields{"ID": command.OrderId},
 		)
+
 		return nil, err
 	}
 
@@ -124,6 +127,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 				badRequestErr,
 			),
 		)
+
 		return nil, badRequestErr
 	}
 
@@ -136,6 +140,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 		o.logger.Errorf(
 			fmt.Sprintf("[OrderGrpcServiceServer_GetOrderByID.StructCtx] err: %v", validationErr),
 		)
+
 		return nil, validationErr
 	}
 
@@ -156,6 +161,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 			),
 			logger.Fields{"ID": query.ID},
 		)
+
 		return nil, err
 	}
 
@@ -166,6 +172,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 			err,
 			"[OrderGrpcServiceServer_GetOrderByID.Map] error in mapping order",
 		)
+
 		return nil, utils2.TraceStatusFromContext(ctx, err)
 	}
 
@@ -208,6 +215,7 @@ func (o OrderGrpcServiceServer) GetOrders(
 			"[OrderGrpcServiceServer_GetOrders.Send] error in sending GetOrders",
 		)
 		o.logger.Error(fmt.Sprintf("[OrderGrpcServiceServer_GetOrders.Send] err: {%v}", err))
+
 		return nil, err
 	}
 
@@ -217,6 +225,7 @@ func (o OrderGrpcServiceServer) GetOrders(
 			err,
 			"[OrderGrpcServiceServer_GetOrders.Map] error in mapping orders",
 		)
+
 		return nil, err
 	}
 

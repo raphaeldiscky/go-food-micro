@@ -15,7 +15,7 @@ import (
 	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/commands"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
 	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/events/integration_events"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
@@ -39,7 +39,7 @@ var _ = Describe("Create Order Feature", func() {
 		err          error
 		command      *createOrderCommandV1.CreateOrder
 		result       *dtos.CreateOrderResponseDto
-		createdOrder *read_models.OrderReadModel
+		createdOrder *readmodels.OrderReadModel
 		// id            string
 		shouldPublish hypothesis.Hypothesis[*integrationEvents.OrderCreatedV1]
 	)

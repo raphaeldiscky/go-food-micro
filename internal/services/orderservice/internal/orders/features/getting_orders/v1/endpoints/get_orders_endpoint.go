@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/params"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_orders/v1/queries"
-
-	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type getOrdersEndpoint struct {
@@ -36,11 +37,11 @@ func (ep *getOrdersEndpoint) MapEndpoint() {
 // @Produce json
 // @Param getOrdersRequestDto query dtos.GetOrdersRequestDto false "GetOrdersRequestDto"
 // @Success 200 {object} dtos.GetOrdersResponseDto
-// @Router /api/v1/orders [get]
+// @Router /api/v1/orders [get].
 func (ep *getOrdersEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		ep.OrdersMetrics.GetOrdersHttpRequests.Add(ctx, 1)
+		ep.OrdersMetrics.GetOrdersHTTPRequests.Add(ctx, 1)
 
 		listQuery, err := utils.GetListQueryFromCtx(c)
 		if err != nil {
@@ -54,6 +55,7 @@ func (ep *getOrdersEndpoint) handler() echo.HandlerFunc {
 					badRequestErr,
 				),
 			)
+
 			return err
 		}
 
@@ -64,6 +66,7 @@ func (ep *getOrdersEndpoint) handler() echo.HandlerFunc {
 				"[getOrdersEndpoint_handler.Bind] error in the binding request",
 			)
 			ep.Logger.Errorf(fmt.Sprintf("[getOrdersEndpoint_handler.Bind] err: %v", badRequestErr))
+
 			return badRequestErr
 		}
 
@@ -76,6 +79,7 @@ func (ep *getOrdersEndpoint) handler() echo.HandlerFunc {
 				"[getOrdersEndpoint_handler.Send] error in sending GetOrders",
 			)
 			ep.Logger.Error(fmt.Sprintf("[getOrdersEndpoint_handler.Send] err: {%v}", err))
+
 			return err
 		}
 

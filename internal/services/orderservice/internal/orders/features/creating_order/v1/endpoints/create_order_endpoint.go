@@ -5,16 +5,17 @@ import (
 	"net/http"
 	"time"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/params"
 	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/commands"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creating_order/v1/dtos"
-
-	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type createOrderEndpoint struct {
@@ -37,11 +38,11 @@ func (ep *createOrderEndpoint) MapEndpoint() {
 // @Produce json
 // @Param CreateOrderRequestDto body dtos.CreateOrderRequestDto true "Order data"
 // @Success 201 {object} dtos.CreateOrderResponseDto
-// @Router /api/v1/orders [post]
+// @Router /api/v1/orders [post].
 func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		ep.OrdersMetrics.CreateOrderHttpRequests.Add(ctx, 1)
+		ep.OrdersMetrics.CreateOrderHTTPRequests.Add(ctx, 1)
 
 		request := &dtos.CreateOrderRequestDto{}
 		if err := c.Bind(request); err != nil {
@@ -52,6 +53,7 @@ func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 			ep.Logger.Errorf(
 				fmt.Sprintf("[createOrderEndpoint_handler.Bind] err: %v", badRequestErr),
 			)
+
 			return badRequestErr
 		}
 
@@ -69,6 +71,7 @@ func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 			ep.Logger.Errorf(
 				fmt.Sprintf("[createOrderEndpoint_handler.StructCtx] err: %v", validationErr),
 			)
+
 			return validationErr
 		}
 
@@ -89,6 +92,7 @@ func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 				),
 				logger.Fields{"ID": command.OrderId},
 			)
+
 			return err
 		}
 

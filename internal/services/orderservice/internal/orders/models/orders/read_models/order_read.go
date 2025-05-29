@@ -1,4 +1,5 @@
-package read_models
+// Package readmodels contains the order read model.
+package readmodels
 
 import (
 	"time"
@@ -6,6 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// OrderReadModel is the read model for the order.
 type OrderReadModel struct {
 	// we generate id ourself because auto generate mongo string id column with type _id is not an uuid
 	ID              string               `json:"id"                        bson:"_id,omitempty"` // https://www.mongodb.com/docs/drivers/go/current/fundamentals/crud/write-operations/insert/#the-_id-field
@@ -25,6 +27,7 @@ type OrderReadModel struct {
 	UpdatedAt       time.Time            `json:"updatedAt,omitempty"       bson:"updatedAt,omitempty"`
 }
 
+// NewOrderReadModel creates a new order read model.
 func NewOrderReadModel(
 	orderId uuid.UUID,
 	items []*ShopItemReadModel,
@@ -46,6 +49,7 @@ func NewOrderReadModel(
 	}
 }
 
+// getShopItemsTotalPrice gets the total price of the shop items.
 func getShopItemsTotalPrice(shopItems []*ShopItemReadModel) float64 {
 	var totalPrice float64 = 0
 	for _, item := range shopItems {

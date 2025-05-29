@@ -4,19 +4,22 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func Test_Order_Shop_Items_Required_Error(t *testing.T) {
+	t.Parallel()
 	err := NewOrderShopItemsRequiredError("order items required")
 	assert.True(t, IsOrderShopItemsRequiredError(err))
 	fmt.Println(errorUtils.ErrorsWithStack(err))
 }
 
 func Test_Order_Not_Found_Error(t *testing.T) {
+	t.Parallel()
+
 	err := NewOrderNotFoundError(1)
 	assert.True(t, IsOrderNotFoundError(err))
 	fmt.Println(errorUtils.ErrorsWithStack(err))

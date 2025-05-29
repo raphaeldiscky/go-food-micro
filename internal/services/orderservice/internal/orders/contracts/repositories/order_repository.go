@@ -4,31 +4,32 @@ import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
 
 	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 )
 
 type orderReadRepository interface {
 	GetAllOrders(
 		ctx context.Context,
 		listQuery *utils.ListQuery,
-	) (*utils.ListResult[*read_models.OrderReadModel], error)
+	) (*utils.ListResult[*readmodels.OrderReadModel], error)
 	SearchOrders(
 		ctx context.Context,
 		searchText string,
 		listQuery *utils.ListQuery,
-	) (*utils.ListResult[*read_models.OrderReadModel], error)
-	GetOrderById(ctx context.Context, uuid uuid.UUID) (*read_models.OrderReadModel, error)
-	GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*read_models.OrderReadModel, error)
+	) (*utils.ListResult[*readmodels.OrderReadModel], error)
+	GetOrderById(ctx context.Context, uuid uuid.UUID) (*readmodels.OrderReadModel, error)
+	GetOrderByOrderId(ctx context.Context, orderId uuid.UUID) (*readmodels.OrderReadModel, error)
 	CreateOrder(
 		ctx context.Context,
-		order *read_models.OrderReadModel,
-	) (*read_models.OrderReadModel, error)
+		order *readmodels.OrderReadModel,
+	) (*readmodels.OrderReadModel, error)
 	UpdateOrder(
 		ctx context.Context,
-		order *read_models.OrderReadModel,
-	) (*read_models.OrderReadModel, error)
+		order *readmodels.OrderReadModel,
+	) (*readmodels.OrderReadModel, error)
 	DeleteOrderByID(ctx context.Context, uuid uuid.UUID) error
 }
 

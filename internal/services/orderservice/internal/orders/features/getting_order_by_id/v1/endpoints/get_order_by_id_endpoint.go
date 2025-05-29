@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"net/http"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+
+	echo "github.com/labstack/echo/v4"
+	mediatr "github.com/mehdihadeli/go-mediatr"
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/params"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/getting_order_by_id/v1/queries"
-
-	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type getOrderByIdEndpoint struct {
@@ -36,13 +37,13 @@ func (ep *getOrderByIdEndpoint) MapEndpoint() {
 // @Produce json
 // @Param id path string true "Order ID"
 // @Success 200 {object} dtos.GetOrderByIdResponseDto
-// @Router /api/v1/orders/{id} [get]
+// @Router /api/v1/orders/{id} [get].
 func (ep *getOrderByIdEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		ep.OrdersMetrics.GetOrderByIdHttpRequests.Add(ctx, 1)
+		ep.OrdersMetrics.GetOrderByIDHTTPRequests.Add(ctx, 1)
 
-		request := &dtos.GetOrderByIdRequestDto{}
+		request := &dtos.GetOrderByIDRequestDto{}
 		if err := c.Bind(request); err != nil {
 			badRequestErr := customErrors.NewBadRequestErrorWrap(
 				err,
@@ -51,6 +52,7 @@ func (ep *getOrderByIdEndpoint) handler() echo.HandlerFunc {
 			ep.Logger.Errorf(
 				fmt.Sprintf("[getProductByIdEndpoint_handler.Bind] err: %v", badRequestErr),
 			)
+
 			return badRequestErr
 		}
 
@@ -61,6 +63,7 @@ func (ep *getOrderByIdEndpoint) handler() echo.HandlerFunc {
 				"[getProductByIdEndpoint_handler.StructCtx]  query validation failed",
 			)
 			ep.Logger.Errorf("[getProductByIdEndpoint_handler.StructCtx] err: %v", validationErr)
+
 			return validationErr
 		}
 
@@ -81,6 +84,7 @@ func (ep *getOrderByIdEndpoint) handler() echo.HandlerFunc {
 				),
 				logger.Fields{"ID": query.ID},
 			)
+
 			return err
 		}
 

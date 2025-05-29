@@ -4,28 +4,28 @@ import (
 	"context"
 	"testing"
 
+	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
-	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	rabbithole "github.com/michaelklishin/rabbit-hole"
+	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/aggregate"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/read_models"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/app/test"
 	contracts2 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/contracts"
 	ordersService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	rabbithole "github.com/michaelklishin/rabbit-hole"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 const (
@@ -44,10 +44,9 @@ type IntegrationTestSharedFixture struct {
 	rabbitmqOptions      *config.RabbitmqOptions
 	BaseAddress          string
 	mongoClient          *mongo.Client
-	esdbClient           *esdb.Client
 	MongoDbOptions       *mongodb.MongoDbOptions
 	EventStoreDbOptions  *config3.EventStoreDbOptions
-	Items                []*read_models.OrderReadModel
+	Items                []*readmodels.OrderReadModel
 	OrdersServiceClient  ordersService.OrdersServiceClient
 }
 
@@ -125,6 +124,7 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
 			queue.Name,
 		)
+
 		return err
 	}
 
@@ -138,6 +138,7 @@ func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
 		collections,
 		i.MongoDbOptions.Database,
 	)
+
 	return err
 }
 
@@ -158,16 +159,17 @@ func cleanupCollections(
 			return err
 		}
 	}
+
 	return nil
 }
 
 func seedReadModelData(
 	db *mongo.Client,
 	databaseName string,
-) ([]*read_models.OrderReadModel, error) {
+) ([]*readmodels.OrderReadModel, error) {
 	ctx := context.Background()
 
-	orders := []*read_models.OrderReadModel{
+	orders := []*readmodels.OrderReadModel{
 		{
 			ID:              gofakeit.UUID(),
 			OrderId:         gofakeit.UUID(),
@@ -220,20 +222,24 @@ func seedReadModelData(
 		return nil, errors.WrapIf(err, "error in seed database")
 	}
 
-	result, err := mongodb.Paginate[*read_models.OrderReadModel](
+	result, err := mongodb.Paginate[*readmodels.OrderReadModel](
 		ctx,
 		utils.NewListQuery(10, 1),
 		collection,
 		nil,
 	)
+	if err != nil {
+		return nil, errors.WrapIf(err, "error in paginate mongodb data")
+	}
+
 	return result.Items, nil
 }
 
-func generateShopItems() []*read_models.ShopItemReadModel {
-	var shopItems []*read_models.ShopItemReadModel
+func generateShopItems() []*readmodels.ShopItemReadModel {
+	var shopItems []*readmodels.ShopItemReadModel
 
 	for i := 0; i < 3; i++ {
-		shopItem := &read_models.ShopItemReadModel{
+		shopItem := &readmodels.ShopItemReadModel{
 			Title:       gofakeit.Word(),
 			Description: gofakeit.Sentence(3),
 			Quantity:    uint64(gofakeit.UintRange(1, 100)),

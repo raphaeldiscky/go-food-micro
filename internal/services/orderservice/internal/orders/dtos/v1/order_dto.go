@@ -1,4 +1,5 @@
-package dtosV1
+// Package dtosv1 contains the order dto.
+package dtosv1
 
 import (
 	"time"
@@ -6,6 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// OrderDto is the dto for the order.
 type OrderDto struct {
 	ID              uuid.UUID      `json:"id"`
 	ShopItems       []*ShopItemDto `json:"shopItems"`

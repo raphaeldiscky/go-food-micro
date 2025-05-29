@@ -3,7 +3,6 @@ package test
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/test"
-
 	"go.uber.org/fx/fxtest"
 )
 

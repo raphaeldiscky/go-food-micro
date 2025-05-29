@@ -56,7 +56,7 @@ jobs:
 
       - name: Install Project Dependencies
         if: steps.go-mod-cache.outputs.cache-hit != 'true'
-        run: task install_dependencies
+        run: task install_deps
 
       - name: Format and Lint Code
         run: task format

@@ -4,9 +4,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
 )
 
 // OrdersApplication is a struct that contains the orders application.
@@ -23,6 +23,7 @@ func NewOrdersApplication(
 	environment environment.Environment,
 ) *OrdersApplication {
 	app := fxapp.NewApplication(providers, decorates, options, logger, environment)
+
 	return &OrdersApplication{
 		OrdersServiceConfigurator: orders.NewOrdersServiceConfigurator(app),
 	}

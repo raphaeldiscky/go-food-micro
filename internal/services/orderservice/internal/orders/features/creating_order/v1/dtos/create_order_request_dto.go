@@ -2,6 +2,7 @@ package dtos
 
 import (
 	customTypes "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/customtypes"
+
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 )
 
@@ -9,7 +10,7 @@ import (
 // https://echo.labstack.com/guide/request/
 // https://github.com/go-playground/validator
 
-// CreateOrderRequestDto validation will handle in command level
+// CreateOrderRequestDto validation will handle in command level.
 type CreateOrderRequestDto struct {
 	ShopItems       []*dtosV1.ShopItemDto  `json:"shopItems"`
 	AccountEmail    string                 `json:"accountEmail"`
