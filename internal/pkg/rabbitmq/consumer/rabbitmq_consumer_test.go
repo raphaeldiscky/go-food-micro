@@ -135,7 +135,7 @@ type TestMessageHandler struct{}
 
 // Handle handles the message.
 func (t *TestMessageHandler) Handle(
-	ctx context.Context,
+	_ context.Context,
 	consumeContext types3.MessageConsumeContext,
 ) error {
 	message := consumeContext.Message().(*ProducerConsumerMessage)
@@ -154,7 +154,7 @@ type TestMessageHandler2 struct{}
 
 // Handle handles the message.
 func (t *TestMessageHandler2) Handle(
-	ctx context.Context,
+	_ context.Context,
 	consumeContext types3.MessageConsumeContext,
 ) error {
 	message := consumeContext.Message()

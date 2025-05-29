@@ -4,6 +4,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"emperror.dev/errors"
 	"github.com/iancoleman/strcase"
@@ -518,8 +519,123 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Count(
 // Find finds entities by specification.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Find(
 	ctx context.Context,
-	specification specification.Specification,
+	spec specification.Specification,
 ) ([]TEntity, error) {
-	// TODO implement me
-	panic("implement me")
+	dataModelType := typeMapper.GetGenericTypeByT[TDataModel]()
+	modelType := typeMapper.GetGenericTypeByT[TEntity]()
+	collection := m.db.Database(m.databaseName).Collection(m.collectionName)
+
+	// Convert specification to MongoDB filter
+	filter := convertSpecificationToMongoFilter(spec)
+
+	cursorResult, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, errors.WrapIf(err, "failed to find entities by specification")
+	}
+	defer cursorResult.Close(ctx) //nolint: errcheck
+
+	if modelType == dataModelType {
+		var models []TEntity
+		for cursorResult.Next(ctx) {
+			var e TEntity
+			if err := cursorResult.Decode(&e); err != nil {
+				return nil, errors.WrapIf(err, "failed to decode entity")
+			}
+			models = append(models, e)
+		}
+		return models, nil
+	}
+
+	var dataModels []TDataModel
+	for cursorResult.Next(ctx) {
+		var d TDataModel
+		if err := cursorResult.Decode(&d); err != nil {
+			return nil, errors.WrapIf(err, "failed to decode data model")
+		}
+		dataModels = append(dataModels, d)
+	}
+
+	models, err := mapper.Map[[]TEntity](dataModels)
+	if err != nil {
+		return nil, errors.WrapIf(err, "failed to map data models to entities")
+	}
+
+	return models, nil
+}
+
+// convertSpecificationToMongoFilter converts a specification to a MongoDB filter.
+func convertSpecificationToMongoFilter(spec specification.Specification) bson.M {
+	query := spec.GetQuery()
+	values := spec.GetValues()
+
+	// Handle simple cases first
+	if query == "" {
+		return bson.M{}
+	}
+
+	// Convert SQL-like operators to MongoDB operators
+	query = strings.ReplaceAll(query, "=", "$eq")
+	query = strings.ReplaceAll(query, ">", "$gt")
+	query = strings.ReplaceAll(query, ">=", "$gte")
+	query = strings.ReplaceAll(query, "<", "$lt")
+	query = strings.ReplaceAll(query, "<=", "$lte")
+	query = strings.ReplaceAll(query, "IS NULL", "$exists: false")
+	query = strings.ReplaceAll(query, "IS NOT NULL", "$exists: true")
+
+	// Handle AND/OR operators
+	if strings.Contains(query, " AND ") {
+		parts := strings.Split(query, " AND ")
+		filters := make([]bson.M, len(parts))
+		for i, part := range parts {
+			filters[i] = parseQueryPart(part, values)
+		}
+		return bson.M{"$and": filters}
+	}
+
+	if strings.Contains(query, " OR ") {
+		parts := strings.Split(query, " OR ")
+		filters := make([]bson.M, len(parts))
+		for i, part := range parts {
+			filters[i] = parseQueryPart(part, values)
+		}
+		return bson.M{"$or": filters}
+	}
+
+	// Handle NOT operator
+	if strings.HasPrefix(query, " NOT ") {
+		innerQuery := strings.TrimPrefix(query, " NOT ")
+		innerFilter := parseQueryPart(innerQuery, values)
+		return bson.M{"$not": innerFilter}
+	}
+
+	return parseQueryPart(query, values)
+}
+
+// parseQueryPart parses a single query part into a MongoDB filter.
+func parseQueryPart(query string, values []any) bson.M {
+	// Remove parentheses and trim spaces
+	query = strings.TrimSpace(strings.Trim(query, "()"))
+
+	// Handle field operator value pattern
+	parts := strings.Fields(query)
+	if len(parts) == 3 {
+		field := parts[0]
+		operator := parts[1]
+		valueIndex := strings.Count(query[:strings.Index(query, "?")], "?")
+		if valueIndex < len(values) {
+			return bson.M{field: bson.M{operator: values[valueIndex]}}
+		}
+	}
+
+	// Handle field IS NULL/NOT NULL
+	if strings.HasSuffix(query, "IS NULL") {
+		field := strings.TrimSuffix(query, "IS NULL")
+		return bson.M{field: bson.M{"$exists": false}}
+	}
+	if strings.HasSuffix(query, "IS NOT NULL") {
+		field := strings.TrimSuffix(query, "IS NOT NULL")
+		return bson.M{field: bson.M{"$exists": true}}
+	}
+
+	return bson.M{}
 }

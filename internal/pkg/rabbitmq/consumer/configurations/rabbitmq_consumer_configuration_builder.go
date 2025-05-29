@@ -22,7 +22,7 @@ type RabbitMQConsumerConfigurationBuilder interface {
 	WithNoWait(noWait bool) RabbitMQConsumerConfigurationBuilder
 	WithConcurrencyLimit(limit int) RabbitMQConsumerConfigurationBuilder
 	WithPrefetchCount(count int) RabbitMQConsumerConfigurationBuilder
-	WithConsumerId(consumerId string) RabbitMQConsumerConfigurationBuilder
+	WithConsumerID(consumerId string) RabbitMQConsumerConfigurationBuilder
 	WithQueueName(queueName string) RabbitMQConsumerConfigurationBuilder
 	WithDurable(durable bool) RabbitMQConsumerConfigurationBuilder
 	WithAutoDeleteQueue(autoDelete bool) RabbitMQConsumerConfigurationBuilder
@@ -38,12 +38,14 @@ type RabbitMQConsumerConfigurationBuilder interface {
 	Build() *RabbitMQConsumerConfiguration
 }
 
+// rabbitMQConsumerConfigurationBuilder is a struct that represents the rabbitmq consumer configuration builder.
 type rabbitMQConsumerConfigurationBuilder struct {
 	rabbitmqConsumerConfigurations *RabbitMQConsumerConfiguration
 	pipelinesBuilder               pipeline.ConsumerPipelineConfigurationBuilder
 	handlersBuilder                messageConsumer.ConsumerHandlerConfigurationBuilder
 }
 
+// NewRabbitMQConsumerConfigurationBuilder creates a new rabbitmq consumer configuration builder.
 func NewRabbitMQConsumerConfigurationBuilder(
 	messageType types2.IMessage,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -52,6 +54,7 @@ func NewRabbitMQConsumerConfigurationBuilder(
 	}
 }
 
+// WithPipelines adds a pipeline to the rabbitmq consumer configuration.
 func (b *rabbitMQConsumerConfigurationBuilder) WIthPipelines(
 	pipelineBuilderFunc pipeline.ConsumerPipelineConfigurationBuilderFunc,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -64,6 +67,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WIthPipelines(
 	return b
 }
 
+// WithHandlers adds a handler to the rabbitmq consumer configuration.
 func (b *rabbitMQConsumerConfigurationBuilder) WithHandlers(
 	consumerBuilderFunc messageConsumer.ConsumerHandlerConfigurationBuilderFunc,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -76,6 +80,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithHandlers(
 	return b
 }
 
+// WithExitOnError sets the exit on error flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithExitOnError(
 	exitOnError bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -84,6 +89,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExitOnError(
 	return b
 }
 
+// WithName sets the name of the rabbitmq consumer configuration.
 func (b *rabbitMQConsumerConfigurationBuilder) WithName(
 	name string,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -92,6 +98,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithName(
 	return b
 }
 
+// WithAutoAck sets the auto ack flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithAutoAck(
 	ack bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -100,6 +107,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithAutoAck(
 	return b
 }
 
+// WithNoLocal sets the no local flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithNoLocal(
 	noLocal bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -108,6 +116,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithNoLocal(
 	return b
 }
 
+// WithNoWait sets the no wait flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithNoWait(
 	noWait bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -116,6 +125,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithNoWait(
 	return b
 }
 
+// WithConcurrencyLimit sets the concurrency limit.
 func (b *rabbitMQConsumerConfigurationBuilder) WithConcurrencyLimit(
 	limit int,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -124,6 +134,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithConcurrencyLimit(
 	return b
 }
 
+// WithPrefetchCount sets the prefetch count.
 func (b *rabbitMQConsumerConfigurationBuilder) WithPrefetchCount(
 	count int,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -132,7 +143,8 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithPrefetchCount(
 	return b
 }
 
-func (b *rabbitMQConsumerConfigurationBuilder) WithConsumerId(
+// WithConsumerID sets the consumer id.
+func (b *rabbitMQConsumerConfigurationBuilder) WithConsumerID(
 	consumerId string,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ConsumerId = consumerId
@@ -140,6 +152,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithConsumerId(
 	return b
 }
 
+// WithQueueName sets the queue name.
 func (b *rabbitMQConsumerConfigurationBuilder) WithQueueName(
 	queueName string,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -157,6 +170,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithDurable(
 	return b
 }
 
+// WithAutoDeleteQueue sets the auto delete queue flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithAutoDeleteQueue(
 	autoDelete bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -165,6 +179,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithAutoDeleteQueue(
 	return b
 }
 
+// WithExclusiveQueue sets the exclusive queue flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithExclusiveQueue(
 	exclusive bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -173,6 +188,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExclusiveQueue(
 	return b
 }
 
+// WithQueueArgs sets the queue args.
 func (b *rabbitMQConsumerConfigurationBuilder) WithQueueArgs(
 	args map[string]any,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -181,6 +197,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithQueueArgs(
 	return b
 }
 
+// WithExchangeName sets the exchange name.
 func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeName(
 	exchangeName string,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -189,6 +206,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeName(
 	return b
 }
 
+// WithAutoDeleteExchange sets the auto delete exchange flag.
 func (b *rabbitMQConsumerConfigurationBuilder) WithAutoDeleteExchange(
 	autoDelete bool,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -197,6 +215,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithAutoDeleteExchange(
 	return b
 }
 
+// WithExchangeType sets the exchange type.
 func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeType(
 	exchangeType types.ExchangeType,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -205,6 +224,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeType(
 	return b
 }
 
+// WithExchangeArgs sets the exchange args.
 func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeArgs(
 	args map[string]any,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -213,6 +233,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeArgs(
 	return b
 }
 
+// WithRoutingKey sets the routing key.
 func (b *rabbitMQConsumerConfigurationBuilder) WithRoutingKey(
 	routingKey string,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -221,6 +242,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithRoutingKey(
 	return b
 }
 
+// WithBindingArgs sets the binding args.
 func (b *rabbitMQConsumerConfigurationBuilder) WithBindingArgs(
 	args map[string]any,
 ) RabbitMQConsumerConfigurationBuilder {
@@ -229,6 +251,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithBindingArgs(
 	return b
 }
 
+// Build builds the rabbitmq consumer configuration.
 func (b *rabbitMQConsumerConfigurationBuilder) Build() *RabbitMQConsumerConfiguration {
 	if b.pipelinesBuilder != nil {
 		b.rabbitmqConsumerConfigurations.Pipelines = b.pipelinesBuilder.Build().Pipelines

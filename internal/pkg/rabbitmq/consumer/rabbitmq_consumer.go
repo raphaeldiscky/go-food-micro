@@ -443,11 +443,10 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 			}
 
 			return nil
-		} else {
-			err := handler.Handle(ctx, messageConsumeContext)
-			if err != nil {
-				return err
-			}
+		}
+		err := handler.Handle(ctx, messageConsumeContext)
+		if err != nil {
+			return err
 		}
 
 		return nil

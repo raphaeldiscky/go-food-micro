@@ -99,7 +99,7 @@ func (g *mongoDockerTest) PopulateContainerOptions(
 }
 
 // Cleanup cleans up the container.
-func (g *mongoDockerTest) Cleanup(ctx context.Context) error {
+func (g *mongoDockerTest) Cleanup(_ context.Context) error {
 	return g.resource.Close()
 }
 
