@@ -1,4 +1,5 @@
-package errorUtils
+// Package errorutils provides a error utils.
+package errorutils
 
 import (
 	"fmt"

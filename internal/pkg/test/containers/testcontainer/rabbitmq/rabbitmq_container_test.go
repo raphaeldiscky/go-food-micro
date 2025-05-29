@@ -1,3 +1,4 @@
+// Package rabbitmq provides a rabbitmq container.
 package rabbitmq
 
 import (
@@ -27,7 +28,8 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
-func Test_Custom_RabbitMQ_Container(t *testing.T) {
+// TestCustomRabbitMQContainer tests the custom rabbitmq container.
+func TestCustomRabbitMQContainer(t *testing.T) {
 	ctx := context.Background()
 	fakeConsumer := consumer.NewRabbitMQFakeTestConsumerHandler[*ProducerConsumerMessage]()
 

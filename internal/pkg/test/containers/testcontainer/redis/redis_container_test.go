@@ -1,3 +1,4 @@
+// Package redis provides a redis container.
 package redis
 
 import (
@@ -18,7 +19,8 @@ import (
 	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
 )
 
-func Test_Custom_Redis_Container(t *testing.T) {
+// TestCustomRedisContainer tests the custom redis container.
+func TestCustomRedisContainer(t *testing.T) {
 	ctx := context.Background()
 	var redisClient redis.UniversalClient
 

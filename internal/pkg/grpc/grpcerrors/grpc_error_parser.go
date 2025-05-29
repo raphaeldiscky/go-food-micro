@@ -17,6 +17,7 @@ import (
 // https://github.com/grpc/grpc/blob/master/doc/http-grpc-status-mapping.md
 // https://github.com/grpc/grpc/blob/master/doc/statuscodes.md
 
+// ParseError is a function that parses an error.
 func ParseError(err error) GrpcErr {
 	customErr := customErrors.GetCustomError(err)
 	var validatorErr validator.ValidationErrors

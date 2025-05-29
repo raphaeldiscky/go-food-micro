@@ -1,3 +1,4 @@
+// Package contracts provides a echo http server contracts.
 package contracts
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// EchoHttpServer is an interface that represents a echo http server.
 type EchoHttpServer interface {
 	RunHttpServer(configEcho ...func(echo *echo.Echo)) error
 	GracefulShutdown(ctx context.Context) error

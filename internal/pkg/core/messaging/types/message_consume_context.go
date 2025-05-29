@@ -1,3 +1,4 @@
+// Package types provides message consume context.
 package types
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 )
 
+// MessageConsumeContext is a type that represents a message consume context.
 type MessageConsumeContext interface {
 	MessageId() string
 	CorrelationId() string
@@ -17,6 +19,7 @@ type MessageConsumeContext interface {
 	Message() IMessage
 }
 
+// messageConsumeContext is a struct that represents a message consume context.
 type messageConsumeContext struct {
 	metadata      metadata.Metadata
 	contentType   string
@@ -28,6 +31,7 @@ type messageConsumeContext struct {
 	message       IMessage
 }
 
+// NewMessageConsumeContext is a function that creates a new message consume context.
 func NewMessageConsumeContext(
 	message IMessage,
 	meta metadata.Metadata,
@@ -50,34 +54,42 @@ func NewMessageConsumeContext(
 	}
 }
 
+// Message is a function that returns the message.
 func (m *messageConsumeContext) Message() IMessage {
 	return m.message
 }
 
+// MessageId is a function that returns the message id.
 func (m *messageConsumeContext) MessageId() string {
 	return m.messageId
 }
 
+// CorrelationId is a function that returns the correlation id.
 func (m *messageConsumeContext) CorrelationId() string {
 	return m.correlationId
 }
 
+// MessageType is a function that returns the message type.
 func (m *messageConsumeContext) MessageType() string {
 	return m.messageType
 }
 
+// ContentType is a function that returns the content type.
 func (m *messageConsumeContext) ContentType() string {
 	return m.contentType
 }
 
+// Metadata is a function that returns the metadata.
 func (m *messageConsumeContext) Metadata() metadata.Metadata {
 	return m.metadata
 }
 
+// Created is a function that returns the created time.
 func (m *messageConsumeContext) Created() time.Time {
 	return m.created
 }
 
+// DeliveryTag is a function that returns the delivery tag.
 func (m *messageConsumeContext) DeliveryTag() uint64 {
 	return m.tag
 }

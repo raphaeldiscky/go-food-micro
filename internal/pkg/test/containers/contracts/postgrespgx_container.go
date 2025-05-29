@@ -1,3 +1,4 @@
+// Package contracts provides a postgrespgx container contracts.
 package contracts
 
 import (
@@ -7,6 +8,7 @@ import (
 	postgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgrespgx"
 )
 
+// PostgresPgxContainer is a interface that represents a postgrespgx container.
 type PostgresPgxContainer interface {
 	PopulateContainerOptions(
 		ctx context.Context,

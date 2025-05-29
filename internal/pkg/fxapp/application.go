@@ -69,16 +69,16 @@ func (a *application) Run() {
 	//}
 	//// wait until get a os signal
 	// sig := <-fxApp.Wait()
-	//exitCode := sig.ExitCode
+	// exitCode := sig.ExitCode
 	//// shutdown ctx just for shut down process and about 15 seconds
-	//stopCtx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
-	//defer cancel()
+	// stopCtx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	// defer cancel()
 	//
-	//if err := fxApp.Stop(stopCtx); err != nil {
+	// if err := fxApp.Stop(stopCtx); err != nil {
 	//	exitCode = 1
 	//}
 	//
-	//if exitCode != 0 {
+	// if exitCode != 0 {
 	//	os.Exit(exitCode)
 	//}
 }

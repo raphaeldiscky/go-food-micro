@@ -1,3 +1,4 @@
+// Package messaging provides a messaging utils.
 package messaging
 
 import (
@@ -11,6 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging/consumer"
 )
 
+// ShouldProduced tests if a message is produced.
 func ShouldProduced[T types.IMessage](
 	ctx context.Context,
 	bus bus.Bus,
@@ -32,6 +34,7 @@ func ShouldProduced[T types.IMessage](
 	return hypo
 }
 
+// ShouldConsume tests if a message is consumed.
 func ShouldConsume[T types.IMessage](
 	ctx context.Context,
 	bus bus.Bus,
@@ -53,6 +56,7 @@ func ShouldConsume[T types.IMessage](
 	return hypo
 }
 
+// ShouldConsumeNewConsumer creates a new consumer and tests if a message is consumed.
 func ShouldConsumeNewConsumer[T types.IMessage](bus bus.Bus) (hypothesis.Hypothesis[T], error) {
 	hypo := hypothesis.ForT[T](nil)
 	testConsumer := consumer.NewRabbitMQFakeTestConsumerHandlerWithHypothesis(hypo)

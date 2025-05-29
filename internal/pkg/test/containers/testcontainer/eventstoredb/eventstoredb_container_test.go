@@ -1,3 +1,4 @@
+// Package eventstoredb provides a eventstoredb container.
 package eventstoredb
 
 import (
@@ -16,7 +17,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 )
 
-func Test_Custom_EventStoreDB_Container(t *testing.T) {
+// TestCustomEventStoreDBContainer tests the custom eventstoredb container.
+func TestCustomEventStoreDBContainer(t *testing.T) {
 	var esdbClient *esdb.Client
 	ctx := context.Background()
 

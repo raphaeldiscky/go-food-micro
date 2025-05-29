@@ -1,3 +1,4 @@
+// Package eventstoredb provides a eventstoredb fx.
 package eventstoredb
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// EventstoreDBContainerOptionsDecorator is a decorator for the eventstoredb container options.
 var EventstoreDBContainerOptionsDecorator = func(t *testing.T, ctx context.Context) interface{} {
 	return func(c *config.EventStoreDbOptions, logger logger.Logger) (*config.EventStoreDbOptions, error) {
 		newOption, err := NewEventstoreDBTestContainers(logger).PopulateContainerOptions(ctx, t)
@@ -20,6 +22,7 @@ var EventstoreDBContainerOptionsDecorator = func(t *testing.T, ctx context.Conte
 	}
 }
 
+// ReplaceEventStoreContainerOptions is a function that replaces the eventstoredb container options.
 var ReplaceEventStoreContainerOptions = func(t *testing.T, options *config.EventStoreDbOptions, ctx context.Context, logger logger.Logger) error {
 	newOption, err := NewEventstoreDBTestContainers(logger).PopulateContainerOptions(ctx, t)
 	if err != nil {

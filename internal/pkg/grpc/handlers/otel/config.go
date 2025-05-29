@@ -1,3 +1,4 @@
+// Package otel provides a otel config.
 package otel
 
 import (
@@ -14,12 +15,14 @@ type Option interface {
 	apply(*config)
 }
 
+// optionFunc is a function that applies an option value when creating a Handler.
 type optionFunc func(*config)
 
 func (f optionFunc) apply(c *config) {
 	f(c)
 }
 
+// config is a struct that represents a config.
 type config struct {
 	metricsProvider     metric.MeterProvider
 	tracerProvider      trace.TracerProvider
@@ -29,6 +32,7 @@ type config struct {
 	instrumentationName string
 }
 
+// defualtConfig is a struct that represents a default config.
 var defualtConfig = config{
 	metricsProvider:     otel.GetMeterProvider(),
 	tracerProvider:      otel.GetTracerProvider(),
@@ -37,24 +41,28 @@ var defualtConfig = config{
 	instrumentationName: "grpc-otel",
 }
 
+// WithMeterProvider is a function that sets the meter provider.
 func WithMeterProvider(m metric.MeterProvider) Option {
 	return optionFunc(func(c *config) {
 		c.metricsProvider = m
 	})
 }
 
+// WithTraceProvider is a function that sets the trace provider.
 func WithTraceProvider(t trace.TracerProvider) Option {
 	return optionFunc(func(c *config) {
 		c.tracerProvider = t
 	})
 }
 
+// WithPropagators is a function that sets the propagators.
 func WithPropagators(p propagation.TextMapPropagator) Option {
 	return optionFunc(func(c *config) {
 		c.propagator = p
 	})
 }
 
+// SetNamespace is a function that sets the namespace.
 func SetNamespace(v string) Option {
 	return optionFunc(func(cfg *config) {
 		if cfg.Namespace != "" {
@@ -63,6 +71,7 @@ func SetNamespace(v string) Option {
 	})
 }
 
+// SetServiceName is a function that sets the service name.
 func SetServiceName(v string) Option {
 	return optionFunc(func(cfg *config) {
 		if cfg.serviceName != "" {
@@ -71,6 +80,7 @@ func SetServiceName(v string) Option {
 	})
 }
 
+// SetInstrumentationName is a function that sets the instrumentation name.
 func SetInstrumentationName(v string) Option {
 	return optionFunc(func(cfg *config) {
 		if cfg.instrumentationName != "" {

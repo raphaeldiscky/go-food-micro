@@ -1,6 +1,4 @@
-//go:build unit
-// +build unit
-
+// Package typemapper provides a type mapper.
 package typemapper
 
 import (
@@ -10,6 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// TestGetTypeNameByT tests the get type name by t.
 func Test_GetTypeNameByT(t *testing.T) {
 	pointerTypeName := GetGenericTypeNameByT[*Test]()
 	nonePointerTypeName := GetGenericTypeNameByT[Test]()
@@ -18,7 +17,8 @@ func Test_GetTypeNameByT(t *testing.T) {
 	require.Equal(t, nonePointerTypeName, "Test")
 }
 
-func Test_GetNonePointerTypeNameByT(t *testing.T) {
+// TestGetNonePointerTypeNameByT tests the get none pointer type name by t.
+func TestGetNonePointerTypeNameByT(t *testing.T) {
 	pointerTypeName := GetGenericNonePointerTypeNameByT[*Test]()
 	nonePointerTypeName := GetGenericNonePointerTypeNameByT[Test]()
 
@@ -26,7 +26,8 @@ func Test_GetNonePointerTypeNameByT(t *testing.T) {
 	require.Equal(t, nonePointerTypeName, "Test")
 }
 
-func Test_TypeByName(t *testing.T) {
+// TestTypeByName tests the type by name.
+func TestTypeByName(t *testing.T) {
 	s1 := TypeByName("*typemapper.Test")
 	s2 := TypeByName("typemapper.Test")
 	s3 := TypeByName("*Test")

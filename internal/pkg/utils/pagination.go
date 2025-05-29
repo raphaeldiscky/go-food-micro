@@ -1,3 +1,4 @@
+// Package utils provides a pagination utils.
 package utils
 
 import (
@@ -18,6 +19,7 @@ const (
 	defaultPage = 1
 )
 
+// ListResult is a struct that represents a list result.
 type ListResult[T any] struct {
 	Size       int   `json:"size,omitempty"       bson:"size"`
 	Page       int   `json:"page,omitempty"       bson:"page"`
@@ -26,6 +28,7 @@ type ListResult[T any] struct {
 	Items      []T   `json:"items,omitempty"      bson:"items"`
 }
 
+// NewListResult is a function that creates a new list result.
 func NewListResult[T any](items []T, size int, page int, totalItems int64) *ListResult[T] {
 	listResult := &ListResult[T]{Items: items, Size: size, Page: page, TotalItems: totalItems}
 
@@ -34,6 +37,7 @@ func NewListResult[T any](items []T, size int, page int, totalItems int64) *List
 	return listResult
 }
 
+// String is a function that returns a string representation of the list result.
 func (p *ListResult[T]) String() string {
 	j, _ := json.Marshal(p)
 
@@ -47,12 +51,14 @@ func getTotalPages(totalCount int64, size int) int {
 	return int(math.Ceil(d))
 }
 
+// FilterModel is a struct that represents a filter model.
 type FilterModel struct {
 	Field      string `query:"field"      json:"field"`
 	Value      string `query:"value"      json:"value"`
 	Comparison string `query:"comparison" json:"comparison"`
 }
 
+// ListQuery is a struct that represents a list query.
 type ListQuery struct {
 	Size    int            `query:"size"    json:"size,omitempty"`
 	Page    int            `query:"page"    json:"page,omitempty"`
@@ -60,10 +66,12 @@ type ListQuery struct {
 	Filters []*FilterModel `query:"filters" json:"filters,omitempty"`
 }
 
+// NewListQuery is a function that creates a new list query.
 func NewListQuery(size int, page int) *ListQuery {
 	return &ListQuery{Size: size, Page: page}
 }
 
+// NewListQueryFromQueryParams is a function that creates a new list query from query params.
 func NewListQueryFromQueryParams(size string, page string) *ListQuery {
 	p := &ListQuery{Size: defaultSize, Page: defaultPage}
 
@@ -78,6 +86,7 @@ func NewListQueryFromQueryParams(size string, page string) *ListQuery {
 	return p
 }
 
+// GetListQueryFromCtx is a function that gets a list query from context.
 func GetListQueryFromCtx(c echo.Context) (*ListQuery, error) {
 	q := &ListQuery{}
 	var page, size, orderBy string
@@ -117,7 +126,7 @@ func GetListQueryFromCtx(c echo.Context) (*ListQuery, error) {
 	return q, nil
 }
 
-// SetSize Set page size.
+// SetSize is a function that sets the page size.
 func (q *ListQuery) SetSize(sizeQuery string) error {
 	if sizeQuery == "" {
 		q.Size = defaultSize
@@ -133,7 +142,7 @@ func (q *ListQuery) SetSize(sizeQuery string) error {
 	return nil
 }
 
-// SetPage Set page number.
+// SetPage is a function that sets the page number.
 func (q *ListQuery) SetPage(pageQuery string) error {
 	if pageQuery == "" {
 		q.Page = defaultPage

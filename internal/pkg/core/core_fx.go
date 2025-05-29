@@ -1,3 +1,4 @@
+// Package core provides a core module for the application.
 package core
 
 import (
@@ -6,7 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer/json"
 )
 
-// Module provided to fxlog
+// Module provided to fxlog.
 // https://uber-go.github.io/fx/modules.html
 var Module = fx.Module(
 	"corefx",

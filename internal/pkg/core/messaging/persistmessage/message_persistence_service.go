@@ -1,3 +1,4 @@
+// Package persistmessage provides a message persistence service.
 package persistmessage
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 )
 
+// MessagePersistenceService is a type that represents a message persistence service.
 type MessagePersistenceService interface {
 	Add(ctx context.Context, storeMessage *StoreMessage) error
 	Update(ctx context.Context, storeMessage *StoreMessage) error

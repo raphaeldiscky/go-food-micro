@@ -1,3 +1,4 @@
+// Package producer provides a producer.
 package producer
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 )
 
+// Producer is a type that represents a producer.
 type Producer interface {
 	PublishMessage(ctx context.Context, message types.IMessage, meta metadata.Metadata) error
 	PublishMessageWithTopicName(

@@ -1,3 +1,4 @@
+// Package consumer provides a rabbitmq fake consumer.
 package consumer
 
 import (
@@ -8,11 +9,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 )
 
+// RabbitMQFakeTestConsumerHandler represents a rabbitmq fake test consumer handler.
 type RabbitMQFakeTestConsumerHandler[T any] struct {
 	isHandled  bool
 	hypothesis hypothesis.Hypothesis[T]
 }
 
+// NewRabbitMQFakeTestConsumerHandlerWithHypothesis creates a new rabbitmq fake test consumer handler with a hypothesis.
 func NewRabbitMQFakeTestConsumerHandlerWithHypothesis[T any](
 	hypothesis hypothesis.Hypothesis[T],
 ) *RabbitMQFakeTestConsumerHandler[T] {
@@ -21,12 +24,14 @@ func NewRabbitMQFakeTestConsumerHandlerWithHypothesis[T any](
 	}
 }
 
+// NewRabbitMQFakeTestConsumerHandler creates a new rabbitmq fake test consumer handler.
 func NewRabbitMQFakeTestConsumerHandler[T any]() *RabbitMQFakeTestConsumerHandler[T] {
 	fmt.Println("NewRabbitMQFakeTestConsumerHandler created.")
 
 	return &RabbitMQFakeTestConsumerHandler[T]{}
 }
 
+// Handle handles a message.
 func (f *RabbitMQFakeTestConsumerHandler[T]) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
@@ -43,6 +48,7 @@ func (f *RabbitMQFakeTestConsumerHandler[T]) Handle(
 	return nil
 }
 
+// IsHandled checks if the message is handled.
 func (f *RabbitMQFakeTestConsumerHandler[T]) IsHandled() bool {
 	return f.isHandled
 }

@@ -1,3 +1,4 @@
+// Package mongo provides a mongo container.
 package mongo
 
 import (
@@ -27,12 +28,14 @@ const (
 	maxPoolSize     = 300
 )
 
+// mongoTestContainers represents a mongo test containers.
 type mongoTestContainers struct {
 	container      testcontainers.Container
 	defaultOptions *contracts.MongoContainerOptions
 	logger         logger.Logger
 }
 
+// NewMongoTestContainers creates a new mongo test containers.
 func NewMongoTestContainers(l logger.Logger) contracts.MongoContainer {
 	return &mongoTestContainers{
 		defaultOptions: &contracts.MongoContainerOptions{
@@ -49,6 +52,7 @@ func NewMongoTestContainers(l logger.Logger) contracts.MongoContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *mongoTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -110,6 +114,7 @@ func (g *mongoTestContainers) PopulateContainerOptions(
 	return option, nil
 }
 
+// Cleanup cleans up the container.
 func (g *mongoTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
@@ -118,6 +123,7 @@ func (g *mongoTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *mongoTestContainers) getRunOptions(
 	opts ...*contracts.MongoContainerOptions,
 ) testcontainers.ContainerRequest {
@@ -165,6 +171,7 @@ func (g *mongoTestContainers) getRunOptions(
 	return containerReq
 }
 
+// isConnectable checks if the container is connectable.
 func isConnectable(
 	ctx context.Context,
 	logger logger.Logger,
@@ -214,6 +221,7 @@ func isConnectable(
 	return true
 }
 
+// logError logs an error.
 func logError(logger logger.Logger, host string, hostPort int) {
 	// we should not use `t.Error` or `t.Errorf` for logging errors because it will `fail` our test at the end and, we just should use logs without error like log.Error (not log.Fatal)
 	logger.Errorf(

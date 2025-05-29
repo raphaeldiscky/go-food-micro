@@ -1,4 +1,5 @@
-package testUtils
+// Package testutils provides a test utils.
+package testutils
 
 import (
 	"net/http"
@@ -12,6 +13,7 @@ import (
 	echo "github.com/labstack/echo/v4"
 )
 
+// SkipCI skips the test if the CI environment is set.
 func SkipCI(t *testing.T) {
 	if os.Getenv("CI") != "" {
 		t.Skip("Skipping testing in CI environment")
@@ -20,6 +22,7 @@ func SkipCI(t *testing.T) {
 	}
 }
 
+// WaitUntilConditionMet waits until the condition is met.
 func WaitUntilConditionMet(conditionToMet func() bool, timeout ...time.Duration) error {
 	timeOutTime := 20 * time.Second
 	if len(timeout) >= 0 && timeout != nil {
@@ -41,6 +44,7 @@ func WaitUntilConditionMet(conditionToMet func() bool, timeout ...time.Duration)
 	return nil
 }
 
+// HttpRecorder records the http request and response.
 func HttpRecorder(
 	t *testing.T,
 	e *echo.Echo,

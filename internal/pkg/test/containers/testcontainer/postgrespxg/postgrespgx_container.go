@@ -1,3 +1,4 @@
+// Package postgrespxg provides a postgrespgx container.
 package postgrespxg
 
 import (
@@ -17,6 +18,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// postgresPgxTestContainers represents a postgrespgx test containers.
 // https://github.com/testcontainers/testcontainers-go/issues/1359
 // https://github.com/testcontainers/testcontainers-go/issues/1249
 type postgresPgxTestContainers struct {
@@ -25,6 +27,7 @@ type postgresPgxTestContainers struct {
 	logger         logger.Logger
 }
 
+// NewPostgresPgxContainers creates a new postgrespgx test containers.
 func NewPostgresPgxContainers(l logger.Logger) contracts.PostgresPgxContainer {
 	return &postgresPgxTestContainers{
 		defaultOptions: &contracts.PostgresContainerOptions{
@@ -41,6 +44,7 @@ func NewPostgresPgxContainers(l logger.Logger) contracts.PostgresPgxContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *postgresPgxTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -94,6 +98,7 @@ func (g *postgresPgxTestContainers) PopulateContainerOptions(
 	return gormOptions, nil
 }
 
+// Start starts the container.
 func (g *postgresPgxTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
@@ -112,6 +117,7 @@ func (g *postgresPgxTestContainers) Start(
 	return db, nil
 }
 
+// Cleanup cleans up the container.
 func (g *postgresPgxTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
@@ -120,6 +126,7 @@ func (g *postgresPgxTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *postgresPgxTestContainers) getRunOptions(
 	opts ...*contracts.PostgresContainerOptions,
 ) testcontainers.ContainerRequest {

@@ -1,3 +1,4 @@
+// Package config provides a echo http options.
 package config
 
 import (
@@ -13,6 +14,7 @@ import (
 
 var optionName = strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[EchoHTTPOptions]())
 
+// EchoHTTPOptions is a struct that represents a echo http options.
 type EchoHTTPOptions struct {
 	Port                string   `mapstructure:"port"                validate:"required" env:"TcpPort"`
 	Development         bool     `mapstructure:"development"                             env:"Development"`
@@ -24,10 +26,12 @@ type EchoHTTPOptions struct {
 	Name                string   `mapstructure:"name"                                    env:"ShortTypeName"`
 }
 
+// Address is a function that returns the address.
 func (c *EchoHTTPOptions) Address() string {
 	return fmt.Sprintf("%s%s", c.Host, c.Port)
 }
 
+// BasePathAddress is a function that returns the base path address.
 func (c *EchoHTTPOptions) BasePathAddress() string {
 	path, err := url.JoinPath(c.Address(), c.BasePath)
 	if err != nil {
@@ -37,6 +41,7 @@ func (c *EchoHTTPOptions) BasePathAddress() string {
 	return path
 }
 
+// ProvideConfig is a function that provides the config.
 func ProvideConfig(environment environment.Environment) (*EchoHTTPOptions, error) {
 	return config.BindConfigKey[*EchoHTTPOptions](optionName, environment)
 }

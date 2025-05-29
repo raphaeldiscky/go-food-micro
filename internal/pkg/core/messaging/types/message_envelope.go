@@ -1,10 +1,13 @@
+// Package types provides message envelope.
 package types
 
+// MessageEnvelope is a struct that represents a message envelope.
 type MessageEnvelope struct {
 	Message IMessage
 	Headers map[string]interface{}
 }
 
+// NewMessageEnvelope is a function that creates a new message envelope.
 func NewMessageEnvelope(
 	message IMessage,
 	headers map[string]interface{},
@@ -19,11 +22,13 @@ func NewMessageEnvelope(
 	}
 }
 
+// MessageEnvelopeT is a struct that represents a message envelope.
 type MessageEnvelopeT[T IMessage] struct {
 	*MessageEnvelope
 	Message T
 }
 
+// NewMessageEnvelopeT is a function that creates a new message envelope.
 func NewMessageEnvelopeT[T IMessage](
 	message T,
 	headers map[string]interface{},

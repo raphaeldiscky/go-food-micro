@@ -1,3 +1,4 @@
+// Package grpc provides a grpc client.
 package grpc
 
 import (
@@ -14,10 +15,12 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/handlers/otel"
 )
 
+// grpcClient is a struct that represents a grpc client.
 type grpcClient struct {
 	conn *grpc.ClientConn
 }
 
+// GrpcClient is an interface that represents a grpc client.
 type GrpcClient interface {
 	GetGrpcConnection() *grpc.ClientConn
 	Close() error
@@ -25,6 +28,7 @@ type GrpcClient interface {
 	WaitForAvailableConnection() error
 }
 
+// NewGrpcClient is a function that creates a new grpc client.
 func NewGrpcClient(config *config.GrpcOptions) (GrpcClient, error) {
 	// Grpc Client to call Grpc Server
 	// https://sahansera.dev/building-grpc-client-go/
@@ -43,14 +47,17 @@ func NewGrpcClient(config *config.GrpcOptions) (GrpcClient, error) {
 	return &grpcClient{conn: conn}, err
 }
 
+// GetGrpcConnection is a function that returns the grpc connection.
 func (g *grpcClient) GetGrpcConnection() *grpc.ClientConn {
 	return g.conn
 }
 
+// Close is a function that closes the grpc connection.
 func (g *grpcClient) Close() error {
 	return g.conn.Close()
 }
 
+// WaitForAvailableConnection is a function that waits for the grpc connection to be available.
 func (g *grpcClient) WaitForAvailableConnection() error {
 	timeout := time.Second * 20
 
@@ -64,6 +71,7 @@ func (g *grpcClient) WaitForAvailableConnection() error {
 	return err
 }
 
+// waitUntilConditionMet is a function that waits until a condition is met.
 func waitUntilConditionMet(
 	conditionToMet func() bool,
 	timeout ...time.Duration,

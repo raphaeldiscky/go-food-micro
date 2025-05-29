@@ -9,6 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 )
 
+// NewValidationGrpcError is a function that creates a new validation grpc error.
 func NewValidationGrpcError(detail string, stackTrace string) GrpcErr {
 	validationError := &grpcErr{
 		Title:      constants.ErrBadRequestTitle,
@@ -21,6 +22,7 @@ func NewValidationGrpcError(detail string, stackTrace string) GrpcErr {
 	return validationError
 }
 
+// NewConflictGrpcError is a function that creates a new conflict grpc error.
 func NewConflictGrpcError(detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrConflictTitle,
@@ -31,6 +33,7 @@ func NewConflictGrpcError(detail string, stackTrace string) GrpcErr {
 	}
 }
 
+// NewBadRequestGrpcError is a function that creates a new bad request grpc error.
 func NewBadRequestGrpcError(detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrBadRequestTitle,
@@ -41,6 +44,7 @@ func NewBadRequestGrpcError(detail string, stackTrace string) GrpcErr {
 	}
 }
 
+// NewNotFoundErrorGrpcError is a function that creates a new not found grpc error.
 func NewNotFoundErrorGrpcError(detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrNotFoundTitle,
@@ -51,6 +55,7 @@ func NewNotFoundErrorGrpcError(detail string, stackTrace string) GrpcErr {
 	}
 }
 
+// NewUnAuthorizedErrorGrpcError is a function that creates a new unauthorized grpc error.
 func NewUnAuthorizedErrorGrpcError(detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrUnauthorizedTitle,
@@ -61,6 +66,7 @@ func NewUnAuthorizedErrorGrpcError(detail string, stackTrace string) GrpcErr {
 	}
 }
 
+// NewForbiddenGrpcError is a function that creates a new forbidden grpc error.
 func NewForbiddenGrpcError(detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrForbiddenTitle,
@@ -71,6 +77,7 @@ func NewForbiddenGrpcError(detail string, stackTrace string) GrpcErr {
 	}
 }
 
+// NewInternalServerGrpcError is a function that creates a new internal server grpc error.
 func NewInternalServerGrpcError(detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrInternalServerErrorTitle,
@@ -81,6 +88,7 @@ func NewInternalServerGrpcError(detail string, stackTrace string) GrpcErr {
 	}
 }
 
+// NewDomainGrpcError is a function that creates a new domain grpc error.
 func NewDomainGrpcError(status codes.Code, detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrDomainTitle,
@@ -91,6 +99,7 @@ func NewDomainGrpcError(status codes.Code, detail string, stackTrace string) Grp
 	}
 }
 
+// NewApplicationGrpcError is a function that creates a new application grpc error.
 func NewApplicationGrpcError(status codes.Code, detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrApplicationTitle,
@@ -101,6 +110,7 @@ func NewApplicationGrpcError(status codes.Code, detail string, stackTrace string
 	}
 }
 
+// NewApiGrpcError is a function that creates a new api grpc error.
 func NewApiGrpcError(status codes.Code, detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
 		Title:      constants.ErrApiTitle,

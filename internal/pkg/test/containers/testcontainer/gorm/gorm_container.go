@@ -1,3 +1,4 @@
+// Package gorm provides a gorm container.
 package gorm
 
 import (
@@ -28,6 +29,7 @@ type gormTestContainers struct {
 	logger         logger.Logger
 }
 
+// NewGormTestContainers creates a new gorm test containers.
 func NewGormTestContainers(l logger.Logger) contracts.GormContainer {
 	return &gormTestContainers{
 		defaultOptions: &contracts.PostgresContainerOptions{
@@ -44,6 +46,7 @@ func NewGormTestContainers(l logger.Logger) contracts.GormContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *gormTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -103,6 +106,7 @@ func (g *gormTestContainers) PopulateContainerOptions(
 	return gormOptions, nil
 }
 
+// Start starts the container.
 func (g *gormTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
@@ -121,6 +125,7 @@ func (g *gormTestContainers) Start(
 	return db, nil
 }
 
+// Cleanup cleans up the container.
 func (g *gormTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
@@ -129,6 +134,7 @@ func (g *gormTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *gormTestContainers) getRunOptions(
 	opts ...*contracts.PostgresContainerOptions,
 ) testcontainers.ContainerRequest {
@@ -177,6 +183,7 @@ func (g *gormTestContainers) getRunOptions(
 	return containerReq
 }
 
+// isConnectable checks if the container is connectable.
 func isConnectable(
 	ctx context.Context,
 	logger logger.Logger,
@@ -226,6 +233,7 @@ func isConnectable(
 	return true
 }
 
+// logError logs an error.
 func logError(logger logger.Logger, host string, hostPort int) {
 	// we should not use `t.Error` or `t.Errorf` for logging errors because it will `fail` our test at the end and, we just should use logs without error like log.Error (not log.Fatal)
 	logger.Errorf("Error in creating postgres connection with %s:%d", host, hostPort)

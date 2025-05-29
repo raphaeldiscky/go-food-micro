@@ -1,3 +1,4 @@
+// Package health provides a health check service.
 package health
 
 import (
@@ -6,10 +7,12 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 )
 
+// healthService is a struct that represents a health service.
 type healthService struct {
 	healthParams contracts.HealthParams
 }
 
+// NewHealthService is a function that creates a new health service.
 func NewHealthService(
 	healthParams contracts.HealthParams,
 ) contracts.HealthService {
@@ -18,6 +21,7 @@ func NewHealthService(
 	}
 }
 
+// CheckHealth is a function that checks the health.
 func (service *healthService) CheckHealth(ctx context.Context) contracts.Check {
 	checks := make(contracts.Check)
 

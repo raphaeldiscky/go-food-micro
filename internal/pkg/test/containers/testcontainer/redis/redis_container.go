@@ -1,3 +1,4 @@
+// Package redis provides a redis container.
 package redis
 
 import (
@@ -18,12 +19,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// redisTestContainers represents a redis test containers.
 type redisTestContainers struct {
 	container      testcontainers.Container
 	defaultOptions *contracts.RedisContainerOptions
 	logger         logger.Logger
 }
 
+// NewRedisTestContainers creates a new redis test containers.
 func NewRedisTestContainers(l logger.Logger) contracts.RedisContainer {
 	return &redisTestContainers{
 		defaultOptions: &contracts.RedisContainerOptions{
@@ -39,6 +42,7 @@ func NewRedisTestContainers(l logger.Logger) contracts.RedisContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *redisTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -98,6 +102,7 @@ func (g *redisTestContainers) PopulateContainerOptions(
 	return reidsOptions, nil
 }
 
+// Cleanup cleans up the container.
 func (g *redisTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
@@ -106,6 +111,7 @@ func (g *redisTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *redisTestContainers) getRunOptions(
 	opts ...*contracts.RedisContainerOptions,
 ) testcontainers.ContainerRequest {
@@ -141,6 +147,7 @@ func (g *redisTestContainers) getRunOptions(
 	return containerReq
 }
 
+// isConnectable checks if the container is connectable.
 func isConnectable(
 	ctx context.Context,
 	logger logger.Logger,

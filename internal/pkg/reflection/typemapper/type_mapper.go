@@ -1,3 +1,4 @@
+// Package typemapper provides a type mapper.
 package typemapper
 
 // https://stackoverflow.com/a/34722791/581476
@@ -26,6 +27,7 @@ func init() {
 	discoverTypes()
 }
 
+// discoverTypes discovers types.
 func discoverTypes() {
 	typ := reflect.TypeOf(0)
 	sections, offset := typelinks2()
@@ -80,15 +82,18 @@ func discoverTypes() {
 	}
 }
 
+// RegisterType registers a type.
 func RegisterType(typ reflect.Type) {
 	types[GetFullTypeName(typ)] = append(types[GetFullTypeName(typ)], typ)
 	types[GetTypeName(typ)] = append(types[GetTypeName(typ)], typ)
 }
 
+// RegisterTypeWithKey registers a type with a key.
 func RegisterTypeWithKey(key string, typ reflect.Type) {
 	types[key] = append(types[key], typ)
 }
 
+// GetAllRegisteredTypes gets all registered types.
 func GetAllRegisteredTypes() map[string][]reflect.Type {
 	return types
 }
@@ -102,6 +107,7 @@ func TypeByName(typeName string) reflect.Type {
 	return nil
 }
 
+// TypesByName gets types by name.
 func TypesByName(typeName string) []reflect.Type {
 	if types, ok := types[typeName]; ok {
 		return types
@@ -110,6 +116,7 @@ func TypesByName(typeName string) []reflect.Type {
 	return nil
 }
 
+// TypeByNameAndImplementedInterface gets a type by name and implemented interface.
 func TypeByNameAndImplementedInterface[TInterface interface{}](
 	typeName string,
 ) reflect.Type {
@@ -126,6 +133,7 @@ func TypeByNameAndImplementedInterface[TInterface interface{}](
 	return nil
 }
 
+// TypesImplementedInterfaceWithFilterTypes gets types implemented interface with filter types.
 func TypesImplementedInterfaceWithFilterTypes[TInterface interface{}](
 	types []reflect.Type,
 ) []reflect.Type {
@@ -142,6 +150,7 @@ func TypesImplementedInterfaceWithFilterTypes[TInterface interface{}](
 	return res
 }
 
+// TypesImplementedInterface gets types implemented interface.
 func TypesImplementedInterface[TInterface interface{}]() []reflect.Type {
 	// https://stackoverflow.com/questions/7132848/how-to-get-the-reflect-type-of-an-interface
 	implementedInterface := GetGenericTypeByT[TInterface]()
@@ -169,12 +178,14 @@ func GetFullTypeName(input interface{}) string {
 	return t.String()
 }
 
+// GetGenericFullTypeNameByT gets a generic full type name by t.
 func GetGenericFullTypeNameByT[T any]() string {
 	t := reflect.TypeOf((*T)(nil)).Elem()
 
 	return t.String()
 }
 
+// GetFullTypeNameByType gets a full type name by type.
 func GetFullTypeNameByType(typ reflect.Type) string {
 	return typ.String()
 }

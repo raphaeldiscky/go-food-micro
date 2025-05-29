@@ -1,5 +1,7 @@
+// Package serializer provides a serializer.
 package serializer
 
+// Serializer is an interface that represents a serializer.
 type Serializer interface {
 	Marshal(v interface{}) ([]byte, error)
 	Unmarshal(data []byte, v interface{}) error

@@ -1,3 +1,4 @@
+// Package eventstoredb provides a eventstoredb container.
 package eventstoredb
 
 import (
@@ -19,12 +20,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// eventstoredbTestContainers represents a eventstoredb test containers.
 type eventstoredbTestContainers struct {
 	container      testcontainers.Container
 	defaultOptions *contracts.EventstoreDBContainerOptions
 	logger         logger.Logger
 }
 
+// NewEventstoreDBTestContainers creates a new eventstoredb test containers.
 func NewEventstoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
 	return &eventstoredbTestContainers{
 		defaultOptions: &contracts.EventstoreDBContainerOptions{
@@ -41,6 +44,7 @@ func NewEventstoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContai
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *eventstoredbTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -97,6 +101,7 @@ func (g *eventstoredbTestContainers) PopulateContainerOptions(
 	return option, nil
 }
 
+// Start starts the container.
 func (g *eventstoredbTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
@@ -110,6 +115,7 @@ func (g *eventstoredbTestContainers) Start(
 	return eventstoredb.NewEventStoreDB(eventstoredbOptions)
 }
 
+// Cleanup cleans up the container.
 func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
@@ -118,6 +124,7 @@ func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *eventstoredbTestContainers) getRunOptions(
 	opts ...*contracts.EventstoreDBContainerOptions,
 ) testcontainers.ContainerRequest {

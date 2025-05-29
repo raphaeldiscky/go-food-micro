@@ -1,3 +1,4 @@
+// Package reflectionHelper provides a reflection helper.
 package reflectionHelper
 
 // ref: https://gist.github.com/drewolson/4771479
@@ -12,6 +13,7 @@ import (
 	"unsafe"
 )
 
+// GetAllFields gets all fields of a type.
 func GetAllFields(typ reflect.Type) []reflect.StructField {
 	var fields []reflect.StructField
 	if typ.Kind() == reflect.Ptr {
@@ -24,6 +26,7 @@ func GetAllFields(typ reflect.Type) []reflect.StructField {
 	return fields
 }
 
+// GetFieldValueByIndex gets the field value by index.
 func GetFieldValueByIndex[T any](object T, index int) interface{} {
 	v := reflect.ValueOf(&object).Elem()
 	if v.Kind() == reflect.Ptr {
@@ -62,6 +65,7 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 	return nil
 }
 
+// GetFieldValueByName gets the field value by name.
 func GetFieldValueByName[T any](object T, name string) interface{} {
 	v := reflect.ValueOf(&object).Elem()
 	if v.Kind() == reflect.Ptr {
@@ -100,6 +104,7 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 	return nil
 }
 
+// SetFieldValueByIndex sets the field value by index.
 func SetFieldValueByIndex[T any](object T, index int, value interface{}) {
 	v := reflect.ValueOf(&object).Elem()
 
@@ -139,6 +144,7 @@ func SetFieldValueByIndex[T any](object T, index int, value interface{}) {
 	}
 }
 
+// SetFieldValueByName sets the field value by name.
 func SetFieldValueByName[T any](object T, name string, value interface{}) {
 	v := reflect.ValueOf(&object).Elem()
 
@@ -178,6 +184,7 @@ func SetFieldValueByName[T any](object T, name string, value interface{}) {
 	}
 }
 
+// GetFieldValue gets the field value.
 func GetFieldValue(field reflect.Value) reflect.Value {
 	if field.CanInterface() {
 		return field
@@ -189,6 +196,7 @@ func GetFieldValue(field reflect.Value) reflect.Value {
 	}
 }
 
+// SetFieldValue sets the field value.
 func SetFieldValue(field reflect.Value, value interface{}) {
 	if field.CanInterface() && field.CanAddr() && field.CanSet() {
 		field.Set(reflect.ValueOf(value))
@@ -200,6 +208,7 @@ func SetFieldValue(field reflect.Value, value interface{}) {
 	}
 }
 
+// GetFieldValueFromMethodAndObject gets the field value from method and object.
 func GetFieldValueFromMethodAndObject[T interface{}](object T, name string) reflect.Value {
 	v := reflect.ValueOf(&object).Elem()
 	if v.Kind() == reflect.Ptr {
@@ -229,6 +238,7 @@ func GetFieldValueFromMethodAndObject[T interface{}](object T, name string) refl
 	return *new(reflect.Value)
 }
 
+// GetFieldValueFromMethodAndReflectValue gets the field value from method and reflect value.
 func GetFieldValueFromMethodAndReflectValue(val reflect.Value, name string) reflect.Value {
 	if val.Kind() == reflect.Ptr {
 		method := val.MethodByName(name)
@@ -256,6 +266,7 @@ func GetFieldValueFromMethodAndReflectValue(val reflect.Value, name string) refl
 	return *new(reflect.Value)
 }
 
+// SetValue sets the value.
 func SetValue[T any](data T, value interface{}) {
 	var inputValue reflect.Value
 	if reflect.ValueOf(data).Kind() == reflect.Ptr {

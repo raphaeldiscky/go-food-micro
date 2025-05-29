@@ -1,3 +1,4 @@
+// Package log provides a echo http server log middleware.
 package log
 
 import "github.com/labstack/echo/v4/middleware"
@@ -13,8 +14,10 @@ type Option interface {
 	apply(*config)
 }
 
+// optionFunc is a function that represents a option func.
 type optionFunc func(*config)
 
+// apply is a function that applies the option.
 func (o optionFunc) apply(c *config) {
 	o(c)
 }

@@ -1,3 +1,4 @@
+// Package contracts provides a eventstoredb container contracts.
 package contracts
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 )
 
+// EventstoreDBContainerOptions represents a eventstoredb container options.
 type EventstoreDBContainerOptions struct {
 	Host    string
 	Ports   []string
@@ -18,6 +20,7 @@ type EventstoreDBContainerOptions struct {
 	Tag       string
 }
 
+// EventstoreDBContainer is a interface that represents a eventstoredb container.
 type EventstoreDBContainer interface {
 	PopulateContainerOptions(
 		ctx context.Context,

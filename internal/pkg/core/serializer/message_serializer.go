@@ -1,3 +1,4 @@
+// Package serializer provides a message serializer.
 package serializer
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 )
 
+// MessageSerializer is an interface that represents a message serializer.
 type MessageSerializer interface {
 	Serialize(message types.IMessage) (*EventSerializationResult, error)
 	SerializeObject(message interface{}) (*EventSerializationResult, error)

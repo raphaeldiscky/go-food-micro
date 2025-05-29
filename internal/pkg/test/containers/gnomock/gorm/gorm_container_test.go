@@ -1,3 +1,4 @@
+// Package gorm provides a gorm container.
 package gorm
 
 import (
@@ -8,7 +9,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func Test_Gorm_Container(t *testing.T) {
+// TestGormContainer tests the gorm container.
+func TestGormContainer(t *testing.T) {
 	gorm, err := NewGnoMockGormContainer().PopulateContainerOptions(context.Background(), t)
 	require.NoError(t, err)
 

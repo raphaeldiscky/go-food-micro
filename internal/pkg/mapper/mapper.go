@@ -163,7 +163,7 @@ func CreateCustomMap[TSrc any, TDst any](fn MapFunc[TSrc, TDst]) error {
 	//	srcType = srcType.Elem()
 	//}
 	//
-	//if desType.Kind() == reflect.Ptr && desType.Elem().Kind() == reflect.Struct {
+	// if desType.Kind() == reflect.Ptr && desType.Elem().Kind() == reflect.Struct {
 	//	desType = desType.Elem()
 	//}
 

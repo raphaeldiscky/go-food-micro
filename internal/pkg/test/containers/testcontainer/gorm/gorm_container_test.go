@@ -23,7 +23,8 @@ import (
 	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 )
 
-func Test_Custom_Gorm_Container(t *testing.T) {
+// TestCustomGormContainer tests the custom gorm container.
+func TestCustomGormContainer(t *testing.T) {
 	ctx := context.Background()
 
 	var gorm *gorm.DB
@@ -41,7 +42,8 @@ func Test_Custom_Gorm_Container(t *testing.T) {
 	assert.NotNil(t, gorm)
 }
 
-func Test_Builtin_Postgres_Container(t *testing.T) {
+// TestBuiltinPostgresContainer tests the builtin postgres container.
+func TestBuiltinPostgresContainer(t *testing.T) {
 	ctx := context.Background()
 
 	// https://github.com/testcontainers/testcontainers-go/blob/f87445303764342cb09ae3cc0e1f80c082b003a4/modules/postgres/postgres_test.go

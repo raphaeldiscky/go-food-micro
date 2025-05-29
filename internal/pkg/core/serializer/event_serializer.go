@@ -1,3 +1,4 @@
+// Package serializer provides a event serializer.
 package serializer
 
 import (
@@ -6,6 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 )
 
+// EventSerializer is an interface that represents a event serializer.
 type EventSerializer interface {
 	Serialize(event domain.IDomainEvent) (*EventSerializationResult, error)
 	SerializeObject(event interface{}) (*EventSerializationResult, error)

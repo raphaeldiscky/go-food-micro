@@ -1,3 +1,4 @@
+// Package grpc provides a grpc module.
 package grpc
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Module provided to fxlog.
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
@@ -18,6 +20,7 @@ var (
 		grpcInvokes,
 	)
 
+	// grpcProviders is a fx.Options that provides the grpc module.
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
 	// - execute its func only if it requested.
@@ -32,6 +35,7 @@ var (
 		NewGrpcClient,
 	))
 
+	// grpcInvokes is a fx.Options that invokes the grpc module.
 	// - execute after registering all of our provided
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
@@ -39,7 +43,7 @@ var (
 	grpcInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
 )
 
-// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
+// registerHooks is a function that registers the grpc module.
 func registerHooks(
 	lc fx.Lifecycle,
 	grpcServer GrpcServer,

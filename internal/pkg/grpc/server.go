@@ -1,3 +1,4 @@
+// Package grpc provides a grpc server.
 package grpc
 
 import (
@@ -30,6 +31,7 @@ const (
 	gRPCTime          = 10
 )
 
+// GrpcServer is an interface that represents a grpc server.
 type GrpcServer interface {
 	RunGrpcServer(configGrpc ...func(grpcServer *googleGrpc.Server)) error
 	GracefulShutdown()
@@ -37,6 +39,7 @@ type GrpcServer interface {
 	GrpcServiceBuilder() *GrpcServiceBuilder
 }
 
+// grpcServer is a struct that represents a grpc server.
 type grpcServer struct {
 	server         *googleGrpc.Server
 	config         *config.GrpcOptions
@@ -45,6 +48,7 @@ type grpcServer struct {
 	serviceBuilder *GrpcServiceBuilder
 }
 
+// NewGrpcServer is a function that creates a new grpc server.
 func NewGrpcServer(
 	config *config.GrpcOptions,
 	logger logger.Logger,
@@ -97,6 +101,7 @@ func NewGrpcServer(
 	}
 }
 
+// RunGrpcServer is a function that runs the grpc server.
 func (s *grpcServer) RunGrpcServer(
 	configGrpc ...func(grpcServer *googleGrpc.Server),
 ) error {
@@ -134,14 +139,17 @@ func (s *grpcServer) RunGrpcServer(
 	return err
 }
 
+// GrpcServiceBuilder is a function that returns the grpc service builder.
 func (s *grpcServer) GrpcServiceBuilder() *GrpcServiceBuilder {
 	return s.serviceBuilder
 }
 
+// GetCurrentGrpcServer is a function that returns the current grpc server.
 func (s *grpcServer) GetCurrentGrpcServer() *googleGrpc.Server {
 	return s.server
 }
 
+// GracefulShutdown is a function that gracefully shuts down the grpc server.
 func (s *grpcServer) GracefulShutdown() {
 	s.server.Stop()
 	s.server.GracefulStop()

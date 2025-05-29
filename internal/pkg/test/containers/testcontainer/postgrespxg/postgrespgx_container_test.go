@@ -1,3 +1,4 @@
+// Package postgrespxg provides a postgrespgx container.
 package postgrespxg
 
 import (
@@ -10,7 +11,8 @@ import (
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 )
 
-func Test_Custom_PostgresPgx_Container(t *testing.T) {
+// TestCustomPostgresPgxContainer tests the custom postgrespgx container.
+func TestCustomPostgresPgxContainer(t *testing.T) {
 	gorm, err := NewPostgresPgxContainers(
 		defaultLogger.GetLogger(),
 	).PopulateContainerOptions(context.Background(), t)

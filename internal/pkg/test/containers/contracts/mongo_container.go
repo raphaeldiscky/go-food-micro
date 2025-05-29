@@ -1,3 +1,4 @@
+// Package contracts provides a mongo container contracts.
 package contracts
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 )
 
+// MongoContainerOptions represents a mongo container options.
 type MongoContainerOptions struct {
 	Database  string
 	Host      string
@@ -19,6 +21,7 @@ type MongoContainerOptions struct {
 	Tag       string
 }
 
+// MongoContainer is a interface that represents a mongo container.
 type MongoContainer interface {
 	PopulateContainerOptions(
 		ctx context.Context,

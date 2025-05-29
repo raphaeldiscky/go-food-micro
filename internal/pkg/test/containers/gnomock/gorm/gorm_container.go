@@ -1,3 +1,4 @@
+// Package gorm provides a gorm container.
 package gorm
 
 import (
@@ -14,11 +15,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// gnoMockGormContainer is a gorm container.
 type gnoMockGormContainer struct {
 	container      *gnomock.Container
 	defaultOptions *contracts.PostgresContainerOptions
 }
 
+// NewGnoMockGormContainer creates a new gorm container.
 func NewGnoMockGormContainer() contracts.GormContainer {
 	return &gnoMockGormContainer{
 		defaultOptions: &contracts.PostgresContainerOptions{
@@ -34,6 +37,7 @@ func NewGnoMockGormContainer() contracts.GormContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *gnoMockGormContainer) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -66,6 +70,7 @@ func (g *gnoMockGormContainer) PopulateContainerOptions(
 	return gormContainerOptions, nil
 }
 
+// Start starts the gorm container.
 func (g *gnoMockGormContainer) Start(
 	ctx context.Context,
 	t *testing.T,
@@ -84,10 +89,12 @@ func (g *gnoMockGormContainer) Start(
 	return db, nil
 }
 
+// Cleanup cleans up the gorm container.
 func (g *gnoMockGormContainer) Cleanup(ctx context.Context) error {
 	return gnomock.Stop(g.container)
 }
 
+// getRunOptions gets the run options.
 func (g *gnoMockGormContainer) getRunOptions(
 	opts ...*contracts.PostgresContainerOptions,
 ) gnomock.Preset {

@@ -1,3 +1,4 @@
+// Package contracts provides a redis container contracts.
 package contracts
 
 import (
@@ -7,6 +8,7 @@ import (
 	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
 )
 
+// RedisContainerOptions represents a redis container options.
 type RedisContainerOptions struct {
 	Host      string
 	Port      string
@@ -18,6 +20,7 @@ type RedisContainerOptions struct {
 	PoolSize  int
 }
 
+// RedisContainer is a interface that represents a redis container.
 type RedisContainer interface {
 	PopulateContainerOptions(
 		ctx context.Context,

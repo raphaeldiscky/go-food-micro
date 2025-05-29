@@ -17,7 +17,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 )
 
-func Test_Custom_Mongo_Container(t *testing.T) {
+// TestCustomMongoContainer tests the custom mongo container.
+func TestCustomMongoContainer(t *testing.T) {
 	ctx := context.Background()
 
 	var mongoClient *mongo.Client

@@ -1,3 +1,4 @@
+// Package client provides a http client.
 package client
 
 import (
@@ -6,6 +7,7 @@ import (
 	resty "github.com/go-resty/resty/v2"
 )
 
+// Constants for the http client.
 const (
 	timeout               = 5 * time.Second
 	dialContextTimeout    = 5 * time.Second
@@ -18,6 +20,7 @@ const (
 	responseHeaderTimeout = 5 * time.Second
 )
 
+// NewHttpClient is a function that creates a new http client.
 func NewHttpClient() *resty.Client {
 	client := resty.New().
 		SetTimeout(timeout).

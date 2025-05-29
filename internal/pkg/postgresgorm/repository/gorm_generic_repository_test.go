@@ -431,7 +431,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Equal(t, len(entities), 1)
 //}
 //
-//func Test_Find_With_Data_Model(t *testing.T) {
+// func Test_Find_With_Data_Model(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepositoryWithDataModel(ctx, t)
 //	if err != nil {

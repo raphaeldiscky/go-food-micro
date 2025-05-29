@@ -13,15 +13,17 @@ type MockIMessage struct {
 	mock.Mock
 }
 
+// MockIMessage_Expecter is a struct that represents a mock IMessage expecter.
 type MockIMessage_Expecter struct {
 	mock *mock.Mock
 }
 
+// EXPECT is a function that returns a mock IMessage expecter.
 func (_m *MockIMessage) EXPECT() *MockIMessage_Expecter {
 	return &MockIMessage_Expecter{mock: &_m.Mock}
 }
 
-// GeMessageId provides a mock function with given fields:
+// GeMessageId is a function that returns the message id.
 func (_m *MockIMessage) GeMessageId() string {
 	ret := _m.Called()
 
@@ -35,16 +37,17 @@ func (_m *MockIMessage) GeMessageId() string {
 	return r0
 }
 
-// MockIMessage_GeMessageId_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GeMessageId'
+// MockIMessage_GeMessageId_Call is a struct that represents a mock IMessage ge message id call.
 type MockIMessage_GeMessageId_Call struct {
 	*mock.Call
 }
 
-// GeMessageId is a helper method to define mock.On call
+// GeMessageId is a function that returns a mock IMessage ge message id call.
 func (_e *MockIMessage_Expecter) GeMessageId() *MockIMessage_GeMessageId_Call {
 	return &MockIMessage_GeMessageId_Call{Call: _e.mock.On("GeMessageId")}
 }
 
+// Run is a function that runs the mock IMessage ge message id call.
 func (_c *MockIMessage_GeMessageId_Call) Run(run func()) *MockIMessage_GeMessageId_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run()
@@ -52,17 +55,19 @@ func (_c *MockIMessage_GeMessageId_Call) Run(run func()) *MockIMessage_GeMessage
 	return _c
 }
 
+// Return is a function that returns the mock IMessage ge message id call.
 func (_c *MockIMessage_GeMessageId_Call) Return(_a0 string) *MockIMessage_GeMessageId_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
+// RunAndReturn is a function that runs and returns the mock IMessage ge message id call.
 func (_c *MockIMessage_GeMessageId_Call) RunAndReturn(run func() string) *MockIMessage_GeMessageId_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetCreated provides a mock function with given fields:
+// GetCreated is a function that returns the created time.
 func (_m *MockIMessage) GetCreated() time.Time {
 	ret := _m.Called()
 
@@ -76,16 +81,17 @@ func (_m *MockIMessage) GetCreated() time.Time {
 	return r0
 }
 
-// MockIMessage_GetCreated_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetCreated'
+// MockIMessage_GetCreated_Call is a struct that represents a mock IMessage get created call.
 type MockIMessage_GetCreated_Call struct {
 	*mock.Call
 }
 
-// GetCreated is a helper method to define mock.On call
+// GetCreated is a function that returns a mock IMessage get created call.
 func (_e *MockIMessage_Expecter) GetCreated() *MockIMessage_GetCreated_Call {
 	return &MockIMessage_GetCreated_Call{Call: _e.mock.On("GetCreated")}
 }
 
+// Run is a function that runs the mock IMessage get created call.
 func (_c *MockIMessage_GetCreated_Call) Run(run func()) *MockIMessage_GetCreated_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run()
@@ -93,17 +99,19 @@ func (_c *MockIMessage_GetCreated_Call) Run(run func()) *MockIMessage_GetCreated
 	return _c
 }
 
+// Return is a function that returns the mock IMessage get created call.
 func (_c *MockIMessage_GetCreated_Call) Return(_a0 time.Time) *MockIMessage_GetCreated_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
+// RunAndReturn is a function that runs and returns the mock IMessage get created call.
 func (_c *MockIMessage_GetCreated_Call) RunAndReturn(run func() time.Time) *MockIMessage_GetCreated_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// GetEventTypeName provides a mock function with given fields:
+// GetEventTypeName is a function that returns the event type name.
 func (_m *MockIMessage) GetMessageTypeName() string {
 	ret := _m.Called()
 
@@ -117,16 +125,17 @@ func (_m *MockIMessage) GetMessageTypeName() string {
 	return r0
 }
 
-// MockIMessage_GetEventTypeName_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMessageTypeName'
+// MockIMessage_GetEventTypeName_Call is a struct that represents a mock IMessage get event type name call.
 type MockIMessage_GetEventTypeName_Call struct {
 	*mock.Call
 }
 
-// GetEventTypeName is a helper method to define mock.On call
+// GetEventTypeName is a function that returns a mock IMessage get event type name call.
 func (_e *MockIMessage_Expecter) GetEventTypeName() *MockIMessage_GetEventTypeName_Call {
 	return &MockIMessage_GetEventTypeName_Call{Call: _e.mock.On("GetMessageTypeName")}
 }
 
+// Run is a function that runs the mock IMessage get event type name call.
 func (_c *MockIMessage_GetEventTypeName_Call) Run(run func()) *MockIMessage_GetEventTypeName_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run()
@@ -134,17 +143,19 @@ func (_c *MockIMessage_GetEventTypeName_Call) Run(run func()) *MockIMessage_GetE
 	return _c
 }
 
+// Return is a function that returns the mock IMessage get event type name call.
 func (_c *MockIMessage_GetEventTypeName_Call) Return(_a0 string) *MockIMessage_GetEventTypeName_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
+// RunAndReturn is a function that runs and returns the mock IMessage get event type name call.
 func (_c *MockIMessage_GetEventTypeName_Call) RunAndReturn(run func() string) *MockIMessage_GetEventTypeName_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// IsMessage provides a mock function with given fields:
+// IsMessage is a function that returns the message.
 func (_m *MockIMessage) IsMessage() bool {
 	ret := _m.Called()
 
@@ -158,16 +169,17 @@ func (_m *MockIMessage) IsMessage() bool {
 	return r0
 }
 
-// MockIMessage_IsMessage_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'IsMessage'
+// MockIMessage_IsMessage_Call is a struct that represents a mock IMessage is message call.
 type MockIMessage_IsMessage_Call struct {
 	*mock.Call
 }
 
-// IsMessage is a helper method to define mock.On call
+// IsMessage is a function that returns a mock IMessage is message call.
 func (_e *MockIMessage_Expecter) IsMessage() *MockIMessage_IsMessage_Call {
 	return &MockIMessage_IsMessage_Call{Call: _e.mock.On("IsMessage")}
 }
 
+// Run is a function that runs the mock IMessage is message call.
 func (_c *MockIMessage_IsMessage_Call) Run(run func()) *MockIMessage_IsMessage_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run()
@@ -175,32 +187,35 @@ func (_c *MockIMessage_IsMessage_Call) Run(run func()) *MockIMessage_IsMessage_C
 	return _c
 }
 
+// Return is a function that returns the mock IMessage is message call.
 func (_c *MockIMessage_IsMessage_Call) Return(_a0 bool) *MockIMessage_IsMessage_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
+// RunAndReturn is a function that runs and returns the mock IMessage is message call.
 func (_c *MockIMessage_IsMessage_Call) RunAndReturn(run func() bool) *MockIMessage_IsMessage_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// SetEventTypeName provides a mock function with given fields: _a0
+// SetEventTypeName is a function that sets the event type name.
 func (_m *MockIMessage) SetEventTypeName(_a0 string) {
 	_m.Called(_a0)
 }
 
-// MockIMessage_SetEventTypeName_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SetEventTypeName'
+// MockIMessage_SetEventTypeName_Call is a struct that represents a mock IMessage set event type name call.
 type MockIMessage_SetEventTypeName_Call struct {
 	*mock.Call
 }
 
-// SetEventTypeName is a helper method to define mock.On call
+// SetEventTypeName is a function that returns a mock IMessage set event type name call.
 //   - _a0 string
 func (_e *MockIMessage_Expecter) SetEventTypeName(_a0 interface{}) *MockIMessage_SetEventTypeName_Call {
 	return &MockIMessage_SetEventTypeName_Call{Call: _e.mock.On("SetEventTypeName", _a0)}
 }
 
+// Run is a function that runs the mock IMessage set event type name call.
 func (_c *MockIMessage_SetEventTypeName_Call) Run(run func(_a0 string)) *MockIMessage_SetEventTypeName_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(string))
@@ -208,18 +223,19 @@ func (_c *MockIMessage_SetEventTypeName_Call) Run(run func(_a0 string)) *MockIMe
 	return _c
 }
 
+// Return is a function that returns the mock IMessage set event type name call.
 func (_c *MockIMessage_SetEventTypeName_Call) Return() *MockIMessage_SetEventTypeName_Call {
 	_c.Call.Return()
 	return _c
 }
 
+// RunAndReturn is a function that runs and returns the mock IMessage set event type name call.
 func (_c *MockIMessage_SetEventTypeName_Call) RunAndReturn(run func(string)) *MockIMessage_SetEventTypeName_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// NewMockIMessage creates a new instance of MockIMessage. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
-// The first argument is typically a *testing.T value.
+// NewMockIMessage is a function that creates a new instance of MockIMessage.
 func NewMockIMessage(t interface {
 	mock.TestingT
 	Cleanup(func())

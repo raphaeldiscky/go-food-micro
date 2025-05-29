@@ -1,3 +1,4 @@
+// Package persistmessage provides a store message.
 package persistmessage
 
 import (
@@ -6,6 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// MessageDeliveryType is a type that represents the delivery type of a message.
 type MessageDeliveryType int
 
 const (
@@ -14,6 +16,7 @@ const (
 	Internal MessageDeliveryType = 4
 )
 
+// MessageStatus is a type that represents the status of a message.
 type MessageStatus int
 
 const (
@@ -21,6 +24,7 @@ const (
 	Processed MessageStatus = 2
 )
 
+// StoreMessage is a struct that represents a message in the store.
 type StoreMessage struct {
 	ID            uuid.UUID `gorm:"primaryKey"`
 	DataType      string
@@ -31,6 +35,7 @@ type StoreMessage struct {
 	DeliveryType  MessageDeliveryType
 }
 
+// NewStoreMessage is a function that creates a new store message.
 func NewStoreMessage(
 	id uuid.UUID,
 	dataType string,
@@ -48,14 +53,17 @@ func NewStoreMessage(
 	}
 }
 
+// ChangeState is a function that changes the state of a message.
 func (sm *StoreMessage) ChangeState(messageStatus MessageStatus) {
 	sm.MessageStatus = messageStatus
 }
 
+// IncreaseRetry is a function that increases the retry count of a message.
 func (sm *StoreMessage) IncreaseRetry() {
 	sm.RetryCount++
 }
 
+// TableName is a function that returns the table name of a message.
 func (sm *StoreMessage) TableName() string {
 	return "store_messages"
 }

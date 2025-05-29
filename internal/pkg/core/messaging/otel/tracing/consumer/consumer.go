@@ -1,3 +1,4 @@
+// Package consumer provides a consumer tracing.
 package consumer
 
 import (
@@ -27,6 +28,7 @@ import (
 // https://opentelemetry.io/docs/instrumentation/go/manual/#semantic-attributes
 // https://trstringer.com/otel-part5-propagation/
 
+// StartConsumerSpan is a function that starts a consumer span.
 func StartConsumerSpan(
 	ctx context.Context,
 	meta *metadata.Metadata,
@@ -63,6 +65,7 @@ func StartConsumerSpan(
 	return ctx, span
 }
 
+// FinishConsumerSpan is a function that finishes a consumer span.
 func FinishConsumerSpan(span trace.Span, err error) error {
 	messageName := utils.GetSpanAttribute(span, tracing.MessageName).Value.AsString()
 
@@ -82,6 +85,7 @@ func FinishConsumerSpan(span trace.Span, err error) error {
 	return err
 }
 
+// getTraceOptions is a function that gets the trace options.
 func getTraceOptions(
 	meta *metadata.Metadata,
 	payload string,
@@ -119,6 +123,7 @@ func getTraceOptions(
 	return opts
 }
 
+// addAfterBaggage is a function that adds after baggage.
 func addAfterBaggage(ctx context.Context, meta *metadata.Metadata) context.Context {
 	correlationId := messageHeader.GetCorrelationId(*meta)
 

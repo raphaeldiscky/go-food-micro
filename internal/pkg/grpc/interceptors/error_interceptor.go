@@ -1,3 +1,4 @@
+// Package interceptors provides a error interceptor.
 package interceptors
 
 import (
@@ -9,7 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcerrors"
 )
 
-// UnaryServerInterceptor returns a problem-detail error to client.
+// UnaryServerInterceptor is a function that returns a problem-detail error to client.
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
@@ -34,7 +35,7 @@ func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
-// StreamServerInterceptor returns a problem-detail error to client.
+// StreamServerInterceptor is a function that returns a problem-detail error to client.
 func StreamServerInterceptor() grpc.StreamServerInterceptor {
 	return func(
 		srv interface{},

@@ -1,3 +1,4 @@
+// Package json provides a json metadata serializer.
 package json
 
 import (
@@ -7,16 +8,19 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 )
 
+// DefaultMetadataJsonSerializer is a struct that represents a default metadata json serializer.
 type DefaultMetadataJsonSerializer struct {
 	serializer serializer.Serializer
 }
 
+// NewDefaultMetadataJsonSerializer is a function that creates a new default metadata json serializer.
 func NewDefaultMetadataJsonSerializer(
 	serializer serializer.Serializer,
 ) serializer.MetadataSerializer {
 	return &DefaultMetadataJsonSerializer{serializer: serializer}
 }
 
+// Serialize is a function that serializes a metadata.
 func (s *DefaultMetadataJsonSerializer) Serialize(meta metadata.Metadata) ([]byte, error) {
 	if meta == nil {
 		return nil, nil
@@ -30,7 +34,10 @@ func (s *DefaultMetadataJsonSerializer) Serialize(meta metadata.Metadata) ([]byt
 	return marshal, nil
 }
 
-func (s *DefaultMetadataJsonSerializer) Deserialize(bytes []byte) (metadata.Metadata, error) {
+// Deserialize is a function that deserializes a metadata.
+func (s *DefaultMetadataJsonSerializer) Deserialize(
+	bytes []byte,
+) (metadata.Metadata, error) {
 	if bytes == nil {
 		return nil, nil
 	}

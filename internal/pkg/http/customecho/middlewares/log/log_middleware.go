@@ -1,3 +1,4 @@
+// Package log provides a echo http server log middleware.
 package log
 
 import (

@@ -1,3 +1,4 @@
+// Package json provides a json message serializer.
 package json
 
 import (
@@ -10,20 +11,24 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// DefaultMessageJsonSerializer is a struct that represents a default message json serializer.
 type DefaultMessageJsonSerializer struct {
 	serializer serializer.Serializer
 }
 
+// NewDefaultMessageJsonSerializer is a function that creates a new default message json serializer.
 func NewDefaultMessageJsonSerializer(s serializer.Serializer) serializer.MessageSerializer {
 	return &DefaultMessageJsonSerializer{serializer: s}
 }
 
+// Serialize is a function that serializes a message.
 func (m *DefaultMessageJsonSerializer) Serialize(
 	message types.IMessage,
 ) (*serializer.EventSerializationResult, error) {
 	return m.SerializeObject(message)
 }
 
+// SerializeObject is a function that serializes an object.
 func (m *DefaultMessageJsonSerializer) SerializeObject(
 	message interface{},
 ) (*serializer.EventSerializationResult, error) {
@@ -44,6 +49,7 @@ func (m *DefaultMessageJsonSerializer) SerializeObject(
 	return result, nil
 }
 
+// SerializeEnvelop is a function that serializes a message envelop.
 func (m *DefaultMessageJsonSerializer) SerializeEnvelop(
 	messageEnvelop types.MessageEnvelope,
 ) (*serializer.EventSerializationResult, error) {
@@ -51,6 +57,7 @@ func (m *DefaultMessageJsonSerializer) SerializeEnvelop(
 	panic("implement me")
 }
 
+// Deserialize is a function that deserializes a message.
 func (m *DefaultMessageJsonSerializer) Deserialize(
 	data []byte,
 	messageType string,
@@ -82,6 +89,7 @@ func (m *DefaultMessageJsonSerializer) Deserialize(
 	return targetMessagePointer.(types.IMessage), nil
 }
 
+// DeserializeObject is a function that deserializes an object.
 func (m *DefaultMessageJsonSerializer) DeserializeObject(
 	data []byte,
 	messageType string,
@@ -108,6 +116,7 @@ func (m *DefaultMessageJsonSerializer) DeserializeObject(
 	return targetMessagePointer, nil
 }
 
+// DeserializeType is a function that deserializes a type.
 func (m *DefaultMessageJsonSerializer) DeserializeType(
 	data []byte,
 	messageType reflect.Type,
@@ -123,10 +132,12 @@ func (m *DefaultMessageJsonSerializer) DeserializeType(
 	return m.Deserialize(data, messageTypeName, contentType)
 }
 
+// ContentType is a function that returns the content type.
 func (m *DefaultMessageJsonSerializer) ContentType() string {
 	return "application/json"
 }
 
+// Serializer is a function that returns the serializer.
 func (m *DefaultMessageJsonSerializer) Serializer() serializer.Serializer {
 	return m.serializer
 }

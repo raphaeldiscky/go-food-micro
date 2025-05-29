@@ -1,3 +1,4 @@
+// Package producer provides a producer tracing.
 package producer
 
 import (
@@ -27,6 +28,7 @@ import (
 // https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/semantic_conventions/messaging.md#messaging-attributes
 // https://trstringer.com/otel-part5-propagation/
 
+// StartProducerSpan is a function that starts a producer span.
 func StartProducerSpan(
 	ctx context.Context,
 	message types.IMessage,
@@ -65,6 +67,7 @@ func StartProducerSpan(
 	return ctx, span
 }
 
+// FinishProducerSpan is a function that finishes a producer span.
 func FinishProducerSpan(span trace.Span, err error) error {
 	messageName := utils.GetSpanAttribute(
 		span,
@@ -98,6 +101,7 @@ func FinishProducerSpan(span trace.Span, err error) error {
 	return err
 }
 
+// getTraceOptions is a function that gets the trace options.
 func getTraceOptions(
 	meta *metadata.Metadata,
 	message types.IMessage,
@@ -137,6 +141,7 @@ func getTraceOptions(
 	return opts
 }
 
+// addAfterBaggage is a function that adds after baggage.
 func addAfterBaggage(
 	ctx context.Context,
 	message types.IMessage,

@@ -1,3 +1,4 @@
+// Package handlers provides a echo http server handlers.
 package handlers
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// ProblemDetailErrorHandlerFunc is a function that handles the problem detail error.
 func ProblemDetailErrorHandlerFunc(
 	err error,
 	c echo.Context,
@@ -16,7 +18,7 @@ func ProblemDetailErrorHandlerFunc(
 ) {
 	var problem problemDetails.ProblemDetailErr
 
-	// if error was not problem detail we will convert the error to a problem detail
+	// if error was not problem detail we will convert the error to a problem detail.
 	if ok := errors.As(err, &problem); !ok {
 		problem = problemDetails.ParseError(err)
 	}

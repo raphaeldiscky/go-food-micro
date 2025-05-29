@@ -1,3 +1,4 @@
+// Package testfixture provides a postgres test fixture.
 package testfixture
 
 import (
@@ -9,6 +10,7 @@ import (
 	testfixtures "github.com/go-testfixtures/testfixtures/v3"
 )
 
+// RunPostgresFixture runs a postgres fixture.
 func RunPostgresFixture(db *sql.DB, fixturePaths []string, data map[string]interface{}) error {
 	// determine the project's root path
 	_, callerPath, _, _ := runtime.Caller(1) //nolint:dogsled

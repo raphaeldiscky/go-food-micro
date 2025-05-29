@@ -1,3 +1,4 @@
+// Package otelmetrics provides a echo http server otelmetrics middleware.
 package otelmetrics
 
 // ref:https://github.com/open-telemetry/opentelemetry-go/blob/main/example/prometheus/main.go

@@ -1,3 +1,4 @@
+// Package rabbitmq provides a rabbitmq container.
 package rabbitmq
 
 import (
@@ -20,15 +21,16 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// rabbitmqTestContainers represents a rabbitmq test containers.
 // https://github.com/testcontainers/testcontainers-go/issues/1359
 // https://github.com/testcontainers/testcontainers-go/issues/1249
-
 type rabbitmqTestContainers struct {
 	container      testcontainers.Container
 	defaultOptions *contracts.RabbitMQContainerOptions
 	logger         logger.Logger
 }
 
+// NewRabbitMQTestContainers creates a new rabbitmq test containers.
 func NewRabbitMQTestContainers(l logger.Logger) contracts.RabbitMQContainer {
 	return &rabbitmqTestContainers{
 		defaultOptions: &contracts.RabbitMQContainerOptions{
@@ -47,6 +49,7 @@ func NewRabbitMQTestContainers(l logger.Logger) contracts.RabbitMQContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *rabbitmqTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -134,6 +137,7 @@ func (g *rabbitmqTestContainers) PopulateContainerOptions(
 	return nil, errors.New("failed to connect to RabbitMQ after maximum retries")
 }
 
+// Cleanup cleans up the container.
 func (g *rabbitmqTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
@@ -142,6 +146,7 @@ func (g *rabbitmqTestContainers) Cleanup(ctx context.Context) error {
 	return nil
 }
 
+// getRunOptions gets the run options.
 func (g *rabbitmqTestContainers) getRunOptions(
 	opts ...*contracts.RabbitMQContainerOptions,
 ) testcontainers.ContainerRequest {
@@ -191,6 +196,7 @@ func (g *rabbitmqTestContainers) getRunOptions(
 	return containerReq
 }
 
+// IsConnectableWithContext checks if the container is connectable.
 func IsConnectableWithContext(
 	ctx context.Context,
 	logger logger.Logger,
@@ -275,6 +281,7 @@ func IsConnectableWithContext(
 	}
 }
 
+// logError logs an error.
 func logError(
 	logger logger.Logger,
 	userName string,

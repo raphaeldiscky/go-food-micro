@@ -1,3 +1,4 @@
+// Package mongo provides a mongo container.
 package mongo
 
 import (
@@ -15,11 +16,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// mongoDockerTest represents a mongo docker test.
 type mongoDockerTest struct {
 	resource       *dockertest.Resource
 	defaultOptions *contracts.MongoContainerOptions
 }
 
+// NewMongoDockerTest creates a new mongo docker test.
 func NewMongoDockerTest() contracts.MongoContainer {
 	return &mongoDockerTest{
 		defaultOptions: &contracts.MongoContainerOptions{
@@ -35,6 +38,7 @@ func NewMongoDockerTest() contracts.MongoContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *mongoDockerTest) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -94,10 +98,12 @@ func (g *mongoDockerTest) PopulateContainerOptions(
 	return mongoOptions, nil
 }
 
+// Cleanup cleans up the container.
 func (g *mongoDockerTest) Cleanup(ctx context.Context) error {
 	return g.resource.Close()
 }
 
+// getRunOptions gets the run options.
 func (g *mongoDockerTest) getRunOptions(
 	opts ...*contracts.MongoContainerOptions,
 ) *dockertest.RunOptions {

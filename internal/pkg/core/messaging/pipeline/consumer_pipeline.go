@@ -1,3 +1,4 @@
+// Package pipeline provides a consumer pipeline.
 package pipeline
 
 import (

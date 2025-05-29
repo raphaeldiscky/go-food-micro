@@ -1,3 +1,4 @@
+// Package utils provides utils for the core package.
 package utils
 
 import (
@@ -10,6 +11,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// GetAllDomainEventTypes is a function that returns all domain event types.
 func GetAllDomainEventTypes() []reflect.Type {
 	var types []reflect.Type
 	d := linq.From(typeMapper.GetAllRegisteredTypes()).
@@ -23,6 +25,7 @@ func GetAllDomainEventTypes() []reflect.Type {
 	return types
 }
 
+// GetAllEventTypes is a function that returns all event types.
 func GetAllEventTypes() []reflect.Type {
 	var types []reflect.Type
 	d := linq.From(typeMapper.GetAllRegisteredTypes()).

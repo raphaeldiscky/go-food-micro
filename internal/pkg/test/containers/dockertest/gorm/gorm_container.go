@@ -1,3 +1,4 @@
+// Package gorm provides a gorm container.
 package gorm
 
 import (
@@ -15,11 +16,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
+// gormDockerTest represents a gorm docker test.
 type gormDockerTest struct {
 	resource       *dockertest.Resource
 	defaultOptions *contracts.PostgresContainerOptions
 }
 
+// NewGormDockerTest creates a new gorm docker test.
 func NewGormDockerTest() contracts.GormContainer {
 	return &gormDockerTest{
 		defaultOptions: &contracts.PostgresContainerOptions{
@@ -35,6 +38,7 @@ func NewGormDockerTest() contracts.GormContainer {
 	}
 }
 
+// PopulateContainerOptions populates the container options.
 func (g *gormDockerTest) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -97,10 +101,12 @@ func (g *gormDockerTest) PopulateContainerOptions(
 	return postgresoptions, nil
 }
 
+// Cleanup cleans up the container.
 func (g *gormDockerTest) Cleanup(ctx context.Context) error {
 	return g.resource.Close()
 }
 
+// getRunOptions gets the run options.
 func (g *gormDockerTest) getRunOptions(
 	opts ...*contracts.PostgresContainerOptions,
 ) *dockertest.RunOptions {

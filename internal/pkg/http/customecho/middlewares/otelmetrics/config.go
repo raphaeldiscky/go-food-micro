@@ -1,3 +1,4 @@
+// Package otelmetrics provides a echo http server otelmetrics middleware.
 package otelmetrics
 
 import (
@@ -6,6 +7,7 @@ import (
 	"go.opentelemetry.io/otel/metric"
 )
 
+// config is a struct that represents a config.
 type config struct {
 	metricsProvider metric.MeterProvider
 

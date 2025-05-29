@@ -1,3 +1,4 @@
+// Package ipratelimit provides a echo http server ipratelimit middleware.
 package ipratelimit
 
 import (
@@ -13,6 +14,7 @@ import (
 
 // ref: https://github.com/ulule/limiter-examples/blob/master/echo/main.go
 
+// IPRateLimit is a function that returns a echo middleware function.
 func IPRateLimit(opts ...Option) echo.MiddlewareFunc {
 	config := defualtConfig
 
@@ -33,7 +35,7 @@ func IPRateLimit(opts ...Option) echo.MiddlewareFunc {
 	store = memory.NewStore()
 	ipRateLimiter = limiter.New(store, rate)
 
-	// 2. Return middleware handler
+	// Return middleware handler.
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) (err error) {
 			ip := c.RealIP()
@@ -73,7 +75,7 @@ func IPRateLimit(opts ...Option) echo.MiddlewareFunc {
 				})
 			}
 
-			// log.Printf("%s request continue", c.RealIP())
+			// log.Printf("%s request continue", c.RealIP()).
 			return next(c)
 		}
 	}

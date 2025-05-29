@@ -1,3 +1,4 @@
+// Package gorm provides a gorm fx.
 package gorm
 
 import (
@@ -8,6 +9,7 @@ import (
 	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 )
 
+// GormContainerOptionsDecorator is a decorator for the gorm container options.
 var GormContainerOptionsDecorator = func(t *testing.T, ctx context.Context) interface{} {
 	return func(c *gormPostgres.GormOptions, logger logger.Logger) (*gormPostgres.GormOptions, error) {
 		return NewGormTestContainers(logger).PopulateContainerOptions(ctx, t)

@@ -1,3 +1,4 @@
+// Package otel provides a otel handler.
 package otel
 
 import (
@@ -35,8 +36,10 @@ type ClientHandler struct {
 	handler
 }
 
+// gRPCContextKey is a struct that represents a gRPC context key.
 type gRPCContextKey struct{}
 
+// gRPCContext is a struct that represents a gRPC context.
 type gRPCContext struct {
 	messagesReceived int64
 	messagesSent     int64
@@ -44,6 +47,7 @@ type gRPCContext struct {
 	startTime        time.Time
 }
 
+// handler is a struct that represents a handler.
 type handler struct {
 	tracer             trace.Tracer
 	meter              metric.Meter
@@ -58,6 +62,7 @@ type handler struct {
 	config             config
 }
 
+// newHandler is a function that creates a new handler.
 func newHandler(spanKind trace.SpanKind, options []Option) (handler, error) {
 	c := defualtConfig
 
@@ -158,6 +163,7 @@ func newHandler(spanKind trace.SpanKind, options []Option) (handler, error) {
 	return h, nil
 }
 
+// tagRPC is a function that tags an RPC.
 func (h *handler) tagRPC(
 	ctx context.Context,
 	info *stats.RPCTagInfo,
@@ -181,6 +187,7 @@ func (h *handler) tagRPC(
 	)
 }
 
+// handleRPC is a function that handles an RPC.
 func (h *handler) handleRPC(ctx context.Context, rs stats.RPCStats) {
 	_ = trace.SpanFromContext(ctx)
 	gctx, _ := ctx.Value(gRPCContextKey{}).(*gRPCContext)
@@ -242,10 +249,12 @@ func (h *handler) handleRPC(ctx context.Context, rs stats.RPCStats) {
 	}
 }
 
+// statusCodeAttr is a function that returns a status code attribute.
 func statusCodeAttr(c codes.Code) attribute.KeyValue {
 	return semconv.RPCGRPCStatusCodeKey.Int(int(c))
 }
 
+// NewServerHandler is a function that creates a new server handler.
 func NewServerHandler(options ...Option) stats.Handler {
 	h, err := newHandler(trace.SpanKindServer, options)
 	if err != nil {
@@ -259,6 +268,7 @@ func NewServerHandler(options ...Option) stats.Handler {
 	return s
 }
 
+// NewClientHandler is a function that creates a new client handler.
 func NewClientHandler(options ...Option) stats.Handler {
 	h, err := newHandler(trace.SpanKindClient, options)
 	if err != nil {
@@ -272,6 +282,7 @@ func NewClientHandler(options ...Option) stats.Handler {
 	return c
 }
 
+// TagRPC is a function that tags an RPC.
 func (s *ServerHandler) TagRPC(
 	ctx context.Context,
 	info *stats.RPCTagInfo,

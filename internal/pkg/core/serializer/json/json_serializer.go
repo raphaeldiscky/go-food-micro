@@ -1,3 +1,4 @@
+// Package json provides a json serializer.
 package json
 
 import (
@@ -11,12 +12,15 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 )
 
+// jsonSerializer is a struct that represents a json serializer.
 type jsonSerializer struct{}
 
+// NewDefaultJsonSerializer is a function that creates a new default json serializer.
 func NewDefaultJsonSerializer() serializer.Serializer {
 	return &jsonSerializer{}
 }
 
+// Marshal is a function that marshals an object.
 // https://www.sohamkamani.com/golang/json/#decoding-json-to-maps---unstructured-data
 // https://developpaper.com/mapstructure-of-go/
 // https://github.com/goccy/go-json
@@ -25,17 +29,20 @@ func (s *jsonSerializer) Marshal(v interface{}) ([]byte, error) {
 	return Marshal(v)
 }
 
+// Unmarshal is a function that unmarshals an object.
 // Unmarshal is a wrapper around json.Unmarshal.
 // To unmarshal JSON into an interface value, Unmarshal stores in a map[string]interface{}.
 func (s *jsonSerializer) Unmarshal(data []byte, v interface{}) error {
 	return Unmarshal(data, v)
 }
 
+// UnmarshalFromJson is a function that unmarshals an object from json.
 // UnmarshalFromJson is a wrapper around json.Unmarshal.
 func (s *jsonSerializer) UnmarshalFromJson(data string, v interface{}) error {
 	return UnmarshalFromJSON(data, v)
 }
 
+// DecodeWithMapStructure is a function that decodes an object with a map structure.
 // DecodeWithMapStructure is a wrapper around mapstructure.Decode.
 // Decode takes an input structure or map[string]interface{} and uses reflection to translate it to the output structure. output must be a pointer to a map or struct.
 // https://pkg.go.dev/github.com/mitchellh/mapstructure#section-readme
@@ -46,6 +53,7 @@ func (s *jsonSerializer) DecodeWithMapStructure(
 	return DecodeWithMapStructure(input, output)
 }
 
+// UnmarshalToMap is a function that unmarshals an object to a map.
 func (s *jsonSerializer) UnmarshalToMap(
 	data []byte,
 	v *map[string]interface{},
@@ -53,6 +61,7 @@ func (s *jsonSerializer) UnmarshalToMap(
 	return UnmarshalToMap(data, v)
 }
 
+// UnmarshalToMapFromJson is a function that unmarshals an object to a map from json.
 func (s *jsonSerializer) UnmarshalToMapFromJson(
 	data string,
 	v *map[string]interface{},
@@ -60,16 +69,17 @@ func (s *jsonSerializer) UnmarshalToMapFromJson(
 	return UnmarshalToMapFromJson(data, v)
 }
 
-// PrettyPrint print input object as a formatted json string.
+// PrettyPrint is a function that pretty prints an object.
 func (s *jsonSerializer) PrettyPrint(data interface{}) string {
 	return PrettyPrint(data)
 }
 
-// ColoredPrettyPrint print input object as a formatted json string with color.
+// ColoredPrettyPrint is a function that pretty prints an object with color.
 func (s *jsonSerializer) ColoredPrettyPrint(data interface{}) string {
 	return ColoredPrettyPrint(data)
 }
 
+// PrettyPrint is a function that pretty prints an object.
 func PrettyPrint(data interface{}) string {
 	// https://gosamples.dev/pretty-print-json/
 	val, err := json.MarshalIndent(data, "", "    ")
@@ -80,6 +90,7 @@ func PrettyPrint(data interface{}) string {
 	return string(val)
 }
 
+// ColoredPrettyPrint is a function that pretty prints an object with color.
 func ColoredPrettyPrint(data interface{}) string {
 	// https://github.com/TylerBrock/colorjson
 	var obj map[string]interface{}
@@ -98,10 +109,12 @@ func ColoredPrettyPrint(data interface{}) string {
 	return string(val)
 }
 
+// Marshal is a function that marshals an object.
 func Marshal(v interface{}) ([]byte, error) {
 	return json.Marshal(v)
 }
 
+// Unmarshal is a function that unmarshals an object.
 // Unmarshal is a wrapper around json.Unmarshal.
 // To unmarshal JSON into an interface value, Unmarshal stores in a map[string]interface{}.
 func Unmarshal(data []byte, v interface{}) error {
@@ -116,6 +129,7 @@ func Unmarshal(data []byte, v interface{}) error {
 	return nil
 }
 
+// UnmarshalFromJSON is a function that unmarshals an object from json.
 // UnmarshalFromJSON is a wrapper around json.Unmarshal.
 func UnmarshalFromJSON(data string, v interface{}) error {
 	err := Unmarshal([]byte(data), v)
@@ -126,6 +140,7 @@ func UnmarshalFromJSON(data string, v interface{}) error {
 	return nil
 }
 
+// DecodeWithMapStructure is a function that decodes an object with a map structure.
 // DecodeWithMapStructure is a wrapper around mapstructure.Decode.
 // Decode takes an input structure or map[string]interface{} and uses reflection to translate it to the output structure. output must be a pointer to a map or struct.
 // https://pkg.go.dev/github.com/mitchellh/mapstructure#section-readme
@@ -137,6 +152,7 @@ func DecodeWithMapStructure(
 	return mapstructure.Decode(input, output)
 }
 
+// UnmarshalToMap is a function that unmarshals an object to a map.
 func UnmarshalToMap(
 	data []byte,
 	v *map[string]interface{},
@@ -150,6 +166,7 @@ func UnmarshalToMap(
 	return nil
 }
 
+// UnmarshalToMapFromJson is a function that unmarshals an object to a map from json.
 func UnmarshalToMapFromJson(
 	data string,
 	v *map[string]interface{},

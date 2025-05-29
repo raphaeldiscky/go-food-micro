@@ -12,6 +12,7 @@ import (
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 )
 
+// grpcErr is a struct that represents a grpc error.
 type grpcErr struct {
 	Status     codes.Code `json:"status,omitempty"`
 	Title      string     `json:"title,omitempty"`
@@ -20,6 +21,7 @@ type grpcErr struct {
 	StackTrace string     `json:"stackTrace,omitempty"`
 }
 
+// GrpcErr is an interface that represents a grpc error.
 type GrpcErr interface {
 	GetStatus() codes.Code
 	SetStatus(status codes.Code) GrpcErr
@@ -35,6 +37,7 @@ type GrpcErr interface {
 	ToGrpcResponseErr() error
 }
 
+// NewGrpcError is a function that creates a new grpc error.
 func NewGrpcError(
 	status codes.Code,
 	title string,
@@ -67,40 +70,48 @@ func (p *grpcErr) Error() string {
 	)
 }
 
+// GetStatus is a function that returns the status.
 func (p *grpcErr) GetStatus() codes.Code {
 	return p.Status
 }
 
+// SetStatus is a function that sets the status.
 func (p *grpcErr) SetStatus(status codes.Code) GrpcErr {
 	p.Status = status
 
 	return p
 }
 
+// GetTitle is a function that returns the title.
 func (p *grpcErr) GetTitle() string {
 	return p.Title
 }
 
+// SetTitle is a function that sets the title.
 func (p *grpcErr) SetTitle(title string) GrpcErr {
 	p.Title = title
 
 	return p
 }
 
+// GetDetail is a function that returns the detail.
 func (p *grpcErr) GetDetail() string {
 	return p.Detail
 }
 
+// SetDetail is a function that sets the detail.
 func (p *grpcErr) SetDetail(detail string) GrpcErr {
 	p.Detail = detail
 
 	return p
 }
 
+// GetStackTrace is a function that returns the stack trace.
 func (p *grpcErr) GetStackTrace() string {
 	return p.StackTrace
 }
 
+// SetStackTrace is a function that sets the stack trace.
 func (p *grpcErr) SetStackTrace(stackTrace string) GrpcErr {
 	p.StackTrace = stackTrace
 

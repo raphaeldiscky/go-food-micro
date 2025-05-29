@@ -1,3 +1,4 @@
+// Package json provides a json event serializer.
 package json
 
 import (
@@ -10,20 +11,24 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// DefaultEventJsonSerializer is a struct that represents a default event json serializer.
 type DefaultEventJsonSerializer struct {
 	serializer serializer.Serializer
 }
 
+// NewDefaultEventJsonSerializer is a function that creates a new default event json serializer.
 func NewDefaultEventJsonSerializer(serializer serializer.Serializer) serializer.EventSerializer {
 	return &DefaultEventJsonSerializer{serializer: serializer}
 }
 
+// Serialize is a function that serializes an event.
 func (s *DefaultEventJsonSerializer) Serialize(
 	event domain.IDomainEvent,
 ) (*serializer.EventSerializationResult, error) {
 	return s.SerializeObject(event)
 }
 
+// SerializeObject is a function that serializes an object.
 func (s *DefaultEventJsonSerializer) SerializeObject(
 	event interface{},
 ) (*serializer.EventSerializationResult, error) {
@@ -44,6 +49,7 @@ func (s *DefaultEventJsonSerializer) SerializeObject(
 	return result, nil
 }
 
+// Deserialize is a function that deserializes an event.
 func (s *DefaultEventJsonSerializer) Deserialize(
 	data []byte,
 	eventType string,
@@ -75,6 +81,7 @@ func (s *DefaultEventJsonSerializer) Deserialize(
 	return targetEventPointer.(domain.IDomainEvent), nil
 }
 
+// DeserializeObject is a function that deserializes an object.
 func (s *DefaultEventJsonSerializer) DeserializeObject(
 	data []byte,
 	eventType string,
@@ -101,6 +108,7 @@ func (s *DefaultEventJsonSerializer) DeserializeObject(
 	return targetEventPointer, nil
 }
 
+// DeserializeType is a function that deserializes a type.
 func (s *DefaultEventJsonSerializer) DeserializeType(
 	data []byte,
 	eventType reflect.Type,
@@ -116,10 +124,12 @@ func (s *DefaultEventJsonSerializer) DeserializeType(
 	return s.Deserialize(data, eventTypeName, contentType)
 }
 
+// ContentType is a function that returns the content type.
 func (s *DefaultEventJsonSerializer) ContentType() string {
 	return "application/json"
 }
 
+// Serializer is a function that returns the serializer.
 func (s *DefaultEventJsonSerializer) Serializer() serializer.Serializer {
 	return s.serializer
 }
