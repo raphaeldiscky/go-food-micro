@@ -9,11 +9,11 @@ import (
 
 // UpdateShoppingCart is the command for the update shopping cart.
 type UpdateShoppingCart struct {
-	OrderId   uuid.UUID             `validate:"required"`
+	OrderID   uuid.UUID             `validate:"required"`
 	ShopItems []*dtosV1.ShopItemDto `validate:"required"`
 }
 
 // NewUpdateShoppingCart creates a new update shopping cart command.
 func NewUpdateShoppingCart(orderID uuid.UUID, shopItems []*dtosV1.ShopItemDto) *UpdateShoppingCart {
-	return &UpdateShoppingCart{OrderId: orderID, ShopItems: shopItems}
+	return &UpdateShoppingCart{OrderID: orderID, ShopItems: shopItems}
 }

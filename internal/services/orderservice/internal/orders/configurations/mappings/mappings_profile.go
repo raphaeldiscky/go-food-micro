@@ -13,13 +13,23 @@ import (
 	grpcOrderService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
 )
 
-// configureOrderMappings configures the order-related mappings.
-func configureOrderMappings() error {
+// configureOrderToDtoMappings configures mappings from Order to DTOs.
+func configureOrderToDtoMappings() error {
 	// Order -> OrderDto
 	if err := mapper.CreateMap[*aggregate.Order, *dtosV1.OrderDto](); err != nil {
 		return err
 	}
 
+	// readmodels.OrderReadModel -> dtos.OrderReadDto
+	if err := mapper.CreateMap[*readmodels.OrderReadModel, *dtosV1.OrderReadDto](); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// configureDtoToOrderMappings configures mappings from DTOs to Order.
+func configureDtoToOrderMappings() error {
 	// OrderDto -> Order
 	if err := mapper.CreateCustomMap[*dtosV1.OrderDto, *aggregate.Order](
 		func(orderDto *dtosV1.OrderDto) *aggregate.Order {
@@ -46,11 +56,11 @@ func configureOrderMappings() error {
 		return err
 	}
 
-	// readmodels.OrderReadModel -> dtos.OrderReadDto
-	if err := mapper.CreateMap[*readmodels.OrderReadModel, *dtosV1.OrderReadDto](); err != nil {
-		return err
-	}
+	return nil
+}
 
+// configureGrpcMappings configures mappings to/from gRPC models.
+func configureGrpcMappings() error {
 	// dtos.OrderReadDto -> grpcOrderService.OrderReadModel
 	if err := mapper.CreateCustomMap[*dtosV1.OrderReadDto, *grpcOrderService.OrderReadModel](
 		func(orderReadDto *dtosV1.OrderReadDto) *grpcOrderService.OrderReadModel {
@@ -64,8 +74,8 @@ func configureOrderMappings() error {
 
 			return &grpcOrderService.OrderReadModel{
 				ID:              orderReadDto.ID,
-				OrderId:         orderReadDto.OrderId,
-				PaymentId:       orderReadDto.PaymentId,
+				OrderID:         orderReadDto.OrderID,
+				PaymentID:       orderReadDto.PaymentID,
 				DeliveredTime:   timestamppb.New(orderReadDto.DeliveredTime),
 				TotalPrice:      orderReadDto.TotalPrice,
 				DeliveryAddress: orderReadDto.DeliveryAddress,
@@ -93,7 +103,7 @@ func configureOrderMappings() error {
 			}
 
 			return &grpcOrderService.Order{
-				OrderId:         order.ID().String(),
+				OrderID:         order.ID().String(),
 				DeliveryAddress: order.DeliveryAddress(),
 				DeliveredTime:   timestamppb.New(order.DeliveredTime()),
 				AccountEmail:    order.AccountEmail(),
@@ -106,10 +116,27 @@ func configureOrderMappings() error {
 				CreatedAt:       timestamppb.New(order.CreatedAt()),
 				UpdatedAt:       timestamppb.New(order.UpdatedAt()),
 				ShopItems:       items,
-				PaymentId:       order.PaymentID().String(),
+				PaymentID:       order.PaymentID().String(),
 			}
 		},
 	); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// configureOrderMappings configures the order-related mappings.
+func configureOrderMappings() error {
+	if err := configureOrderToDtoMappings(); err != nil {
+		return err
+	}
+
+	if err := configureDtoToOrderMappings(); err != nil {
+		return err
+	}
+
+	if err := configureGrpcMappings(); err != nil {
 		return err
 	}
 
@@ -191,7 +218,7 @@ func configureShopItemMappings() error {
 // configureListResultMappings configures the list result-related mappings.
 func configureListResultMappings() error {
 	// ListResult[OrderReadDto] -> GetOrdersRes
-	if err := mapper.CreateCustomMap[*utils.ListResult[*dtosV1.OrderReadDto], *grpcOrderService.GetOrdersRes](
+	if err := mapper.CreateCustomMap(
 		func(orders *utils.ListResult[*dtosV1.OrderReadDto]) *grpcOrderService.GetOrdersRes {
 			o, err := mapper.Map[[]*grpcOrderService.OrderReadModel](orders.Items)
 			if err != nil {

@@ -16,20 +16,31 @@ import (
 // https://pmihaylov.com/shared-components-go-microservices/
 
 // OrderServiceModule is the module for the orderservice.
-var OrderServiceModule = fx.Module(
-	"ordersfx",
-	// Shared Modules
-	config.NewModule(),
-	infrastructure.Module(),
+func OrderServiceModule() fx.Option {
+	return fx.Module(
+		"ordersfx",
+		// Shared Modules
+		config.NewModule(),
+		infrastructure.Module(),
 
-	// Features Modules
-	orders.Module(),
+		// Features Modules
+		orders.Module(),
 
-	// Other provides
-	fx.Provide(configOrdersMetrics),
-)
+		// Other provides
+		fx.Provide(configOrdersMetrics),
+	)
+}
 
 // ref: https://github.com/open-telemetry/opentelemetry-go/blob/main/example/prometheus/main.go
+
+// createCounter creates a new counter with the given name and description.
+func createCounter(meter metric.Meter, name, description string) (metric.Float64Counter, error) {
+	if meter == nil {
+		return nil, nil
+	}
+
+	return meter.Float64Counter(name, metric.WithDescription(description))
+}
 
 // configGrpcMetrics configures the gRPC metrics.
 func configGrpcMetrics(meter metric.Meter, serviceName string) (*contracts.GrpcMetrics, error) {
@@ -37,88 +48,37 @@ func configGrpcMetrics(meter metric.Meter, serviceName string) (*contracts.GrpcM
 		return nil, nil
 	}
 
-	successGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_success_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of success grpc requests"),
-	)
-	if err != nil {
-		return nil, err
+	counters := map[string]string{
+		"success_grpc_requests_total":         "The total number of success grpc requests",
+		"error_grpc_requests_total":           "The total number of error grpc requests",
+		"create_order_grpc_requests_total":    "The total number of create order grpc requests",
+		"update_order_grpc_requests_total":    "The total number of update order grpc requests",
+		"pay_order_grpc_requests_total":       "The total number of pay order grpc requests",
+		"submit_order_grpc_requests_total":    "The total number of submit order grpc requests",
+		"get_order_by_id_grpc_requests_total": "The total number of get order by id grpc requests",
+		"get_orders_grpc_requests_total":      "The total number of get orders grpc requests",
+		"search_order_grpc_requests_total":    "The total number of search order grpc requests",
 	}
 
-	errorGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_error_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of error grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	createOrderGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_create_order_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of create order grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	updateOrderGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_update_order_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of update order grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	payOrderGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_pay_order_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of pay order grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	submitOrderGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_submit_order_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of submit order grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	getOrderByIDGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_get_order_by_id_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of get order by id grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	getOrdersGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_get_orders_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of get orders grpc requests"),
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	searchOrderGrpcRequests, err := meter.Float64Counter(
-		fmt.Sprintf("%s_search_order_grpc_requests_total", serviceName),
-		metric.WithDescription("The total number of search order grpc requests"),
-	)
-	if err != nil {
-		return nil, err
+	metrics := make(map[string]metric.Float64Counter)
+	for name, desc := range counters {
+		counter, err := createCounter(meter, fmt.Sprintf("%s_%s", serviceName, name), desc)
+		if err != nil {
+			return nil, err
+		}
+		metrics[name] = counter
 	}
 
 	return &contracts.GrpcMetrics{
-		SuccessGrpcRequests:      successGrpcRequests,
-		ErrorGrpcRequests:        errorGrpcRequests,
-		CreateOrderGrpcRequests:  createOrderGrpcRequests,
-		UpdateOrderGrpcRequests:  updateOrderGrpcRequests,
-		PayOrderGrpcRequests:     payOrderGrpcRequests,
-		SubmitOrderGrpcRequests:  submitOrderGrpcRequests,
-		GetOrderByIDGrpcRequests: getOrderByIDGrpcRequests,
-		GetOrdersGrpcRequests:    getOrdersGrpcRequests,
-		SearchOrderGrpcRequests:  searchOrderGrpcRequests,
+		SuccessGrpcRequests:      metrics["success_grpc_requests_total"],
+		ErrorGrpcRequests:        metrics["error_grpc_requests_total"],
+		CreateOrderGrpcRequests:  metrics["create_order_grpc_requests_total"],
+		UpdateOrderGrpcRequests:  metrics["update_order_grpc_requests_total"],
+		PayOrderGrpcRequests:     metrics["pay_order_grpc_requests_total"],
+		SubmitOrderGrpcRequests:  metrics["submit_order_grpc_requests_total"],
+		GetOrderByIDGrpcRequests: metrics["get_order_by_id_grpc_requests_total"],
+		GetOrdersGrpcRequests:    metrics["get_orders_grpc_requests_total"],
+		SearchOrderGrpcRequests:  metrics["search_order_grpc_requests_total"],
 	}, nil
 }
 

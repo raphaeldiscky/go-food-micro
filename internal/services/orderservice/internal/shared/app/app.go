@@ -15,7 +15,7 @@ func NewOrderApp() *OrderApp {
 func (a *OrderApp) Run() {
 	// configure dependencies
 	appBuilder := NewOrdersApplicationBuilder()
-	appBuilder.ProvideModule(orders.OrderServiceModule)
+	appBuilder.ProvideModule(orders.OrderServiceModule())
 
 	app := appBuilder.Build()
 

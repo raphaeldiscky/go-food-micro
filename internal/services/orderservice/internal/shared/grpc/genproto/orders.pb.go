@@ -98,7 +98,7 @@ type Order struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId         string                 `protobuf:"bytes,1,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
+	OrderID         string                 `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
 	ShopItems       []*ShopItem            `protobuf:"bytes,2,rep,name=ShopItems,proto3" json:"ShopItems,omitempty"`
 	Paid            bool                   `protobuf:"varint,3,opt,name=Paid,proto3" json:"Paid,omitempty"`
 	Submitted       bool                   `protobuf:"varint,4,opt,name=Submitted,proto3" json:"Submitted,omitempty"`
@@ -111,7 +111,7 @@ type Order struct {
 	DeliveredTime   *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=DeliveredTime,proto3" json:"DeliveredTime,omitempty"`
 	CreatedAt       *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
 	UpdatedAt       *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=UpdatedAt,proto3" json:"UpdatedAt,omitempty"`
-	PaymentId       string                 `protobuf:"bytes,14,opt,name=PaymentId,proto3" json:"PaymentId,omitempty"`
+	PaymentID       string                 `protobuf:"bytes,14,opt,name=PaymentID,proto3" json:"PaymentID,omitempty"`
 }
 
 func (x *Order) Reset() {
@@ -148,7 +148,7 @@ func (*Order) Descriptor() ([]byte, []int) {
 
 func (x *Order) GetOrderId() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderID
 	}
 	return ""
 }
@@ -239,7 +239,7 @@ func (x *Order) GetUpdatedAt() *timestamppb.Timestamp {
 
 func (x *Order) GetPaymentId() string {
 	if x != nil {
-		return x.PaymentId
+		return x.PaymentID
 	}
 	return ""
 }
@@ -250,7 +250,7 @@ type OrderReadModel struct {
 	unknownFields protoimpl.UnknownFields
 
 	ID              string                 `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
-	OrderId         string                 `protobuf:"bytes,2,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
+	OrderID         string                 `protobuf:"bytes,2,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
 	ShopItems       []*ShopItemReadModel   `protobuf:"bytes,3,rep,name=ShopItems,proto3" json:"ShopItems,omitempty"`
 	Paid            bool                   `protobuf:"varint,4,opt,name=Paid,proto3" json:"Paid,omitempty"`
 	Submitted       bool                   `protobuf:"varint,5,opt,name=Submitted,proto3" json:"Submitted,omitempty"`
@@ -263,7 +263,7 @@ type OrderReadModel struct {
 	DeliveredTime   *timestamppb.Timestamp `protobuf:"bytes,12,opt,name=DeliveredTime,proto3" json:"DeliveredTime,omitempty"`
 	CreatedAt       *timestamppb.Timestamp `protobuf:"bytes,13,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
 	UpdatedAt       *timestamppb.Timestamp `protobuf:"bytes,14,opt,name=UpdatedAt,proto3" json:"UpdatedAt,omitempty"`
-	PaymentId       string                 `protobuf:"bytes,15,opt,name=PaymentId,proto3" json:"PaymentId,omitempty"`
+	PaymentID       string                 `protobuf:"bytes,15,opt,name=PaymentID,proto3" json:"PaymentID,omitempty"`
 }
 
 func (x *OrderReadModel) Reset() {
@@ -307,7 +307,7 @@ func (x *OrderReadModel) GetId() string {
 
 func (x *OrderReadModel) GetOrderId() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderID
 	}
 	return ""
 }
@@ -398,7 +398,7 @@ func (x *OrderReadModel) GetUpdatedAt() *timestamppb.Timestamp {
 
 func (x *OrderReadModel) GetPaymentId() string {
 	if x != nil {
-		return x.PaymentId
+		return x.PaymentID
 	}
 	return ""
 }
@@ -550,7 +550,7 @@ type CreateOrderRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId string `protobuf:"bytes,1,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
+	OrderID string `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
 }
 
 func (x *CreateOrderRes) Reset() {
@@ -587,7 +587,7 @@ func (*CreateOrderRes) Descriptor() ([]byte, []int) {
 
 func (x *CreateOrderRes) GetOrderId() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderID
 	}
 	return ""
 }
@@ -597,7 +597,7 @@ type SubmitOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId string `protobuf:"bytes,1,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
+	OrderID string `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
 }
 
 func (x *SubmitOrderReq) Reset() {
@@ -634,7 +634,7 @@ func (*SubmitOrderReq) Descriptor() ([]byte, []int) {
 
 func (x *SubmitOrderReq) GetOrderId() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderID
 	}
 	return ""
 }
@@ -644,7 +644,7 @@ type SubmitOrderRes struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId string `protobuf:"bytes,1,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
+	OrderID string `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
 }
 
 func (x *SubmitOrderRes) Reset() {
@@ -681,7 +681,7 @@ func (*SubmitOrderRes) Descriptor() ([]byte, []int) {
 
 func (x *SubmitOrderRes) GetOrderId() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderID
 	}
 	return ""
 }
@@ -785,7 +785,7 @@ type UpdateShoppingCartReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId   string      `protobuf:"bytes,1,opt,name=OrderId,proto3" json:"OrderId,omitempty"`
+	OrderID   string      `protobuf:"bytes,1,opt,name=OrderID,proto3" json:"OrderID,omitempty"`
 	ShopItems []*ShopItem `protobuf:"bytes,2,rep,name=ShopItems,proto3" json:"ShopItems,omitempty"`
 }
 
@@ -823,7 +823,7 @@ func (*UpdateShoppingCartReq) Descriptor() ([]byte, []int) {
 
 func (x *UpdateShoppingCartReq) GetOrderId() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderID
 	}
 	return ""
 }

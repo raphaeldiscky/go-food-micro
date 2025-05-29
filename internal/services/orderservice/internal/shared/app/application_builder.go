@@ -16,8 +16,8 @@ func NewOrdersApplicationBuilder() *OrdersApplicationBuilder {
 }
 
 // Build is a method that builds the orders application.
-func (a *OrdersApplicationBuilder) Build() *OrdersApplication {
-	return NewOrdersApplication(
+func (a *OrdersApplicationBuilder) Build() *OrderServiceApplication {
+	return NewOrderServiceApplication(
 		a.GetProvides(),
 		a.GetDecorates(),
 		a.Options(),

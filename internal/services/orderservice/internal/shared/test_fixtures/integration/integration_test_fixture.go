@@ -33,8 +33,8 @@ const (
 	orderCollection = "orders"
 )
 
-// IntegrationTestSharedFixture is the integration test fixture.
-type IntegrationTestSharedFixture struct {
+// OrderIntegrationTestSharedFixture is the integration test fixture.
+type OrderIntegrationTestSharedFixture struct {
 	OrderAggregateStore  store.AggregateStore[*aggregate.Order]
 	OrderMongoRepository repositories.OrderMongoRepository
 	OrdersMetrics        contracts2.OrdersMetrics
@@ -55,7 +55,7 @@ type IntegrationTestSharedFixture struct {
 // NewIntegrationTestSharedFixture creates a new integration test fixture.
 func NewIntegrationTestSharedFixture(
 	t *testing.T,
-) *IntegrationTestSharedFixture {
+) *OrderIntegrationTestSharedFixture {
 	t.Helper()
 	result := test.NewOrderTestApp().Run(t)
 
@@ -69,7 +69,7 @@ func NewIntegrationTestSharedFixture(
 			errors.WrapIf(err, "error in creating rabbithole client"),
 		)
 	}
-	shared := &IntegrationTestSharedFixture{
+	shared := &OrderIntegrationTestSharedFixture{
 		Log:                  result.Logger,
 		Container:            result.Container,
 		Cfg:                  result.Cfg,
@@ -89,7 +89,7 @@ func NewIntegrationTestSharedFixture(
 }
 
 // SetupTest setups the test.
-func (i *IntegrationTestSharedFixture) SetupTest() {
+func (i *OrderIntegrationTestSharedFixture) SetupTest() {
 	i.Log.Info("SetupTest started")
 
 	// seed data in each test
@@ -101,7 +101,7 @@ func (i *IntegrationTestSharedFixture) SetupTest() {
 }
 
 // TearDownTest tears down the test.
-func (i *IntegrationTestSharedFixture) TearDownTest() {
+func (i *OrderIntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
 	// cleanup test containers with their hooks
@@ -115,7 +115,7 @@ func (i *IntegrationTestSharedFixture) TearDownTest() {
 }
 
 // cleanupRabbitmqData cleans up the rabbitmq data.
-func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
+func (i *OrderIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	// https://github.com/michaelklishin/rabbit-hole
 	// Get all queues
 	queues, err := i.RabbitmqCleaner.ListQueuesIn(
@@ -140,7 +140,7 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 }
 
 // cleanupMongoData cleans up the mongodb data.
-func (i *IntegrationTestSharedFixture) cleanupMongoData() error {
+func (i *OrderIntegrationTestSharedFixture) cleanupMongoData() error {
 	collections := []string{orderCollection}
 	err := cleanupCollections(
 		i.mongoClient,
@@ -183,7 +183,7 @@ func seedReadModelData(
 	orders := []*readmodels.OrderReadModel{
 		{
 			ID:              gofakeit.UUID(),
-			OrderId:         gofakeit.UUID(),
+			OrderID:         gofakeit.UUID(),
 			ShopItems:       generateShopItems(),
 			AccountEmail:    gofakeit.Email(),
 			DeliveryAddress: gofakeit.Address().Address,
@@ -194,13 +194,13 @@ func seedReadModelData(
 			Submitted:       gofakeit.Bool(),
 			Completed:       gofakeit.Bool(),
 			Canceled:        gofakeit.Bool(),
-			PaymentId:       gofakeit.UUID(),
+			PaymentID:       gofakeit.UUID(),
 			CreatedAt:       gofakeit.Date(),
 			UpdatedAt:       gofakeit.Date(),
 		},
 		{
 			ID:              gofakeit.UUID(),
-			OrderId:         gofakeit.UUID(),
+			OrderID:         gofakeit.UUID(),
 			ShopItems:       generateShopItems(),
 			AccountEmail:    gofakeit.Email(),
 			DeliveryAddress: gofakeit.Address().Address,
@@ -211,7 +211,7 @@ func seedReadModelData(
 			Submitted:       gofakeit.Bool(),
 			Completed:       gofakeit.Bool(),
 			Canceled:        gofakeit.Bool(),
-			PaymentId:       gofakeit.UUID(),
+			PaymentID:       gofakeit.UUID(),
 			CreatedAt:       gofakeit.Date(),
 			UpdatedAt:       gofakeit.Date(),
 		},

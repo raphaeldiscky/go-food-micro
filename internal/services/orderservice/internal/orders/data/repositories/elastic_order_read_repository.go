@@ -340,22 +340,23 @@ func (e elasticOrderReadRepository) GetOrderByOrderID(
 	return &order, nil
 }
 
-// CreateOrder creates an order.
-func (e elasticOrderReadRepository) CreateOrder(
+// indexOrder indexes an order in Elasticsearch.
+func (e elasticOrderReadRepository) indexOrder(
 	ctx context.Context,
 	order *readmodels.OrderReadModel,
+	operation string,
 ) (*readmodels.OrderReadModel, error) {
-	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.CreateOrder")
+	ctx, span := e.tracer.Start(ctx, fmt.Sprintf("elasticOrderReadRepository.%s", operation))
 	span.SetAttributes(attribute.Object("Order", order))
 	defer span.End()
 
 	// Convert order to JSON
 	orderJSON, err := json.Marshal(order)
 	if err != nil {
-		return nil, errors.WrapIf(err, "failed to marshal order")
+		return nil, errors.WrapIf(err, fmt.Sprintf("failed to marshal order for %s", operation))
 	}
 
-	// Create document
+	// Index document
 	res, err := e.elasticClient.Index(
 		orderIndex,
 		strings.NewReader(string(orderJSON)),
@@ -364,7 +365,7 @@ func (e elasticOrderReadRepository) CreateOrder(
 		e.elasticClient.Index.WithRefresh("true"),
 	)
 	if err != nil {
-		return nil, errors.WrapIf(err, "failed to create order")
+		return nil, errors.WrapIf(err, fmt.Sprintf("failed to %s order", operation))
 	}
 	defer func() {
 		if closeErr := closeResponseBody(res.Body); closeErr != nil {
@@ -377,55 +378,32 @@ func (e elasticOrderReadRepository) CreateOrder(
 	}
 
 	e.log.Infow(
-		fmt.Sprintf("[elasticOrderReadRepository.CreateOrder] order with id %s created", order.ID),
+		fmt.Sprintf(
+			"[elasticOrderReadRepository.%s] order with id %s %sed",
+			operation,
+			order.ID,
+			operation,
+		),
 		logger.Fields{"Order": order},
 	)
 
 	return order, nil
 }
 
-// UpdateOrder updates an order.
+// CreateOrder creates a new order in Elasticsearch.
+func (e elasticOrderReadRepository) CreateOrder(
+	ctx context.Context,
+	order *readmodels.OrderReadModel,
+) (*readmodels.OrderReadModel, error) {
+	return e.indexOrder(ctx, order, "Create")
+}
+
+// UpdateOrder updates an existing order in Elasticsearch.
 func (e elasticOrderReadRepository) UpdateOrder(
 	ctx context.Context,
 	order *readmodels.OrderReadModel,
 ) (*readmodels.OrderReadModel, error) {
-	ctx, span := e.tracer.Start(ctx, "elasticOrderReadRepository.UpdateOrder")
-	span.SetAttributes(attribute.Object("Order", order))
-	defer span.End()
-
-	// Convert order to JSON
-	orderJSON, err := json.Marshal(order)
-	if err != nil {
-		return nil, errors.WrapIf(err, "failed to marshal order")
-	}
-
-	// Update document
-	res, err := e.elasticClient.Index(
-		orderIndex,
-		strings.NewReader(string(orderJSON)),
-		e.elasticClient.Index.WithContext(ctx),
-		e.elasticClient.Index.WithDocumentID(order.ID),
-		e.elasticClient.Index.WithRefresh("true"),
-	)
-	if err != nil {
-		return nil, errors.WrapIf(err, "failed to update order")
-	}
-	defer func() {
-		if closeErr := closeResponseBody(res.Body); closeErr != nil {
-			e.log.Error(closeErr)
-		}
-	}()
-
-	if res.IsError() {
-		return nil, fmt.Errorf("index error: %s", res.String())
-	}
-
-	e.log.Infow(
-		fmt.Sprintf("[elasticOrderReadRepository.UpdateOrder] order with id %s updated", order.ID),
-		logger.Fields{"Order": order},
-	)
-
-	return order, nil
+	return e.indexOrder(ctx, order, "Update")
 }
 
 // DeleteOrderByID deletes an order by id.

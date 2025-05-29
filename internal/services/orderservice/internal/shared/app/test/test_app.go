@@ -64,8 +64,8 @@ func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 	lifetimeCtx := context.Background()
 
 	// ref: https://github.com/uber-go/fx/blob/master/app_test.go
-	appBuilder := NewOrdersTestApplicationBuilder(t)
-	appBuilder.ProvideModule(orders.OrderServiceModule)
+	appBuilder := NewOrderServiceTestApplicationBuilder(t)
+	appBuilder.ProvideModule(orders.OrderServiceModule())
 
 	appBuilder.Decorate(rabbitmq.RabbitmqContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(eventstoredb.EventstoreDBContainerOptionsDecorator(t, lifetimeCtx))

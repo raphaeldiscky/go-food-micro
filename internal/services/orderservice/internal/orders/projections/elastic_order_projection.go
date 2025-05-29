@@ -69,7 +69,7 @@ func (e *elasticOrderProjection) onOrderCreated(
 ) error {
 	ctx, span := e.tracer.Start(ctx, "elasticOrderProjection.onOrderCreated")
 	span.SetAttributes(attribute.Object("Event", evt))
-	span.SetAttributes(attribute2.String("OrderId", evt.OrderId.String()))
+	span.SetAttributes(attribute2.String("OrderID", evt.OrderID.String()))
 	defer span.End()
 
 	items, err := mapper.Map[[]*readmodels.ShopItemReadModel](evt.ShopItems)
@@ -81,7 +81,7 @@ func (e *elasticOrderProjection) onOrderCreated(
 	}
 
 	orderRead := readmodels.NewOrderReadModel(
-		evt.OrderId,
+		evt.OrderID,
 		items,
 		evt.AccountEmail,
 		evt.DeliveryAddress,
@@ -102,9 +102,9 @@ func (e *elasticOrderProjection) onOrderCreated(
 	e.log.Infow(
 		fmt.Sprintf(
 			"[elasticOrderProjection.onOrderCreated] order with id '%s' created",
-			orderRead.OrderId,
+			orderRead.OrderID,
 		),
-		logger.Fields{"ID": orderRead.OrderId},
+		logger.Fields{"ID": orderRead.OrderID},
 	)
 
 	return nil
@@ -158,9 +158,9 @@ func (e *elasticOrderProjection) onShoppingCartUpdated(
 	e.log.Infow(
 		fmt.Sprintf(
 			"[elasticOrderProjection.onShoppingCartUpdated] order with id '%s' updated",
-			order.OrderId,
+			order.OrderID,
 		),
-		logger.Fields{"ID": order.OrderId},
+		logger.Fields{"ID": order.OrderID},
 	)
 
 	return nil
@@ -173,7 +173,7 @@ func (e *elasticOrderProjection) onOrderSubmitted(
 ) error {
 	ctx, span := e.tracer.Start(ctx, "elasticOrderProjection.onOrderSubmitted")
 	span.SetAttributes(attribute.Object("Event", evt))
-	span.SetAttributes(attribute2.String("OrderId", evt.OrderID.String()))
+	span.SetAttributes(attribute2.String("OrderID", evt.OrderID.String()))
 	defer span.End()
 
 	// Get existing order
@@ -206,9 +206,9 @@ func (e *elasticOrderProjection) onOrderSubmitted(
 	e.log.Infow(
 		fmt.Sprintf(
 			"[elasticOrderProjection.onOrderSubmitted] order with id '%s' submitted",
-			order.OrderId,
+			order.OrderID,
 		),
-		logger.Fields{"ID": order.OrderId},
+		logger.Fields{"ID": order.OrderID},
 	)
 
 	return nil
@@ -216,7 +216,7 @@ func (e *elasticOrderProjection) onOrderSubmitted(
 
 // getShopItemsTotalPrice gets the total price of the shop items.
 func getShopItemsTotalPrice(shopItems []*readmodels.ShopItemReadModel) float64 {
-	var totalPrice float64 = 0
+	var totalPrice float64
 	for _, item := range shopItems {
 		totalPrice += item.Price * float64(item.Quantity)
 	}

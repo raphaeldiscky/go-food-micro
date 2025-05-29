@@ -15,21 +15,21 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders/infrastructure"
 )
 
-// OrdersServiceConfigurator is the orders service configurator.
-type OrdersServiceConfigurator struct {
+// OrderServiceConfigurator is the orders service configurator.
+type OrderServiceConfigurator struct {
 	contracts.Application
 	infrastructureConfigurator *infrastructure.OrderInfrastructureConfigurator
 	ordersModuleConfigurator   *configurations.OrdersModuleConfigurator
 }
 
-// NewOrdersServiceConfigurator creates a new orders service configurator.
-func NewOrdersServiceConfigurator(
+// NewOrderServiceConfigurator creates a new orders service configurator.
+func NewOrderServiceConfigurator(
 	app contracts.Application,
-) *OrdersServiceConfigurator {
+) *OrderServiceConfigurator {
 	infraConfigurator := infrastructure.NewOrderInfrastructureConfigurator(app)
 	ordersModuleConfigurator := configurations.NewOrdersModuleConfigurator(app)
 
-	return &OrdersServiceConfigurator{
+	return &OrderServiceConfigurator{
 		Application:                app,
 		infrastructureConfigurator: infraConfigurator,
 		ordersModuleConfigurator:   ordersModuleConfigurator,
@@ -37,13 +37,13 @@ func NewOrdersServiceConfigurator(
 }
 
 // ConfigureOrders configures the orders.
-func (ic *OrdersServiceConfigurator) ConfigureOrders() {
+func (ic *OrderServiceConfigurator) ConfigureOrders() {
 	ic.infrastructureConfigurator.ConfigInfrastructures()
 	ic.ordersModuleConfigurator.ConfigureOrdersModule()
 }
 
 // MapOrdersEndpoints maps the orders endpoints.
-func (ic *OrdersServiceConfigurator) MapOrdersEndpoints() {
+func (ic *OrderServiceConfigurator) MapOrdersEndpoints() {
 	// Shared
 	ic.ResolveFunc(
 		func(ordersServer echocontracts.EchoHttpServer, cfg *config.Config) error {

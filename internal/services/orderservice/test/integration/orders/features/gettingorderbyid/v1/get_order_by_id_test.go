@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/queries"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
 	uuid "github.com/satori/go.uuid"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/gettingorderbyid/v1/queries"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -91,7 +91,7 @@ var _ = Describe("Get Order By ID Feature", func() {
 				Expect(result).NotTo(BeNil())
 				Expect(result.Order).NotTo(BeNil())
 				Expect(result.Order.ID).To(Equal(id.String()))
-				Expect(result.Order.OrderId).NotTo(BeEmpty())
+				Expect(result.Order.OrderID).NotTo(BeEmpty())
 			})
 		})
 	})

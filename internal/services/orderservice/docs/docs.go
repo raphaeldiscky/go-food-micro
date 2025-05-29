@@ -158,7 +158,7 @@ const docTemplate = `{
                 "paid": {
                     "type": "boolean"
                 },
-                "paymentId": {
+                "paymentID": {
                     "type": "string"
                 },
                 "shopItems": {

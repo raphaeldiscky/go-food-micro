@@ -6,7 +6,7 @@ import "time"
 // OrderReadDto is the read dto for the order.
 type OrderReadDto struct {
 	ID              string             `json:"id"`
-	OrderId         string             `json:"orderId"`
+	OrderID         string             `json:"orderId"`
 	ShopItems       []*ShopItemReadDto `json:"shopItems"`
 	AccountEmail    string             `json:"accountEmail"`
 	DeliveryAddress string             `json:"deliveryAddress"`
@@ -17,7 +17,7 @@ type OrderReadDto struct {
 	Submitted       bool               `json:"submitted"`
 	Completed       bool               `json:"completed"`
 	Canceled        bool               `json:"canceled"`
-	PaymentId       string             `json:"paymentId"`
+	PaymentID       string             `json:"paymentID"`
 	CreatedAt       time.Time          `json:"createdAt"`
 	UpdatedAt       time.Time          `json:"updatedAt"`
 }

@@ -10,7 +10,7 @@ import (
 )
 
 // configSwagger configures the swagger.
-func (ic *OrdersServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
+func (ic *OrderServiceConfigurator) configSwagger(routeBuilder *customEcho.RouteBuilder) {
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.Title = "Orders Service Api"
 	docs.SwaggerInfo.Description = "Orders Service Api."

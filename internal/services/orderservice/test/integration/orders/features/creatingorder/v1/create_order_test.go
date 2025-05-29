@@ -10,19 +10,20 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	mediatr "github.com/mehdihadeli/go-mediatr"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
+
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	createOrderCommandV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/commands"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
 	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/events/integrationevents"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/models/orders/readmodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
-
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	mediatr "github.com/mehdihadeli/go-mediatr"
-
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture
@@ -48,7 +49,7 @@ var _ = Describe("Create Order Feature", func() {
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
 
-		// id = integrationFixture.Items[0].OrderId
+		// id = integrationFixture.Items[0].OrderID
 	})
 
 	_ = AfterEach(func() {
@@ -106,7 +107,7 @@ var _ = Describe("Create Order Feature", func() {
 				// "Then" step for assertions
 				Expect(err).To(BeNil())
 				Expect(result).NotTo(BeNil())
-				Expect(command.OrderId).To(Equal(result.OrderId))
+				Expect(command.OrderID).To(Equal(result.OrderID))
 			})
 		})
 	})
@@ -150,7 +151,10 @@ var _ = Describe("Create Order Feature", func() {
 			It("Should retrieve created order in MongoDB Read database", func() {
 				// Use a utility function to wait until the order is available in MongoDB Read
 				err = testUtils.WaitUntilConditionMet(func() bool {
-					createdOrder, err = integrationFixture.OrderMongoRepository.GetOrderByOrderID(ctx, result.OrderId)
+					createdOrder, err = integrationFixture.OrderMongoRepository.GetOrderByOrderID(
+						ctx,
+						result.OrderID,
+					)
 					Expect(err).ToNot(HaveOccurred())
 					return createdOrder != nil
 				})
@@ -161,53 +165,56 @@ var _ = Describe("Create Order Feature", func() {
 	})
 
 	// "Scenario" for testing the publishing of an "OrderCreated" event
-	Describe("Publishing an OrderCreated event to the message broker when order saved successfully", func() {
-		BeforeEach(func() {
-			shouldPublish = messaging.ShouldProduced[*integrationEvents.OrderCreatedV1](
-				ctx,
-				integrationFixture.Bus, nil,
-			)
-
-			command, err = createOrderCommandV1.NewCreateOrder(
-				[]*dtosV1.ShopItemDto{
-					{
-						Quantity:    uint64(gofakeit.Number(1, 10)),
-						Description: gofakeit.AdjectiveDescriptive(),
-						Price:       gofakeit.Price(100, 10000),
-						Title:       gofakeit.Name(),
-					},
-				},
-				gofakeit.Email(),
-				gofakeit.Address().Address,
-				time.Now(),
-			)
-
-			Expect(err).ToNot(HaveOccurred())
-			Expect(command).ToNot(BeNil())
-		})
-
-		// "When" step for creating and sending an order
-		When("CreateOrder command is executed for non-existing order", func() {
+	Describe(
+		"Publishing an OrderCreated event to the message broker when order saved successfully",
+		func() {
 			BeforeEach(func() {
-				// "When" step for executing the createOrderCommand
-				result, err = mediatr.Send[*createOrderCommandV1.CreateOrder, *dtos.CreateOrderResponseDto](
-					context.Background(),
-					command,
+				shouldPublish = messaging.ShouldProduced[*integrationEvents.OrderCreatedV1](
+					ctx,
+					integrationFixture.Bus, nil,
 				)
-			})
 
-			It("Should return no error", func() {
+				command, err = createOrderCommandV1.NewCreateOrder(
+					[]*dtosV1.ShopItemDto{
+						{
+							Quantity:    uint64(gofakeit.Number(1, 10)),
+							Description: gofakeit.AdjectiveDescriptive(),
+							Price:       gofakeit.Price(100, 10000),
+							Title:       gofakeit.Name(),
+						},
+					},
+					gofakeit.Email(),
+					gofakeit.Address().Address,
+					time.Now(),
+				)
+
 				Expect(err).ToNot(HaveOccurred())
+				Expect(command).ToNot(BeNil())
 			})
 
-			It("Should return not nil result", func() {
-				Expect(result).ToNot(BeNil())
-			})
+			// "When" step for creating and sending an order
+			When("CreateOrder command is executed for non-existing order", func() {
+				BeforeEach(func() {
+					// "When" step for executing the createOrderCommand
+					result, err = mediatr.Send[*createOrderCommandV1.CreateOrder, *dtos.CreateOrderResponseDto](
+						context.Background(),
+						command,
+					)
+				})
 
-			It("Should publish OrderCreated event to the broker", func() {
-				// ensuring message published to the rabbitmq broker
-				shouldPublish.Validate(ctx, "there is no published message", time.Second*30)
+				It("Should return no error", func() {
+					Expect(err).ToNot(HaveOccurred())
+				})
+
+				It("Should return not nil result", func() {
+					Expect(result).ToNot(BeNil())
+				})
+
+				It("Should publish OrderCreated event to the broker", func() {
+					// ensuring message published to the rabbitmq broker
+					shouldPublish.Validate(ctx, "there is no published message", time.Second*30)
+				})
 			})
-		})
-	})
+		},
+	)
 })

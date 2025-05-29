@@ -49,6 +49,9 @@ linters:
     - wsl
 
   settings:
+    gosec:
+      excludes:
+        - G115
     dupl:
       threshold: 120
     errorlint:

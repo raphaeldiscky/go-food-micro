@@ -17,7 +17,7 @@ import (
 // OrderCreatedV1 is the order created v1 event.
 type OrderCreatedV1 struct {
 	*domain.DomainEvent
-	OrderId         uuid.UUID             `json:"order_id"`
+	OrderID         uuid.UUID             `json:"order_id"`
 	ShopItems       []*dtosV1.ShopItemDto `json:"shopItems"       bson:"shopItems,omitempty"`
 	AccountEmail    string                `json:"accountEmail"    bson:"accountEmail,omitempty"`
 	DeliveryAddress string                `json:"deliveryAddress" bson:"deliveryAddress,omitempty"`
@@ -55,7 +55,7 @@ func NewOrderCreatedEventV1(
 
 	eventData := &OrderCreatedV1{
 		ShopItems:       shopItems,
-		OrderId:         orderID,
+		OrderID:         orderID,
 		AccountEmail:    accountEmail,
 		DeliveryAddress: deliveryAddress,
 		CreatedAt:       createdAt,
@@ -69,5 +69,5 @@ func NewOrderCreatedEventV1(
 
 // GetAggregateID returns the aggregate id.
 func (e *OrderCreatedV1) GetAggregateID() uuid.UUID {
-	return e.OrderId
+	return e.OrderID
 }

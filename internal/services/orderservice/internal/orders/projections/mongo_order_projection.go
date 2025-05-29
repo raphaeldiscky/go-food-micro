@@ -67,7 +67,7 @@ func (m *mongoOrderProjection) onOrderCreated(
 ) error {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderProjection.onOrderCreated")
 	span.SetAttributes(attribute.Object("Event", evt))
-	span.SetAttributes(attribute2.String("OrderId", evt.OrderId.String()))
+	span.SetAttributes(attribute2.String("OrderID", evt.OrderID.String()))
 	defer span.End()
 
 	items, err := mapper.Map[[]*readmodels.ShopItemReadModel](evt.ShopItems)
@@ -79,7 +79,7 @@ func (m *mongoOrderProjection) onOrderCreated(
 	}
 
 	orderRead := readmodels.NewOrderReadModel(
-		evt.OrderId,
+		evt.OrderID,
 		items,
 		evt.AccountEmail,
 		evt.DeliveryAddress,
@@ -125,7 +125,7 @@ func (m *mongoOrderProjection) onOrderCreated(
 			"[mongoOrderProjection.onOrderCreated] OrderCreated message with messageId `%s` published to the rabbitmq broker",
 			orderCreatedEvent.MessageId,
 		),
-		logger.Fields{"MessageId": orderCreatedEvent.MessageId, "ID": orderCreatedEvent.OrderId},
+		logger.Fields{"MessageId": orderCreatedEvent.MessageId, "ID": orderCreatedEvent.OrderID},
 	)
 
 	m.logger.Infow(

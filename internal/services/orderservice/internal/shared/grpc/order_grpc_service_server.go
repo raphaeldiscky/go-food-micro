@@ -38,9 +38,10 @@ type OrderGrpcServiceServer struct {
 	validator     *validator.Validate
 }
 
-var grpcMetricsAttr = api.WithAttributes(
-	attribute.Key("MetricsType").String("Grpc"),
-)
+// getGrpcMetricsAttributes returns the gRPC metrics attributes.
+func getGrpcMetricsAttributes() attribute.KeyValue {
+	return attribute.Key("MetricsType").String("Grpc")
+}
 
 // NewOrderGrpcService creates a new order grpc service.
 func NewOrderGrpcService(
@@ -62,7 +63,11 @@ func (o OrderGrpcServiceServer) CreateOrder(
 ) (*grpcOrderService.CreateOrderRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
-	o.ordersMetrics.GrpcMetrics.CreateOrderGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GrpcMetrics.CreateOrderGrpcRequests.Add(
+		ctx,
+		1,
+		api.WithAttributes(getGrpcMetricsAttributes()),
+	)
 
 	shopItemsDtos, err := mapper.Map[[]*dtosV1.ShopItemDto](req.GetShopItems())
 	if err != nil {
@@ -108,7 +113,7 @@ func (o OrderGrpcServiceServer) CreateOrder(
 		return nil, err
 	}
 
-	return &grpcOrderService.CreateOrderRes{OrderId: result.OrderID.String()}, nil
+	return &grpcOrderService.CreateOrderRes{OrderID: result.OrderID.String()}, nil
 }
 
 // GetOrderByID gets the order by id.
@@ -118,7 +123,11 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 ) (*grpcOrderService.GetOrderByIDRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
-	o.ordersMetrics.GrpcMetrics.GetOrderByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GrpcMetrics.GetOrderByIDGrpcRequests.Add(
+		ctx,
+		1,
+		api.WithAttributes(getGrpcMetricsAttributes()),
+	)
 
 	orderIDUUID, err := uuid.FromString(req.ID)
 	if err != nil {
@@ -205,7 +214,11 @@ func (o OrderGrpcServiceServer) GetOrders(
 	ctx context.Context,
 	req *grpcOrderService.GetOrdersReq,
 ) (*grpcOrderService.GetOrdersRes, error) {
-	o.ordersMetrics.GrpcMetrics.GetOrdersGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GrpcMetrics.GetOrdersGrpcRequests.Add(
+		ctx,
+		1,
+		api.WithAttributes(getGrpcMetricsAttributes()),
+	)
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
 

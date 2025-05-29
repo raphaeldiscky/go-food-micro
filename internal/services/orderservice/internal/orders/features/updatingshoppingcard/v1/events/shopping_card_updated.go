@@ -13,17 +13,17 @@ import (
 // ShoppingCartUpdatedV1 is the event for the shopping cart updated v1.
 type ShoppingCartUpdatedV1 struct {
 	*domain.DomainEvent
-	OrderId   uuid.UUID               `json:"orderId"   bson:"orderId,omitempty"`
+	OrderID   uuid.UUID               `json:"orderId"   bson:"orderId,omitempty"`
 	ShopItems []*valueobject.ShopItem `json:"shopItems" bson:"shopItems,omitempty"`
 }
 
 // NewShoppingCartUpdatedV1 creates a new shopping cart updated v1 event.
 func NewShoppingCartUpdatedV1(
-	orderId uuid.UUID,
+	orderID uuid.UUID,
 	shopItems []*valueobject.ShopItem,
 ) (*ShoppingCartUpdatedV1, error) {
 	eventData := &ShoppingCartUpdatedV1{
-		OrderId:   orderId,
+		OrderID:   orderID,
 		ShopItems: shopItems,
 	}
 	eventData.DomainEvent = domain.NewDomainEvent(typeMapper.GetTypeName(eventData))
@@ -33,5 +33,5 @@ func NewShoppingCartUpdatedV1(
 
 // GetAggregateID returns the aggregate id.
 func (e *ShoppingCartUpdatedV1) GetAggregateID() uuid.UUID {
-	return e.OrderId
+	return e.OrderID
 }

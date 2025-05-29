@@ -9,16 +9,16 @@ import (
 	"testing"
 	"time"
 
-	customTypes "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/customtypes"
-	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	httpexpect "github.com/gavv/httpexpect/v2"
+	customTypes "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/customtypes"
 
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
+	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

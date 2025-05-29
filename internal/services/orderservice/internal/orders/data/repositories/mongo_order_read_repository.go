@@ -168,16 +168,16 @@ func (m mongoOrderReadRepository) GetOrderByID(
 // GetOrderByOrderID gets an order by order id from the database.
 func (m mongoOrderReadRepository) GetOrderByOrderID(
 	ctx context.Context,
-	orderId goUuid.UUID,
+	orderID goUuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByOrderID")
-	span.SetAttributes(attribute2.String("OrderId", orderId.String()))
+	span.SetAttributes(attribute2.String("OrderID", orderID.String()))
 	defer span.End()
 
 	collection := m.mongoClient.Database(m.mongoOptions.Database).Collection(orderCollection)
 
 	var order readmodels.OrderReadModel
-	if err := collection.FindOne(ctx, bson.M{"orderId": orderId.String()}).Decode(&order); err != nil {
+	if err := collection.FindOne(ctx, bson.M{"orderId": orderID.String()}).Decode(&order); err != nil {
 		// ErrNoDocuments means that the filter did not match any documents in the collection
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return nil, nil
@@ -189,7 +189,7 @@ func (m mongoOrderReadRepository) GetOrderByOrderID(
 				err,
 				fmt.Sprintf(
 					"[mongoOrderReadRepository_GetOrderByID.FindOne] can't find the order with orderId %s into the database.",
-					orderId.String(),
+					orderID.String(),
 				),
 			),
 		)
@@ -199,9 +199,9 @@ func (m mongoOrderReadRepository) GetOrderByOrderID(
 	m.log.Infow(
 		fmt.Sprintf(
 			"[mongoOrderReadRepository.GetOrderByID] order with orderId %s laoded",
-			orderId.String(),
+			orderID.String(),
 		),
-		logger.Fields{"Order": order, "orderId": orderId},
+		logger.Fields{"Order": order, "orderId": orderID},
 	)
 
 	return &order, nil
@@ -231,9 +231,9 @@ func (m mongoOrderReadRepository) CreateOrder(
 	m.log.Infow(
 		fmt.Sprintf(
 			"[mongoOrderReadRepository.CreateOrder] order with id '%s' created",
-			order.OrderId,
+			order.OrderID,
 		),
-		logger.Fields{"Order": order, "ID": order.OrderId},
+		logger.Fields{"Order": order, "ID": order.OrderID},
 	)
 
 	return order, nil
@@ -254,14 +254,14 @@ func (m mongoOrderReadRepository) UpdateOrder(
 	ops.SetUpsert(true)
 
 	var updated readmodels.OrderReadModel
-	if err := collection.FindOneAndUpdate(ctx, bson.M{"_id": order.OrderId}, bson.M{"$set": order}, ops).Decode(&updated); err != nil {
+	if err := collection.FindOneAndUpdate(ctx, bson.M{"_id": order.OrderID}, bson.M{"$set": order}, ops).Decode(&updated); err != nil {
 		return nil, utils2.TraceStatusFromContext(
 			ctx,
 			errors.WrapIf(
 				err,
 				fmt.Sprintf(
 					"[mongoOrderReadRepository_UpdateOrder.FindOneAndUpdate] error in updating order with id %s into the database.",
-					order.OrderId,
+					order.OrderID,
 				),
 			),
 		)
@@ -271,9 +271,9 @@ func (m mongoOrderReadRepository) UpdateOrder(
 	m.log.Infow(
 		fmt.Sprintf(
 			"[mongoOrderReadRepository.UpdateOrder] order with id '%s' updated",
-			order.OrderId,
+			order.OrderID,
 		),
-		logger.Fields{"Order": order, "ID": order.OrderId},
+		logger.Fields{"Order": order, "ID": order.OrderID},
 	)
 
 	return &updated, nil

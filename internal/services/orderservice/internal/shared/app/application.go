@@ -9,22 +9,22 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/configurations/orders"
 )
 
-// OrdersApplication is a struct that contains the orders application.
-type OrdersApplication struct {
-	*orders.OrdersServiceConfigurator
+// OrderServiceApplication is a struct that contains the orders application.
+type OrderServiceApplication struct {
+	*orders.OrderServiceConfigurator
 }
 
-// NewOrdersApplication creates a new OrdersApplication.
-func NewOrdersApplication(
+// NewOrderServiceApplication creates a new OrderServiceApplication.
+func NewOrderServiceApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
 	log logger.Logger,
 	env environment.Environment,
-) *OrdersApplication {
+) *OrderServiceApplication {
 	app := fxapp.NewApplication(providers, decorates, options, log, env)
 
-	return &OrdersApplication{
-		OrdersServiceConfigurator: orders.NewOrdersServiceConfigurator(app),
+	return &OrderServiceApplication{
+		OrderServiceConfigurator: orders.NewOrderServiceConfigurator(app),
 	}
 }

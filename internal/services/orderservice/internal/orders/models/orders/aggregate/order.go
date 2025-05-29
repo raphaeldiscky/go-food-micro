@@ -36,7 +36,7 @@ type Order struct {
 	submitted       bool
 	completed       bool
 	canceled        bool
-	paymentId       uuid.UUID
+	paymentID       uuid.UUID
 	createdAt       time.Time
 }
 
@@ -157,7 +157,7 @@ func (o *Order) ShopItems() []*valueobject.ShopItem {
 
 // PaymentID returns the payment id.
 func (o *Order) PaymentID() uuid.UUID {
-	return o.paymentId
+	return o.paymentID
 }
 
 // AccountEmail returns the account email.
@@ -222,7 +222,7 @@ func (o *Order) String() string {
 
 // getShopItemsTotalPrice returns the total price of the shop items.
 func getShopItemsTotalPrice(shopItems []*valueobject.ShopItem) float64 {
-	var totalPrice float64 = 0
+	var totalPrice float64
 	for _, item := range shopItems {
 		totalPrice += item.Price() * float64(item.Quantity())
 	}
