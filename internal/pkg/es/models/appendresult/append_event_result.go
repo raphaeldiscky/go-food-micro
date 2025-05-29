@@ -1,4 +1,5 @@
-package appendResult
+// Package appendresult provides append event result.
+package appendresult
 
 type AppendEventsResult struct {
 	GlobalPosition      uint64

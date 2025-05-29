@@ -9,7 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants"
-	tracingHeaders "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/tracing_headers"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/tracingheaders"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 
 	"go.opentelemetry.io/otel"
@@ -88,9 +88,9 @@ func getTraceOptions(
 		semconv.MessageIDKey.String(messageHeader.GetMessageId(*meta)),
 		semconv.MessagingMessageConversationID(correlationId),
 		semconv.MessagingOperationReceive,
-		attribute.Key(constants.TraceId).String(tracingHeaders.GetTracingTraceId(*meta)),
-		attribute.Key(constants.Traceparent).String(tracingHeaders.GetTracingTraceparent(*meta)),
-		attribute.Key(constants.ParentSpanId).String(tracingHeaders.GetTracingParentSpanId(*meta)),
+		attribute.Key(constants.TraceId).String(tracingheaders.GetTracingTraceId(*meta)),
+		attribute.Key(constants.Traceparent).String(tracingheaders.GetTracingTraceparent(*meta)),
+		attribute.Key(constants.ParentSpanId).String(tracingheaders.GetTracingParentSpanId(*meta)),
 		attribute.Key(constants.Timestamp).Int64(time.Now().UnixMilli()),
 		attribute.Key(tracing.MessageType).String(messageHeader.GetMessageType(*meta)),
 		attribute.Key(tracing.MessageName).String(messageHeader.GetMessageName(*meta)),

@@ -5,9 +5,9 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
-	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/append_result"
-	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_position/read_position"
-	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
+	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/appendresult"
+	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/readposition"
+	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 
 	uuid "github.com/satori/go.uuid"
 )

@@ -2,7 +2,7 @@ package domain
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
-	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -23,7 +23,7 @@ type DomainEvent struct {
 func NewDomainEvent(eventType string) *DomainEvent {
 	domainEvent := &DomainEvent{
 		Event:                   events.NewEvent(eventType),
-		AggregateSequenceNumber: expectedStreamVersion.NoStream.Value(),
+		AggregateSequenceNumber: streamversion.NoStream.Value(),
 	}
 	domainEvent.Event = events.NewEvent(eventType)
 

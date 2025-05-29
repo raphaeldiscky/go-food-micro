@@ -4,11 +4,11 @@ import (
 	"context"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
-	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/append_result"
-	streamName "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_name"
-	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_position/read_position"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_position/truncatePosition"
-	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
+	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/appendresult"
+	streamName "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamname"
+	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/readposition"
+	truncatePosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/truncateposition"
+	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 )
 
 type EventStore interface {

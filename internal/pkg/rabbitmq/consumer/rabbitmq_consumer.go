@@ -16,7 +16,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/rabbitmqErrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/rabbitmqerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 	errorutils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 
@@ -131,7 +131,7 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 	// get a new channel on the connection - channel is unique for each consumer
 	ch, err := r.connection.Channel()
 	if err != nil {
-		return rabbitmqErrors.ErrDisconnected
+		return rabbitmqerrors.ErrDisconnected
 	}
 	r.channel = ch
 

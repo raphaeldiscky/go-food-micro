@@ -1,6 +1,7 @@
-package readPosition
+// Package readposition provides stream read position.
+package readposition
 
-import expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
+import expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 
 // https://github.com/EventStore/EventStore-Client-Dotnet/blob/b8beee7b97ef359316822cb2d00f120bf67bd14d/src/EventStore.Client/StreamPosition.cs
 // https://github.com/EventStore/EventStore-Client-Go/blob/1591d047c0c448cacc0468f9af3605572aba7970/esdb/position.go

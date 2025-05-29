@@ -1,4 +1,5 @@
-package problemDetails
+// Package problemdetails provides problem details.
+package problemdetails
 
 import (
 	"net/http"

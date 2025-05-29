@@ -1,4 +1,5 @@
-package streamName
+// Package streamname provides stream name.
+package streamname
 
 import (
 	"fmt"

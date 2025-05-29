@@ -1,3 +1,4 @@
+// Package grpcerrors provides custom grpc errors.
 package grpcerrors
 
 import (

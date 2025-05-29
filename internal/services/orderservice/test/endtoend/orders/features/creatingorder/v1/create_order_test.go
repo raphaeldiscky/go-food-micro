@@ -18,7 +18,7 @@ import (
 
 	dtosV1 "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/dtos/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/features/creatingorder/v1/dtos"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

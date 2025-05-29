@@ -18,7 +18,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/consumercontracts"
 	producerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer/producercontracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/rabbitmqErrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/rabbitmqerrors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
 	"emperror.dev/errors"
@@ -243,7 +243,7 @@ func (r *rabbitmqBus) Start(ctx context.Context) error {
 			r.logger.Info(
 				fmt.Sprintf("consumer %s, started", rabbitConsumer.GetName()),
 			)
-			if errors.Is(err, rabbitmqErrors.ErrDisconnected) {
+			if errors.Is(err, rabbitmqerrors.ErrDisconnected) {
 				r.logger.Info(
 					fmt.Sprintf(
 						"consumer %s, disconnected with err: %v",

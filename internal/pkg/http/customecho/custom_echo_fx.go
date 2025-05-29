@@ -1,4 +1,5 @@
-package customEcho
+// Package customecho provides a custom echo server.
+package customecho
 
 import (
 	"context"

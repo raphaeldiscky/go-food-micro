@@ -13,7 +13,7 @@ import (
 
 	httpexpect "github.com/gavv/httpexpect/v2"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/test_fixtures/integration"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.IntegrationTestSharedFixture

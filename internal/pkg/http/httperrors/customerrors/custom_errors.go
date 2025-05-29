@@ -1,4 +1,5 @@
-package customErrors
+// Package customerrors provides custom errors.
+package customerrors
 
 import (
 	"fmt"

@@ -1,4 +1,5 @@
-package tracingHeaders
+// Package tracingheaders provides metadata tracing extensions.
+package tracingheaders
 
 import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"

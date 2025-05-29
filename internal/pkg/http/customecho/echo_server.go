@@ -1,4 +1,5 @@
-package customEcho
+// Package customecho provides a custom echo server.
+package customecho
 
 import (
 	"context"
@@ -9,11 +10,11 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	handlers "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/handlers"
-	ipratelimit "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/ip_ratelimit"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/ipratelimit"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/log"
-	otelMetrics "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/otel_metrics"
-	oteltracing "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/otel_tracing"
-	problemdetail "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/problem_detail"
+	otelMetrics "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/otelmetrics"
+	oteltracing "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/oteltracing"
+	problemdetail "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/problemdetail"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 
 	echo "github.com/labstack/echo/v4"

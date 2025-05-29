@@ -10,7 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	errors2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/errors"
-	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 
 	"emperror.dev/errors"
 	linq "github.com/ahmetb/go-linq/v3"
@@ -103,8 +103,8 @@ func NewEventSourcedAggregateRootWithId(
 	}
 
 	aggregate := &EventSourcedAggregateRoot{
-		originalVersion: expectedStreamVersion.NoStream.Value(),
-		currentVersion:  expectedStreamVersion.NoStream.Value(),
+		originalVersion: streamversion.NoStream.Value(),
+		currentVersion:  streamversion.NoStream.Value(),
 		when:            when,
 	}
 
@@ -119,8 +119,8 @@ func NewEventSourcedAggregateRoot(aggregateType string, when WhenFunc) *EventSou
 	}
 
 	aggregate := &EventSourcedAggregateRoot{
-		originalVersion: expectedStreamVersion.NoStream.Value(),
-		currentVersion:  expectedStreamVersion.NoStream.Value(),
+		originalVersion: streamversion.NoStream.Value(),
+		currentVersion:  streamversion.NoStream.Value(),
 		when:            when,
 	}
 

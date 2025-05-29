@@ -6,9 +6,9 @@ import (
 	"reflect"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
-	grpcerrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcErrors"
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-	problemdetails "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcerrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/telemetrytags"
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 
@@ -29,7 +29,7 @@ const parentSpanKey traceContextKeyType = iota + 1
 func HttpTraceStatusFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
-	if customErrors.IsCustomError(err) {
+	if customerrors.IsCustomError(err) {
 		httpError := problemdetails.ParseError(err)
 
 		return HttpTraceStatusFromSpanWithCode(
@@ -197,7 +197,7 @@ func GrpcTraceErrFromSpan(span trace.Span, err error) error {
 			attribute.String(telemetrytags.Exceptions.Stacktrace, stackTraceError),
 		)
 
-		if customErrors.IsCustomError(err) {
+		if customerrors.IsCustomError(err) {
 			grpcErr := grpcerrors.ParseError(err)
 			span.SetAttributes(
 				semconv.RPCGRPCStatusCodeKey.Int(int(grpcErr.GetStatus())),

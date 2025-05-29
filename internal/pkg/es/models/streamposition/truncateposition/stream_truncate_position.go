@@ -1,4 +1,5 @@
-package truncatePosition
+// Package truncateposition provides stream truncate position.
+package truncateposition
 
 // StreamTruncatePosition an int64 for accepts negative and positive value
 type StreamTruncatePosition int64

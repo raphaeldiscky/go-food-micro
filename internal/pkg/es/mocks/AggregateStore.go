@@ -5,9 +5,9 @@ package mocks
 import (
 	context "context"
 
-	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/append_result"
+	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/appendresult"
 
-	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_version"
+	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 
 	metadata "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 
@@ -15,7 +15,7 @@ import (
 
 	models "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
 
-	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/stream_position/read_position"
+	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/readposition"
 
 	uuid "github.com/satori/go.uuid"
 )

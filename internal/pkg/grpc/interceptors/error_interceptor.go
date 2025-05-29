@@ -3,7 +3,7 @@ package interceptors
 import (
 	"context"
 
-	grpcerrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcErrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcerrors"
 
 	"emperror.dev/errors"
 	"google.golang.org/grpc"
