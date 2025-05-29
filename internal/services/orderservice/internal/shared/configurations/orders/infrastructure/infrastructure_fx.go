@@ -24,32 +24,34 @@ import (
 // https://pmihaylov.com/shared-components-go-microservices/
 
 // Module is the infrastructure fx module.
-var Module = fx.Module(
-	"infrastructurefx",
-	// Modules
-	core.Module,
-	customEcho.Module,
-	grpc.Module,
-	mongodb.Module,
-	elasticsearch.Module,
-	eventstroredb.ModuleFunc(
-		func(params params.OrderProjectionParams) eventstroredb.ProjectionBuilderFuc {
-			return func(builder eventstroredb.ProjectionsBuilder) {
-				builder.AddProjections(params.Projections)
-			}
-		},
-	),
-	rabbitmq.ModuleFunc(
-		func() configurations.RabbitMQConfigurationBuilderFuc {
-			return func(builder configurations.RabbitMQConfigurationBuilder) {
-				rabbitmq2.ConfigOrdersRabbitMQ(builder)
-			}
-		},
-	),
-	health.Module,
-	tracing.Module,
-	metrics.Module,
+func Module() fx.Option {
+	return fx.Module(
+		"infrastructurefx",
+		// Modules
+		core.Module,
+		customEcho.Module,
+		grpc.Module,
+		mongodb.Module,
+		elasticsearch.Module,
+		eventstroredb.ModuleFunc(
+			func(params params.OrderProjectionParams) eventstroredb.ProjectionBuilderFuc {
+				return func(builder eventstroredb.ProjectionsBuilder) {
+					builder.AddProjections(params.Projections)
+				}
+			},
+		),
+		rabbitmq.ModuleFunc(
+			func() configurations.RabbitMQConfigurationBuilderFuc {
+				return func(builder configurations.RabbitMQConfigurationBuilder) {
+					rabbitmq2.ConfigOrdersRabbitMQ(builder)
+				}
+			},
+		),
+		health.Module,
+		tracing.Module,
+		metrics.Module,
 
-	// Other provides
-	fx.Provide(validator.New),
-)
+		// Other provides
+		fx.Provide(validator.New),
+	)
+}

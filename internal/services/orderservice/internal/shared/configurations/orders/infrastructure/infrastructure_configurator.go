@@ -13,22 +13,22 @@ import (
 	tracingpipelines "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/mediatr/pipelines"
 )
 
-// InfrastructureConfigurator is the infrastructure configurator.
-type InfrastructureConfigurator struct {
+// OrderInfrastructureConfigurator is the infrastructure configurator.
+type OrderInfrastructureConfigurator struct {
 	contracts.Application
 }
 
-// NewInfrastructureConfigurator creates a new infrastructure configurator.
-func NewInfrastructureConfigurator(
+// NewOrderInfrastructureConfigurator creates a new infrastructure configurator.
+func NewOrderInfrastructureConfigurator(
 	app contracts.Application,
-) *InfrastructureConfigurator {
-	return &InfrastructureConfigurator{
+) *OrderInfrastructureConfigurator {
+	return &OrderInfrastructureConfigurator{
 		Application: app,
 	}
 }
 
 // ConfigInfrastructures configures the infrastructures.
-func (ic *InfrastructureConfigurator) ConfigInfrastructures() {
+func (ic *OrderInfrastructureConfigurator) ConfigInfrastructures() {
 	ic.ResolveFunc(
 		func(l logger.Logger, tracer tracing.AppTracer, metrics metrics.AppMetrics) error {
 			err := mediatr.RegisterRequestPipelineBehaviors(

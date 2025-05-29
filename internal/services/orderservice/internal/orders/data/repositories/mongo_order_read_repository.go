@@ -17,7 +17,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	utils2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-	uuid "github.com/satori/go.uuid"
+	goUuid "github.com/satori/go.uuid"
 	attribute2 "go.opentelemetry.io/otel/attribute"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/orders/contracts/repositories"
@@ -129,7 +129,7 @@ func (m mongoOrderReadRepository) SearchOrders(
 // GetOrderByID gets an order by id from the database.
 func (m mongoOrderReadRepository) GetOrderByID(
 	ctx context.Context,
-	id uuid.UUID,
+	id goUuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByID")
 	span.SetAttributes(attribute2.String("ID", id.String()))
@@ -168,7 +168,7 @@ func (m mongoOrderReadRepository) GetOrderByID(
 // GetOrderByOrderID gets an order by order id from the database.
 func (m mongoOrderReadRepository) GetOrderByOrderID(
 	ctx context.Context,
-	orderId uuid.UUID,
+	orderId goUuid.UUID,
 ) (*readmodels.OrderReadModel, error) {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.GetOrderByOrderID")
 	span.SetAttributes(attribute2.String("OrderId", orderId.String()))
@@ -280,7 +280,7 @@ func (m mongoOrderReadRepository) UpdateOrder(
 }
 
 // DeleteOrderByID deletes an order by id from the database.
-func (m mongoOrderReadRepository) DeleteOrderByID(ctx context.Context, uuid uuid.UUID) error {
+func (m mongoOrderReadRepository) DeleteOrderByID(ctx context.Context, uuid goUuid.UUID) error {
 	ctx, span := m.tracer.Start(ctx, "mongoOrderReadRepository.DeleteOrderByID")
 	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()

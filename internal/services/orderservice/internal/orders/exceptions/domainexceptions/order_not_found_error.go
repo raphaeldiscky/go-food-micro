@@ -19,7 +19,11 @@ func NewOrderNotFoundError(id int) error {
 	notFound := customErrors.NewNotFoundError(
 		fmt.Sprintf("order with id %d not found", id),
 	)
-	customErr := customErrors.GetCustomError(notFound).(customErrors.NotFoundError)
+	customErr, ok := customErrors.GetCustomError(notFound).(customErrors.NotFoundError)
+	if !ok {
+		return notFound // Return original error if type assertion fails
+	}
+
 	br := &orderNotFoundError{
 		NotFoundError: customErr,
 	}

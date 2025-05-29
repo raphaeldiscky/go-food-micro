@@ -15,7 +15,11 @@ type orderShopItemsRequiredError struct {
 // NewOrderShopItemsRequiredError creates a new order shop items required error.
 func NewOrderShopItemsRequiredError(message string) error {
 	bad := customErrors.NewBadRequestError(message)
-	customErr := customErrors.GetCustomError(bad).(customErrors.BadRequestError)
+	customErr, ok := customErrors.GetCustomError(bad).(customErrors.BadRequestError)
+	if !ok {
+		return bad // Return original error if type assertion fails
+	}
+
 	br := &orderShopItemsRequiredError{
 		BadRequestError: customErr,
 	}

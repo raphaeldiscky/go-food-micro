@@ -4,6 +4,7 @@ package aggregate
 // https://www.eventstore.com/blog/what-is-event-sourcing
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
@@ -211,7 +212,10 @@ func (o *Order) CancelReason() string {
 
 // String returns the string representation of the order.
 func (o *Order) String() string {
-	j, _ := json.Marshal(o)
+	j, err := json.Marshal(o)
+	if err != nil {
+		return fmt.Sprintf("error marshaling order: %v", err)
+	}
 
 	return string(j)
 }

@@ -31,7 +31,7 @@ func NewSubmitOrderV1(orderID uuid.UUID) (*OrderSubmittedV1, error) {
 	return event, nil
 }
 
-// GetAggregateId returns the aggregate id.
+// GetAggregateID returns the aggregate id.
 func (e *OrderSubmittedV1) GetAggregateID() uuid.UUID {
 	return e.OrderID
 }

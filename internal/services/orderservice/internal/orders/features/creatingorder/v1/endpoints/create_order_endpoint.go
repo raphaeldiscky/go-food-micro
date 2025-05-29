@@ -46,7 +46,7 @@ func (ep *createOrderEndpoint) MapEndpoint() {
 func (ep *createOrderEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		ep.OrdersMetrics.CreateOrderHTTPRequests.Add(ctx, 1)
+		ep.OrdersMetrics.HTTPMetrics.CreateOrderHTTPRequests.Add(ctx, 1)
 
 		request := &dtos.CreateOrderRequestDto{}
 		if err := c.Bind(request); err != nil {

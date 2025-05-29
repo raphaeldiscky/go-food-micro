@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"strings"
 
 	"emperror.dev/errors"
@@ -24,6 +25,15 @@ import (
 const (
 	orderIndex = "orders"
 )
+
+// closeResponseBody is a helper function to close the response body and handle any errors.
+func closeResponseBody(body io.ReadCloser) error {
+	if err := body.Close(); err != nil {
+		return errors.WrapIf(err, "failed to close response body")
+	}
+
+	return nil
+}
 
 // elasticOrderReadRepository is the repository for the order read model.
 type elasticOrderReadRepository struct {
@@ -76,7 +86,11 @@ func (e elasticOrderReadRepository) GetAllOrders(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to execute search")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.IsError() {
 		return nil, fmt.Errorf("search error: %s", res.String())
@@ -100,8 +114,8 @@ func (e elasticOrderReadRepository) GetAllOrders(
 
 	// Convert hits to orders
 	orders := make([]*readmodels.OrderReadModel, len(result.Hits.Hits))
-	for i, hit := range result.Hits.Hits {
-		orders[i] = &hit.Source
+	for i := range result.Hits.Hits {
+		orders[i] = &result.Hits.Hits[i].Source
 	}
 
 	return &utils.ListResult[*readmodels.OrderReadModel]{
@@ -159,7 +173,11 @@ func (e elasticOrderReadRepository) SearchOrders(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to execute search")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.IsError() {
 		return nil, fmt.Errorf("search error: %s", res.String())
@@ -183,8 +201,8 @@ func (e elasticOrderReadRepository) SearchOrders(
 
 	// Convert hits to orders
 	orders := make([]*readmodels.OrderReadModel, len(result.Hits.Hits))
-	for i, hit := range result.Hits.Hits {
-		orders[i] = &hit.Source
+	for i := range result.Hits.Hits {
+		orders[i] = &result.Hits.Hits[i].Source
 	}
 
 	return &utils.ListResult[*readmodels.OrderReadModel]{
@@ -213,7 +231,11 @@ func (e elasticOrderReadRepository) GetOrderByID(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to get order")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.StatusCode == 404 {
 		return nil, nil
@@ -277,7 +299,11 @@ func (e elasticOrderReadRepository) GetOrderByOrderID(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to execute search")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.IsError() {
 		return nil, fmt.Errorf("search error: %s", res.String())
@@ -340,7 +366,11 @@ func (e elasticOrderReadRepository) CreateOrder(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to create order")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.IsError() {
 		return nil, fmt.Errorf("index error: %s", res.String())
@@ -380,7 +410,11 @@ func (e elasticOrderReadRepository) UpdateOrder(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to update order")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.IsError() {
 		return nil, fmt.Errorf("index error: %s", res.String())
@@ -409,7 +443,11 @@ func (e elasticOrderReadRepository) DeleteOrderByID(ctx context.Context, id uuid
 	if err != nil {
 		return errors.WrapIf(err, "failed to delete order")
 	}
-	defer res.Body.Close()
+	defer func() {
+		if closeErr := closeResponseBody(res.Body); closeErr != nil {
+			e.log.Error(closeErr)
+		}
+	}()
 
 	if res.StatusCode == 404 {
 		return nil

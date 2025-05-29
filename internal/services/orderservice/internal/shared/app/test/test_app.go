@@ -3,7 +3,6 @@ package test
 
 import (
 	"context"
-	"os"
 	"testing"
 	"time"
 
@@ -32,11 +31,11 @@ import (
 	ordersService "github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/grpc/genproto"
 )
 
-// TestApp is a struct that contains the test app.
-type TestApp struct{}
+// OrderTestApp is a struct that contains the test app.
+type OrderTestApp struct{}
 
-// TestAppResult is a struct that contains the test app result.
-type TestAppResult struct {
+// OrderTestAppResult is a struct that contains the test app result.
+type OrderTestAppResult struct {
 	Cfg                  *config.Config
 	Bus                  bus.RabbitmqBus
 	Container            contracts.Container
@@ -53,13 +52,13 @@ type TestAppResult struct {
 	GrpcClient           grpc.GrpcClient
 }
 
-// NewTestApp is a constructor for the TestApp.
-func NewTestApp() *TestApp {
-	return &TestApp{}
+// NewOrderTestApp is a constructor for the OrderTestApp.
+func NewOrderTestApp() *OrderTestApp {
+	return &OrderTestApp{}
 }
 
 // Run is a method that runs the test app.
-func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
+func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 	t.Helper()
 
 	lifetimeCtx := context.Background()
@@ -94,7 +93,7 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 			esdbClient *esdb.Client,
 			mongoDbOptions *mongodb.MongoDbOptions,
 		) {
-			result = &TestAppResult{
+			result = &OrderTestAppResult{
 				Bus:                  bus,
 				Cfg:                  cfg,
 				Container:            testApp,
@@ -124,7 +123,6 @@ func (a *TestApp) Run(t *testing.T) (result *TestAppResult) {
 	err := testApp.Start(startCtx)
 	if err != nil {
 		t.Errorf("Error starting, err: %v", err)
-		os.Exit(1)
 	}
 
 	t.Cleanup(func() {

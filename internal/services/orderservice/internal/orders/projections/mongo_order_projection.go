@@ -53,8 +53,7 @@ func (m mongoOrderProjection) ProcessEvent(
 	streamEvent *models.StreamEvent,
 ) error {
 	// Handling and projecting event to elastic read model
-	switch evt := streamEvent.Event.(type) {
-	case *createOrderDomainEventsV1.OrderCreatedV1:
+	if evt, ok := streamEvent.Event.(*createOrderDomainEventsV1.OrderCreatedV1); ok {
 		return m.onOrderCreated(ctx, evt)
 	}
 

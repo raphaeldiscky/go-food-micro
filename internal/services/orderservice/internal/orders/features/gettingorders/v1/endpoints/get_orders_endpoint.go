@@ -45,7 +45,7 @@ func (ep *getOrdersEndpoint) MapEndpoint() {
 func (ep *getOrdersEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		ep.OrdersMetrics.GetOrdersHTTPRequests.Add(ctx, 1)
+		ep.OrdersMetrics.HTTPMetrics.GetOrdersHTTPRequests.Add(ctx, 1)
 
 		listQuery, err := utils.GetListQueryFromCtx(c)
 		if err != nil {

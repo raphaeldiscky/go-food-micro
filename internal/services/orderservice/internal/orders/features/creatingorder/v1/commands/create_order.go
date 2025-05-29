@@ -47,8 +47,8 @@ func NewCreateOrder(
 }
 
 // Validate validates the create order command.
-func (c CreateOrder) Validate() error {
-	return validation.ValidateStruct(&c,
+func (c *CreateOrder) Validate() error {
+	return validation.ValidateStruct(c,
 		validation.Field(&c.OrderID, validation.Required),
 		validation.Field(&c.ShopItems, validation.Required),
 		validation.Field(&c.AccountEmail, validation.Required),

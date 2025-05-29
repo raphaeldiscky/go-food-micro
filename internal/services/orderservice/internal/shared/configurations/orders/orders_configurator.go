@@ -18,7 +18,7 @@ import (
 // OrdersServiceConfigurator is the orders service configurator.
 type OrdersServiceConfigurator struct {
 	contracts.Application
-	infrastructureConfigurator *infrastructure.InfrastructureConfigurator
+	infrastructureConfigurator *infrastructure.OrderInfrastructureConfigurator
 	ordersModuleConfigurator   *configurations.OrdersModuleConfigurator
 }
 
@@ -26,7 +26,7 @@ type OrdersServiceConfigurator struct {
 func NewOrdersServiceConfigurator(
 	app contracts.Application,
 ) *OrdersServiceConfigurator {
-	infraConfigurator := infrastructure.NewInfrastructureConfigurator(app)
+	infraConfigurator := infrastructure.NewOrderInfrastructureConfigurator(app)
 	ordersModuleConfigurator := configurations.NewOrdersModuleConfigurator(app)
 
 	return &OrdersServiceConfigurator{

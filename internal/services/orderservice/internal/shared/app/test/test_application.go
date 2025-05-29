@@ -23,7 +23,7 @@ func NewOrdersTestApplication(
 	providers []interface{},
 	decorates []interface{},
 	options []fx.Option,
-	logger logger.Logger,
+	log logger.Logger,
 	env environment.Environment,
 ) *OrdersTestApplication {
 	testApp := test.NewTestApplication(
@@ -31,7 +31,7 @@ func NewOrdersTestApplication(
 		providers,
 		decorates,
 		options,
-		logger,
+		log,
 		env,
 	)
 

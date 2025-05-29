@@ -15,7 +15,11 @@ type invalidEmailAddressError struct {
 // NewInvalidEmailAddressError creates a new invalid email address error.
 func NewInvalidEmailAddressError(message string) error {
 	bad := customErrors.NewBadRequestError(message)
-	customErr := customErrors.GetCustomError(bad).(customErrors.BadRequestError)
+	customErr, ok := customErrors.GetCustomError(bad).(customErrors.BadRequestError)
+	if !ok {
+		return bad // Return original error if type assertion fails
+	}
+
 	br := &invalidEmailAddressError{
 		BadRequestError: customErr,
 	}

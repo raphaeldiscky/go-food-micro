@@ -57,7 +57,7 @@ func NewIntegrationTestSharedFixture(
 	t *testing.T,
 ) *IntegrationTestSharedFixture {
 	t.Helper()
-	result := test.NewTestApp().Run(t)
+	result := test.NewOrderTestApp().Run(t)
 
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
@@ -126,13 +126,14 @@ func (i *IntegrationTestSharedFixture) cleanupRabbitmqData() error {
 	}
 
 	// clear each queue
-	for _, queue := range queues {
+	for idx := range queues {
 		_, err = i.RabbitmqCleaner.PurgeQueue(
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
-			queue.Name,
+			queues[idx].Name,
 		)
-
-		return err
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

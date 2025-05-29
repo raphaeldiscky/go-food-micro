@@ -45,7 +45,7 @@ func (ep *GetOrderByIDEndpoint) MapEndpoint() {
 func (ep *GetOrderByIDEndpoint) handler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		ctx := c.Request().Context()
-		ep.OrdersMetrics.GetOrderByIDHTTPRequests.Add(ctx, 1)
+		ep.OrdersMetrics.HTTPMetrics.GetOrderByIDHTTPRequests.Add(ctx, 1)
 
 		request := &dtos.GetOrderByIDRequestDto{}
 		if err := c.Bind(request); err != nil {

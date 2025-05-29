@@ -62,7 +62,7 @@ func (o OrderGrpcServiceServer) CreateOrder(
 ) (*grpcOrderService.CreateOrderRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
-	o.ordersMetrics.CreateOrderGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GrpcMetrics.CreateOrderGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 
 	shopItemsDtos, err := mapper.Map[[]*dtosV1.ShopItemDto](req.GetShopItems())
 	if err != nil {
@@ -118,7 +118,7 @@ func (o OrderGrpcServiceServer) GetOrderByID(
 ) (*grpcOrderService.GetOrderByIDRes, error) {
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
-	o.ordersMetrics.GetOrderByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GrpcMetrics.GetOrderByIDGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 
 	orderIDUUID, err := uuid.FromString(req.ID)
 	if err != nil {
@@ -205,7 +205,7 @@ func (o OrderGrpcServiceServer) GetOrders(
 	ctx context.Context,
 	req *grpcOrderService.GetOrdersReq,
 ) (*grpcOrderService.GetOrdersRes, error) {
-	o.ordersMetrics.GetOrdersGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
+	o.ordersMetrics.GrpcMetrics.GetOrdersGrpcRequests.Add(ctx, 1, grpcMetricsAttr)
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute2.Object("Request", req))
 
