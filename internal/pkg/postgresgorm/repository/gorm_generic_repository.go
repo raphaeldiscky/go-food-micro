@@ -45,6 +45,7 @@ func NewGenericGormRepository[TEntity interface{}](
 	}
 }
 
+// Add adds a new entity to the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) Add(
 	ctx context.Context,
 	entity TEntity,
@@ -78,6 +79,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Add(
 	return nil
 }
 
+// AddAll adds a new entity to the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) AddAll(
 	ctx context.Context,
 	entities []TEntity,
@@ -92,6 +94,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) AddAll(
 	return nil
 }
 
+// GetById gets a new entity by id.
 func (r *gormGenericRepository[TDataModel, TEntity]) GetById(
 	ctx context.Context,
 	id uuid.UUID,
@@ -140,6 +143,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetById(
 	}
 }
 
+// GetAll gets all the entities from the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) GetAll(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
@@ -156,6 +160,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetAll(
 	return result, nil
 }
 
+// Search searches for entities in the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) Search(
 	ctx context.Context,
 	searchTerm string,
@@ -189,6 +194,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Search(
 	return result, nil
 }
 
+// GetByFilter gets entities by filter.
 func (r *gormGenericRepository[TDataModel, TEntity]) GetByFilter(
 	ctx context.Context,
 	filters map[string]interface{},
@@ -218,6 +224,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetByFilter(
 	}
 }
 
+// GetByFuncFilter gets entities by func filter.
 func (r *gormGenericRepository[TDataModel, TEntity]) GetByFuncFilter(
 	ctx context.Context,
 	filterFunc func(TEntity) bool,
@@ -225,6 +232,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetByFuncFilter(
 	return *new([]TEntity), nil
 }
 
+// FirstOrDefault gets the first entity by filter.
 func (r *gormGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 	ctx context.Context,
 	filters map[string]interface{},
@@ -232,6 +240,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 	return *new(TEntity), nil
 }
 
+// Update updates an entity in the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) Update(
 	ctx context.Context,
 	entity TEntity,
@@ -262,6 +271,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Update(
 	return nil
 }
 
+// UpdateAll updates all the entities in the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) UpdateAll(
 	ctx context.Context,
 	entities []TEntity,
@@ -276,6 +286,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) UpdateAll(
 	return nil
 }
 
+// Delete deletes an entity from the database.
 func (r *gormGenericRepository[TDataModel, TEntity]) Delete(
 	ctx context.Context,
 	id uuid.UUID,

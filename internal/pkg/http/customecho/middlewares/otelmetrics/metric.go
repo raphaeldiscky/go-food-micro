@@ -254,6 +254,7 @@ func (h *HTTPMetricsRecorder) AddInFlightRequest(
 	)
 }
 
+// AddRequestError adds a request error to the metrics.
 func (h *HTTPMetricsRecorder) AddRequestError(
 	ctx context.Context,
 	values HTTPLabels,
@@ -274,6 +275,7 @@ func (h *HTTPMetricsRecorder) AddRequestError(
 	)
 }
 
+// AddRequestSuccess adds a request success to the metrics.
 func (h *HTTPMetricsRecorder) AddRequestSuccess(
 	ctx context.Context,
 	values HTTPLabels,
@@ -315,6 +317,7 @@ func (h *HTTPMetricsRecorder) RemInFlightRequest(
 	)
 }
 
+// AddRequestSize adds a request size to the metrics.
 func (h *HTTPMetricsRecorder) AddRequestSize(
 	ctx context.Context,
 	request *http.Request,
@@ -334,6 +337,7 @@ func (h *HTTPMetricsRecorder) AddRequestSize(
 	))
 }
 
+// AddResponseSize adds a response size to the metrics.
 func (h *HTTPMetricsRecorder) AddResponseSize(
 	ctx context.Context,
 	response *echo.Response,
@@ -353,6 +357,7 @@ func (h *HTTPMetricsRecorder) AddResponseSize(
 	))
 }
 
+// computeApproximateRequestSize computes the approximate size of a request.
 func computeApproximateRequestSize(r *http.Request) int {
 	s := 0
 	if r.URL != nil {

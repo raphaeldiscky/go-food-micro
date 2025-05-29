@@ -1,3 +1,4 @@
+// Package types provides a set of types for the rabbitmq package.
 package types
 
 import (
@@ -12,6 +13,7 @@ import (
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 )
 
+// internalConnection is a struct that contains the rabbitmq connection.
 type internalConnection struct {
 	cfg *config.RabbitmqOptions
 	*amqp091.Connection
@@ -20,6 +22,7 @@ type internalConnection struct {
 	reconnectedChan   chan struct{}
 }
 
+// IConnection is a interface that contains the rabbitmq connection.
 type IConnection interface {
 	IsClosed() bool
 	IsConnected() bool
@@ -33,6 +36,7 @@ type IConnection interface {
 	ReconnectedChannel() chan struct{}
 }
 
+// NewRabbitMQConnection creates a new rabbitmq connection.
 func NewRabbitMQConnection(cfg *config.RabbitmqOptions) (IConnection, error) {
 	// https://levelup.gitconnected.com/connecting-a-service-in-golang-to-a-rabbitmq-server-835294d8c914
 	if cfg.RabbitmqHostOptions == nil {
@@ -58,22 +62,27 @@ func NewRabbitMQConnection(cfg *config.RabbitmqOptions) (IConnection, error) {
 	return c, err
 }
 
+// Close closes the rabbitmq connection.
 func (c *internalConnection) Close() error {
 	return c.Connection.Close()
 }
 
+// IsConnected checks if the rabbitmq connection is connected.
 func (c *internalConnection) IsConnected() bool {
 	return c.isConnected
 }
 
+// ErrorConnectionChannel returns the error connection channel.
 func (c *internalConnection) ErrorConnectionChannel() chan error {
 	return c.errConnectionChan
 }
 
+// ReconnectedChannel returns the reconnected channel.
 func (c *internalConnection) ReconnectedChannel() chan struct{} {
 	return c.reconnectedChan
 }
 
+// ReConnect reconnects the rabbitmq connection.
 func (c *internalConnection) ReConnect() error {
 	if !c.IsClosed() {
 		return nil
@@ -82,10 +91,12 @@ func (c *internalConnection) ReConnect() error {
 	return c.connect()
 }
 
+// Raw returns the raw rabbitmq connection.
 func (c *internalConnection) Raw() *amqp091.Connection {
 	return c.Connection
 }
 
+// Channel returns the rabbitmq channel.
 func (c *internalConnection) Channel() (*amqp091.Channel, error) {
 	ch, err := c.Connection.Channel()
 	// notifyChannelClose := ch.NotifyClose(make(chan *amqp091.Error))
@@ -97,6 +108,7 @@ func (c *internalConnection) Channel() (*amqp091.Channel, error) {
 	return ch, err
 }
 
+// connect connects to the rabbitmq server.
 func (c *internalConnection) connect() error {
 	conn, err := amqp091.Dial(c.cfg.RabbitmqHostOptions.AmqpEndPoint())
 	if err != nil {
@@ -125,6 +137,7 @@ func (c *internalConnection) connect() error {
 	return nil
 }
 
+// handleReconnecting handles the reconnecting of the rabbitmq connection.
 func (c *internalConnection) handleReconnecting() {
 	defer errorUtils.HandlePanic()
 	for err := range c.errConnectionChan {

@@ -20,8 +20,8 @@ const (
 	responseHeaderTimeout = 5 * time.Second
 )
 
-// NewHttpClient is a function that creates a new http client.
-func NewHttpClient() *resty.Client {
+// NewHTTPClient is a function that creates a new http client.
+func NewHTTPClient() *resty.Client {
 	client := resty.New().
 		SetTimeout(timeout).
 		SetRetryCount(retryCount).

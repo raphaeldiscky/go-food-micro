@@ -1,3 +1,4 @@
+// Package consumer provides a set of functions for the rabbitmq consumer.
 package consumer
 
 import (
@@ -11,6 +12,7 @@ import (
 	types2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// consumerFactory is a struct that contains the consumer factory.
 type consumerFactory struct {
 	connection      types2.IConnection
 	eventSerializer serializer.MessageSerializer
@@ -18,6 +20,7 @@ type consumerFactory struct {
 	rabbitmqOptions *config.RabbitmqOptions
 }
 
+// NewConsumerFactory creates a new consumer factory.
 func NewConsumerFactory(
 	rabbitmqOptions *config.RabbitmqOptions,
 	connection types2.IConnection,
@@ -32,6 +35,7 @@ func NewConsumerFactory(
 	}
 }
 
+// CreateConsumer creates a new consumer.
 func (c *consumerFactory) CreateConsumer(
 	consumerConfiguration *consumerConfigurations.RabbitMQConsumerConfiguration,
 	isConsumedNotifications ...func(message types.IMessage),
@@ -45,6 +49,7 @@ func (c *consumerFactory) CreateConsumer(
 		isConsumedNotifications...)
 }
 
+// Connection returns the connection.
 func (c *consumerFactory) Connection() types2.IConnection {
 	return c.connection
 }

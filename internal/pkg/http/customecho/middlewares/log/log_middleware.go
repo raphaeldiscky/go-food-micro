@@ -38,7 +38,7 @@ func EchoLogger(l logger.Logger, opts ...Option) echo.MiddlewareFunc {
 			LogContentLength: true,
 			LogResponseSize:  true,
 
-			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			LogValuesFunc: func(_ echo.Context, v middleware.RequestLoggerValues) error {
 				l.Infow(
 					fmt.Sprintf(
 						"[Request Middleware] REQUEST: uri: %v, status: %v\n",

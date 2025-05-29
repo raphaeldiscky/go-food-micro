@@ -113,7 +113,7 @@ func NewApplicationGrpcError(status codes.Code, detail string, stackTrace string
 // NewApiGrpcError is a function that creates a new api grpc error.
 func NewApiGrpcError(status codes.Code, detail string, stackTrace string) GrpcErr {
 	return &grpcErr{
-		Title:      constants.ErrApiTitle,
+		Title:      constants.ErrAPITitle,
 		Detail:     detail,
 		Status:     status,
 		Timestamp:  time.Now(),

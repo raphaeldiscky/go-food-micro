@@ -39,10 +39,12 @@ var defualtConfig = config{
 	instrumentationName:  "echo",
 }
 
+// Option is a type that represents a option.
 type Option interface {
 	apply(*config)
 }
 
+// optionFunc is a type that represents a option function.
 type optionFunc func(*config)
 
 func (o optionFunc) apply(c *config) {
@@ -60,6 +62,7 @@ func WithNamespace(v string) Option {
 	})
 }
 
+// WithServiceName specifies the service name that will be added to all metric configurations.
 func WithServiceName(v string) Option {
 	return optionFunc(func(cfg *config) {
 		if cfg.serviceName != "" {
@@ -68,6 +71,7 @@ func WithServiceName(v string) Option {
 	})
 }
 
+// WithInstrumentationName specifies the instrumentation name that will be added to all metric configurations.
 func WithInstrumentationName(v string) Option {
 	return optionFunc(func(cfg *config) {
 		if cfg.instrumentationName != "" {
@@ -93,18 +97,21 @@ func WithMeterProvider(provider metric.MeterProvider) Option {
 	})
 }
 
+// WithInFlightMetric specifies whether to enable a metric that tells the number of current in-flight requests.
 func WithInFlightMetric(enabled bool) Option {
 	return optionFunc(func(cfg *config) {
 		cfg.enableInFlightMetric = enabled
 	})
 }
 
+// WithTotalMetric specifies whether to enable a metric to count the total number of http requests.
 func WithTotalMetric(enabled bool) Option {
 	return optionFunc(func(cfg *config) {
 		cfg.enableTotalMetric = enabled
 	})
 }
 
+// WithDurMetric specifies whether to enable a metric to track the duration of each request.
 func WithDurMetric(enabled bool) Option {
 	return optionFunc(func(cfg *config) {
 		cfg.enableDurMetric = enabled

@@ -1,3 +1,4 @@
+// Package contracts provides a set of contracts for the postgresgorm package.
 package contracts
 
 import (
@@ -6,6 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// GormDBContext is a context that contains a gorm.DB.
 type GormDBContext interface {
 	WithTx(ctx context.Context) (GormDBContext, error)
 	WithTxIfExists(ctx context.Context) GormDBContext
@@ -13,4 +15,5 @@ type GormDBContext interface {
 	DB() *gorm.DB
 }
 
+// ActionFunc is a function that executes an action.
 type ActionFunc func(ctx context.Context, gormContext GormDBContext) error

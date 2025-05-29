@@ -1,3 +1,4 @@
+// Package producer provides a set of functions for the rabbitmq producer.
 package producer
 
 import (
@@ -24,6 +25,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// rabbitMQProducer is a struct that contains the rabbitmq producer.
 type rabbitMQProducer struct {
 	logger                  logger.Logger
 	rabbitmqOptions         *config.RabbitmqOptions
@@ -33,6 +35,7 @@ type rabbitMQProducer struct {
 	isProducedNotifications []func(message types2.IMessage)
 }
 
+// NewRabbitMQProducer creates a new rabbitmq producer.
 func NewRabbitMQProducer(
 	cfg *config.RabbitmqOptions,
 	connection types.IConnection,
@@ -54,10 +57,12 @@ func NewRabbitMQProducer(
 	return p, nil
 }
 
+// IsProduced adds a new produced notification.
 func (r *rabbitMQProducer) IsProduced(h func(message types2.IMessage)) {
 	r.isProducedNotifications = append(r.isProducedNotifications, h)
 }
 
+// PublishMessage publishes a message to the rabbitmq.
 func (r *rabbitMQProducer) PublishMessage(
 	ctx context.Context,
 	message types2.IMessage,
@@ -66,6 +71,7 @@ func (r *rabbitMQProducer) PublishMessage(
 	return r.PublishMessageWithTopicName(ctx, message, meta, "")
 }
 
+// getProducerConfigurationByMessage gets the producer configuration by message.
 func (r *rabbitMQProducer) getProducerConfigurationByMessage(
 	message types2.IMessage,
 ) *configurations.RabbitMQProducerConfiguration {
@@ -74,6 +80,7 @@ func (r *rabbitMQProducer) getProducerConfigurationByMessage(
 	return r.producersConfigurations[messageType.String()]
 }
 
+// PublishMessageWithTopicName publishes a message to the rabbitmq with topic name.
 func (r *rabbitMQProducer) PublishMessageWithTopicName(
 	ctx context.Context,
 	message types2.IMessage,
@@ -209,6 +216,7 @@ func (r *rabbitMQProducer) PublishMessageWithTopicName(
 	return producer3.FinishProducerSpan(beforeProduceSpan, err)
 }
 
+// getMetadata gets the metadata.
 func (r *rabbitMQProducer) getMetadata(
 	message types2.IMessage,
 	meta metadata.Metadata,
@@ -236,6 +244,7 @@ func (r *rabbitMQProducer) getMetadata(
 	return meta
 }
 
+// ensureExchange ensures the exchange.
 func (r *rabbitMQProducer) ensureExchange(
 	producersConfigurations *configurations.RabbitMQProducerConfiguration,
 	channel *amqp091.Channel,

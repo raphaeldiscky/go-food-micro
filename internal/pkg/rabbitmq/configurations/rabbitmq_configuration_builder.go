@@ -1,3 +1,4 @@
+// Package configurations provides a set of functions for the rabbitmq configurations.
 package configurations
 
 import (
@@ -8,6 +9,7 @@ import (
 	producerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer/configurations"
 )
 
+// RabbitMQConfigurationBuilder is a interface that contains the rabbitmq configuration builder.
 type RabbitMQConfigurationBuilder interface {
 	AddProducer(
 		producerMessageType types.IMessage,
@@ -20,18 +22,21 @@ type RabbitMQConfigurationBuilder interface {
 	Build() *RabbitMQConfiguration
 }
 
+// rabbitMQConfigurationBuilder is a struct that contains the rabbitmq configuration builder.
 type rabbitMQConfigurationBuilder struct {
 	rabbitMQConfiguration *RabbitMQConfiguration
 	consumerBuilders      []consumerConfigurations.RabbitMQConsumerConfigurationBuilder
 	producerBuilders      []producerConfigurations.RabbitMQProducerConfigurationBuilder
 }
 
+// NewRabbitMQConfigurationBuilder creates a new rabbitmq configuration builder.
 func NewRabbitMQConfigurationBuilder() RabbitMQConfigurationBuilder {
 	return &rabbitMQConfigurationBuilder{
 		rabbitMQConfiguration: &RabbitMQConfiguration{},
 	}
 }
 
+// AddProducer adds a new producer to the rabbitmq configuration.
 func (r *rabbitMQConfigurationBuilder) AddProducer(
 	producerMessageType types.IMessage,
 	producerBuilderFunc producerConfigurations.RabbitMQProducerConfigurationBuilderFuc,
@@ -46,6 +51,7 @@ func (r *rabbitMQConfigurationBuilder) AddProducer(
 	return r
 }
 
+// AddConsumer adds a new consumer to the rabbitmq configuration.
 func (r *rabbitMQConfigurationBuilder) AddConsumer(
 	consumerMessageType types.IMessage,
 	consumerBuilderFunc consumerConfigurations.RabbitMQConsumerConfigurationBuilderFuc,
@@ -60,6 +66,7 @@ func (r *rabbitMQConfigurationBuilder) AddConsumer(
 	return r
 }
 
+// Build builds the rabbitmq configuration.
 func (r *rabbitMQConfigurationBuilder) Build() *RabbitMQConfiguration {
 	consumersConfigs := lo.Map(
 		r.consumerBuilders,

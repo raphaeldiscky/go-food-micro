@@ -54,7 +54,7 @@ func registerHooks(
 	lifetimeCtx := context.Background()
 
 	lc.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
+		OnStart: func(_ context.Context) error {
 			// https://github.com/uber-go/fx/blob/v1.20.0/app.go#L573
 			// this ctx is just for startup dependencies setup and OnStart callbacks, and it has short timeout 15s, and it is not alive in whole lifetime app
 			// if we need an app context which is alive until the app context done we should create it manually here

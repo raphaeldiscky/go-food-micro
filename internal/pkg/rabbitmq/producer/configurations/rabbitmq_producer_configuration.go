@@ -1,3 +1,4 @@
+// Package configurations provides a set of functions for the rabbitmq producer configurations.
 package configurations
 
 import (
@@ -9,6 +10,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// RabbitMQProducerConfiguration is a struct that contains the rabbitmq producer configuration.
 type RabbitMQProducerConfiguration struct {
 	ProducerMessageType reflect.Type
 	ExchangeOptions     *options.RabbitMQExchangeOptions
@@ -21,6 +23,7 @@ type RabbitMQProducerConfiguration struct {
 	ContentEncoding     string
 }
 
+// NewDefaultRabbitMQProducerConfiguration creates a new default rabbitmq producer configuration.
 func NewDefaultRabbitMQProducerConfiguration(
 	messageType types2.IMessage,
 ) *RabbitMQProducerConfiguration {

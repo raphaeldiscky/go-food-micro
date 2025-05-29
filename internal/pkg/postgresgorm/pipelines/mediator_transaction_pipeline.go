@@ -1,3 +1,5 @@
+// Package pipelines provides a set of functions for the pipelines.
+// https://github.com/mehdihadeli/go-mediatr/blob/main/docs/pipelines.md
 package pipelines
 
 import (
@@ -13,11 +15,13 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// mediatorTransactionPipeline is a struct that contains the mediator transaction pipeline.
 type mediatorTransactionPipeline struct {
 	logger logger.Logger
 	db     *gorm.DB
 }
 
+// NewMediatorTransactionPipeline creates a new mediator transaction pipeline.
 func NewMediatorTransactionPipeline(
 	l logger.Logger,
 	db *gorm.DB,
@@ -28,6 +32,7 @@ func NewMediatorTransactionPipeline(
 	}
 }
 
+// Handle handles the mediator transaction pipeline.
 func (m *mediatorTransactionPipeline) Handle(
 	ctx context.Context,
 	request interface{},

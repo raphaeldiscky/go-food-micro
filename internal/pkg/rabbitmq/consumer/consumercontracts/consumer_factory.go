@@ -1,3 +1,4 @@
+// Package consumercontracts provides a set of functions for the rabbitmq consumer contracts.
 package consumercontracts
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// ConsumerFactory is a interface that contains the consumer factory.
 type ConsumerFactory interface {
 	CreateConsumer(
 		consumerConfiguration *configurations.RabbitMQConsumerConfiguration,

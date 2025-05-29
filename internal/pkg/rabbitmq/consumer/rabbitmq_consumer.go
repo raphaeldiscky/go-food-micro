@@ -1,3 +1,4 @@
+// Package consumer provides a set of functions for the rabbitmq consumer.
 package consumer
 
 import (
@@ -40,6 +41,7 @@ var retryOptions = []retry.Option{
 	retry.DelayType(retry.BackOffDelay),
 }
 
+// rabbitMQConsumer is a struct that contains the rabbitmq consumer.
 type rabbitMQConsumer struct {
 	rabbitmqConsumerOptions *configurations.RabbitMQConsumerConfiguration
 	connection              types.IConnection
@@ -54,7 +56,7 @@ type rabbitMQConsumer struct {
 	isConsumedNotifications []func(message messagingTypes.IMessage)
 }
 
-// NewRabbitMQConsumer create a new generic RabbitMQ consumer.
+// NewRabbitMQConsumer creates a new generic RabbitMQ consumer.
 func NewRabbitMQConsumer(
 	rabbitmqOptions *config.RabbitmqOptions,
 	connection types.IConnection,
@@ -94,10 +96,12 @@ func NewRabbitMQConsumer(
 	return cons, nil
 }
 
+// IsConsumed adds a new consumed notification.
 func (r *rabbitMQConsumer) IsConsumed(h func(message messagingTypes.IMessage)) {
 	r.isConsumedNotifications = append(r.isConsumedNotifications, h)
 }
 
+// Start starts the rabbitmq consumer.
 func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 	// https://github.com/rabbitmq/rabbitmq-tutorials/blob/master/go/receive.go
 	if r.connection == nil {
@@ -231,6 +235,7 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 	return nil
 }
 
+// Stop stops the rabbitmq consumer.
 func (r *rabbitMQConsumer) Stop() error {
 	defer func() {
 		if r.channel != nil && !r.channel.IsClosed() {
@@ -256,14 +261,17 @@ func (r *rabbitMQConsumer) Stop() error {
 	return nil
 }
 
+// ConnectHandler adds a new consumer handler.
 func (r *rabbitMQConsumer) ConnectHandler(handler consumer.ConsumerHandler) {
 	r.handlers = append(r.handlers, handler)
 }
 
+// GetName returns the name of the rabbitmq consumer.
 func (r *rabbitMQConsumer) GetName() string {
 	return r.rabbitmqConsumerOptions.Name
 }
 
+// reConsumeOnDropConnection reconnects the rabbitmq consumer on drop connection.
 func (r *rabbitMQConsumer) reConsumeOnDropConnection(ctx context.Context) {
 	go func() {
 		defer errorutils.HandlePanic()
@@ -291,6 +299,7 @@ func (r *rabbitMQConsumer) reConsumeOnDropConnection(ctx context.Context) {
 	}()
 }
 
+// handleReceived handles the received message.
 func (r *rabbitMQConsumer) handleReceived(
 	ctx context.Context,
 	delivery amqp091.Delivery,
@@ -369,6 +378,7 @@ func (r *rabbitMQConsumer) handleReceived(
 	r.handle(ctx, ack, nack, consumeContext)
 }
 
+// handle handles the message.
 func (r *rabbitMQConsumer) handle(
 	ctx context.Context,
 	ack func(),

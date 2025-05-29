@@ -39,7 +39,10 @@ func NewListResult[T any](items []T, size int, page int, totalItems int64) *List
 
 // String is a function that returns a string representation of the list result.
 func (p *ListResult[T]) String() string {
-	j, _ := json.Marshal(p)
+	j, err := json.Marshal(p)
+	if err != nil {
+		return ""
+	}
 
 	return string(j)
 }
@@ -197,6 +200,7 @@ func (q *ListQuery) GetQueryString() string {
 	return fmt.Sprintf("page=%v&size=%v&orderBy=%s", q.GetPage(), q.GetSize(), q.GetOrderBy())
 }
 
+// ListResultToListResultDto converts a list result to a list result dto.
 func ListResultToListResultDto[TDto any, TModel any](
 	listResult *ListResult[TModel],
 ) (*ListResult[TDto], error) {

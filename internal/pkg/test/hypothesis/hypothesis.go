@@ -26,7 +26,7 @@ type hypothesis[T any] struct {
 }
 
 // Validate validates the hypothesis.
-func (h *hypothesis[T]) Validate(ctx context.Context, message string, time time.Duration) {
+func (h *hypothesis[T]) Validate(_ context.Context, message string, time time.Duration) {
 	err := testUtils.WaitUntilConditionMet(func() bool {
 		return !reflect.ValueOf(h.data).IsZero()
 	}, time)
@@ -36,6 +36,6 @@ func (h *hypothesis[T]) Validate(ctx context.Context, message string, time time.
 }
 
 // Test tests the hypothesis.
-func (h *hypothesis[T]) Test(ctx context.Context, item T) {
+func (h *hypothesis[T]) Test(_ context.Context, item T) {
 	h.data = item
 }

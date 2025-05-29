@@ -33,7 +33,7 @@ type GrpcErr interface {
 	SetDetail(detail string) GrpcErr
 	Error() string
 	ErrBody() error
-	ToJson() string
+	ToJSON() string
 	ToGrpcResponseErr() error
 }
 
@@ -120,10 +120,10 @@ func (p *grpcErr) SetStackTrace(stackTrace string) GrpcErr {
 
 // ToGrpcResponseErr creates a gRPC error response to send grpc engine.
 func (p *grpcErr) ToGrpcResponseErr() error {
-	return status.Error(p.GetStatus(), p.ToJson())
+	return status.Error(p.GetStatus(), p.ToJSON())
 }
 
-func (p *grpcErr) ToJson() string {
+func (p *grpcErr) ToJSON() string {
 	defaultLogger.GetLogger().Error(p.Error())
 	stackTrace := p.GetStackTrace()
 	fmt.Println(stackTrace)

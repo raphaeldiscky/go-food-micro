@@ -1,9 +1,11 @@
+// Package otelmetrics provides a set of views for the otel metrics.
 package otelmetrics
 
 import (
 	"go.opentelemetry.io/otel/sdk/metric"
 )
 
+// GetViews returns a list of views for the otel metrics.
 // https://opentelemetry.io/docs/instrumentation/go/manual/#registering-views
 func GetViews() []metric.View {
 	customBucketView := metric.NewView(

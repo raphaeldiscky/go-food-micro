@@ -1,3 +1,4 @@
+// Package configurations provides a set of functions for the rabbitmq consumer configurations.
 package configurations
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// RabbitMQConsumerConfiguration is a struct that contains the rabbitmq consumer configuration.
 type RabbitMQConsumerConfiguration struct {
 	Name                string
 	ConsumerMessageType reflect.Type

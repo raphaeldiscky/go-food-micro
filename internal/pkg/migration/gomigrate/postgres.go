@@ -34,7 +34,7 @@ func NewGoMigratorPostgres(
 	logger logger.Logger,
 ) (contracts.PostgresMigrationRunner, error) {
 	if config.DBName == "" {
-		return nil, errors.New("DBName is required in the config.")
+		return nil, errors.New("dbName is required in the config.")
 	}
 
 	datasource := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",

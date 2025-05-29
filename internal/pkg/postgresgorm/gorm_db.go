@@ -1,3 +1,4 @@
+// Package postgresgorm provides a set of functions for the postgres gorm.
 package postgresgorm
 
 import (
@@ -15,6 +16,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/gromlog"
 )
 
+// NewGorm creates a new gorm.
 func NewGorm(cfg *GormOptions) (*gorm.DB, error) {
 	if cfg.DBName == "" {
 		return nil, errors.New("DBName is required in the config.")
@@ -68,6 +70,7 @@ func NewGorm(cfg *GormOptions) (*gorm.DB, error) {
 	return gormDb, nil
 }
 
+// createInMemoryDB creates a new in memory db.
 func createInMemoryDB() (*gorm.DB, error) {
 	// https://gorm.io/docs/connecting_to_the_database.html#SQLite
 	// https://github.com/glebarez/sqlite
@@ -81,6 +84,7 @@ func createInMemoryDB() (*gorm.DB, error) {
 	return db, err
 }
 
+// createSQLLiteDB creates a new sqlite db.
 func createSQLLiteDB(dbFilePath string) (*gorm.DB, error) {
 	// https://gorm.io/docs/connecting_to_the_database.html#SQLite
 	// https://github.com/glebarez/sqlite
@@ -94,10 +98,12 @@ func createSQLLiteDB(dbFilePath string) (*gorm.DB, error) {
 	return gormSQLLiteDB, err
 }
 
+// NewSQLDB creates a new sql db.
 func NewSQLDB(orm *gorm.DB) (*sql.DB, error) {
 	return orm.DB()
 }
 
+// createPostgresDB creates a new postgres db.
 func createPostgresDB(cfg *GormOptions) error {
 	var db *sql.DB
 

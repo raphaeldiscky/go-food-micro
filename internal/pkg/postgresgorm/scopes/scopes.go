@@ -1,3 +1,4 @@
+// Package scopes provides a set of functions for the scopes.
 package scopes
 
 import (
@@ -13,11 +14,10 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 )
 
+// AmountGreaterThan1000 returns the amount greater than 1000.
 // https://gorm.io/docs/advanced_query.html#Scopes
 // https://gorm.io/docs/scopes.html
-
 // After scopes, we should have a runner function like Find, Update, Delete
-
 func AmountGreaterThan1000(db *gorm.DB) *gorm.DB {
 	return db.Where("amount > ?", 1000)
 }
@@ -33,18 +33,21 @@ func SoftDeleted(db *gorm.DB) *gorm.DB {
 	return db.Unscoped().Where("deleted_at IS NOT NULL")
 }
 
+// FilterByTitle filters the items by title.
 func FilterByTitle(title string) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("title = ?", title)
 	}
 }
 
+// FilterByID filters the items by id.
 func FilterByID(id uuid.UUID) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Where("id = ?", id)
 	}
 }
 
+// FilterPaginate filters the items by pagination.
 func FilterPaginate[TDataModel any](
 	ctx context.Context,
 	listQuery *utils.ListQuery,

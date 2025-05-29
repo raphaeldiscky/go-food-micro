@@ -1,3 +1,4 @@
+// Package redis provides a set of functions for the redis package.
 package redis
 
 import (
@@ -8,6 +9,7 @@ import (
 	redis "github.com/redis/go-redis/v9"
 )
 
+// constants for the redis client.
 const (
 	maxRetries      = 5
 	minRetryBackoff = 300 * time.Millisecond
@@ -19,6 +21,7 @@ const (
 	poolTimeout     = 6 * time.Second
 )
 
+// NewRedisClient creates a new redis client.
 func NewRedisClient(cfg *RedisOptions) *redis.Client {
 	universalClient := redis.NewClient(&redis.Options{
 		Addr:            fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),

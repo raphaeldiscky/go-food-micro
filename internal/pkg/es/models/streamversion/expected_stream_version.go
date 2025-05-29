@@ -8,8 +8,11 @@ package streamversion
 type ExpectedStreamVersion int64
 
 const (
-	NoStream     ExpectedStreamVersion = -1
-	Any          ExpectedStreamVersion = -2
+	// NoStream is a expected stream version that represents a no stream.
+	NoStream ExpectedStreamVersion = -1
+	// Any is a expected stream version that represents a any.
+	Any ExpectedStreamVersion = -2
+	// StreamExists is a expected stream version that represents a stream exists.
 	StreamExists ExpectedStreamVersion = -3
 )
 

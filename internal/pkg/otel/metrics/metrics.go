@@ -105,7 +105,7 @@ func (o *OtelMetrics) initMetrics(
 
 	batchExporters := lo.Map(
 		metricsExporter,
-		func(item metric.Reader, index int) metric.Option {
+		func(item metric.Reader, _ int) metric.Option {
 			return metric.WithReader(item)
 		},
 	)

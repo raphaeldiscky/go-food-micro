@@ -1,3 +1,4 @@
+// Package postgresgorm provides a set of functions for the postgres gorm.
 package postgresgorm
 
 import (
@@ -8,7 +9,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 )
 
-// Module provided to fxlog
+// Module is the module for the postgres gorm.
 // https://uber-go.github.io/fx/modules.html
 var Module = fx.Module(
 	"gormpostgresfx",

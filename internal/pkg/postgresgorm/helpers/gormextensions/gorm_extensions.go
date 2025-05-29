@@ -1,3 +1,4 @@
+// Package gormextensions provides a set of functions for the gorm extensions.
 package gormextensions
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 )
 
+// GetTxFromContext gets the transaction from the context.
 func GetTxFromContext(ctx context.Context) (*gorm.DB, error) {
 	gCtx, gCtxOk := ctx.(*contracts.GormContext)
 	if gCtxOk {
@@ -26,6 +28,7 @@ func GetTxFromContext(ctx context.Context) (*gorm.DB, error) {
 	return tx, nil
 }
 
+// GetTxFromContextIfExists gets the transaction from the context if it exists.
 func GetTxFromContextIfExists(ctx context.Context) *gorm.DB {
 	gCtx, gCtxOk := ctx.(*contracts.GormContext)
 	if gCtxOk {
@@ -40,6 +43,7 @@ func GetTxFromContextIfExists(ctx context.Context) *gorm.DB {
 	return tx
 }
 
+// SetTxToContext sets the transaction to the context.
 func SetTxToContext(ctx context.Context, tx *gorm.DB) *contracts.GormContext {
 	newCtx := context.WithValue(ctx, constants.TxKey, tx)
 	gormContext := &contracts.GormContext{Tx: tx, Context: newCtx}
@@ -47,8 +51,8 @@ func SetTxToContext(ctx context.Context, tx *gorm.DB) *contracts.GormContext {
 	return gormContext
 }
 
+// Paginate paginates the items.
 // Ref: https://dev.to/rafaelgfirmino/pagination-using-gorm-scopes-3k5f
-
 func Paginate[TDataModel any, TEntity any](
 	ctx context.Context,
 	listQuery *utils.ListQuery,

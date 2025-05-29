@@ -21,10 +21,10 @@ type StreamNotFoundError interface {
 }
 
 // NewStreamNotFoundError creates a new stream not found error.
-func NewStreamNotFoundError(err error, streamId string) error {
+func NewStreamNotFoundError(err error, streamID string) error {
 	notFound := customErrors.NewNotFoundErrorWrap(
 		err,
-		fmt.Sprintf("stream with streamId %s not found", streamId),
+		fmt.Sprintf("stream with streamId %s not found", streamID),
 	)
 	customErr := customErrors.GetCustomError(notFound)
 	br := &streamNotFoundError{

@@ -1,3 +1,4 @@
+// Package gormdbcontext provides a set of functions for the gormdbcontext package.
 package gormdbcontext
 
 import (
@@ -10,16 +11,19 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
 )
 
+// gormDBContext is a struct that contains a gorm.DB.
 type gormDBContext struct {
 	db *gorm.DB
 }
 
+// NewGormDBContext creates a new gormDBContext.
 func NewGormDBContext(db *gorm.DB) contracts.GormDBContext {
 	c := &gormDBContext{db: db}
 
 	return c
 }
 
+// DB returns the gorm.DB.
 func (c *gormDBContext) DB() *gorm.DB {
 	return c.db
 }
@@ -48,6 +52,7 @@ func (c *gormDBContext) WithTxIfExists(
 	return NewGormDBContext(tx)
 }
 
+// RunInTx runs a transaction.
 func (c *gormDBContext) RunInTx(
 	ctx context.Context,
 	action contracts.ActionFunc,

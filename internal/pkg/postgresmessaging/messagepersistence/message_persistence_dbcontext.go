@@ -1,3 +1,4 @@
+// Package messagepersistence provides a set of functions for the message persistence.
 package messagepersistence
 
 import (
@@ -7,11 +8,13 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
 )
 
+// PostgresMessagePersistenceDBContext is a struct that contains the postgres message persistence db context.
 type PostgresMessagePersistenceDBContext struct {
 	// our dbcontext base
 	contracts.GormDBContext
 }
 
+// NewPostgresMessagePersistenceDBContext creates a new postgres message persistence db context.
 func NewPostgresMessagePersistenceDBContext(
 	db *gorm.DB,
 ) *PostgresMessagePersistenceDBContext {

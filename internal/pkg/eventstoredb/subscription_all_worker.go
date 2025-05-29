@@ -148,13 +148,13 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 			}
 
 			if event.EventAppeared != nil {
-				streamId := event.EventAppeared.OriginalEvent().StreamID
+				streamID := event.EventAppeared.OriginalEvent().StreamID
 				revision := event.EventAppeared.OriginalEvent().EventNumber
 				s.log.Info(
 					fmt.Sprintf(
 						"event appeared in subscription to all '%s'. streamId: %s, revision: %d",
 						s.subscriptionId,
-						streamId,
+						streamID,
 						revision,
 					),
 				)

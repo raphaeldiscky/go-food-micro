@@ -29,6 +29,7 @@ const (
 	Production           = "production"
 )
 
+// error titles.
 const (
 	ErrBadRequestTitle          = "Bad Request"
 	ErrConflictTitle            = "Conflict Error"
@@ -39,5 +40,5 @@ const (
 	ErrInternalServerErrorTitle = "Internal Server Error"
 	ErrDomainTitle              = "Domain Model Error"
 	ErrApplicationTitle         = "Application Service Error"
-	ErrApiTitle                 = "Api Error"
+	ErrAPITitle                 = "API Error"
 )

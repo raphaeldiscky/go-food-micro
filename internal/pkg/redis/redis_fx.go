@@ -1,3 +1,4 @@
+// Package redis provides a set of functions for the redis package.
 package redis
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Module provided to fxlog
 var (
 	// Module provided to fxlog
 	// https://uber-go.github.io/fx/modules.html
@@ -43,6 +45,7 @@ var (
 	)
 )
 
+// registerHooks registers the hooks for the redis client.
 func registerHooks(
 	lc fx.Lifecycle,
 	client redis.UniversalClient,

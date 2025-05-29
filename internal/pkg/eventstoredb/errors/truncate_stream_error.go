@@ -21,10 +21,10 @@ type TruncateStreamError interface {
 }
 
 // NewTruncateStreamError creates a new truncate stream error.
-func NewTruncateStreamError(err error, streamId string) error {
+func NewTruncateStreamError(err error, streamID string) error {
 	internal := customErrors.NewInternalServerErrorWrap(
 		err,
-		fmt.Sprintf("unable to truncate stream %s", streamId),
+		fmt.Sprintf("unable to truncate stream %s", streamID),
 	)
 	customErr := customErrors.GetCustomError(internal)
 	br := &truncateStreamError{

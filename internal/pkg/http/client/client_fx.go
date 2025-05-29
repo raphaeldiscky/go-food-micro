@@ -10,5 +10,5 @@ var Module = fx.Module("clientfx",
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
 	// - execute its func only if it requested
-	fx.Provide(NewHttpClient),
+	fx.Provide(NewHTTPClient),
 )

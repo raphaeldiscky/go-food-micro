@@ -1,3 +1,4 @@
+// Package messagepersistence provides a set of functions for the message persistence.
 package messagepersistence
 
 import (
@@ -14,22 +15,26 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// postgresMessagePersistenceService is a struct that contains the postgres message persistence service.
 type postgresMessagePersistenceService struct {
 	messagingDBContext *PostgresMessagePersistenceDBContext
 	messageSerializer  serializer.MessageSerializer
 	logger             logger.Logger
 }
 
+// Process processes the message.
 func (m *postgresMessagePersistenceService) Process(messageID string, ctx context.Context) error {
 	// TODO implement me
 	panic("implement me")
 }
 
+// ProcessAll processes all the messages.
 func (m *postgresMessagePersistenceService) ProcessAll(ctx context.Context) error {
 	// TODO implement me
 	panic("implement me")
 }
 
+// AddPublishMessage adds a publish message.
 func (m *postgresMessagePersistenceService) AddPublishMessage(
 	messageEnvelope types.MessageEnvelope,
 	ctx context.Context,
@@ -38,6 +43,7 @@ func (m *postgresMessagePersistenceService) AddPublishMessage(
 	panic("implement me")
 }
 
+// AddReceivedMessage adds a received message.
 func (m *postgresMessagePersistenceService) AddReceivedMessage(
 	messageEnvelope types.MessageEnvelope,
 	ctx context.Context,
@@ -46,6 +52,7 @@ func (m *postgresMessagePersistenceService) AddReceivedMessage(
 	panic("implement me")
 }
 
+// AddMessageCore adds a message core.
 func (m *postgresMessagePersistenceService) AddMessageCore(
 	ctx context.Context,
 	messageEnvelope types.MessageEnvelope,
@@ -96,6 +103,7 @@ func (m *postgresMessagePersistenceService) AddMessageCore(
 	return nil
 }
 
+// NewPostgresMessageService creates a new postgres message service.
 func NewPostgresMessageService(
 	postgresMessagePersistenceDBContext *PostgresMessagePersistenceDBContext,
 	l logger.Logger,
@@ -106,6 +114,7 @@ func NewPostgresMessageService(
 	}
 }
 
+// Add adds a message.
 func (m *postgresMessagePersistenceService) Add(
 	ctx context.Context,
 	storeMessage *persistmessage.StoreMessage,
@@ -126,6 +135,7 @@ func (m *postgresMessagePersistenceService) Add(
 	return nil
 }
 
+// Update updates a message.
 func (m *postgresMessagePersistenceService) Update(
 	ctx context.Context,
 	storeMessage *persistmessage.StoreMessage,
@@ -146,6 +156,7 @@ func (m *postgresMessagePersistenceService) Update(
 	return nil
 }
 
+// ChangeState changes the state of a message.
 func (m *postgresMessagePersistenceService) ChangeState(
 	ctx context.Context,
 	messageID uuid.UUID,

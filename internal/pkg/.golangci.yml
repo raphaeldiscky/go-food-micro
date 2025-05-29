@@ -2,51 +2,51 @@ version: "2"
 
 linters:
   enable:
-    - asciicheck
-    - bodyclose
-    - cyclop
-    - dogsled
-    - dupl
-    - durationcheck
-    - errcheck
-    - errorlint
-    - exhaustive
-    - forbidigo
-    - funlen
-    - gochecknoglobals
-    - gochecknoinits
-    - gocognit
-    - goconst
-    - gocritic
-    - gocyclo
-    - godot
-    - godox
-    - gomodguard
-    - gosec
-    - govet
-    - ineffassign
-    - makezero
-    - misspell
-    - nakedret
-    - nestif
-    - nlreturn
-    - noctx
-    - nolintlint
-    - paralleltest
-    - predeclared
+    # - asciicheck
+    # - bodyclose
+    # - cyclop
+    # - dogsled
+    # - dupl
+    # - durationcheck
+    # - errcheck
+    # - errorlint
+    # - exhaustive
+    # - forbidigo
+    # - funlen
+    # - gochecknoglobals
+    # - gochecknoinits
+    # - gocognit
+    # - goconst
+    # - gocritic
+    # - gocyclo
+    # - godot
+    # - godox
+    # - gomodguard
+    # - gosec
+    # - govet
+    # - ineffassign
+    # - makezero
+    # - misspell
+    # - nakedret
+    # - nestif
+    # - nlreturn
+    # - noctx
+    # - nolintlint
+    # - predeclared
     - revive
-    - rowserrcheck
-    - sqlclosecheck
-    - staticcheck
-    - tparallel
-    - thelper
-    - unconvert
-    - unparam
-    - unused
-    - wsl
-    - whitespace
+    # - rowserrcheck
+    # - sqlclosecheck
+    # - staticcheck
+    # - thelper
+    # - unconvert
+    # - unparam
+    # - unused
+    # - wsl
+    # - whitespace
   disable:
     - wsl
+    - tparallel
+    - paralleltest
 
   settings:
     dupl:

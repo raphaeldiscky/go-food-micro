@@ -21,10 +21,10 @@ type DeleteStreamError interface {
 }
 
 // NewDeleteStreamError creates a new delete stream error.
-func NewDeleteStreamError(err error, streamId string) error {
+func NewDeleteStreamError(err error, streamID string) error {
 	internal := customErrors.NewInternalServerErrorWrap(
 		err,
-		fmt.Sprintf("unable to delete stream %s", streamId),
+		fmt.Sprintf("unable to delete stream %s", streamID),
 	)
 	customErr := customErrors.GetCustomError(internal)
 

@@ -309,6 +309,7 @@ func (s *ServerHandler) HandleConn(_ context.Context, _ stats.ConnStats) {
 	// no-op
 }
 
+// TagRPC can attach some information to the given context.
 func (c *ClientHandler) TagRPC(
 	ctx context.Context,
 	info *stats.RPCTagInfo,
@@ -316,6 +317,7 @@ func (c *ClientHandler) TagRPC(
 	return c.tagRPC(ctx, info)
 }
 
+// HandleRPC processes the RPC stats.
 func (c *ClientHandler) HandleRPC(
 	ctx context.Context,
 	rpcStats stats.RPCStats,
@@ -323,6 +325,7 @@ func (c *ClientHandler) HandleRPC(
 	c.handleRPC(ctx, rpcStats)
 }
 
+// TagConn can attach some information to the given context.
 func (c *ClientHandler) TagConn(
 	ctx context.Context,
 	_ *stats.ConnTagInfo,
@@ -331,6 +334,7 @@ func (c *ClientHandler) TagConn(
 	return ctx
 }
 
+// HandleConn processes the Conn stats.
 func (c *ClientHandler) HandleConn(
 	_ context.Context,
 	_ stats.ConnStats,

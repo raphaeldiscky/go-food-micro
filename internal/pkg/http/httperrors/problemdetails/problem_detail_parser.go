@@ -16,12 +16,15 @@ import (
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 )
 
+// ProblemDetailParser is a struct that represents a problem detail parser.
 type ProblemDetailParser struct {
 	internalErrors map[reflect.Type]func(err error) ProblemDetailErr
 }
 
+// ErrorParserFunc is a function that parses an error and returns a problem detail error.
 type ErrorParserFunc func(err error) ProblemDetailErr
 
+// NewProblemDetailParser creates a new problem detail parser.
 func NewProblemDetailParser(
 	builder func(builder *OptionBuilder),
 ) *ProblemDetailParser {
@@ -32,6 +35,7 @@ func NewProblemDetailParser(
 	return &ProblemDetailParser{internalErrors: items}
 }
 
+// ResolveError resolves an error and returns a problem detail error.
 func (p *ProblemDetailParser) ResolveError(err error) ProblemDetailErr {
 	errType := typeMapper.GetReflectType(err)
 	problem := p.internalErrors[errType]
@@ -42,6 +46,7 @@ func (p *ProblemDetailParser) ResolveError(err error) ProblemDetailErr {
 	return nil
 }
 
+// ParseError parses an error and returns a problem detail error.
 func ParseError(err error) ProblemDetailErr {
 	stackTrace := errorUtils.ErrorsWithStack(err)
 	customErr := customErrors.GetCustomError(err)

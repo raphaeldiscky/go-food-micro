@@ -23,9 +23,9 @@ func NewRabbitmqInMemoryHarnesses() *RabbitmqInMemoryHarnesses {
 
 // PublishMessage publishes a message.
 func (r *RabbitmqInMemoryHarnesses) PublishMessage(
-	ctx context.Context,
+	_ context.Context,
 	message types.IMessage,
-	meta metadata.Metadata,
+	_ metadata.Metadata,
 ) error {
 	r.publishedMessage = append(r.publishedMessage, message)
 
@@ -36,8 +36,8 @@ func (r *RabbitmqInMemoryHarnesses) PublishMessage(
 func (r *RabbitmqInMemoryHarnesses) PublishMessageWithTopicName(
 	ctx context.Context,
 	message types.IMessage,
-	meta metadata.Metadata,
-	topicOrExchangeName string,
+	_ metadata.Metadata,
+	_ string,
 ) error {
 	r.publishedMessage = append(r.publishedMessage, message)
 
@@ -45,11 +45,11 @@ func (r *RabbitmqInMemoryHarnesses) PublishMessageWithTopicName(
 }
 
 // IsProduced checks if a message is produced.
-func (r *RabbitmqInMemoryHarnesses) IsProduced(f func(message types.IMessage)) {
+func (r *RabbitmqInMemoryHarnesses) IsProduced(_ func(message types.IMessage)) {
 }
 
 // AddMessageConsumedHandler adds a message consumed handler.
-func (r *RabbitmqInMemoryHarnesses) AddMessageConsumedHandler(f func(message types.IMessage)) {
+func (r *RabbitmqInMemoryHarnesses) AddMessageConsumedHandler(_ func(message types.IMessage)) {
 }
 
 // Start starts the rabbitmq in memory harnesss.
@@ -74,8 +74,8 @@ func (r *RabbitmqInMemoryHarnesses) ConnectConsumerHandler(
 
 // ConnectConsumer connects a consumer.
 func (r *RabbitmqInMemoryHarnesses) ConnectConsumer(
-	messageType types.IMessage,
-	consumer consumer2.Consumer,
+	_ types.IMessage,
+	_ consumer2.Consumer,
 ) error {
 	return nil
 }

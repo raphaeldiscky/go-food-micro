@@ -93,17 +93,17 @@ func (e *esdbSubscriptionCheckpointRepository) Load(
 
 // Store stores a subscription checkpoint.
 func (e *esdbSubscriptionCheckpointRepository) Store(
-	subscriptionId string,
+	subscriptionID string,
 	position uint64,
 	ctx context.Context,
 ) error {
 	checkpoint := &CheckpointStored{
-		SubscriptionId: subscriptionId,
+		SubscriptionId: subscriptionID,
 		Position:       position,
 		CheckpointAt:   time.Now(),
 		Event:          events.NewEvent(typeMapper.GetTypeName(&CheckpointStored{})),
 	}
-	streamName := getCheckpointStreamName(subscriptionId)
+	streamName := getCheckpointStreamName(subscriptionID)
 	eventData, err := e.esdbSerilizer.SerializeObject(checkpoint, nil)
 	if err != nil {
 		return errors.WrapIf(err, "esdbSerilizer.Serialize")

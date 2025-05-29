@@ -1,3 +1,4 @@
+// Package rabbitmq provides a set of functions for the rabbitmq package.
 package rabbitmq
 
 import (

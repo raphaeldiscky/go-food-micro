@@ -7,7 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 )
 
-// Module provided to fxlog
+// Module is a module that provides a environment.Environment.
 // https://uber-go.github.io/fx/modules.html
 var Module = fx.Module(
 	"configfx",
@@ -16,6 +16,7 @@ var Module = fx.Module(
 	}),
 )
 
+// ModuleFunc is a function that returns a fx.Option.
 var ModuleFunc = func(e environment.Environment) fx.Option {
 	return fx.Module(
 		"configfx",

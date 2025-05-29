@@ -1,3 +1,4 @@
+// Package postgresgorm provides a set of functions for the postgres gorm.
 package postgresgorm
 
 import (
@@ -11,8 +12,10 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// optionName is the name of the option.
 var optionName = strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[GormOptions]())
 
+// GormOptions is a struct that contains the gorm options.
 type GormOptions struct {
 	UseInMemory   bool   `mapstructure:"useInMemory"`
 	UseSQLLite    bool   `mapstructure:"useSqlLite"`
@@ -25,6 +28,7 @@ type GormOptions struct {
 	EnableTracing bool   `mapstructure:"enableTracing" default:"true"`
 }
 
+// Dns returns the dns.
 func (h *GormOptions) Dns() string {
 	if h.UseInMemory {
 		return ""
@@ -48,6 +52,7 @@ func (h *GormOptions) Dns() string {
 	return datasource
 }
 
+// provideConfig provides the gorm options.
 func provideConfig(environment environment.Environment) (*GormOptions, error) {
 	return config.BindConfigKey[*GormOptions](optionName, environment)
 }

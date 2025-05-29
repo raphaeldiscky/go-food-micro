@@ -56,7 +56,7 @@ func registerHooks(
 	logger logger.Logger,
 ) {
 	lc.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
+		OnStart: func(_ context.Context) error {
 			if metrics.appMetrics == nil {
 				return nil
 			}

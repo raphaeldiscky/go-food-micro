@@ -1,3 +1,4 @@
+// Package testcontainer provides a set of functions for the rabbitmq test container.
 package testcontainer
 
 import (
@@ -14,6 +15,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 )
 
+// CreatingContainerOptions creates a new container options.
 func CreatingContainerOptions(
 	ctx context.Context,
 	t *testing.T,
@@ -52,7 +54,7 @@ func CreatingContainerOptions(
 		return nil, err
 	}
 
-	//// Clean up the container after the test is complete
+	// Clean up the container after the test is complete
 	t.Cleanup(func() {
 		if terr := dbContainer.Terminate(ctx); terr != nil {
 			t.Fatalf("failed to terminate container: %s", err)

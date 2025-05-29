@@ -1,3 +1,4 @@
+// Package producer provides a set of functions for the rabbitmq producer.
 package producer
 
 import (
@@ -11,6 +12,7 @@ import (
 	types2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// producerFactory is a struct that contains the producer factory.
 type producerFactory struct {
 	connection      types2.IConnection
 	logger          logger.Logger
@@ -18,6 +20,7 @@ type producerFactory struct {
 	rabbitmqOptions *config.RabbitmqOptions
 }
 
+// NewProducerFactory creates a new producer factory.
 func NewProducerFactory(
 	rabbitmqOptions *config.RabbitmqOptions,
 	connection types2.IConnection,
@@ -32,6 +35,7 @@ func NewProducerFactory(
 	}
 }
 
+// CreateProducer creates a new producer.
 func (p *producerFactory) CreateProducer(
 	rabbitmqProducersConfiguration map[string]*producerConfigurations.RabbitMQProducerConfiguration,
 	isProducedNotifications ...func(message types.IMessage),

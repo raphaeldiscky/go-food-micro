@@ -1,5 +1,5 @@
-// Package reflectionHelper provides a reflection helper.
-package reflectionHelper
+// Package reflectionhelper provides a reflection helper.
+package reflectionhelper
 
 // ref: https://gist.github.com/drewolson/4771479
 // https://stackoverflow.com/a/60598827/581476
@@ -38,10 +38,10 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 		// for all exported fields (public)
 		if field.CanInterface() {
 			return field.Interface()
-		} else {
-			// for all unexported fields (private)
-			return reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
 		}
+		// for all unexported fields (private)
+		return reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
+
 	} else if v.Kind() == reflect.Struct {
 		// for all exported fields (public)
 		val := v
@@ -51,15 +51,14 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 		}
 		if field.CanInterface() {
 			return field.Interface()
-		} else {
-			// for all unexported fields (private)
-			rs2 := reflect.New(val.Type()).Elem()
-			rs2.Set(val)
-			val = rs2.Field(index)
-			val = reflect.NewAt(val.Type(), unsafe.Pointer(val.UnsafeAddr())).Elem()
-
-			return val.Interface()
 		}
+		// for all unexported fields (private)
+		rs2 := reflect.New(val.Type()).Elem()
+		rs2.Set(val)
+		val = rs2.Field(index)
+		val = reflect.NewAt(val.Type(), unsafe.Pointer(val.UnsafeAddr())).Elem()
+
+		return val.Interface()
 	}
 
 	return nil
@@ -77,10 +76,10 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 		// for all exported fields (public)
 		if field.CanInterface() {
 			return field.Interface()
-		} else {
-			// for all unexported fields (private)
-			return reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
 		}
+		// for all unexported fields (private)
+		return reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Interface()
+
 	} else if v.Kind() == reflect.Struct {
 		// for all exported fields (public)
 		val := v
@@ -90,15 +89,14 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 		}
 		if field.CanInterface() {
 			return field.Interface()
-		} else {
-			// for all unexported fields (private)
-			rs2 := reflect.New(val.Type()).Elem()
-			rs2.Set(val)
-			val = rs2.FieldByName(name)
-			val = reflect.NewAt(val.Type(), unsafe.Pointer(val.UnsafeAddr())).Elem()
-
-			return val.Interface()
 		}
+		// for all unexported fields (private)
+		rs2 := reflect.New(val.Type()).Elem()
+		rs2.Set(val)
+		val = rs2.FieldByName(name)
+		val = reflect.NewAt(val.Type(), unsafe.Pointer(val.UnsafeAddr())).Elem()
+
+		return val.Interface()
 	}
 
 	return nil
@@ -188,12 +186,11 @@ func SetFieldValueByName[T any](object T, name string, value interface{}) {
 func GetFieldValue(field reflect.Value) reflect.Value {
 	if field.CanInterface() {
 		return field
-	} else {
-		// for all unexported fields (private)
-		res := reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem()
-
-		return res
 	}
+	// for all unexported fields (private)
+	res := reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem()
+
+	return res
 }
 
 // SetFieldValue sets the field value.
@@ -283,6 +280,7 @@ func SetValue[T any](data T, value interface{}) {
 	}
 }
 
+// ObjectTypePath returns the object type path.
 func ObjectTypePath(obj any) string {
 	objType := reflect.TypeOf(obj).Elem()
 	path := fmt.Sprintf("%s.%s", objType.PkgPath(), objType.Name())
@@ -290,12 +288,14 @@ func ObjectTypePath(obj any) string {
 	return path
 }
 
+// TypePath returns the type path.
 func TypePath[T any]() string {
 	var msg T
 
 	return ObjectTypePath(msg)
 }
 
+// MethodPath returns the method path.
 func MethodPath(f interface{}) string {
 	pointerName := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
 	lastSlashIdx := strings.LastIndex(pointerName, "/")

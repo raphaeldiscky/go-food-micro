@@ -1,3 +1,4 @@
+// Package fxapp provides a set of functions for the fxapp package.
 package fxapp
 
 import (
@@ -10,6 +11,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// application is a struct that represents a application.
 type application struct {
 	provides    []interface{}
 	decorates   []interface{}
@@ -20,6 +22,7 @@ type application struct {
 	environment environment.Environment
 }
 
+// NewApplication creates a new application.
 func NewApplication(
 	providers []interface{},
 	decorates []interface{},
@@ -36,18 +39,22 @@ func NewApplication(
 	}
 }
 
+// ResolveFunc resolves a function.
 func (a *application) ResolveFunc(function interface{}) {
 	a.invokes = append(a.invokes, function)
 }
 
+// ResolveFuncWithParamTag resolves a function with a param tag.
 func (a *application) ResolveFuncWithParamTag(function interface{}, paramTagName string) {
 	a.invokes = append(a.invokes, fx.Annotate(function, fx.ParamTags(paramTagName)))
 }
 
+// RegisterHook registers a hook.
 func (a *application) RegisterHook(function interface{}) {
 	a.invokes = append(a.invokes, function)
 }
 
+// Run runs the application.
 func (a *application) Run() {
 	// build phase of container will do in this stage, containing provides and invokes but app not started yet and will be started in the future with `fxApp.Register`
 	fxApp := CreateFxApp(a)
@@ -83,6 +90,7 @@ func (a *application) Run() {
 	//}
 }
 
+// Start starts the application.
 func (a *application) Start(ctx context.Context) error {
 	// build phase of container will do in this stage, containing provides and invokes but app not started yet and will be started in the future with `fxApp.Register`
 	fxApp := CreateFxApp(a)
@@ -91,6 +99,7 @@ func (a *application) Start(ctx context.Context) error {
 	return fxApp.Start(ctx)
 }
 
+// Stop stops the application.
 func (a *application) Stop(ctx context.Context) error {
 	if a.fxapp == nil {
 		a.logger.Fatal("Failed to stop because application not started.")
@@ -99,6 +108,7 @@ func (a *application) Stop(ctx context.Context) error {
 	return a.fxapp.Stop(ctx)
 }
 
+// Wait waits for the application to finish.
 func (a *application) Wait() <-chan fx.ShutdownSignal {
 	if a.fxapp == nil {
 		a.logger.Fatal("Failed to wait because application not started.")
@@ -107,10 +117,12 @@ func (a *application) Wait() <-chan fx.ShutdownSignal {
 	return a.fxapp.Wait()
 }
 
+// Logger returns the logger.
 func (a *application) Logger() logger.Logger {
 	return a.logger
 }
 
+// Environment returns the environment.
 func (a *application) Environment() environment.Environment {
 	return a.environment
 }

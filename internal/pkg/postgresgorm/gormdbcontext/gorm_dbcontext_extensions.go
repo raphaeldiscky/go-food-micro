@@ -1,3 +1,4 @@
+// Package gormdbcontext provides a set of extensions for the gormdbcontext package.
 package gormdbcontext
 
 import (
@@ -16,6 +17,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// Exists checks if a data model exists.
 func Exists[TDataModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,
@@ -30,6 +32,7 @@ func Exists[TDataModel interface{}](
 	return count > 0
 }
 
+// FindModelByID finds a model by id.
 func FindModelByID[TDataModel interface{}, TModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,
@@ -72,6 +75,7 @@ func FindModelByID[TDataModel interface{}, TModel interface{}](
 	return resultModel, nil
 }
 
+// FindDataModelByID finds a data model by id.
 func FindDataModelByID[TDataModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,

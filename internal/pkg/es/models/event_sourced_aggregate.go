@@ -161,7 +161,7 @@ func (a *EventSourcedAggregateRoot) CurrentVersion() int64 {
 // AddDomainEvents adds a new domain_events event to the aggregate's uncommitted events.
 func (a *EventSourcedAggregateRoot) AddDomainEvents(event domain.IDomainEvent) error {
 	exists := linq.From(a.uncommittedEvents).AnyWithT(func(e domain.IDomainEvent) bool {
-		return e.GetEventId() == event.GetEventId()
+		return e.GetEventID() == event.GetEventID()
 	})
 
 	if exists {

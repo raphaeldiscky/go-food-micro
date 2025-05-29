@@ -1,3 +1,4 @@
+// Package bus provides a rabbitmq bus.
 package bus
 
 import (
@@ -30,6 +31,7 @@ type RabbitmqBus interface {
 	consumerConfigurations.RabbitMQConsumerConnector
 }
 
+// rabbitmqBus is a struct that represents a rabbitmq bus.
 type rabbitmqBus struct {
 	messageTypeConsumers    map[reflect.Type][]consumer2.Consumer
 	producer                producer.Producer
@@ -42,6 +44,7 @@ type rabbitmqBus struct {
 	isProducedNotifications []func(message types.IMessage)
 }
 
+// NewRabbitmqBus creates a new rabbitmq bus.
 func NewRabbitmqBus(
 	logger logger.Logger,
 	consumerFactory consumercontracts.ConsumerFactory,
@@ -125,15 +128,17 @@ func NewRabbitmqBus(
 	return rabbitBus, nil
 }
 
+// IsConsumed adds a notification to the rabbitmq bus.
 func (r *rabbitmqBus) IsConsumed(h func(message types.IMessage)) {
 	r.isConsumedNotifications = append(r.isConsumedNotifications, h)
 }
 
+// IsProduced adds a notification to the rabbitmq bus.
 func (r *rabbitmqBus) IsProduced(h func(message types.IMessage)) {
 	r.isProducedNotifications = append(r.isProducedNotifications, h)
 }
 
-// ConnectConsumer Add a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type.
+// ConnectConsumer adds a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type.
 func (r *rabbitmqBus) ConnectConsumer(
 	messageType types.IMessage,
 	consumer consumer2.Consumer,
@@ -148,7 +153,7 @@ func (r *rabbitmqBus) ConnectConsumer(
 	return nil
 }
 
-// ConnectRabbitMQConsumer Add a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type.
+// ConnectRabbitMQConsumer adds a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type.
 func (r *rabbitmqBus) ConnectRabbitMQConsumer(
 	messageType types.IMessage,
 	consumerBuilderFunc consumerConfigurations.RabbitMQConsumerConfigurationBuilderFuc,
@@ -187,7 +192,7 @@ func (r *rabbitmqBus) ConnectRabbitMQConsumer(
 	return nil
 }
 
-// ConnectConsumerHandler Add handler to existing consumer. creates new consumer if not exist.
+// ConnectConsumerHandler adds a handler to existing consumer. creates new consumer if not exist.
 func (r *rabbitmqBus) ConnectConsumerHandler(
 	messageType types.IMessage,
 	consumerHandler consumer2.ConsumerHandler,
@@ -230,6 +235,7 @@ func (r *rabbitmqBus) ConnectConsumerHandler(
 	return nil
 }
 
+// Start starts the rabbitmq bus.
 func (r *rabbitmqBus) Start(ctx context.Context) error {
 	r.logger.Infof(
 		"rabbitmq is running on host: %s",
@@ -275,6 +281,7 @@ func (r *rabbitmqBus) Start(ctx context.Context) error {
 	return nil
 }
 
+// Stop stops the rabbitmq bus.
 func (r *rabbitmqBus) Stop() error {
 	waitGroup := sync.WaitGroup{}
 
@@ -302,6 +309,7 @@ func (r *rabbitmqBus) Stop() error {
 	return nil
 }
 
+// PublishMessage publishes a message to the rabbitmq bus.
 func (r *rabbitmqBus) PublishMessage(
 	ctx context.Context,
 	message types.IMessage,
@@ -314,6 +322,7 @@ func (r *rabbitmqBus) PublishMessage(
 	return r.producer.PublishMessage(ctx, message, meta)
 }
 
+// PublishMessageWithTopicName publishes a message to the rabbitmq bus with a topic name.
 func (r *rabbitmqBus) PublishMessageWithTopicName(
 	ctx context.Context,
 	message types.IMessage,

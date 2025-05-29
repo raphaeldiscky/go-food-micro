@@ -50,21 +50,21 @@ func (l *GormCustomLogger) LogMode(level gormlogger.LogLevel) gormlogger.Interfa
 }
 
 // Info prints info messages.
-func (l GormCustomLogger) Info(ctx context.Context, str string, args ...interface{}) {
+func (l GormCustomLogger) Info(_ context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Info {
 		l.Debugf(str, args...)
 	}
 }
 
 // Warn prints warn messages.
-func (l GormCustomLogger) Warn(ctx context.Context, str string, args ...interface{}) {
+func (l GormCustomLogger) Warn(_ context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Warn {
 		l.Warnf(str, args...)
 	}
 }
 
 // Error prints error messages.
-func (l GormCustomLogger) Error(ctx context.Context, str string, args ...interface{}) {
+func (l GormCustomLogger) Error(_ context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Error {
 		l.Errorf(str, args...)
 	}
@@ -72,10 +72,10 @@ func (l GormCustomLogger) Error(ctx context.Context, str string, args ...interfa
 
 // Trace prints trace messages.
 func (l GormCustomLogger) Trace(
-	ctx context.Context,
+	_ context.Context,
 	begin time.Time,
 	fc func() (string, int64),
-	err error,
+	_ error,
 ) {
 	if l.LogLevel <= 0 {
 		return

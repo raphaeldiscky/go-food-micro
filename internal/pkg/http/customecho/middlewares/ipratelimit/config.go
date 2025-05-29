@@ -17,6 +17,7 @@ var defualtConfig = config{
 	limit:  1000,
 }
 
+// Option is a function that applies a config.
 type Option interface {
 	apply(*config)
 }

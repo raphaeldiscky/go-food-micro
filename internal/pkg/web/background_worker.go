@@ -11,10 +11,11 @@ type Worker interface {
 	Stop(ctx context.Context) error
 }
 
-// ExecutionFunc is a function that represents a execution func.
 type (
+	// ExecutionFunc is a function that represents a execution func.
 	ExecutionFunc func(ctx context.Context) error
-	StopFunc      func(ctx context.Context) error
+	// StopFunc is a function that represents a stop func.
+	StopFunc func(ctx context.Context) error
 )
 
 // BackgroundWorker is a struct that represents a background worker.

@@ -11,7 +11,7 @@ import (
 
 // IEvent is a event.
 type IEvent interface {
-	GetEventId() uuid.UUID
+	GetEventID() uuid.UUID
 	GetOccurredOn() time.Time
 	// GetEventTypeName get short type name of the event - we use event short type name instead of full type name because this event in other receiver packages could have different package name
 	GetEventTypeName() string
@@ -34,8 +34,8 @@ func NewEvent(eventType string) *Event {
 	}
 }
 
-// GetEventId gets the event id.
-func (e *Event) GetEventId() uuid.UUID {
+// GetEventID gets the event id.
+func (e *Event) GetEventID() uuid.UUID {
 	return e.EventId
 }
 

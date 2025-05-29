@@ -34,7 +34,9 @@ var (
 )
 
 const (
+	// SrcKeyIndex is the index of the source key.
 	SrcKeyIndex = iota
+	// DestKeyIndex is the index of the destination key.
 	DestKeyIndex
 )
 
@@ -213,9 +215,9 @@ func Map[TDes any, TSrc any](src TSrc) (TDes, error) {
 			}).ToSlice(&des)
 
 			return des, nil
-		} else {
-			return fnReflect.Call([]reflect.Value{reflect.ValueOf(src)})[0].Interface().(TDes), nil
 		}
+
+		return fnReflect.Call([]reflect.Value{reflect.ValueOf(src)})[0].Interface().(TDes), nil
 	}
 
 	desTypeValue := reflect.ValueOf(&des).Elem()

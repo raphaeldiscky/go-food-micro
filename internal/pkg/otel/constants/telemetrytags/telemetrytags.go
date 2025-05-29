@@ -75,7 +75,7 @@ type netHTTP struct {
 	HostName  string
 }
 
-// app constants.
+// App constants.
 var App = app{
 	DefaultSourceName: "app",
 	Consumer:          "app.consumer",
@@ -108,7 +108,7 @@ var App = app{
 	MessageType:       "app.message_type",
 }
 
-// exceptions constants.
+// Exceptions constants.
 var Exceptions = exceptions{
 	EventName:  "exception",
 	Type:       "exception.type",
@@ -116,13 +116,13 @@ var Exceptions = exceptions{
 	Stacktrace: "exception.stacktrace",
 }
 
-// general constants.
+// General constants.
 var General = general{}
 
-// grpc constants.
+// Grpc constants.
 var Grpc = grpc{}
 
-// messaging constants.
+// Messaging constants.
 var Messaging = messaging{
 	System:          "messaging.system",
 	Destination:     "messaging.destination",
@@ -135,7 +135,7 @@ var Messaging = messaging{
 	Operation:       "messaging.operation",
 }
 
-// netHTTP constants.
+// NetHTTP constants.
 var NetHTTP = netHTTP{
 	Transport: "net.transport",
 	PeerIp:    "net.peer.ip",

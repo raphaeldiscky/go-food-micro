@@ -27,8 +27,8 @@ func (m Metadata) GetTime(key string) time.Time {
 	return *new(time.Time)
 }
 
-// ToJson is a function that returns the json value of the metadata.
-func (m Metadata) ToJson() string {
+// ToJSON is a function that returns the json value of the metadata.
+func (m Metadata) ToJSON() string {
 	marshal, err := json.Marshal(m)
 	if err != nil {
 		return ""

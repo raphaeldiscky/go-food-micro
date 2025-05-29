@@ -120,7 +120,7 @@ func getTraceOptions(
 		attribute.Key(tracing.MessageName).
 			String(messageHeader.GetMessageName(*meta)),
 		attribute.Key(tracing.Payload).String(payload),
-		attribute.String(tracing.Headers, meta.ToJson()),
+		attribute.String(tracing.Headers, meta.ToJSON()),
 		attribute.Key(constants.Timestamp).Int64(time.Now().UnixMilli()),
 		semconv.MessagingDestinationName(producerTracingOptions.Destination),
 		semconv.MessagingSystemKey.String(

@@ -1,3 +1,4 @@
+// Package otelmetrics provides a set of metrics for the http server.
 package otelmetrics
 
 // ref:https://github.com/open-telemetry/opentelemetry-go/blob/main/example/prometheus/main.go

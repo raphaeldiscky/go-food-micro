@@ -44,8 +44,8 @@ func WaitUntilConditionMet(conditionToMet func() bool, timeout ...time.Duration)
 	return nil
 }
 
-// HttpRecorder records the http request and response.
-func HttpRecorder(
+// HTTPRecorder records the http request and response.
+func HTTPRecorder(
 	t *testing.T,
 	e *echo.Echo,
 	req *http.Request,

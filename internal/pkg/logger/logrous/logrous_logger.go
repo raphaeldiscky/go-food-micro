@@ -229,7 +229,7 @@ func (l *logrusLogger) GrpcClientInterceptorLogger(
 
 // mapToFields maps fields to logrus fields.
 func (l *logrusLogger) mapToFields(
-	fields map[string]interface{},
+	_ map[string]interface{},
 ) *logrus.Entry {
 	return l.logger.WithFields(logrus.Fields{"ss": 1})
 }

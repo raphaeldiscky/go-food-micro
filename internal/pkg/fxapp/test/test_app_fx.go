@@ -12,6 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 )
 
+// CreateFxTestApp creates a new fx test app.
 func CreateFxTestApp(
 	tb fxtest.TB,
 	provides []interface{},

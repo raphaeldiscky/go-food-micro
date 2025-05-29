@@ -1,3 +1,4 @@
+// Package postgressqlx provides a set of functions for the postgressqlx.
 package postgressqlx
 
 import (
@@ -8,13 +9,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
-// Module provided to fxlog
+// Module is the module for the postgressqlx.
 // https://uber-go.github.io/fx/modules.html
 var Module = fx.Module("postgressqlxfx",
 	fx.Provide(NewSqlxConn, provideConfig),
 	fx.Invoke(registerHooks),
 )
 
+// registerHooks registers the hooks for the postgressqlx.
 func registerHooks(lc fx.Lifecycle, pgxClient *Sqlx, logger logger.Logger) {
 	lc.Append(fx.Hook{
 		OnStop: func(ctx context.Context) error {

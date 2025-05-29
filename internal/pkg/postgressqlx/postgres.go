@@ -1,3 +1,4 @@
+// Package postgressqlx provides a set of functions for the postgressqlx.
 package postgressqlx
 
 import (
@@ -18,6 +19,7 @@ import (
 	goqu "github.com/doug-martin/goqu/v9"
 )
 
+// Sqlx is a struct that contains the sqlx.
 type Sqlx struct {
 	SqlxDB          *sqlx.DB
 	DB              *sql.DB
@@ -26,7 +28,7 @@ type Sqlx struct {
 	config          *PostgresSqlxOptions
 }
 
-// NewSqlxConn creates a database connection with appropriate pool configuration
+// NewSqlxConn creates a database connection with appropriate pool configuration.
 // and runs migration to prepare database.
 //
 // Migration will be omitted if appropriate config parameter set.

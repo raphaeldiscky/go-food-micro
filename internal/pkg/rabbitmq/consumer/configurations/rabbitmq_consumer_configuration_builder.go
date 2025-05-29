@@ -1,3 +1,4 @@
+// Package configurations provides a set of functions for the rabbitmq consumer configurations.
 package configurations
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 )
 
+// RabbitMQConsumerConfigurationBuilder is a interface that contains the rabbitmq consumer configuration builder.
 type RabbitMQConsumerConfigurationBuilder interface {
 	WithHandlers(
 		consumerBuilderFunc messageConsumer.ConsumerHandlerConfigurationBuilderFunc,

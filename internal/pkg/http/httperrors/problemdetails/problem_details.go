@@ -15,12 +15,15 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// ContentTypeJSON is the content type for the JSON.
 const (
 	ContentTypeJSON = "application_exceptions/problem+json"
 )
 
+// ProblemDetailFunc is a function that returns a problem detail error.
 type ProblemDetailFunc[E error] func(err E) ProblemDetailErr
 
+// internalErrorMaps is a map of internal error maps.
 var internalErrorMaps = map[reflect.Type]func(err error) ProblemDetailErr{}
 
 // ProblemDetailErr ProblemDetail error interface.
@@ -64,50 +67,60 @@ func (p *problemDetail) Error() string {
 	)
 }
 
+// GetStatus gets the status.
 func (p *problemDetail) GetStatus() int {
 	return p.Status
 }
 
+// SetStatus sets the status.
 func (p *problemDetail) SetStatus(status int) ProblemDetailErr {
 	p.Status = status
 
 	return p
 }
 
+// GetTitle gets the title.
 func (p *problemDetail) GetTitle() string {
 	return p.Title
 }
 
+// SetTitle sets the title.
 func (p *problemDetail) SetTitle(title string) ProblemDetailErr {
 	p.Title = title
 
 	return p
 }
 
+// GetType gets the type.
 func (p *problemDetail) GetType() string {
 	return p.Type
 }
 
+// SetType sets the type.
 func (p *problemDetail) SetType(typ string) ProblemDetailErr {
 	p.Type = typ
 
 	return p
 }
 
+// GetDetail gets the detail.
 func (p *problemDetail) GetDetail() string {
 	return p.Detail
 }
 
+// SetDetail sets the detail.
 func (p *problemDetail) SetDetail(detail string) ProblemDetailErr {
 	p.Detail = detail
 
 	return p
 }
 
+// GetStackTrace gets the stack trace.
 func (p *problemDetail) GetStackTrace() string {
 	return p.StackTrace
 }
 
+// SetStackTrace sets the stack trace.
 func (p *problemDetail) SetStackTrace(stackTrace string) ProblemDetailErr {
 	p.StackTrace = stackTrace
 
@@ -160,6 +173,7 @@ func NewProblemDetailFromCodeAndDetail(
 	}
 }
 
+// Map maps the problem detail.
 func Map[E error](problem ProblemDetailFunc[E]) {
 	errorType := typeMapper.GetGenericTypeByT[E]()
 	if errorType.Kind() == reflect.Interface {
@@ -186,6 +200,7 @@ func Map[E error](problem ProblemDetailFunc[E]) {
 	}
 }
 
+// ResolveProblemDetail resolves the problem detail.
 func ResolveProblemDetail(err error) ProblemDetailErr {
 	resolvedErr := err
 	for {
@@ -220,6 +235,7 @@ func WriteTo(p ProblemDetailErr, w http.ResponseWriter) (int, error) {
 	return w.Write(marshal)
 }
 
+// writeHeaderTo writes the header to the response writer.
 func writeHeaderTo(p ProblemDetailErr, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", ContentTypeJSON)
 	status := p.GetStatus()
@@ -230,6 +246,7 @@ func writeHeaderTo(p ProblemDetailErr, w http.ResponseWriter) {
 	w.WriteHeader(status)
 }
 
+// getDefaultType returns the default type.
 func getDefaultType(statusCode int) string {
 	return fmt.Sprintf("https://httpstatuses.io/%d", statusCode)
 }

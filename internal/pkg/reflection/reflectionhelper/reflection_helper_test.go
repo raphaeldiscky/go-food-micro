@@ -1,5 +1,5 @@
-// Package reflectionHelper provides a reflection helper.
-package reflectionHelper
+// Package reflectionhelper provides a reflection helper.
+package reflectionhelper
 
 import (
 	"reflect"

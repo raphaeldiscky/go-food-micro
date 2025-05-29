@@ -1,5 +1,5 @@
 // Package customTypes provides a module for the custom types.
-package customTypes
+package customtypes
 
 // https://gist.github.com/lummie/2cd6240378372079a8be7df782b380fc
 // https://stackoverflow.com/questions/25845172/parsing-rfc-3339-iso-8601-date-time-string-in-go

@@ -21,10 +21,10 @@ type AppendToStreamError interface {
 }
 
 // NewAppendToStreamError creates a new append to stream error.
-func NewAppendToStreamError(err error, streamId string) error {
+func NewAppendToStreamError(err error, streamID string) error {
 	bad := customErrors.NewBadRequestErrorWrap(
 		err,
-		fmt.Sprintf("unable to append events to stream %s", streamId),
+		fmt.Sprintf("unable to append events to stream %s", streamID),
 	)
 	customErr := customErrors.GetCustomError(bad)
 	br := &appendToStreamError{
