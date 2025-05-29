@@ -5,27 +5,28 @@ import (
 	"net/http"
 	"reflect"
 
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/codes"
+	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
+	"go.opentelemetry.io/otel/trace"
+
+	linq "github.com/ahmetb/go-linq/v3"
+	trace2 "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/telemetrytags"
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
-
-	linq "github.com/ahmetb/go-linq/v3"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/codes"
-	trace2 "go.opentelemetry.io/otel/sdk/trace"
-	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
-	"go.opentelemetry.io/otel/trace"
 )
 
 type traceContextKeyType int
 
 const parentSpanKey traceContextKeyType = iota + 1
 
-// HttpTraceStatusFromSpan create an error span if we have an error and a successful span when error is nil
+// HttpTraceStatusFromSpan create an error span if we have an error and a successful span when error is nil.
 func HttpTraceStatusFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
@@ -123,7 +124,7 @@ func TraceErrStatusFromSpan(span trace.Span, err error) error {
 	return err
 }
 
-// HttpTraceStatusFromSpanWithCode create an error span with specific status code if we have an error and a successful span when error is nil with a specific status
+// HttpTraceStatusFromSpanWithCode create an error span with specific status code if we have an error and a successful span when error is nil with a specific status.
 func HttpTraceStatusFromSpanWithCode(
 	span trace.Span,
 	err error,
@@ -155,7 +156,7 @@ func HttpTraceStatusFromSpanWithCode(
 	return err
 }
 
-// HttpTraceStatusFromContext create an error span if we have an error and a successful span when error is nil
+// HttpTraceStatusFromContext create an error span if we have an error and a successful span when error is nil.
 func HttpTraceStatusFromContext(ctx context.Context, err error) error {
 	// https://opentelemetry.io/docs/instrumentation/go/manual/#record-errors
 	span := trace.SpanFromContext(ctx)
@@ -183,7 +184,7 @@ func TraceErrStatusFromContext(ctx context.Context, err error) error {
 	return TraceErrStatusFromSpan(span, err)
 }
 
-// GrpcTraceErrFromSpan setting span with status error with error message
+// GrpcTraceErrFromSpan setting span with status error with error message.
 func GrpcTraceErrFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
@@ -210,7 +211,7 @@ func GrpcTraceErrFromSpan(span trace.Span, err error) error {
 	return err
 }
 
-// GrpcTraceErrFromSpanWithCode setting span with status error with error message
+// GrpcTraceErrFromSpanWithCode setting span with status error with error message.
 func GrpcTraceErrFromSpanWithCode(span trace.Span, err error, code int) error {
 	isError := err != nil
 
@@ -284,6 +285,7 @@ func CopyFromParentSpanAttributeIfNotSet(
 ) {
 	if attributeValue != "" {
 		span.SetAttributes(attribute.String(attributeName, attributeValue))
+
 		return
 	}
 	CopyFromParentSpanAttribute(ctx, span, attributeName, parentAttributeName)

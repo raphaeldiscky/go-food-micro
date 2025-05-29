@@ -4,10 +4,11 @@ import (
 	"context"
 	"time"
 
-	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
+	"github.com/stretchr/testify/assert"
 
 	reflect "github.com/goccy/go-reflect"
-	"github.com/stretchr/testify/assert"
+
+	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
 type Hypothesis[T any] interface {

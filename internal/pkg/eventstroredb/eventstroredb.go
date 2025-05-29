@@ -1,9 +1,9 @@
 package eventstroredb
 
 import (
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
-
 	"github.com/EventStore/EventStore-Client-Go/esdb"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
 )
 
 func NewEventStoreDB(cfg *config.EventStoreDbOptions) (*esdb.Client, error) {

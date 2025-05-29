@@ -4,6 +4,14 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
@@ -11,16 +19,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	mongocontainer "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Product is a domain_events entity
+// Product is a domain_events entity.
 type Product struct {
 	ID          string
 	Name        string
@@ -414,7 +415,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 	c.Assert().Nil(single)
 }
 
-//func Test_Delete_With_Data_Model(t *testing.T) {
+// func Test_Delete_With_Data_Model(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
 //
@@ -438,7 +439,7 @@ func (c *mongoGenericRepositoryTest) Test_Delete() {
 //	assert.Nil(t, single)
 //}
 //
-//func Test_Count(t *testing.T) {
+// func Test_Count(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericMongoRepository(ctx, t)
 //	if err != nil {

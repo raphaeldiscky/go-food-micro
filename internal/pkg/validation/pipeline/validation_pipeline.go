@@ -3,10 +3,10 @@ package pipeline
 import (
 	"context"
 
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/validation"
-
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type mediatorValidationPipeline struct {

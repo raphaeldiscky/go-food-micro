@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"time"
 
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/telemetrytags"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
 	customAttribute "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	mediatr "github.com/mehdihadeli/go-mediatr"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/metric"
 )
 
 type mediatorMetricsPipeline struct {
@@ -57,14 +58,12 @@ func (r *mediatorMetricsPipeline) Handle(
 		payloadTag = telemetrytags.App.Command
 		resultSnakeTypeNameTag = telemetrytags.App.CommandResultName
 		resultTag = telemetrytags.App.CommandResult
-
 	} else if cqrs.IsQuery(request) {
 		nameTag = telemetrytags.App.QueryName
 		typeNameTag = telemetrytags.App.QueryType
 		payloadTag = telemetrytags.App.Query
 		resultSnakeTypeNameTag = telemetrytags.App.QueryResultName
 		resultTag = telemetrytags.App.QueryResult
-
 	} else if events.IsEvent(request) {
 		nameTag = telemetrytags.App.EventName
 		typeNameTag = telemetrytags.App.EventType

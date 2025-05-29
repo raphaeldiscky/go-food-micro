@@ -7,12 +7,13 @@ import (
 	"strconv"
 	"testing"
 
+	"github.com/ory/dockertest/v3/docker"
+
+	dockertest "github.com/ory/dockertest/v3"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
-	dockertest "github.com/ory/dockertest/v3"
-	"github.com/ory/dockertest/v3/docker"
 )
 
 type rabbitmqDockerTest struct {
@@ -72,14 +73,12 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	hostPort, err := strconv.Atoi(
 		resource.GetPort(fmt.Sprintf("%s/tcp", g.defaultOptions.Ports[0])),
 	) // 5672
-
 	if err != nil {
 		return nil, err
 	}
 	httpPort, err := strconv.Atoi(
 		resource.GetPort(fmt.Sprintf("%s/tcp", g.defaultOptions.Ports[1])),
 	) // 15672
-
 	if err != nil {
 		return nil, err
 	}
@@ -89,8 +88,8 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 
 	t.Cleanup(func() { _ = resource.Close() })
 
-	//isConnectable := isConnectable(g.logger, g.defaultOptions)
-	//if !isConnectable {
+	// isConnectable := isConnectable(g.logger, g.defaultOptions)
+	// if !isConnectable {
 	//	return g.PopulateContainerOptions(context.Background(), t, options...)
 	//}
 
@@ -108,6 +107,7 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 		return nil
 	}); err != nil {
 		log.Fatalf("Could not connect to docker: %s", err)
+
 		return nil, err
 	}
 

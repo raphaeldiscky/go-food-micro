@@ -4,12 +4,12 @@ import (
 	"database/sql"
 	"fmt"
 
-	bun2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/bun"
-
 	"emperror.dev/errors"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/pgdialect"
 	"github.com/uptrace/bun/driver/pgdriver"
+
+	bun2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/bun"
 )
 
 func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {
@@ -32,7 +32,7 @@ func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {
 	)
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(datasource)))
 
-	//pgconn := pgdriver.NewConnector(
+	// pgconn := pgdriver.NewConnector(
 	//	pgdriver.WithNetwork("tcp"),
 	//	pgdriver.WithAddr("localhost:5437"),
 	//	pgdriver.WithTLSConfig(&tls.config{InsecureSkipVerify: true}),
@@ -48,7 +48,7 @@ func NewBunDB(cfg *bun2.BunConfig) (*bun.DB, error) {
 	//		"search_path": "my_search_path",
 	//	}),
 	//)
-	//sqldb := sql.OpenDB(pgconn)
+	// sqldb := sql.OpenDB(pgconn)
 
 	db := bun.NewDB(sqldb, pgdialect.New())
 
@@ -68,7 +68,9 @@ func createDB(cfg *bun2.BunConfig) error {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(datasource)))
 
 	var exists int
-	rows, err := sqldb.Query(fmt.Sprintf("SELECT 1 FROM  pg_catalog.pg_database WHERE datname='%s'", cfg.DBName))
+	rows, err := sqldb.Query(
+		fmt.Sprintf("SELECT 1 FROM  pg_catalog.pg_database WHERE datname='%s'", cfg.DBName),
+	)
 	if err != nil {
 		return err
 	}

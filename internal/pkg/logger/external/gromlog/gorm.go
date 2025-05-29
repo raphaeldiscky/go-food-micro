@@ -4,9 +4,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	gormlogger "gorm.io/gorm/logger"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 // Ref: https://articles.wesionary.team/logging-interfaces-in-go-182c28be3d18
@@ -18,9 +18,9 @@ type GormCustomLogger struct {
 }
 
 func NewGormCustomLogger(logger logger.Logger) *GormCustomLogger {
-	//cfg, err := config.ProvideLogConfig()
+	// cfg, err := config.ProvideLogConfig()
 	//
-	//var logger logger.logger
+	// var logger logger.logger
 	//if cfg.LogType == datamodels.Logrus && err != nil {
 	//	logger = logrous.NewLogrusLogger(cfg, constants.Dev)
 	//} else {
@@ -38,35 +38,36 @@ func NewGormCustomLogger(logger logger.Logger) *GormCustomLogger {
 	}
 }
 
-// LogMode set log mode
+// LogMode set log mode.
 func (l *GormCustomLogger) LogMode(level gormlogger.LogLevel) gormlogger.Interface {
 	newlogger := *l
 	newlogger.LogLevel = level
+
 	return &newlogger
 }
 
-// Info prints info
+// Info prints info.
 func (l GormCustomLogger) Info(ctx context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Info {
 		l.Debugf(str, args...)
 	}
 }
 
-// Warn prints warn messages
+// Warn prints warn messages.
 func (l GormCustomLogger) Warn(ctx context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Warn {
 		l.Warnf(str, args...)
 	}
 }
 
-// Error prints error messages
+// Error prints error messages.
 func (l GormCustomLogger) Error(ctx context.Context, str string, args ...interface{}) {
 	if l.LogLevel >= gormlogger.Error {
 		l.Errorf(str, args...)
 	}
 }
 
-// Trace prints trace messages
+// Trace prints trace messages.
 func (l GormCustomLogger) Trace(
 	ctx context.Context,
 	begin time.Time,
@@ -80,18 +81,21 @@ func (l GormCustomLogger) Trace(
 	if l.LogLevel >= gormlogger.Info {
 		sql, rows := fc()
 		l.Debug("[", elapsed.Milliseconds(), " ms, ", rows, " rows] ", "sql -> ", sql)
+
 		return
 	}
 
 	if l.LogLevel >= gormlogger.Warn {
 		sql, rows := fc()
 		l.Logger.Warn("[", elapsed.Milliseconds(), " ms, ", rows, " rows] ", "sql -> ", sql)
+
 		return
 	}
 
 	if l.LogLevel >= gormlogger.Error {
 		sql, rows := fc()
 		l.Logger.Error("[", elapsed.Milliseconds(), " ms, ", rows, " rows] ", "sql -> ", sql)
+
 		return
 	}
 }

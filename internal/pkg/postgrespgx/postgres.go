@@ -8,8 +8,6 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/Masterminds/squirrel"
-	goqu "github.com/doug-martin/goqu/v9"
-	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/log/zapadapter"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgx/v4/stdlib"
@@ -17,6 +15,9 @@ import (
 	"go.uber.org/zap"
 
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
+
+	goqu "github.com/doug-martin/goqu/v9"
+	pgx "github.com/jackc/pgx/v4"
 )
 
 // Ref:https://github.com/henvic/pgxtutorial
@@ -177,6 +178,7 @@ func (db *Pgx) conn(ctx context.Context) PGXQuerier {
 	if res, ok := ctx.Value(connCtx{}).(*pgxpool.Conn); ok && res != nil {
 		return res
 	}
+
 	return db.ConnPool
 }
 
@@ -192,8 +194,9 @@ func (db *Pgx) ExecTx(ctx context.Context, fn func(*Pgx) error) error {
 	err = fn(db)
 	if err != nil {
 		if rbErr := tx.Rollback(ctx); rbErr != nil {
-			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
+			return fmt.Errorf("tx err: %w, rb err: %w", err, rbErr)
 		}
+
 		return err
 	}
 
@@ -210,6 +213,7 @@ func (db *Pgx) TransactionContext(ctx context.Context) (context.Context, error) 
 	if err != nil {
 		return nil, err
 	}
+
 	return context.WithValue(ctx, txCtx{}, tx), nil
 }
 
@@ -218,6 +222,7 @@ func (db *Pgx) Commit(ctx context.Context) error {
 	if tx, ok := ctx.Value(txCtx{}).(pgx.Tx); ok && tx != nil {
 		return tx.Commit(ctx)
 	}
+
 	return errors.New("context has no transaction")
 }
 
@@ -226,6 +231,7 @@ func (db *Pgx) Rollback(ctx context.Context) error {
 	if tx, ok := ctx.Value(txCtx{}).(pgx.Tx); ok && tx != nil {
 		return tx.Rollback(ctx)
 	}
+
 	return errors.New("context has no transaction")
 }
 
@@ -237,7 +243,7 @@ func (db *Pgx) Rollback(ctx context.Context) error {
 //
 // Example:
 // dbCtx := db.WithAcquire(ctx)
-// defer postgres.Release(dbCtx)
+// defer postgres.Release(dbCtx).
 func (db *Pgx) WithAcquire(ctx context.Context) (dbCtx context.Context, err error) {
 	if _, ok := ctx.Value(connCtx{}).(*pgxpool.Conn); ok {
 		panic("context already has a connection acquired")
@@ -246,6 +252,7 @@ func (db *Pgx) WithAcquire(ctx context.Context) (dbCtx context.Context, err erro
 	if err != nil {
 		return nil, err
 	}
+
 	return context.WithValue(ctx, connCtx{}, res), nil
 }
 

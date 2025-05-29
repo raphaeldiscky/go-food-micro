@@ -50,11 +50,10 @@ func (u *unauthorizedError) isUnAuthorizedError() {
 }
 
 func IsUnAuthorizedError(err error) bool {
-	var unauthorizedError UnauthorizedError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested unauthorized error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(UnauthorizedError); ok {
+	var unauthorizedError UnauthorizedError
+	if errors.As(err, &unauthorizedError) {
 		return true
 	}
 

@@ -7,12 +7,13 @@ import (
 	"fmt"
 	"reflect"
 
+	"emperror.dev/errors"
+	"github.com/iancoleman/strcase"
+
+	linq "github.com/ahmetb/go-linq/v3"
+
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
-
-	"emperror.dev/errors"
-	linq "github.com/ahmetb/go-linq/v3"
-	"github.com/iancoleman/strcase"
 )
 
 var (
@@ -150,11 +151,11 @@ func CreateCustomMap[TSrc any, TDst any](fn MapFunc[TSrc, TDst]) error {
 	}
 	maps[k] = fn
 
-	//if srcType.Kind() == reflect.Ptr && srcType.Elem().Kind() == reflect.Struct {
+	// if srcType.Kind() == reflect.Ptr && srcType.Elem().Kind() == reflect.Struct {
 	//	srcType = srcType.Elem()
 	//}
 	//
-	//if desType.Kind() == reflect.Ptr && desType.Elem().Kind() == reflect.Struct {
+	// if desType.Kind() == reflect.Ptr && desType.Elem().Kind() == reflect.Struct {
 	//	desType = desType.Elem()
 	//}
 
@@ -254,24 +255,28 @@ func configProfile(srcType reflect.Type, destType reflect.Type) {
 		// case src key equals dest key
 		if _, ok := destMeta.keysToTags[srcKey]; ok {
 			profile = append(profile, [2]string{srcKey, srcKey})
+
 			continue
 		}
 
 		// case src key equals dest tag
 		if destKey, ok := destMeta.tagsToKeys[srcKey]; ok {
 			profile = append(profile, [2]string{srcKey, destKey})
+
 			continue
 		}
 
 		// case src tag equals dest key
 		if _, ok := destMeta.keysToTags[srcTag]; ok {
 			profile = append(profile, [2]string{srcKey, srcTag})
+
 			continue
 		}
 
 		// case src tag equals dest tag
 		if destKey, ok := destMeta.tagsToKeys[srcTag]; ok {
 			profile = append(profile, [2]string{srcKey, destKey})
+
 			continue
 		}
 	}
@@ -279,6 +284,7 @@ func configProfile(srcType reflect.Type, destType reflect.Type) {
 	for _, method := range srcMethods {
 		if _, ok := destMeta.keysToTags[method]; ok {
 			profile = append(profile, [2]string{method, method})
+
 			continue
 		}
 	}
@@ -319,7 +325,6 @@ func getTypeMethods(val reflect.Type) []string {
 	var keys []string
 
 	for i := 0; i < methodsNum; i++ {
-
 		methodName := val.Method(i).Name
 		keys = append(keys, methodName)
 	}
@@ -338,6 +343,7 @@ func mapStructs[TDes any, TSrc any](src reflect.Value, dest reflect.Value) {
 			src.Type().String(),
 			dest.Type().String(),
 		)
+
 		return
 	}
 

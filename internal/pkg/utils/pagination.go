@@ -5,11 +5,12 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
-
 	"emperror.dev/errors"
+
 	json "github.com/goccy/go-json"
 	echo "github.com/labstack/echo/v4"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 )
 
 const (
@@ -35,12 +36,14 @@ func NewListResult[T any](items []T, size int, page int, totalItems int64) *List
 
 func (p *ListResult[T]) String() string {
 	j, _ := json.Marshal(p)
+
 	return string(j)
 }
 
-// GetTotalPages Get total pages int
+// GetTotalPages Get total pages int.
 func getTotalPages(totalCount int64, size int) int {
 	d := float64(totalCount) / float64(size)
+
 	return int(math.Ceil(d))
 }
 
@@ -92,13 +95,13 @@ func GetListQueryFromCtx(c echo.Context) (*ListQuery, error) {
 				}
 				q.Filters = append(q.Filters, f)
 			}
+
 			return nil
 		}).
 		String("size", &size).
 		String("page", &page).
 		String("orderBy", &orderBy).
 		BindError() // returns first binding error
-
 	if err != nil {
 		return nil, err
 	}
@@ -114,10 +117,11 @@ func GetListQueryFromCtx(c echo.Context) (*ListQuery, error) {
 	return q, nil
 }
 
-// SetSize Set page size
+// SetSize Set page size.
 func (q *ListQuery) SetSize(sizeQuery string) error {
 	if sizeQuery == "" {
 		q.Size = defaultSize
+
 		return nil
 	}
 	n, err := strconv.Atoi(sizeQuery)
@@ -129,10 +133,11 @@ func (q *ListQuery) SetSize(sizeQuery string) error {
 	return nil
 }
 
-// SetPage Set page number
+// SetPage Set page number.
 func (q *ListQuery) SetPage(pageQuery string) error {
 	if pageQuery == "" {
 		q.Page = defaultPage
+
 		return nil
 	}
 	n, err := strconv.Atoi(pageQuery)
@@ -144,40 +149,41 @@ func (q *ListQuery) SetPage(pageQuery string) error {
 	return nil
 }
 
-// SetOrderBy Set order by
+// SetOrderBy Set order by.
 func (q *ListQuery) SetOrderBy(orderByQuery string) {
 	q.OrderBy = orderByQuery
 }
 
-// GetOffset Get offset
+// GetOffset Get offset.
 func (q *ListQuery) GetOffset() int {
 	if q.Page == 0 {
 		return 0
 	}
+
 	return (q.Page - 1) * q.Size
 }
 
-// GetLimit Get limit
+// GetLimit Get limit.
 func (q *ListQuery) GetLimit() int {
 	return q.Size
 }
 
-// GetOrderBy Get OrderBy
+// GetOrderBy Get OrderBy.
 func (q *ListQuery) GetOrderBy() string {
 	return q.OrderBy
 }
 
-// GetPage Get OrderBy
+// GetPage Get OrderBy.
 func (q *ListQuery) GetPage() int {
 	return q.Page
 }
 
-// GetSize Get OrderBy
+// GetSize Get OrderBy.
 func (q *ListQuery) GetSize() int {
 	return q.Size
 }
 
-// GetQueryString get query string
+// GetQueryString get query string.
 func (q *ListQuery) GetQueryString() string {
 	return fmt.Sprintf("page=%v&size=%v&orderBy=%s", q.GetPage(), q.GetSize(), q.GetOrderBy())
 }

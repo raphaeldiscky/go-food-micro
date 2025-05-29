@@ -50,11 +50,10 @@ func (c *conflictError) isConflictError() {
 }
 
 func IsConflictError(err error) bool {
-	var conflictError ConflictError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested notfound error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(ConflictError); ok {
+	var conflictError ConflictError
+	if errors.As(err, &conflictError) {
 		return true
 	}
 

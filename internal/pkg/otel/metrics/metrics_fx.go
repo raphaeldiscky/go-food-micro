@@ -3,13 +3,13 @@ package metrics
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"go.opentelemetry.io/contrib/instrumentation/host"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/metric"
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 var (
@@ -43,7 +43,7 @@ func provideMeter(otelMetrics *OtelMetrics) AppMetrics {
 	return otelMetrics.appMetrics
 }
 
-// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`
+// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,
 	metrics *OtelMetrics,

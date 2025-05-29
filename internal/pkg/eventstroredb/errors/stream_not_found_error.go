@@ -3,9 +3,9 @@ package errors
 import (
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 type streamNotFoundError struct {
@@ -18,7 +18,10 @@ type StreamNotFoundError interface {
 }
 
 func NewStreamNotFoundError(err error, streamId string) error {
-	notFound := customErrors.NewNotFoundErrorWrap(err, fmt.Sprintf("stream with streamId %s not found", streamId))
+	notFound := customErrors.NewNotFoundErrorWrap(
+		err,
+		fmt.Sprintf("stream with streamId %s not found", streamId),
+	)
 	customErr := customErrors.GetCustomError(notFound)
 	br := &streamNotFoundError{
 		NotFoundError: customErr.(customErrors.NotFoundError),

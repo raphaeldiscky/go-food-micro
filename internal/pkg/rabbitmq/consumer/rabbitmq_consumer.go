@@ -6,6 +6,14 @@ import (
 	"reflect"
 	"time"
 
+	"emperror.dev/errors"
+	"go.opentelemetry.io/otel/attribute"
+
+	linq "github.com/ahmetb/go-linq/v3"
+	retry "github.com/avast/retry-go"
+	amqp091 "github.com/rabbitmq/amqp091-go"
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	consumertracing "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/otel/tracing/consumer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/pipeline"
@@ -19,13 +27,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/rabbitmqerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 	errorutils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
-
-	"emperror.dev/errors"
-	linq "github.com/ahmetb/go-linq/v3"
-	retry "github.com/avast/retry-go"
-	amqp091 "github.com/rabbitmq/amqp091-go"
-	"go.opentelemetry.io/otel/attribute"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 )
 
 const (
@@ -53,7 +54,7 @@ type rabbitMQConsumer struct {
 	isConsumedNotifications []func(message messagingTypes.IMessage)
 }
 
-// NewRabbitMQConsumer create a new generic RabbitMQ consumer
+// NewRabbitMQConsumer create a new generic RabbitMQ consumer.
 func NewRabbitMQConsumer(
 	rabbitmqOptions *config.RabbitmqOptions,
 	connection types.IConnection,
@@ -204,6 +205,7 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 				select {
 				case <-ctx.Done():
 					r.logger.Info("shutting down consumer")
+
 					return
 				case amqErr := <-chClosedCh:
 					// This case handles the event of closed channel e.g. abnormal shutdown
@@ -215,6 +217,7 @@ func (r *rabbitMQConsumer) Start(ctx context.Context) error {
 				case msg, ok := <-msgs:
 					if !ok {
 						r.logger.Info("consumer connection dropped")
+
 						return
 					}
 
@@ -242,14 +245,15 @@ func (r *rabbitMQConsumer) Stop() error {
 		for {
 			if len(r.deliveryRoutines) == 0 {
 				done <- struct{}{}
+
+				return
 			}
 		}
 	}()
 
-	select {
-	case <-done:
-		return nil
-	}
+	<-done
+
+	return nil
 }
 
 func (r *rabbitMQConsumer) ConnectHandler(handler consumer.ConsumerHandler) {
@@ -275,11 +279,13 @@ func (r *rabbitMQConsumer) reConsumeOnDropConnection(ctx context.Context) {
 					"reconsume_on_drop_connection finished with error: %v",
 					err,
 				)
+
 				continue
 			}
 			r.logger.Info(
 				"reconsume_on_drop_connection finished successfully",
 			)
+
 			return
 		}
 	}()
@@ -319,6 +325,7 @@ func (r *rabbitMQConsumer) handleReceived(
 		r.logger.Error(
 			consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
 		)
+
 		return
 	}
 
@@ -333,6 +340,7 @@ func (r *rabbitMQConsumer) handleReceived(
 					"error sending ACK to RabbitMQ consumer: %v",
 					consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
 				)
+
 				return
 			}
 			_ = consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
@@ -351,6 +359,7 @@ func (r *rabbitMQConsumer) handleReceived(
 					"error in sending Nack to RabbitMQ consumer: %v",
 					consumertracing.FinishConsumerSpan(beforeConsumeSpan, err),
 				)
+
 				return
 			}
 			_ = consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
@@ -397,7 +406,6 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 		if len(r.pipelines) > 0 {
 			reversPipes := r.reversOrder(r.pipelines)
 			lastHandler = func(ctx context.Context) error {
-				handler := handler.(consumer.ConsumerHandler)
 				return handler.Handle(ctx, messageConsumeContext)
 			}
 
@@ -406,22 +414,13 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 					pipeValue := pipe
 					nexValue := next
 
-					var handlerFunc pipeline.ConsumerHandlerFunc = func(ctx context.Context) error {
-						genericContext, ok := messageConsumeContext.(messagingTypes.MessageConsumeContext)
-						if ok {
-							return pipeValue.Handle(
-								ctx,
-								genericContext,
-								nexValue,
-							)
-						}
+					return func(ctx context.Context) error {
 						return pipeValue.Handle(
 							ctx,
-							messageConsumeContext.(messagingTypes.MessageConsumeContext),
+							messageConsumeContext,
 							nexValue,
 						)
 					}
-					return handlerFunc
 				})
 
 			v := aggregateResult.(pipeline.ConsumerHandlerFunc)
@@ -432,13 +431,15 @@ func (r *rabbitMQConsumer) runHandlersWithRetry(
 					"error handling consumer handlers pipeline",
 				)
 			}
+
 			return nil
 		} else {
-			err := handler.Handle(ctx, messageConsumeContext.(messagingTypes.MessageConsumeContext))
+			err := handler.Handle(ctx, messageConsumeContext)
 			if err != nil {
 				return err
 			}
 		}
+
 		return nil
 	}, append(retryOptions, retry.Context(ctx))...)
 
@@ -469,6 +470,7 @@ func (r *rabbitMQConsumer) createConsumeContext(
 		delivery.MessageId,
 		delivery.CorrelationId,
 	)
+
 	return consumeContext, nil
 }
 
@@ -483,6 +485,7 @@ func (r *rabbitMQConsumer) deserializeData(
 
 	if len(body) == 0 {
 		r.logger.Error("message body is nil or empty in the consumer")
+
 		return nil
 	}
 
@@ -501,6 +504,7 @@ func (r *rabbitMQConsumer) deserializeData(
 					eventType,
 				),
 			)
+
 			return nil
 		}
 

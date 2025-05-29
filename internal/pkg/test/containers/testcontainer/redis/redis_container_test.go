@@ -4,17 +4,18 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+
+	redis "github.com/redis/go-redis/v9"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
-
-	redis "github.com/redis/go-redis/v9"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
 )
 
 func Test_Custom_Redis_Container(t *testing.T) {

@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"reflect"
 
+	"emperror.dev/errors"
+	"github.com/go-playground/validator"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
-
-	"emperror.dev/errors"
-	"github.com/go-playground/validator"
 )
 
 type ProblemDetailParser struct {
@@ -28,6 +28,7 @@ func NewProblemDetailParser(
 	optionBuilder := NewOptionBuilder()
 	builder(optionBuilder)
 	items := optionBuilder.Build()
+
 	return &ProblemDetailParser{internalErrors: items}
 }
 
@@ -37,6 +38,7 @@ func (p *ProblemDetailParser) ResolveError(err error) ProblemDetailErr {
 	if problem != nil {
 		return problem(err)
 	}
+
 	return nil
 }
 

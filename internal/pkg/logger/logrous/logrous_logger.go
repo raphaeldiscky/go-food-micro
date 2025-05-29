@@ -4,15 +4,15 @@ import (
 	"os"
 	"time"
 
+	"github.com/nolleh/caption_json_formatter"
+	"github.com/sirupsen/logrus"
+	"github.com/uptrace/opentelemetry-go-extra/otellogrus"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
-
-	"github.com/nolleh/caption_json_formatter"
-	"github.com/sirupsen/logrus"
-	"github.com/uptrace/opentelemetry-go-extra/otellogrus"
 )
 
 type logrusLogger struct {
@@ -21,7 +21,7 @@ type logrusLogger struct {
 	logOptions *config2.LogOptions
 }
 
-// For mapping config logger
+// For mapping config logger.
 var loggerLevelMap = map[string]logrus.Level{
 	"debug": logrus.DebugLevel,
 	"info":  logrus.InfoLevel,
@@ -31,7 +31,7 @@ var loggerLevelMap = map[string]logrus.Level{
 	"fatal": logrus.FatalLevel,
 }
 
-// NewLogrusLogger creates a new logrus logger
+// NewLogrusLogger creates a new logrus logger.
 func NewLogrusLogger(
 	cfg *config2.LogOptions,
 	env environment.Environment,
@@ -42,7 +42,7 @@ func NewLogrusLogger(
 	return logrusLogger
 }
 
-// InitLogger Init logger
+// InitLogger Init logger.
 func (l *logrusLogger) initLogger(env environment.Environment) {
 	logLevel := l.GetLoggerLevel()
 

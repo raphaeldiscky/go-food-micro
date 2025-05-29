@@ -5,15 +5,16 @@ import (
 	"fmt"
 	"strings"
 
+	"go.opentelemetry.io/otel/attribute"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/telemetrytags"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/tracing/components"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	customAttribute "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	mediatr "github.com/mehdihadeli/go-mediatr"
-	"go.opentelemetry.io/otel/attribute"
 )
 
 type mediatorTracingPipeline struct {

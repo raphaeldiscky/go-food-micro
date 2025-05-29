@@ -4,15 +4,16 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/iancoleman/strcase"
+
+	uuid "github.com/satori/go.uuid"
+
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	defaultlogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/scopes"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"github.com/iancoleman/strcase"
-	uuid "github.com/satori/go.uuid"
 )
 
 func Exists[TDataModel interface{}](
@@ -105,7 +106,7 @@ func FindDataModelByID[TDataModel interface{}](
 	return dataModel, nil
 }
 
-// DeleteDataModelByID delete the data-model inner a tx if exists
+// DeleteDataModelByID delete the data-model inner a tx if exists.
 func DeleteDataModelByID[TDataModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,
@@ -117,10 +118,12 @@ func DeleteDataModelByID[TDataModel interface{}](
 
 	exists := Exists[TDataModel](ctx, dbContext, id)
 	if !exists {
-		return customErrors.NewNotFoundError(fmt.Sprintf("%s with id `%s` not found in the database",
-			dataModelName,
-			id.String(),
-		))
+		return customErrors.NewNotFoundError(
+			fmt.Sprintf("%s with id `%s` not found in the database",
+				dataModelName,
+				id.String(),
+			),
+		)
 	}
 
 	dataModel := typeMapper.GenericInstanceByT[TDataModel]()
@@ -145,7 +148,7 @@ func DeleteDataModelByID[TDataModel interface{}](
 	return nil
 }
 
-// AddModel add the model inner a tx if exists
+// AddModel add the model inner a tx if exists.
 func AddModel[TDataModel interface{}, TModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,
@@ -186,7 +189,7 @@ func AddModel[TDataModel interface{}, TModel interface{}](
 	return resultModel, err
 }
 
-// AddDataModel add the data-model inner a tx if exists
+// AddDataModel add the data-model inner a tx if exists.
 func AddDataModel[TDataModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,
@@ -210,7 +213,7 @@ func AddDataModel[TDataModel interface{}](
 	return dataModel, nil
 }
 
-// UpdateModel update the model inner a tx if exists
+// UpdateModel update the model inner a tx if exists.
 func UpdateModel[TDataModel interface{}, TModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,
@@ -251,7 +254,7 @@ func UpdateModel[TDataModel interface{}, TModel interface{}](
 	return modelResult, err
 }
 
-// UpdateDataModel update the data-model inner a tx if exists
+// UpdateDataModel update the data-model inner a tx if exists.
 func UpdateDataModel[TDataModel interface{}](
 	ctx context.Context,
 	dbContext contracts.GormDBContext,

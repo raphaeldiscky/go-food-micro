@@ -8,11 +8,11 @@ import (
 	"errors"
 	"strconv"
 
+	goose "github.com/pressly/goose/v3"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	migration "github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
-
-	goose "github.com/pressly/goose/v3"
 )
 
 type goosePostgresMigrator struct {

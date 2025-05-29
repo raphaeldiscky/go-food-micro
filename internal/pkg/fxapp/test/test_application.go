@@ -3,12 +3,12 @@ package test
 import (
 	"context"
 
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
 )
 
 type testApplication struct {
@@ -80,6 +80,7 @@ func (a *testApplication) Stop(ctx context.Context) error {
 	if a.fxtestApp == nil {
 		a.logger.Fatal("Failed to stop because application not started.")
 	}
+
 	return a.fxtestApp.Stop(ctx)
 }
 
@@ -87,6 +88,7 @@ func (a *testApplication) Wait() <-chan fx.ShutdownSignal {
 	if a.fxtestApp == nil {
 		a.logger.Fatal("Failed to wait because application not started.")
 	}
+
 	return a.fxtestApp.Wait()
 }
 
@@ -108,7 +110,7 @@ func (a *testApplication) createFxTest() *fxtest.App {
 	return fxTestApp
 }
 
-//func (a *testApplication) fixTestEnvironmentWorkingDirectory() {
+// func (a *testApplication) fixTestEnvironmentWorkingDirectory() {
 //	currentWD, _ := os.Getwd()
 //	a.logger.Infof("Current test working directory is: %s", currentWD)
 //

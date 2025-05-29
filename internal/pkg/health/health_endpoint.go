@@ -3,10 +3,10 @@ package health
 import (
 	"net/http"
 
+	echo "github.com/labstack/echo/v4"
+
 	contracts2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
-
-	echo "github.com/labstack/echo/v4"
 )
 
 type HealthCheckEndpoint struct {

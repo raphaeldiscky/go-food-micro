@@ -8,6 +8,7 @@ func Contains[T any](arr []T, x T) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
@@ -17,5 +18,6 @@ func ContainsFunc[T any](arr []T, predicate func(T) bool) bool {
 			return true
 		}
 	}
+
 	return false
 }

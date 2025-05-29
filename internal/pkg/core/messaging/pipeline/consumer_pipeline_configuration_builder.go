@@ -12,13 +12,16 @@ type consumerPipelineConfigurationBuilder struct {
 }
 
 func NewConsumerPipelineConfigurationBuilder() ConsumerPipelineConfigurationBuilder {
-	return &consumerPipelineConfigurationBuilder{pipelineConfigurations: &ConsumerPipelineConfiguration{}}
+	return &consumerPipelineConfigurationBuilder{
+		pipelineConfigurations: &ConsumerPipelineConfiguration{},
+	}
 }
 
 func (c *consumerPipelineConfigurationBuilder) AddPipeline(
 	pipeline ConsumerPipeline,
 ) ConsumerPipelineConfigurationBuilder {
 	c.pipelineConfigurations.Pipelines = append(c.pipelineConfigurations.Pipelines, pipeline)
+
 	return c
 }
 

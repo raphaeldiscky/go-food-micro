@@ -6,6 +6,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+
+	uuid "github.com/satori/go.uuid"
+
 	messageConsumer "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/pipeline"
 	types3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
@@ -20,9 +24,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging/consumer"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
-
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/require"
 )
 
 func Test_Consumer_With_Fake_Message(t *testing.T) {
@@ -30,7 +31,7 @@ func Test_Consumer_With_Fake_Message(t *testing.T) {
 
 	ctx := context.Background()
 
-	//options := &config.RabbitmqOptions{
+	// options := &config.RabbitmqOptions{
 	//	RabbitmqHostOptions: &config.RabbitmqHostOptions{
 	//		UserName: "guest",
 	//		Password: "guest",
@@ -125,7 +126,7 @@ func NewProducerConsumerMessage(data string) *ProducerConsumerMessage {
 	}
 }
 
-// /////////// ConsumerHandlerT
+// /////////// ConsumerHandlerT.
 type TestMessageHandler struct{}
 
 func (t *TestMessageHandler) Handle(
@@ -158,7 +159,7 @@ func NewTestMessageHandler2() *TestMessageHandler2 {
 	return &TestMessageHandler2{}
 }
 
-// /////////////// ConsumerPipeline
+// /////////////// ConsumerPipeline.
 type Pipeline1 struct{}
 
 func NewPipeline1() pipeline.ConsumerPipeline {
@@ -178,5 +179,6 @@ func (p Pipeline1) Handle(
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

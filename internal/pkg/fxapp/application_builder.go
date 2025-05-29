@@ -1,6 +1,8 @@
 package fxapp
 
 import (
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
@@ -8,8 +10,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/logrous"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
-
-	"go.uber.org/fx"
 )
 
 type applicationBuilder struct {

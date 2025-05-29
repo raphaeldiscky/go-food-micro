@@ -4,15 +4,15 @@ import (
 	"os"
 	"time"
 
+	"github.com/uptrace/opentelemetry-go-extra/otelzap"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
-
-	"github.com/uptrace/opentelemetry-go-extra/otelzap"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 type zapLogger struct {
@@ -30,7 +30,7 @@ type ZapLogger interface {
 	Sync() error
 }
 
-// For mapping config logger
+// For mapping config logger.
 var loggerLevelMap = map[string]zapcore.Level{
 	"debug": zapcore.DebugLevel,
 	"info":  zapcore.InfoLevel,
@@ -40,7 +40,7 @@ var loggerLevelMap = map[string]zapcore.Level{
 	"fatal": zapcore.FatalLevel,
 }
 
-// NewZapLogger create new zap logger
+// NewZapLogger create new zap logger.
 func NewZapLogger(
 	cfg *config2.LogOptions,
 	env environment.Environment,
@@ -64,7 +64,7 @@ func (l *zapLogger) getLoggerLevel() zapcore.Level {
 	return level
 }
 
-// InitLogger Init logger
+// InitLogger Init logger.
 func (l *zapLogger) initLogger(env environment.Environment) {
 	logLevel := l.getLoggerLevel()
 
@@ -132,7 +132,7 @@ func (l *zapLogger) LogType() models.LogType {
 	return models.Zap
 }
 
-// WithName add logger microservice name
+// WithName add logger microservice name.
 func (l *zapLogger) WithName(name string) {
 	l.logger = l.logger.Named(name)
 	l.sugarLogger = l.sugarLogger.Named(name)
@@ -143,7 +143,7 @@ func (l *zapLogger) Debug(args ...interface{}) {
 	l.sugarLogger.Debug(args...)
 }
 
-// Debugf uses fmt.Sprintf to log a templated message
+// Debugf uses fmt.Sprintf to log a templated message.
 func (l *zapLogger) Debugf(template string, args ...interface{}) {
 	l.sugarLogger.Debugf(template, args...)
 }
@@ -153,7 +153,7 @@ func (l *zapLogger) Debugw(msg string, fields logger.Fields) {
 	l.logger.Debug(msg, zapFields...)
 }
 
-// Info uses fmt.Sprint to construct and log a message
+// Info uses fmt.Sprint to construct and log a message.
 func (l *zapLogger) Info(args ...interface{}) {
 	l.sugarLogger.Info(args...)
 }
@@ -169,7 +169,7 @@ func (l *zapLogger) Infow(msg string, fields logger.Fields) {
 	l.logger.Info(msg, zapFields...)
 }
 
-// Printf uses fmt.Sprintf to log a templated message
+// Printf uses fmt.Sprintf to log a templated message.
 func (l *zapLogger) Printf(template string, args ...interface{}) {
 	l.sugarLogger.Infof(template, args...)
 }
@@ -225,7 +225,7 @@ func (l *zapLogger) Panic(args ...interface{}) {
 	l.sugarLogger.Panic(args...)
 }
 
-// Panicf uses fmt.Sprintf to log a templated message, then panics
+// Panicf uses fmt.Sprintf to log a templated message, then panics.
 func (l *zapLogger) Panicf(template string, args ...interface{}) {
 	l.sugarLogger.Panicf(template, args...)
 }
@@ -240,7 +240,7 @@ func (l *zapLogger) Fatalf(template string, args ...interface{}) {
 	l.sugarLogger.Fatalf(template, args...)
 }
 
-// Sync flushes any buffered log entries
+// Sync flushes any buffered log entries.
 func (l *zapLogger) Sync() error {
 	go func() {
 		err := l.logger.Sync()
@@ -248,6 +248,7 @@ func (l *zapLogger) Sync() error {
 			l.logger.Error("error while syncing", zap.Error(err))
 		}
 	}() // nolint: errcheck
+
 	return l.sugarLogger.Sync()
 }
 

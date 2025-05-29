@@ -1,10 +1,10 @@
 package logrous
 
 import (
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
-
-	"go.uber.org/fx"
 )
 
 // Module provided to fxlog

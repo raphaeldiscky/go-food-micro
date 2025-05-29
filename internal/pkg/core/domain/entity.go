@@ -29,7 +29,7 @@ type IEntity interface {
 	SetId(id uuid.UUID)
 }
 
-// NewEntityWithId creates a new Entity with an id
+// NewEntityWithId creates a new Entity with an id.
 func NewEntityWithId(id uuid.UUID, entityType string) *Entity {
 	return &Entity{
 		id:         id,
@@ -38,7 +38,7 @@ func NewEntityWithId(id uuid.UUID, entityType string) *Entity {
 	}
 }
 
-// NewEntity creates a new Entity
+// NewEntity creates a new Entity.
 func NewEntity(entityType string) *Entity {
 	return &Entity{
 		createdAt:  time.Now(),

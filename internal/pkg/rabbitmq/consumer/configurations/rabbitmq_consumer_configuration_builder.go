@@ -78,6 +78,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExitOnError(
 	exitOnError bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ExitOnError = exitOnError
+
 	return b
 }
 
@@ -85,6 +86,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithName(
 	name string,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.Name = name
+
 	return b
 }
 
@@ -92,6 +94,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithAutoAck(
 	ack bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.AutoAck = ack
+
 	return b
 }
 
@@ -99,6 +102,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithNoLocal(
 	noLocal bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.NoLocal = noLocal
+
 	return b
 }
 
@@ -106,6 +110,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithNoWait(
 	noWait bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.NoWait = noWait
+
 	return b
 }
 
@@ -113,6 +118,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithConcurrencyLimit(
 	limit int,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ConcurrencyLimit = limit
+
 	return b
 }
 
@@ -120,6 +126,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithPrefetchCount(
 	count int,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.PrefetchCount = count
+
 	return b
 }
 
@@ -127,6 +134,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithConsumerId(
 	consumerId string,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ConsumerId = consumerId
+
 	return b
 }
 
@@ -134,6 +142,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithQueueName(
 	queueName string,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.QueueOptions.Name = queueName
+
 	return b
 }
 
@@ -142,6 +151,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithDurable(
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ExchangeOptions.Durable = durable
 	b.rabbitmqConsumerConfigurations.QueueOptions.Durable = durable
+
 	return b
 }
 
@@ -149,6 +159,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithAutoDeleteQueue(
 	autoDelete bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.QueueOptions.AutoDelete = autoDelete
+
 	return b
 }
 
@@ -156,6 +167,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExclusiveQueue(
 	exclusive bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.QueueOptions.Exclusive = exclusive
+
 	return b
 }
 
@@ -163,6 +175,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithQueueArgs(
 	args map[string]any,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.QueueOptions.Args = args
+
 	return b
 }
 
@@ -170,6 +183,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeName(
 	exchangeName string,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ExchangeOptions.Name = exchangeName
+
 	return b
 }
 
@@ -177,6 +191,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithAutoDeleteExchange(
 	autoDelete bool,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ExchangeOptions.AutoDelete = autoDelete
+
 	return b
 }
 
@@ -184,6 +199,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeType(
 	exchangeType types.ExchangeType,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ExchangeOptions.Type = exchangeType
+
 	return b
 }
 
@@ -191,6 +207,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithExchangeArgs(
 	args map[string]any,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.ExchangeOptions.Args = args
+
 	return b
 }
 
@@ -198,6 +215,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithRoutingKey(
 	routingKey string,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.BindingOptions.RoutingKey = routingKey
+
 	return b
 }
 
@@ -205,6 +223,7 @@ func (b *rabbitMQConsumerConfigurationBuilder) WithBindingArgs(
 	args map[string]any,
 ) RabbitMQConsumerConfigurationBuilder {
 	b.rabbitmqConsumerConfigurations.BindingOptions.Args = args
+
 	return b
 }
 

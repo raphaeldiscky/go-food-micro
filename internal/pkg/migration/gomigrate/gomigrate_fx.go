@@ -1,9 +1,9 @@
 package gomigrate
 
 import (
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
 )
 
 var (

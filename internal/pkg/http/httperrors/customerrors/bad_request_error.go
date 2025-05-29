@@ -50,11 +50,10 @@ func (b *badRequestError) isBadRequestError() {
 }
 
 func IsBadRequestError(err error) bool {
-	var badRequestError BadRequestError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested bad-request error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(BadRequestError); ok {
+	var badRequestError BadRequestError
+	if errors.As(err, &badRequestError) {
 		return true
 	}
 

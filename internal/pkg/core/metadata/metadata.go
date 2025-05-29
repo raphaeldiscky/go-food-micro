@@ -4,6 +4,7 @@ type Metadata map[string]interface{}
 
 func (m Metadata) ExistsKey(key string) bool {
 	_, exists := m[key]
+
 	return exists
 }
 
@@ -34,6 +35,7 @@ func (m Metadata) Keys() []string {
 
 func MapToMetadata(data map[string]interface{}) Metadata {
 	m := Metadata(data)
+
 	return m
 }
 
@@ -45,5 +47,6 @@ func FromMetadata(m Metadata) Metadata {
 	if m == nil {
 		return Metadata{}
 	}
+
 	return m
 }

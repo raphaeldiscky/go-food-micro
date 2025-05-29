@@ -1,17 +1,19 @@
 package json
 
 import (
+	"emperror.dev/errors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
-
-	"emperror.dev/errors"
 )
 
 type DefaultMetadataJsonSerializer struct {
 	serializer serializer.Serializer
 }
 
-func NewDefaultMetadataJsonSerializer(serializer serializer.Serializer) serializer.MetadataSerializer {
+func NewDefaultMetadataJsonSerializer(
+	serializer serializer.Serializer,
+) serializer.MetadataSerializer {
 	return &DefaultMetadataJsonSerializer{serializer: serializer}
 }
 

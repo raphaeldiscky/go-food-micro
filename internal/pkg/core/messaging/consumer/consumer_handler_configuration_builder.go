@@ -12,11 +12,19 @@ type consumerHandlerConfigurationBuilder struct {
 }
 
 func NewConsumerHandlersConfigurationBuilder() ConsumerHandlerConfigurationBuilder {
-	return &consumerHandlerConfigurationBuilder{consumerHandlersConfiguration: &ConsumerHandlersConfiguration{}}
+	return &consumerHandlerConfigurationBuilder{
+		consumerHandlersConfiguration: &ConsumerHandlersConfiguration{},
+	}
 }
 
-func (c *consumerHandlerConfigurationBuilder) AddHandler(handler ConsumerHandler) ConsumerHandlerConfigurationBuilder {
-	c.consumerHandlersConfiguration.Handlers = append(c.consumerHandlersConfiguration.Handlers, handler)
+func (c *consumerHandlerConfigurationBuilder) AddHandler(
+	handler ConsumerHandler,
+) ConsumerHandlerConfigurationBuilder {
+	c.consumerHandlersConfiguration.Handlers = append(
+		c.consumerHandlersConfiguration.Handlers,
+		handler,
+	)
+
 	return c
 }
 

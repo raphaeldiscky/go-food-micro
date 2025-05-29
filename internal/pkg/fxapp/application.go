@@ -3,11 +3,11 @@ package fxapp
 import (
 	"context"
 
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	"go.uber.org/fx"
 )
 
 type application struct {
@@ -60,8 +60,8 @@ func (a *application) Run() {
 	fxApp.Run()
 
 	//// startup ctx just for setup dependencies about 15 seconds
-	//const defaultTimeout = 15 * time.Second
-	//startCtx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
+	// const defaultTimeout = 15 * time.Second
+	// startCtx, cancel := context.WithTimeout(context.Background(), defaultTimeout)
 	//defer cancel()
 	//
 	//if err := fxApp.Start(startCtx); err != nil {
@@ -95,6 +95,7 @@ func (a *application) Stop(ctx context.Context) error {
 	if a.fxapp == nil {
 		a.logger.Fatal("Failed to stop because application not started.")
 	}
+
 	return a.fxapp.Stop(ctx)
 }
 
@@ -102,6 +103,7 @@ func (a *application) Wait() <-chan fx.ShutdownSignal {
 	if a.fxapp == nil {
 		a.logger.Fatal("Failed to wait because application not started.")
 	}
+
 	return a.fxapp.Wait()
 }
 

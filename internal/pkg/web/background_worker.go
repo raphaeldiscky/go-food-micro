@@ -23,7 +23,11 @@ type BackgroundWorker struct {
 }
 
 func NewBackgroundWorker(executionFunc ExecutionFunc, stopFunc StopFunc) Worker {
-	return &BackgroundWorker{executionFunc: executionFunc, stopFunc: stopFunc, errChan: make(chan error)}
+	return &BackgroundWorker{
+		executionFunc: executionFunc,
+		stopFunc:      stopFunc,
+		errChan:       make(chan error),
+	}
 }
 
 func (b BackgroundWorker) Start(ctx context.Context) chan error {
@@ -39,6 +43,7 @@ func (b BackgroundWorker) Start(ctx context.Context) chan error {
 			b.errChan <- err
 		}
 	}()
+
 	return b.errChan
 }
 

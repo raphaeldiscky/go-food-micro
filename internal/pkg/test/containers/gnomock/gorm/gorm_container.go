@@ -5,13 +5,13 @@ import (
 	"log"
 	"testing"
 
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
 	"emperror.dev/errors"
 	"github.com/orlangure/gnomock"
 	"github.com/orlangure/gnomock/preset/postgres"
 	"gorm.io/gorm"
+
+	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
 type gnoMockGormContainer struct {
@@ -45,6 +45,7 @@ func (g *gnoMockGormContainer) PopulateContainerOptions(
 	container, err := gnomock.Start(runOption)
 	if container == nil || err != nil {
 		log.Fatal(errors.New("error creating postgres container"))
+
 		return nil, err
 	}
 

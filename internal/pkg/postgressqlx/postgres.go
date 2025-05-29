@@ -10,11 +10,12 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/Masterminds/squirrel"
-	goqu "github.com/doug-martin/goqu/v9"
 	"github.com/jmoiron/sqlx"
 	"github.com/uptrace/bun/driver/pgdriver"
 
 	_ "github.com/jackc/pgx/v4/stdlib" // load pgx driver for PostgreSQL
+
+	goqu "github.com/doug-martin/goqu/v9"
 )
 
 type Sqlx struct {
@@ -69,6 +70,7 @@ func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 	// Try to ping database.
 	if err := db.Ping(); err != nil {
 		defer db.Close() // close database connection
+
 		return nil, fmt.Errorf("error, not sent ping to database, %w", err)
 	}
 
@@ -150,8 +152,9 @@ func (db *Sqlx) ExecTx(ctx context.Context, fn func(*Sqlx) error) error {
 	err = fn(db)
 	if err != nil {
 		if rbErr := tx.Rollback(); rbErr != nil {
-			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
+			return fmt.Errorf("tx err: %w, rb err: %w", err, rbErr)
 		}
+
 		return err
 	}
 

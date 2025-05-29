@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"github.com/araddon/dateparse"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 // CustomTime provides an example of how to declare a new time Type with a custom formatter.
@@ -18,7 +18,7 @@ import (
 // Otherwise, only use in the json struct at marshal/unmarshal time.
 type CustomTime time.Time
 
-// UnmarshalJSON Parses the json string in the custom format
+// UnmarshalJSON Parses the json string in the custom format.
 func (ct *CustomTime) UnmarshalJSON(b []byte) (err error) {
 	s := strings.Trim(string(b), `"`)
 	// nt, err := time.Parse(time.RFC3339, s)
@@ -27,16 +27,18 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) (err error) {
 		return customErrors.NewBadRequestErrorWrap(err, fmt.Sprintf("invalid time format: %s", s))
 	}
 	*ct = CustomTime(nt)
+
 	return
 }
 
-// MarshalJSON writes a quoted string in the custom format
+// MarshalJSON writes a quoted string in the custom format.
 func (ct CustomTime) MarshalJSON() ([]byte, error) {
 	return []byte(ct.String()), nil
 }
 
-// String returns the time in the custom format
+// String returns the time in the custom format.
 func (ct *CustomTime) String() string {
 	t := time.Time(*ct)
+
 	return fmt.Sprintf("%q", t)
 }

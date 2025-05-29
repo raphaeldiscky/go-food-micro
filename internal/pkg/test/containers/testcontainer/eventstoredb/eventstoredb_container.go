@@ -6,16 +6,17 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+	"github.com/docker/go-connections/nat"
+	"github.com/testcontainers/testcontainers-go/wait"
+
+	testcontainers "github.com/testcontainers/testcontainers-go"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"github.com/docker/go-connections/nat"
-	testcontainers "github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 type eventstoredbTestContainers struct {
@@ -105,6 +106,7 @@ func (g *eventstoredbTestContainers) Start(
 	if err != nil {
 		return nil, err
 	}
+
 	return eventstroredb.NewEventStoreDB(eventstoredbOptions)
 }
 
@@ -112,6 +114,7 @@ func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
 	}
+
 	return nil
 }
 
@@ -137,8 +140,9 @@ func (g *eventstoredbTestContainers) getRunOptions(
 	containerReq := testcontainers.ContainerRequest{
 		Image:        fmt.Sprintf("%s:%s", g.defaultOptions.ImageName, g.defaultOptions.Tag),
 		ExposedPorts: g.defaultOptions.Ports,
-		WaitingFor:   wait.ForListeningPort(nat.Port(g.defaultOptions.Ports[0])).WithPollInterval(2 * time.Second),
-		Hostname:     g.defaultOptions.Host,
+		WaitingFor: wait.ForListeningPort(nat.Port(g.defaultOptions.Ports[0])).
+			WithPollInterval(2 * time.Second),
+		Hostname: g.defaultOptions.Host,
 		// we use `EVENTSTORE_IN_MEM` for use eventstoredb in-memory mode in tests
 		Env: map[string]string{
 			"EVENTSTORE_START_STANDARD_PROJECTIONS": "false",

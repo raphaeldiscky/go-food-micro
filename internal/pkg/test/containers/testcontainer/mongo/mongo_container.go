@@ -6,17 +6,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
 	"emperror.dev/errors"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
-	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	testcontainers "github.com/testcontainers/testcontainers-go"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
 const (

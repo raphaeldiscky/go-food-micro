@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
-
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 )
 
 type grpcErr struct {
@@ -52,12 +52,12 @@ func NewGrpcError(
 	return grpcErr
 }
 
-// ErrBody Error body
+// ErrBody Error body.
 func (p *grpcErr) ErrBody() error {
 	return p
 }
 
-// Error  Error() interface method
+// Error  Error() interface method.
 func (p *grpcErr) Error() string {
 	return fmt.Sprintf(
 		"Error Title: %s - Error Status: %d - Error Detail: %s",
@@ -107,7 +107,7 @@ func (p *grpcErr) SetStackTrace(stackTrace string) GrpcErr {
 	return p
 }
 
-// ToGrpcResponseErr creates a gRPC error response to send grpc engine
+// ToGrpcResponseErr creates a gRPC error response to send grpc engine.
 func (p *grpcErr) ToGrpcResponseErr() error {
 	return status.Error(p.GetStatus(), p.ToJson())
 }
@@ -122,5 +122,6 @@ func (p *grpcErr) ToJson() string {
 
 func (p *grpcErr) json() []byte {
 	b, _ := json.Marshal(&p)
+
 	return b
 }

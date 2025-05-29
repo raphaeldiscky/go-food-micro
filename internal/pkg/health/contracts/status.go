@@ -13,6 +13,7 @@ func NewStatus(err error) Status {
 	if err != nil {
 		return Status{Status: StatusDown}
 	}
+
 	return Status{Status: StatusUp}
 }
 

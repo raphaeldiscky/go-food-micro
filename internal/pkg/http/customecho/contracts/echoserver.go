@@ -3,10 +3,10 @@ package contracts
 import (
 	"context"
 
+	echo "github.com/labstack/echo/v4"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	echo "github.com/labstack/echo/v4"
 )
 
 type EchoHttpServer interface {

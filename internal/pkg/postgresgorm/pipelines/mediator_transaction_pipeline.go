@@ -3,13 +3,14 @@ package pipelines
 import (
 	"context"
 
+	"gorm.io/gorm"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	mediatr "github.com/mehdihadeli/go-mediatr"
-	"gorm.io/gorm"
 )
 
 type mediatorTransactionPipeline struct {

@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/iancoleman/strcase"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/pipeline"
 	types2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants/telemetrytags"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
 	attribute2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
-
-	"github.com/iancoleman/strcase"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/metric"
 )
 
 type messagingMetricsPipeline struct {

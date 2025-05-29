@@ -23,13 +23,16 @@ func (r *WorkersRunner) Start(ctx context.Context) chan error {
 				select {
 				case e := <-err:
 					r.errChan <- e
+
 					return
 				case <-ctx.Done():
 					stopErr := r.Stop(ctx)
 					if stopErr != nil {
 						r.errChan <- stopErr
+
 						return
 					}
+
 					return
 				}
 			}

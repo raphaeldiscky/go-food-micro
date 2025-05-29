@@ -7,15 +7,16 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
-
 	"emperror.dev/errors"
-	migrate "github.com/golang-migrate/migrate/v4"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+
+	migrate "github.com/golang-migrate/migrate/v4"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/migration/contracts"
 )
 
 type goMigratePostgresMigrator struct {
@@ -106,7 +107,10 @@ func (m *goMigratePostgresMigrator) Down(_ context.Context, version uint) error 
 	return nil
 }
 
-func (m *goMigratePostgresMigrator) executeCommand(command migration.CommandType, version uint) error {
+func (m *goMigratePostgresMigrator) executeCommand(
+	command migration.CommandType,
+	version uint,
+) error {
 	var err error
 	switch command {
 	case migration.Up:
@@ -125,7 +129,7 @@ func (m *goMigratePostgresMigrator) executeCommand(command migration.CommandType
 		err = errors.New("invalid migration direction")
 	}
 
-	if err == migrate.ErrNoChange {
+	if errors.Is(err, migrate.ErrNoChange) {
 		return nil
 	}
 	if err != nil {

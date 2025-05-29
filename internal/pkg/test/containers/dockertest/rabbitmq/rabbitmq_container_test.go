@@ -5,6 +5,12 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/require"
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core"
@@ -15,16 +21,10 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	rabbitmq2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq"
-
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
 	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging/consumer"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
-
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/require"
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
 )
 
 func Test_RabbitMQ_Container(t *testing.T) {

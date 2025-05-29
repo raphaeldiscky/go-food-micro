@@ -3,11 +3,11 @@ package json
 import (
 	"reflect"
 
+	"emperror.dev/errors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
 )
 
 type DefaultEventJsonSerializer struct {
@@ -24,7 +24,9 @@ func (s *DefaultEventJsonSerializer) Serialize(
 	return s.SerializeObject(event)
 }
 
-func (s *DefaultEventJsonSerializer) SerializeObject(event interface{}) (*serializer.EventSerializationResult, error) {
+func (s *DefaultEventJsonSerializer) SerializeObject(
+	event interface{},
+) (*serializer.EventSerializationResult, error) {
 	if event == nil {
 		return &serializer.EventSerializationResult{Data: nil, ContentType: s.ContentType()}, nil
 	}
@@ -56,7 +58,10 @@ func (s *DefaultEventJsonSerializer) Deserialize(
 	)
 
 	if targetEventPointer == nil {
-		return nil, errors.Errorf("event type `%s` is not impelemted IDomainEvent or can't be instansiated", eventType)
+		return nil, errors.Errorf(
+			"event type `%s` is not impelemted IDomainEvent or can't be instansiated",
+			eventType,
+		)
 	}
 
 	if contentType != s.ContentType() {

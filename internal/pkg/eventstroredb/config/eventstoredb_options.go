@@ -3,11 +3,11 @@ package config
 import (
 	"fmt"
 
+	"github.com/iancoleman/strcase"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"github.com/iancoleman/strcase"
 )
 
 // https://developers.eventstore.com/clients/dotnet/21.2/#connect-to-eventstoredb
@@ -51,5 +51,6 @@ type Subscription struct {
 
 func ProvideConfig(environment environment.Environment) (*EventStoreDbOptions, error) {
 	optionName := strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[EventStoreDbOptions]())
+
 	return config.BindConfigKey[*EventStoreDbOptions](optionName, environment)
 }

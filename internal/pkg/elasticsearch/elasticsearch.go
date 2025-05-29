@@ -2,6 +2,7 @@ package elasticsearch
 
 import (
 	"emperror.dev/errors"
+
 	elasticsearch "github.com/elastic/go-elasticsearch/v8"
 )
 

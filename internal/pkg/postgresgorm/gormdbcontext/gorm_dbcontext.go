@@ -3,11 +3,11 @@ package gormdbcontext
 import (
 	"context"
 
+	"gorm.io/gorm"
+
 	defaultlogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/helpers/gormextensions"
-
-	"gorm.io/gorm"
 )
 
 type gormDBContext struct {

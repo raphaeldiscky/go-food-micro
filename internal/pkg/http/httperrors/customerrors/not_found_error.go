@@ -50,11 +50,10 @@ func (n *notFoundError) isNotFoundError() {
 }
 
 func IsNotFoundError(err error) bool {
-	var notFoundError NotFoundError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested notfound error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(NotFoundError); ok {
+	var notFoundError NotFoundError
+	if errors.As(err, &notFoundError) {
 		return true
 	}
 

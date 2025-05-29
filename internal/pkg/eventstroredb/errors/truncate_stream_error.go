@@ -3,9 +3,9 @@ package errors
 import (
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 type truncateStreamError struct {
@@ -18,7 +18,10 @@ type TruncateStreamError interface {
 }
 
 func NewTruncateStreamError(err error, streamId string) error {
-	internal := customErrors.NewInternalServerErrorWrap(err, fmt.Sprintf("unable to truncate stream %s", streamId))
+	internal := customErrors.NewInternalServerErrorWrap(
+		err,
+		fmt.Sprintf("unable to truncate stream %s", streamId),
+	)
 	customErr := customErrors.GetCustomError(internal)
 	br := &truncateStreamError{
 		InternalServerError: customErr.(customErrors.InternalServerError),

@@ -6,6 +6,11 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/labstack/echo/v4/middleware"
+	"go.opentelemetry.io/otel/metric"
+
+	echo "github.com/labstack/echo/v4"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
@@ -16,10 +21,6 @@ import (
 	oteltracing "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/oteltracing"
 	problemdetail "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/middlewares/problemdetail"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	echo "github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-	"go.opentelemetry.io/otel/metric"
 )
 
 type echoHttpServer struct {
@@ -154,7 +155,7 @@ func (s *echoHttpServer) GetEchoInstance() *echo.Echo {
 	return s.echo
 }
 
-// APIVersion Header Based Versioning
+// APIVersion Header Based Versioning.
 func apiVersion(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		req := c.Request()

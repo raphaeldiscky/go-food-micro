@@ -5,6 +5,14 @@ import (
 	"fmt"
 	"reflect"
 
+	"emperror.dev/errors"
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+	"go.opentelemetry.io/otel/trace"
+
+	linq "github.com/ahmetb/go-linq/v3"
+	uuid "github.com/satori/go.uuid"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
@@ -18,13 +26,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	linq "github.com/ahmetb/go-linq/v3"
-	uuid "github.com/satori/go.uuid"
-	attribute2 "go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 )
 
 type esdbAggregateStore[T models.IHaveEventSourcedAggregate] struct {
@@ -68,6 +69,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 			),
 			logger.Fields{"AggregateID": aggregate.ID()},
 		)
+
 		return appendResult.NoOp, nil
 	}
 
@@ -84,6 +86,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 			if err != nil {
 				return nil
 			}
+
 			return a.serializer.DomainEventToStreamEvent(
 				domainEvent,
 				metadata,
@@ -235,6 +238,7 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 		Distinct().
 		SelectT(func(streamEvent *models.StreamEvent) domain.IDomainEvent {
 			meta = streamEvent.Metadata
+
 			return streamEvent.Event
 		}).
 		ToSlice(&domainEvents)

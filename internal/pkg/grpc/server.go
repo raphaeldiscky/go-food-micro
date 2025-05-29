@@ -5,21 +5,22 @@ import (
 	"net"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/handlers/otel"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/interceptors"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"emperror.dev/errors"
-	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
-	grpcRecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
-	grpcCtxTags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
-	googleGrpc "google.golang.org/grpc"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/reflection"
+
+	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpcRecovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	grpcCtxTags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	googleGrpc "google.golang.org/grpc"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/handlers/otel"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/interceptors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 const (

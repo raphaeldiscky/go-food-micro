@@ -53,11 +53,10 @@ func (u *unMarshalingError) isInternalServerError() {
 }
 
 func IsUnMarshalingError(err error) bool {
-	var unMarshalingError UnMarshalingError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested unMarshaling error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(UnMarshalingError); ok {
+	var unMarshalingError UnMarshalingError
+	if errors.As(err, &unMarshalingError) {
 		return true
 	}
 

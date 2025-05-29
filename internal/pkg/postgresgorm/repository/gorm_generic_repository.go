@@ -6,6 +6,12 @@ import (
 	"reflect"
 	"strings"
 
+	"emperror.dev/errors"
+	"github.com/iancoleman/strcase"
+	"gorm.io/gorm"
+
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data/specification"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
@@ -14,19 +20,14 @@ import (
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-
-	"emperror.dev/errors"
-	"github.com/iancoleman/strcase"
-	uuid "github.com/satori/go.uuid"
-	"gorm.io/gorm"
 )
 
-// gorm generic repository
+// gorm generic repository.
 type gormGenericRepository[TDataModel interface{}, TEntity interface{}] struct {
 	db *gorm.DB
 }
 
-// NewGenericGormRepositoryWithDataModel create new gorm generic repository
+// NewGenericGormRepositoryWithDataModel create new gorm generic repository.
 func NewGenericGormRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}](
 	db *gorm.DB,
 ) data.GenericRepositoryWithDataModel[TDataModel, TEntity] {
@@ -35,7 +36,7 @@ func NewGenericGormRepositoryWithDataModel[TDataModel interface{}, TEntity inter
 	}
 }
 
-// NewGenericGormRepository create new gorm generic repository
+// NewGenericGormRepository create new gorm generic repository.
 func NewGenericGormRepository[TEntity interface{}](
 	db *gorm.DB,
 ) data.GenericRepository[TEntity] {
@@ -200,6 +201,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetByFilter(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	} else {
 		var dataModels []TDataModel
@@ -211,6 +213,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetByFilter(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }
@@ -307,6 +310,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) SkipTake(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	} else {
 		var dataModels []TDataModel
@@ -318,6 +322,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) SkipTake(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }
@@ -328,6 +333,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Count(
 	var dataModel TDataModel
 	var count int64
 	r.db.WithContext(ctx).Model(&dataModel).Count(&count)
+
 	return count
 }
 
@@ -346,6 +352,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Find(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	} else {
 		var dataModels []TDataModel
@@ -357,6 +364,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Find(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }

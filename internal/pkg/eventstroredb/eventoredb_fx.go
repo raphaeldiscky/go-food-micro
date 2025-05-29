@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
-	// - execute its func only if it requested
+	// - execute its func only if it requested.
 	eventstoreProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
 		config.ProvideConfig,
 		NewEsdbSerializer,
@@ -38,11 +38,11 @@ var (
 	// FiberInvokes - execute after registering all of our provided
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
-	// - return value will be discarded and can not be provided
+	// - return value will be discarded and can not be provided.
 	eventstoreInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
 )
 
-// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`
+// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,
 	worker EsdbSubscriptionAllWorker,
@@ -69,6 +69,7 @@ func registerHooks(
 						"(worker.SubscribeAll) error in running esdb subscription worker: {%v}",
 						err,
 					)
+
 					return
 				}
 			}()

@@ -6,14 +6,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	"emperror.dev/errors"
+	"github.com/spf13/viper"
+
+	env "github.com/caarlos0/env/v8"
+	defaults "github.com/mcuadros/go-defaults"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
-	env "github.com/caarlos0/env/v8"
-	defaults "github.com/mcuadros/go-defaults"
-	"github.com/spf13/viper"
 )
 
 func BindConfig[T any](environments ...environment.Environment) (T, error) {

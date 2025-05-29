@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"go.uber.org/fx"
 
 	redis "github.com/redis/go-redis/v9"
-	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 var (
@@ -18,7 +19,7 @@ var (
 		"redisfx",
 		redisProviders,
 		redisInvokes,
-	) //nolint:gochecknoglobals
+	)
 
 	redisProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
 		NewRedisClient,
@@ -26,10 +27,10 @@ var (
 			return client
 		},
 		//// will create new instance of redis client instead of reusing current instance of `redis.Client`
-		//fx.Annotate(
+		// fx.Annotate(
 		//	NewRedisClient,
 		//	fx.As(new(redis.UniversalClient)),
-		//),
+		// ),
 		fx.Annotate(
 			NewRedisHealthChecker,
 			fx.As(new(contracts.Health)),
@@ -39,7 +40,7 @@ var (
 
 	redisInvokes = fx.Options(
 		fx.Invoke(registerHooks),
-	) //nolint:gochecknoglobals
+	)
 )
 
 func registerHooks(

@@ -1,10 +1,10 @@
 package messagepersistence
 
 import (
+	"gorm.io/gorm"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
-
-	"gorm.io/gorm"
 )
 
 type PostgresMessagePersistenceDBContext struct {

@@ -15,12 +15,21 @@ func NewProjectionsBuilder() ProjectionsBuilder {
 }
 
 func (p *projectionsBuilder) AddProjection(projection projection.IProjection) ProjectionsBuilder {
-	p.projectionConfiguration.Projections = append(p.projectionConfiguration.Projections, projection)
+	p.projectionConfiguration.Projections = append(
+		p.projectionConfiguration.Projections,
+		projection,
+	)
+
 	return p
 }
 
-func (p *projectionsBuilder) AddProjections(projections []projection.IProjection) ProjectionsBuilder {
-	p.projectionConfiguration.Projections = append(p.projectionConfiguration.Projections, projections...)
+func (p *projectionsBuilder) AddProjections(
+	projections []projection.IProjection,
+) ProjectionsBuilder {
+	p.projectionConfiguration.Projections = append(
+		p.projectionConfiguration.Projections,
+		projections...)
+
 	return p
 }
 

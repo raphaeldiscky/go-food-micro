@@ -5,6 +5,11 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+
+	uuid "github.com/satori/go.uuid"
+
 	messageConsumer "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	pipeline2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/pipeline"
 	types3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
@@ -20,10 +25,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging/consumer"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
-
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func Test_AddRabbitMQ(t *testing.T) {
@@ -37,7 +38,7 @@ func Test_AddRabbitMQ(t *testing.T) {
 		json.NewDefaultJsonSerializer(),
 	)
 
-	//rabbitmqOptions := &config.RabbitmqOptions{
+	// rabbitmqOptions := &config.RabbitmqOptions{
 	//	RabbitmqHostOptions: &config.RabbitmqHostOptions{
 	//		UserName: "guest",
 	//		Password: "guest",
@@ -101,12 +102,12 @@ func Test_AddRabbitMQ(t *testing.T) {
 
 	require.NoError(t, err)
 
-	//err = b.ConnectRabbitMQConsumer(ProducerConsumerMessage{}, func(consumerBuilder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
+	// err = b.ConnectRabbitMQConsumer(ProducerConsumerMessage{}, func(consumerBuilder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 	//	consumerBuilder.WithHandlers(func(handlerBuilder messageConsumer.ConsumerHandlerConfigurationBuilder) {
 	//		handlerBuilder.AddHandler(fakeConsumer)
 	//	})
-	//})
-	//require.NoError(t, err)
+	// })
+	// require.NoError(t, err)
 
 	err = b.ConnectConsumerHandler(&ProducerConsumerMessage{}, fakeConsumer2)
 	require.NoError(t, err)
@@ -147,7 +148,7 @@ func NewProducerConsumerMessage(data string) *ProducerConsumerMessage {
 	}
 }
 
-// /////////// ConsumerHandlerT
+// /////////// ConsumerHandlerT.
 type TestMessageHandler struct{}
 
 func NewTestMessageHandler() *TestMessageHandler {
@@ -180,7 +181,7 @@ func NewTestMessageHandler2() *TestMessageHandler2 {
 	return &TestMessageHandler2{}
 }
 
-// /////////////// ConsumerPipeline
+// /////////////// ConsumerPipeline.
 type Pipeline1 struct{}
 
 func NewPipeline1() pipeline2.ConsumerPipeline {

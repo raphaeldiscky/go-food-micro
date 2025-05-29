@@ -53,11 +53,10 @@ func (v *validationError) isBadRequestError() {
 }
 
 func IsValidationError(err error) bool {
-	var validationError ValidationError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested validation error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(ValidationError); ok {
+	var validationError ValidationError
+	if errors.As(err, &validationError) {
 		return true
 	}
 

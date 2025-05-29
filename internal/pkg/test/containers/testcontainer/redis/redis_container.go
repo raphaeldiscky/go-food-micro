@@ -6,15 +6,16 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
+	"github.com/docker/go-connections/nat"
+	"github.com/testcontainers/testcontainers-go/wait"
+
+	redis "github.com/redis/go-redis/v9"
+	testcontainers "github.com/testcontainers/testcontainers-go"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
-	"emperror.dev/errors"
-	"github.com/docker/go-connections/nat"
-	redis "github.com/redis/go-redis/v9"
-	testcontainers "github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 type redisTestContainers struct {
@@ -93,6 +94,7 @@ func (g *redisTestContainers) PopulateContainerOptions(
 		Port:     g.defaultOptions.HostPort,
 		PoolSize: g.defaultOptions.PoolSize,
 	}
+
 	return reidsOptions, nil
 }
 

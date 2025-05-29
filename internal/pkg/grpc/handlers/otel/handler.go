@@ -8,12 +8,12 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
-	"go.opentelemetry.io/otel/propagation"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 	"go.opentelemetry.io/otel/trace"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/stats"
 	"google.golang.org/grpc/status"
+
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 )
 
 // ref: https://github.com/bakins/otel-grpc-statshandler/blob/main/statshandler.go
@@ -47,7 +47,6 @@ type gRPCContext struct {
 type handler struct {
 	tracer             trace.Tracer
 	meter              metric.Meter
-	propagator         propagation.TextMapPropagator
 	rpcDuration        metric.Int64Histogram
 	rpcRequestSize     metric.Int64Histogram
 	rpcResponseSize    metric.Int64Histogram
@@ -277,12 +276,12 @@ func (s *ServerHandler) TagRPC(
 	ctx context.Context,
 	info *stats.RPCTagInfo,
 ) context.Context {
-	return s.handler.tagRPC(ctx, info)
+	return s.tagRPC(ctx, info)
 }
 
 // HandleRPC processes the RPC stats.
 func (s *ServerHandler) HandleRPC(ctx context.Context, rs stats.RPCStats) {
-	s.handler.handleRPC(ctx, rs)
+	s.handleRPC(ctx, rs)
 }
 
 // TagConn can attach some information to the given context.
@@ -303,14 +302,14 @@ func (c *ClientHandler) TagRPC(
 	ctx context.Context,
 	info *stats.RPCTagInfo,
 ) context.Context {
-	return c.handler.tagRPC(ctx, info)
+	return c.tagRPC(ctx, info)
 }
 
 func (c *ClientHandler) HandleRPC(
 	ctx context.Context,
 	rpcStats stats.RPCStats,
 ) {
-	c.handler.handleRPC(ctx, rpcStats)
+	c.handleRPC(ctx, rpcStats)
 }
 
 func (c *ClientHandler) TagConn(

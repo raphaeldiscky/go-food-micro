@@ -7,14 +7,15 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"emperror.dev/errors"
+
+	linq "github.com/ahmetb/go-linq/v3"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	errors2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
-
-	"emperror.dev/errors"
-	linq "github.com/ahmetb/go-linq/v3"
-	uuid "github.com/satori/go.uuid"
 )
 
 type WhenFunc func(event domain.IDomainEvent) error
@@ -40,14 +41,14 @@ type AggregateStateProjection interface {
 	fold
 }
 
-// IHaveEventSourcedAggregate this interface should implement by actual aggregate root class in our domain_events
+// IHaveEventSourcedAggregate this interface should implement by actual aggregate root class in our domain_events.
 type IHaveEventSourcedAggregate interface {
 	When
 	NewEmptyAggregate()
 	IEventSourcedAggregateRoot
 }
 
-// IEventSourcedAggregateRoot contains all methods of AggregateBase
+// IEventSourcedAggregateRoot contains all methods of AggregateBase.
 type IEventSourcedAggregateRoot interface {
 	domain.IEntity
 
@@ -79,7 +80,7 @@ type IEventSourcedAggregateRoot interface {
 	AggregateStateProjection
 }
 
-// EventSourcedAggregateRoot base aggregate contains all main necessary fields
+// EventSourcedAggregateRoot base aggregate contains all main necessary fields.
 type EventSourcedAggregateRoot struct {
 	*domain.Entity
 	originalVersion   int64
@@ -222,9 +223,10 @@ func (a *EventSourcedAggregateRoot) fold(
 
 func (a *EventSourcedAggregateRoot) String() string {
 	data := &EventSourcedAggregateRootDataModel{
-		EntityDataModel: a.Entity.ToDataModel(),
+		EntityDataModel: a.ToDataModel(),
 		OriginalVersion: a.originalVersion,
 	}
 	j, _ := json.Marshal(data)
+
 	return fmt.Sprintf("Aggregate json: %s", string(j))
 }

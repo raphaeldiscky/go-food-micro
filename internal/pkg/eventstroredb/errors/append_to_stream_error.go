@@ -3,9 +3,9 @@ package errors
 import (
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 type appendToStreamError struct {
@@ -18,7 +18,10 @@ type AppendToStreamError interface {
 }
 
 func NewAppendToStreamError(err error, streamId string) error {
-	bad := customErrors.NewBadRequestErrorWrap(err, fmt.Sprintf("unable to append events to stream %s", streamId))
+	bad := customErrors.NewBadRequestErrorWrap(
+		err,
+		fmt.Sprintf("unable to append events to stream %s", streamId),
+	)
 	customErr := customErrors.GetCustomError(bad)
 	br := &appendToStreamError{
 		BadRequestError: customErr.(customErrors.BadRequestError),

@@ -18,7 +18,7 @@ var (
 	packages map[string]map[string][]reflect.Type
 )
 
-// discoverTypes initializes types and packages
+// discoverTypes initializes types and packages.
 func init() {
 	types = make(map[string][]reflect.Type)
 	packages = make(map[string]map[string][]reflect.Type)
@@ -93,11 +93,12 @@ func GetAllRegisteredTypes() map[string][]reflect.Type {
 	return types
 }
 
-// TypeByName return the type by its name
+// TypeByName return the type by its name.
 func TypeByName(typeName string) reflect.Type {
 	if typ, ok := types[typeName]; ok {
 		return typ[0]
 	}
+
 	return nil
 }
 
@@ -105,6 +106,7 @@ func TypesByName(typeName string) []reflect.Type {
 	if types, ok := types[typeName]; ok {
 		return types
 	}
+
 	return nil
 }
 
@@ -156,13 +158,14 @@ func TypesImplementedInterface[TInterface interface{}]() []reflect.Type {
 	return res
 }
 
-// GetFullTypeName returns the full name of the type by its package name
+// GetFullTypeName returns the full name of the type by its package name.
 func GetFullTypeName(input interface{}) string {
 	if input == nil {
 		return ""
 	}
 
 	t := reflect.TypeOf(input)
+
 	return t.String()
 }
 
@@ -176,7 +179,7 @@ func GetFullTypeNameByType(typ reflect.Type) string {
 	return typ.String()
 }
 
-// GetTypeName returns the name of the type without its package name
+// GetTypeName returns the name of the type without its package name.
 func GetTypeName(input interface{}) string {
 	if input == nil {
 		return ""
@@ -234,7 +237,7 @@ func GetGenericNonePointerTypeNameByT[T any]() string {
 	return t.Elem().Name()
 }
 
-// GetNonePointerTypeName returns the name of the type without its package name and its pointer
+// GetNonePointerTypeName returns the name of the type without its package name and its pointer.
 func GetNonePointerTypeName(input interface{}) string {
 	if input == nil {
 		return ""
@@ -260,11 +263,12 @@ func GetTypeNameByType(typ reflect.Type) string {
 	return fmt.Sprintf("*%s", typ.Elem().Name())
 }
 
-// TypeByPackageName return the type by its package and name
+// TypeByPackageName return the type by its package and name.
 func TypeByPackageName(pkgPath string, name string) reflect.Type {
 	if pkgTypes, ok := packages[pkgPath]; ok {
 		return pkgTypes[name][0]
 	}
+
 	return nil
 }
 
@@ -285,11 +289,13 @@ func TypesByPackageName(pkgPath string, name string) []reflect.Type {
 	if pkgTypes, ok := packages[pkgPath]; ok {
 		return pkgTypes[name]
 	}
+
 	return nil
 }
 
 func GetGenericTypeByT[T interface{}]() reflect.Type {
 	res := reflect.TypeOf((*T)(nil)).Elem()
+
 	return res
 }
 
@@ -308,6 +314,7 @@ func GetReflectType(value interface{}) reflect.Type {
 	}
 
 	res := reflect.TypeOf(value)
+
 	return res
 }
 
@@ -322,6 +329,7 @@ func GetBaseReflectType(value interface{}) reflect.Type {
 func GenericInstanceByT[T any]() T {
 	// https://stackoverflow.com/questions/7132848/how-to-get-the-reflect-type-of-an-interface
 	typ := GetGenericTypeByT[T]()
+
 	return getInstanceFromType(typ).(T)
 }
 
@@ -331,7 +339,7 @@ func InstanceByType(typ reflect.Type) interface{} {
 
 // InstanceByTypeName return an empty instance of the type by its name
 // If the type is a pointer type, it will return a pointer instance of the type and
-// if the type is a struct type, it will return an empty struct
+// if the type is a struct type, it will return an empty struct.
 func InstanceByTypeName(name string) interface{} {
 	typ := TypeByName(name)
 
@@ -357,11 +365,12 @@ func EmptyInstanceByTypeAndImplementedInterface[TInterface interface{}](
 
 // InstancePointerByTypeName return an empty pointer instance of the type by its name
 // If the type is a pointer type, it will return a pointer instance of the type and
-// if the type is a struct type, it will return a pointer to the struct
+// if the type is a struct type, it will return a pointer to the struct.
 func InstancePointerByTypeName(name string) interface{} {
 	typ := TypeByName(name)
 	if typ.Kind() == reflect.Ptr {
 		res := reflect.New(typ.Elem()).Interface()
+
 		return res
 	}
 
@@ -370,7 +379,7 @@ func InstancePointerByTypeName(name string) interface{} {
 
 // InstanceByPackageName return an empty instance of the type by its name and package name
 // If the type is a pointer type, it will return a pointer instance of the type and
-// if the type is a struct type, it will return an empty struct
+// if the type is a struct type, it will return an empty struct.
 func InstanceByPackageName(pkgPath string, name string) interface{} {
 	typ := TypeByPackageName(pkgPath, name)
 
@@ -380,6 +389,7 @@ func InstanceByPackageName(pkgPath string, name string) interface{} {
 func getInstanceFromType(typ reflect.Type) interface{} {
 	if typ.Kind() == reflect.Ptr {
 		res := reflect.New(typ.Elem()).Interface()
+
 		return res
 	}
 

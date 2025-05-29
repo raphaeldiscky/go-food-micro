@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
-
 	"emperror.dev/errors"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
 )
 
 // https://klotzandrew.com/blog/error-handling-in-golang
@@ -75,8 +75,8 @@ func (e *customError) Format(s fmt.State, verb rune) {
 	switch verb {
 	case 'v':
 		if s.Flag('+') {
-			//%s	error messages separated by a colon and a space (": ")
-			//%q	double-quoted error messages separated by a colon and a space (": ")
+			// %s	error messages separated by a colon and a space (": ")
+			// %q	double-quoted error messages separated by a colon and a space (": ")
 			//%v	one error message per line
 			//%+v	one error message per line and stack trace (if any)
 
@@ -85,6 +85,7 @@ func (e *customError) Format(s fmt.State, verb rune) {
 			// io.WriteString(s, e.message)
 			return
 		}
+
 		fallthrough
 	case 's', 'q':
 		io.WriteString(s, e.Error())
@@ -105,7 +106,8 @@ func GetCustomError(err error) CustomError {
 func IsCustomError(err error) bool {
 	var customErr CustomError
 
-	_, ok := err.(CustomError)
+	var customError CustomError
+	ok := errors.As(err, &customError)
 	if ok {
 		return true
 	}

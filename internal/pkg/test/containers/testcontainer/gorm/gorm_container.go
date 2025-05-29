@@ -6,17 +6,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
 	"emperror.dev/errors"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
-	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	testcontainers "github.com/testcontainers/testcontainers-go"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
 // https://github.com/testcontainers/testcontainers-go/issues/1359
@@ -98,6 +99,7 @@ func (g *gormTestContainers) PopulateContainerOptions(
 		SSLMode:  false,
 		User:     g.defaultOptions.UserName,
 	}
+
 	return gormOptions, nil
 }
 
@@ -123,6 +125,7 @@ func (g *gormTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
 	}
+
 	return nil
 }
 

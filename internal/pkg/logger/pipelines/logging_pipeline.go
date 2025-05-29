@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type requestLoggerPipeline struct {

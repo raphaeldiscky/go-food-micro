@@ -23,6 +23,7 @@ func NewRabbitMQFakeTestConsumerHandlerWithHypothesis[T any](
 
 func NewRabbitMQFakeTestConsumerHandler[T any]() *RabbitMQFakeTestConsumerHandler[T] {
 	fmt.Println("NewRabbitMQFakeTestConsumerHandler created.")
+
 	return &RabbitMQFakeTestConsumerHandler[T]{}
 }
 

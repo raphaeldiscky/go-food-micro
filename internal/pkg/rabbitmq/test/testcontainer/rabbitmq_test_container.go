@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
-
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
-	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
+
+	testcontainers "github.com/testcontainers/testcontainers-go"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 )
 
 func CreatingContainerOptions(

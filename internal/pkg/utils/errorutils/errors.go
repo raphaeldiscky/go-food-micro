@@ -5,13 +5,13 @@ import (
 	"runtime/debug"
 	"strings"
 
+	"emperror.dev/errors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
-
-	"emperror.dev/errors"
 )
 
-// CheckErrMessages check for specific messages contains in the error
+// CheckErrMessages check for specific messages contains in the error.
 func CheckErrMessages(err error, messages ...string) bool {
 	for _, message := range messages {
 		if strings.Contains(
@@ -21,16 +21,18 @@ func CheckErrMessages(err error, messages ...string) bool {
 			return true
 		}
 	}
+
 	return false
 }
 
-// ErrorsWithStack returns a string contains errors messages in the stack with its stack trace levels for given error
+// ErrorsWithStack returns a string contains errors messages in the stack with its stack trace levels for given error.
 func ErrorsWithStack(err error) string {
 	res := fmt.Sprintf("%+v\n", err)
+
 	return res
 }
 
-// ErrorsWithoutStack just returns error messages without its callstack
+// ErrorsWithoutStack just returns error messages without its callstack.
 func ErrorsWithoutStack(err error, format bool) string {
 	res := fmt.Sprintf("%v\n", err)
 
@@ -40,13 +42,14 @@ func ErrorsWithoutStack(err error, format bool) string {
 		for _, item := range items {
 			errStr += fmt.Sprintf("%s\n", strings.TrimSpace(item))
 		}
+
 		return errStr
 	}
 
 	return res
 }
 
-// StackTrace returns all stack traces with a string contains just stack trace levels for the given error
+// StackTrace returns all stack traces with a string contains just stack trace levels for the given error.
 func StackTrace(err error) string {
 	var stackTrace contracts.StackTracer
 	stackStr := ""
@@ -69,7 +72,7 @@ func StackTrace(err error) string {
 	return stackStr
 }
 
-// RootStackTrace returns root stack trace with a string contains just stack trace levels for the given error
+// RootStackTrace returns root stack trace with a string contains just stack trace levels for the given error.
 func RootStackTrace(err error) string {
 	var stackTrace contracts.StackTracer
 	stackStr := ""

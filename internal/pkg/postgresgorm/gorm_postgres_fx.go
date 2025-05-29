@@ -3,9 +3,9 @@ package postgresgorm
 import (
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 )
 
 // Module provided to fxlog

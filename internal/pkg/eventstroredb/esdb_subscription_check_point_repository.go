@@ -6,13 +6,13 @@ import (
 	"io"
 	"time"
 
+	"emperror.dev/errors"
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 )
 
 type esdbSubscriptionCheckpointRepository struct {

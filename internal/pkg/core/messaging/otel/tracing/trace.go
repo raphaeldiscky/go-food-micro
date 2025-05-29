@@ -1,9 +1,9 @@
 package tracing
 
 import (
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
-
 	"go.opentelemetry.io/otel/trace"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 )
 
 var MessagingTracer trace.Tracer

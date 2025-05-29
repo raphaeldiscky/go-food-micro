@@ -62,11 +62,10 @@ func (a *applicationError) isApplicationError() {
 }
 
 func IsApplicationError(err error, code int) bool {
-	var applicationError ApplicationError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested application error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(ApplicationError); ok {
+	var applicationError ApplicationError
+	if errors.As(err, &applicationError) {
 		return true
 	}
 

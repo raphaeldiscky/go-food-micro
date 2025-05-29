@@ -1,10 +1,10 @@
 package empty
 
 import (
+	"go.uber.org/fx"
+
 	logger2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
-
-	"go.uber.org/fx"
 )
 
 // Module provided to fxlog

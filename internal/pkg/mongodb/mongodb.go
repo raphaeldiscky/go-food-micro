@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	mgm "github.com/kamva/mgm/v3"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.opentelemetry.io/contrib/instrumentation/go.mongodb.org/mongo-driver/mongo/otelmongo"
 
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+
+	mgm "github.com/kamva/mgm/v3"
 )
 
 const (
@@ -20,7 +21,7 @@ const (
 	maxPoolSize     = 300
 )
 
-// NewMongoDB Create new MongoDB client
+// NewMongoDB Create new MongoDB client.
 func NewMongoDB(cfg *MongoDbOptions) (*mongo.Client, error) {
 	uriAddress := fmt.Sprintf(
 		"mongodb://%s:%s@%s:%d",

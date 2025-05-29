@@ -20,6 +20,7 @@ func GetAllFields(typ reflect.Type) []reflect.StructField {
 	for i := 0; i < typ.NumField(); i++ {
 		fields = append(fields, typ.Field(i))
 	}
+
 	return fields
 }
 
@@ -57,6 +58,7 @@ func GetFieldValueByIndex[T any](object T, index int) interface{} {
 			return val.Interface()
 		}
 	}
+
 	return nil
 }
 
@@ -94,6 +96,7 @@ func GetFieldValueByName[T any](object T, name string) interface{} {
 			return val.Interface()
 		}
 	}
+
 	return nil
 }
 
@@ -181,6 +184,7 @@ func GetFieldValue(field reflect.Value) reflect.Value {
 	} else {
 		// for all unexported fields (private)
 		res := reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem()
+
 		return res
 	}
 }
@@ -203,18 +207,21 @@ func GetFieldValueFromMethodAndObject[T interface{}](object T, name string) refl
 		method := val.MethodByName(name)
 		if method.Kind() == reflect.Func {
 			res := method.Call(nil)
+
 			return res[0]
 		}
 	} else if v.Kind() == reflect.Struct {
 		method := v.MethodByName(name)
 		if method.Kind() == reflect.Func {
 			res := method.Call(nil)
+
 			return res[0]
 		} else {
 			// https://www.geeksforgeeks.org/reflect-addr-function-in-golang-with-examples/
 			pointerType := v.Addr()
 			method := pointerType.MethodByName(name)
 			res := method.Call(nil)
+
 			return res[0]
 		}
 	}
@@ -227,18 +234,21 @@ func GetFieldValueFromMethodAndReflectValue(val reflect.Value, name string) refl
 		method := val.MethodByName(name)
 		if method.Kind() == reflect.Func {
 			res := method.Call(nil)
+
 			return res[0]
 		}
 	} else if val.Kind() == reflect.Struct {
 		method := val.MethodByName(name)
 		if method.Kind() == reflect.Func {
 			res := method.Call(nil)
+
 			return res[0]
 		} else {
 			// https://www.geeksforgeeks.org/reflect-addr-function-in-golang-with-examples/
 			pointerType := val.Addr()
 			method := pointerType.MethodByName(name)
 			res := method.Call(nil)
+
 			return res[0]
 		}
 	}
@@ -265,11 +275,13 @@ func SetValue[T any](data T, value interface{}) {
 func ObjectTypePath(obj any) string {
 	objType := reflect.TypeOf(obj).Elem()
 	path := fmt.Sprintf("%s.%s", objType.PkgPath(), objType.Name())
+
 	return path
 }
 
 func TypePath[T any]() string {
 	var msg T
+
 	return ObjectTypePath(msg)
 }
 
@@ -284,5 +296,6 @@ func MethodPath(f interface{}) string {
 	methodPath = strings.ReplaceAll(methodPath, "(", "")
 	methodPath = strings.ReplaceAll(methodPath, ")", "")
 	methodPath = strings.ReplaceAll(methodPath, "*", "")
+
 	return methodPath
 }

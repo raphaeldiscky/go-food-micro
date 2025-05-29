@@ -50,11 +50,10 @@ func (f *forbiddenError) isForbiddenError() {
 }
 
 func IsForbiddenError(err error) bool {
-	var forbiddenError ForbiddenError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested forbidden error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(ForbiddenError); ok {
+	var forbiddenError ForbiddenError
+	if errors.As(err, &forbiddenError) {
 		return true
 	}
 

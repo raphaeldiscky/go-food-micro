@@ -6,14 +6,15 @@ import (
 	"testing"
 	"time"
 
+	"emperror.dev/errors"
+	"github.com/docker/go-connections/nat"
+	"github.com/testcontainers/testcontainers-go/wait"
+
+	testcontainers "github.com/testcontainers/testcontainers-go"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	postgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgrespgx"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
-	"emperror.dev/errors"
-	"github.com/docker/go-connections/nat"
-	testcontainers "github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // https://github.com/testcontainers/testcontainers-go/issues/1359
@@ -89,6 +90,7 @@ func (g *postgresPgxTestContainers) PopulateContainerOptions(
 		SSLMode:  false,
 		User:     g.defaultOptions.UserName,
 	}
+
 	return gormOptions, nil
 }
 
@@ -103,7 +105,6 @@ func (g *postgresPgxTestContainers) Start(
 	}
 
 	db, err := postgres.NewPgx(postgresPgxOptions)
-
 	if err != nil {
 		return nil, err
 	}
@@ -115,6 +116,7 @@ func (g *postgresPgxTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
 	}
+
 	return nil
 }
 
@@ -143,8 +145,8 @@ func (g *postgresPgxTestContainers) getRunOptions(
 		}
 	}
 
-	//hostFreePort, err := freeport.GetFreePort()
-	//if err != nil {
+	// hostFreePort, err := freeport.GetFreePort()
+	// if err != nil {
 	//	log.Fatal(err)
 	//}
 	//g.defaultOptions.HostPort = hostFreePort
@@ -152,9 +154,10 @@ func (g *postgresPgxTestContainers) getRunOptions(
 	containerReq := testcontainers.ContainerRequest{
 		Image:        fmt.Sprintf("%s:%s", g.defaultOptions.ImageName, g.defaultOptions.Tag),
 		ExposedPorts: []string{g.defaultOptions.Port},
-		WaitingFor:   wait.ForListeningPort(nat.Port(g.defaultOptions.Port)).WithPollInterval(2 * time.Second),
-		Hostname:     g.defaultOptions.Host,
-		SkipReaper:   true,
+		WaitingFor: wait.ForListeningPort(nat.Port(g.defaultOptions.Port)).
+			WithPollInterval(2 * time.Second),
+		Hostname:   g.defaultOptions.Host,
+		SkipReaper: true,
 		Env: map[string]string{
 			"POSTGRES_DB":       g.defaultOptions.Database,
 			"POSTGRES_PASSWORD": g.defaultOptions.Password,

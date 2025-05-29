@@ -3,9 +3,9 @@ package redis
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
-
 	redis "github.com/redis/go-redis/v9"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 )
 
 type RedisHealthChecker struct {

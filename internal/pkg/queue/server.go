@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
-
 	"github.com/hibiken/asynq"
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
 )
 
 func NewServeMux() *asynq.ServeMux {
@@ -30,10 +30,12 @@ func HookServer(lifecycle fx.Lifecycle, server *asynq.Server, mux *asynq.ServeMu
 					panic(err)
 				}
 			}()
+
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			server.Shutdown()
+
 			return nil
 		},
 	})

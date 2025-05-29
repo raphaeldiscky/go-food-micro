@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"strings"
 
-	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
+	"gorm.io/gorm"
 
 	uuid "github.com/satori/go.uuid"
-	"gorm.io/gorm"
+
+	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 )
 
 // https://gorm.io/docs/advanced_query.html#Scopes
@@ -21,13 +22,13 @@ func AmountGreaterThan1000(db *gorm.DB) *gorm.DB {
 	return db.Where("amount > ?", 1000)
 }
 
-// FilterAllItemsWithSoftDeleted returns soft-deleted and none soft-deleted items
+// FilterAllItemsWithSoftDeleted returns soft-deleted and none soft-deleted items.
 func FilterAllItemsWithSoftDeleted(db *gorm.DB) *gorm.DB {
 	// https://gorm.io/docs/delete.html#Find-soft-deleted-records
 	return db.Unscoped()
 }
 
-// SoftDeleted returns only soft-deleted items
+// SoftDeleted returns only soft-deleted items.
 func SoftDeleted(db *gorm.DB) *gorm.DB {
 	return db.Unscoped().Where("deleted_at IS NOT NULL")
 }

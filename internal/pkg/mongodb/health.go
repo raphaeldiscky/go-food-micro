@@ -3,9 +3,9 @@ package mongodb
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
-
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
 )
 
 type mongoHealthChecker struct {

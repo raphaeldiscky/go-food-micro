@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/ulule/limiter/v3/drivers/store/memory"
+
 	echo "github.com/labstack/echo/v4"
 	limiter "github.com/ulule/limiter/v3"
-	"github.com/ulule/limiter/v3/drivers/store/memory"
 )
 
 // ref: https://github.com/ulule/limiter-examples/blob/master/echo/main.go

@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/labstack/echo/v4/middleware"
 
 	echo "github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 // EchoLogger returns echo middleware which will log incoming requests.

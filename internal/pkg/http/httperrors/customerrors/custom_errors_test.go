@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
-	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
-
 	"emperror.dev/errors"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
+	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
 )
 
 func Test_Domain_Err(t *testing.T) {

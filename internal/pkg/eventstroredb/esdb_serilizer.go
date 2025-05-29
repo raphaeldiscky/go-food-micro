@@ -4,6 +4,13 @@ import (
 	"io"
 	"strings"
 
+	"emperror.dev/errors"
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+	"github.com/gofrs/uuid"
+
+	linq "github.com/ahmetb/go-linq/v3"
+	uuid2 "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
@@ -14,12 +21,6 @@ import (
 	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 	esErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/errors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	linq "github.com/ahmetb/go-linq/v3"
-	"github.com/gofrs/uuid"
-	uuid2 "github.com/satori/go.uuid"
 )
 
 type EsdbSerializer struct {
@@ -63,6 +64,7 @@ func (e *EsdbSerializer) StreamEventToEventData(
 	if err != nil {
 		return *new(esdb.EventData), err
 	}
+
 	return esdb.EventData{
 		EventID:     id,
 		EventType:   typeMapper.GetTypeName(streamEvent.Event),
@@ -179,6 +181,7 @@ func (e *EsdbSerializer) ResolvedEventsToStreamEvents(
 		if err != nil {
 			return nil
 		}
+
 		return event
 	}).ToSlice(&streamEvents)
 

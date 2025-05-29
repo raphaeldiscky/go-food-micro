@@ -4,6 +4,16 @@ import (
 	"context"
 	"fmt"
 
+	"emperror.dev/errors"
+	"github.com/iancoleman/strcase"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+
+	reflect "github.com/goccy/go-reflect"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data/specification"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
@@ -12,15 +22,6 @@ import (
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-
-	"emperror.dev/errors"
-	reflect "github.com/goccy/go-reflect"
-	"github.com/iancoleman/strcase"
-	uuid "github.com/satori/go.uuid"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // https://github.com/Kamva/mgm
@@ -35,7 +36,7 @@ type mongoGenericRepository[TDataModel interface{}, TEntity interface{}] struct 
 	collectionName string
 }
 
-// NewGenericMongoRepositoryWithDataModel create new gorm generic repository
+// NewGenericMongoRepositoryWithDataModel create new gorm generic repository.
 func NewGenericMongoRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}](
 	db *mongo.Client,
 	databaseName string,
@@ -48,7 +49,7 @@ func NewGenericMongoRepositoryWithDataModel[TDataModel interface{}, TEntity inte
 	}
 }
 
-// NewGenericMongoRepository create new gorm generic repository
+// NewGenericMongoRepository create new gorm generic repository.
 func NewGenericMongoRepository[TEntity interface{}](
 	db *mongo.Client,
 	databaseName string,
@@ -75,6 +76,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Add(
 		if err != nil {
 			return err
 		}
+
 		return nil
 	} else {
 		dataModel, err := mapper.Map[TDataModel](entity)
@@ -91,6 +93,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Add(
 		}
 		reflectionHelper.SetValue[TEntity](entity, e)
 	}
+
 	return nil
 }
 
@@ -124,7 +127,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetById(
 		// https://pkg.go.dev/go.mongodb.org/mongo-driver@v1.10.3/bson
 		if err := collection.FindOne(ctx, bson.M{"_id": id.String()}).Decode(&model); err != nil {
 			// ErrNoDocuments means that the filter did not match any documents in the collection
-			if err == mongo.ErrNoDocuments {
+			if errors.Is(err, mongo.ErrNoDocuments) {
 				return *new(TEntity), customErrors.NewNotFoundErrorWrap(
 					err,
 					fmt.Sprintf(
@@ -133,6 +136,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetById(
 					),
 				)
 			}
+
 			return *new(TEntity), errors.WrapIf(
 				err,
 				fmt.Sprintf(
@@ -141,20 +145,23 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetById(
 				),
 			)
 		}
+
 		return model, nil
 	} else {
 		var dataModel TDataModel
 		if err := collection.FindOne(ctx, bson.M{"_id": id.String()}).Decode(&dataModel); err != nil {
 			// ErrNoDocuments means that the filter did not match any documents in the collection
-			if err == mongo.ErrNoDocuments {
+			if errors.Is(err, mongo.ErrNoDocuments) {
 				return *new(TEntity), customErrors.NewNotFoundErrorWrap(err, fmt.Sprintf("can't find the entity with id %s into the database.", id.String()))
 			}
+
 			return *new(TEntity), errors.WrapIf(err, fmt.Sprintf("can't find the entity with id %s into the database.", id.String()))
 		}
 		entity, err := mapper.Map[TEntity](dataModel)
 		if err != nil {
 			return *new(TEntity), err
 		}
+
 		return entity, nil
 	}
 }
@@ -177,6 +184,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetAll(
 		if err != nil {
 			return nil, err
 		}
+
 		return result, nil
 	} else {
 		result, err := mongodb.Paginate[TDataModel](ctx, listQuery, collection, nil)
@@ -187,6 +195,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetAll(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }
@@ -229,6 +238,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Search(
 		if err != nil {
 			return nil, err
 		}
+
 		return result, nil
 	} else {
 		fields := reflectionHelper.GetAllFields(typeMapper.GetGenericTypeByT[TDataModel]())
@@ -251,6 +261,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Search(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }
@@ -269,7 +280,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFilter(
 		return nil, err
 	}
 
-	defer cursorResult.Close(ctx) // nolint: errcheck
+	defer cursorResult.Close(ctx) //nolint: errcheck
 
 	if modelType == dataModelType {
 		var models []TEntity
@@ -298,6 +309,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFilter(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }
@@ -322,9 +334,10 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 		// we could use also bson.D{} for filtering, it is also a map
 		if err := collection.FindOne(ctx, filters).Decode(&model); err != nil {
 			// ErrNoDocuments means that the filter did not match any documents in the collection
-			if err == mongo.ErrNoDocuments {
+			if errors.Is(err, mongo.ErrNoDocuments) {
 				return *new(TEntity), nil
 			}
+
 			return *new(TEntity), err
 		}
 
@@ -333,9 +346,10 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 		var dataModel TDataModel
 		if err := collection.FindOne(ctx, filters).Decode(&dataModel); err != nil {
 			// ErrNoDocuments means that the filter did not match any documents in the collection
-			if err == mongo.ErrNoDocuments {
+			if errors.Is(err, mongo.ErrNoDocuments) {
 				return *new(TEntity), nil
 			}
+
 			return *new(TEntity), err
 		}
 
@@ -343,6 +357,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 		if err != nil {
 			return *new(TEntity), err
 		}
+
 		return model, nil
 	}
 }
@@ -447,7 +462,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) SkipTake(
 	if err != nil {
 		return nil, err
 	}
-	defer cursorResult.Close(ctx) // nolint: errcheck
+	defer cursorResult.Close(ctx) //nolint: errcheck
 
 	if modelType == dataModelType {
 		var models []TEntity
@@ -473,6 +488,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) SkipTake(
 		if err != nil {
 			return nil, err
 		}
+
 		return models, nil
 	}
 }
@@ -485,6 +501,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Count(
 	if err != nil {
 		return 0
 	}
+
 	return count
 }
 

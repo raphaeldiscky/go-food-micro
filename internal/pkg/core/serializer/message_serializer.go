@@ -12,7 +12,11 @@ type MessageSerializer interface {
 	SerializeEnvelop(messageEnvelop types.MessageEnvelope) (*EventSerializationResult, error)
 	Deserialize(data []byte, messageType string, contentType string) (types.IMessage, error)
 	DeserializeObject(data []byte, messageType string, contentType string) (interface{}, error)
-	DeserializeType(data []byte, messageType reflect.Type, contentType string) (types.IMessage, error)
+	DeserializeType(
+		data []byte,
+		messageType reflect.Type,
+		contentType string,
+	) (types.IMessage, error)
 	ContentType() string
 	Serializer() Serializer
 }

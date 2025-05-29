@@ -1,11 +1,11 @@
 package postgresmessaging
 
 import (
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/persistmessage"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresmessaging/messagepersistence"
-
 	"go.uber.org/fx"
 	"gorm.io/gorm"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/persistmessage"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresmessaging/messagepersistence"
 )
 
 var Module = fx.Module(

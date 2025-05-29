@@ -8,12 +8,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/samber/lo"
 	"go.opentelemetry.io/otel"
@@ -23,7 +18,13 @@ import (
 	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
 	"go.opentelemetry.io/otel/sdk/metric"
 	"go.opentelemetry.io/otel/sdk/resource"
+
+	echo "github.com/labstack/echo/v4"
 	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 type OtelMetrics struct {
@@ -34,7 +35,7 @@ type OtelMetrics struct {
 	provider    *metric.MeterProvider
 }
 
-// NewOtelMetrics adds otel metrics
+// NewOtelMetrics adds otel metrics.
 func NewOtelMetrics(
 	config *MetricsOptions,
 	logger logger.Logger,
@@ -136,7 +137,6 @@ func (o *OtelMetrics) configExporters() ([]metric.Reader, error) {
 	}
 
 	if !o.config.UseOTLP { //nolint:nestif
-
 		if o.config.UseStdout {
 			console, err := stdoutmetric.New()
 			if err != nil {

@@ -3,9 +3,9 @@ package persistmessage
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-
 	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 )
 
 type MessagePersistenceService interface {
@@ -34,8 +34,8 @@ type MessagePersistenceService interface {
 		messageEnvelope types.MessageEnvelope,
 		ctx context.Context,
 	) error
-	//AddInternalMessage(
+	// AddInternalMessage(
 	//	internalCommand InternalMessage,
 	//	ctx context.Context,
-	//) error
+	// ) error
 }

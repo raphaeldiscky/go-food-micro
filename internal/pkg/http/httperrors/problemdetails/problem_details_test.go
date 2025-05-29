@@ -5,14 +5,18 @@ import (
 	"net/http"
 	"testing"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
 	"github.com/stretchr/testify/assert"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 func Test_Domain_Err(t *testing.T) {
-	domainErr := NewDomainProblemDetail(http.StatusBadRequest, "Order with id '1' already completed", "stack")
+	domainErr := NewDomainProblemDetail(
+		http.StatusBadRequest,
+		"Order with id '1' already completed",
+		"stack",
+	)
 
 	assert.Equal(t, "Order with id '1' already completed", domainErr.GetDetail())
 	assert.Equal(t, "Domain Model Error", domainErr.GetTitle())
@@ -22,7 +26,11 @@ func Test_Domain_Err(t *testing.T) {
 }
 
 func Test_Application_Err(t *testing.T) {
-	applicationErr := NewApplicationProblemDetail(http.StatusBadRequest, "application_exceptions error", "stack")
+	applicationErr := NewApplicationProblemDetail(
+		http.StatusBadRequest,
+		"application_exceptions error",
+		"stack",
+	)
 
 	assert.Equal(t, "application_exceptions error", applicationErr.GetDetail())
 	assert.Equal(t, "Application Service Error", applicationErr.GetTitle())
@@ -43,7 +51,10 @@ func Test_BadRequest_Err(t *testing.T) {
 
 func Test_Parse_Error(t *testing.T) {
 	// Bad-Request ProblemDetail
-	badRequestError := errors.WrapIf(customErrors.NewBadRequestError("bad-request error"), "bad request error")
+	badRequestError := errors.WrapIf(
+		customErrors.NewBadRequestError("bad-request error"),
+		"bad request error",
+	)
 	badRequestPrb := ParseError(badRequestError)
 	assert.NotNil(t, badRequestPrb)
 	assert.Equal(t, badRequestPrb.GetStatus(), 400)

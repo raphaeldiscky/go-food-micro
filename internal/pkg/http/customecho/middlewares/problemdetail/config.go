@@ -1,9 +1,9 @@
 package problemdetail
 
 import (
-	problemDetails "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
-
 	"github.com/labstack/echo/v4/middleware"
+
+	problemDetails "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
 )
 
 type config struct {

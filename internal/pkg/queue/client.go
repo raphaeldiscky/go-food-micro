@@ -4,14 +4,16 @@ import (
 	"context"
 	"fmt"
 
-	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
-
 	"github.com/hibiken/asynq"
 	"go.uber.org/fx"
+
+	redis2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/redis"
 )
 
 func NewClient(config *redis2.RedisOptions) *asynq.Client {
-	return asynq.NewClient(asynq.RedisClientOpt{Addr: fmt.Sprintf("%s:%d", config.Host, config.Port)})
+	return asynq.NewClient(
+		asynq.RedisClientOpt{Addr: fmt.Sprintf("%s:%d", config.Host, config.Port)},
+	)
 }
 
 func HookClient(lifecycle fx.Lifecycle, client *asynq.Client) {

@@ -4,6 +4,13 @@ import (
 	"context"
 	"time"
 
+	"emperror.dev/errors"
+	"go.opentelemetry.io/otel/attribute"
+
+	amqp091 "github.com/rabbitmq/amqp091-go"
+	uuid "github.com/satori/go.uuid"
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
 	messageHeader "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/messageheader"
 	producer3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/otel/tracing/producer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/producer"
@@ -15,12 +22,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer/configurations"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
-
-	"emperror.dev/errors"
-	amqp091 "github.com/rabbitmq/amqp091-go"
-	uuid "github.com/satori/go.uuid"
-	"go.opentelemetry.io/otel/attribute"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 )
 
 type rabbitMQProducer struct {
@@ -69,6 +70,7 @@ func (r *rabbitMQProducer) getProducerConfigurationByMessage(
 	message types2.IMessage,
 ) *configurations.RabbitMQProducerConfiguration {
 	messageType := utils.GetMessageBaseReflectType(message)
+
 	return r.producersConfigurations[messageType.String()]
 }
 
@@ -221,7 +223,7 @@ func (r *rabbitMQProducer) getMetadata(
 		messageHeader.SetMessageId(meta, message.GeMessageId())
 	}
 
-	if messageHeader.GetMessageCreated(meta) == *new(time.Time) {
+	if messageHeader.GetMessageCreated(meta).Equal(*new(time.Time)) {
 		messageHeader.SetMessageCreated(meta, message.GetCreated())
 	}
 

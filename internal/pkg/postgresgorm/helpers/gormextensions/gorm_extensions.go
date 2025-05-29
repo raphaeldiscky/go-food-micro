@@ -3,13 +3,13 @@ package gormextensions
 import (
 	"context"
 
+	"emperror.dev/errors"
+	"gorm.io/gorm"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/constants"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/scopes"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-
-	"emperror.dev/errors"
-	"gorm.io/gorm"
 )
 
 func GetTxFromContext(ctx context.Context) (*gorm.DB, error) {

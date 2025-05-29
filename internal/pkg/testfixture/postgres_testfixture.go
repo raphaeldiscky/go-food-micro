@@ -11,7 +11,7 @@ import (
 
 func RunPostgresFixture(db *sql.DB, fixturePaths []string, data map[string]interface{}) error {
 	// determine the project's root path
-	_, callerPath, _, _ := runtime.Caller(1) // nolint:dogsled
+	_, callerPath, _, _ := runtime.Caller(1) //nolint:dogsled
 
 	// Root folder of this project
 	rootPath := filepath.Join(filepath.Dir(callerPath), "../../../..")

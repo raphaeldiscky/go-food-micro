@@ -1,11 +1,11 @@
 package test
 
 import (
+	"go.uber.org/fx/fxtest"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
-
-	"go.uber.org/fx/fxtest"
 )
 
 type TestApplicationBuilder struct {

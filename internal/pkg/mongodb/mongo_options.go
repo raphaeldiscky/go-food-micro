@@ -1,11 +1,11 @@
 package mongodb
 
 import (
+	"github.com/iancoleman/strcase"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"github.com/iancoleman/strcase"
 )
 
 type MongoDbOptions struct {
@@ -24,5 +24,6 @@ func provideConfig(
 	optionName := strcase.ToLowerCamel(
 		typeMapper.GetGenericTypeNameByT[MongoDbOptions](),
 	)
+
 	return config.BindConfigKey[*MongoDbOptions](optionName, environment)
 }

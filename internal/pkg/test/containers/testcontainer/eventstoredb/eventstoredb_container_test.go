@@ -4,16 +4,16 @@ import (
 	"context"
 	"testing"
 
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
-
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
 )
 
 func Test_Custom_EventStoreDB_Container(t *testing.T) {

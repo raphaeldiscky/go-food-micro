@@ -3,13 +3,13 @@ package test
 import (
 	"time"
 
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxtest"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
-
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxtest"
 )
 
 func CreateFxTestApp(

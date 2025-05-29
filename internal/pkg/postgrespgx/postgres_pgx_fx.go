@@ -3,9 +3,9 @@ package postgres
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 // Module provided to fxlog

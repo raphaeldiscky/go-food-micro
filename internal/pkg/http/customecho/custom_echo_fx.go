@@ -6,11 +6,11 @@ import (
 	"errors"
 	"net/http"
 
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	"go.uber.org/fx"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
-	// - execute its func only if it requested
+	// - execute its func only if it requested.
 	echoProviders = fx.Options(fx.Provide( //nolint:gochecknoglobals
 		config.ProvideConfig,
 		// https://uber-go.github.io/fx/value-groups/consume.html#with-annotated-functions
@@ -39,11 +39,11 @@ var (
 	// - execute after registering all of our provided
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
-	// - return value will be discarded and can not be provided
+	// - return value will be discarded and can not be provided.
 	echoInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
 )
 
-// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`
+// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,
 	echoServer contracts.EchoHttpServer,
@@ -89,6 +89,7 @@ func registerHooks(
 			} else {
 				echoServer.Logger().Info("echo server shutdown gracefully")
 			}
+
 			return nil
 		},
 	})

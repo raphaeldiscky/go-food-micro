@@ -4,6 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	types2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer/json"
@@ -13,9 +17,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
-
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/require"
 )
 
 func Test_Publish_Message(t *testing.T) {
@@ -42,7 +43,7 @@ func Test_Publish_Message(t *testing.T) {
 	}
 	defer tp.Shutdown(ctx)
 
-	//options := &config.RabbitmqOptions{
+	// options := &config.RabbitmqOptions{
 	//	RabbitmqHostOptions: &config.RabbitmqHostOptions{
 	//		UserName: "guest",
 	//		Password: "guest",

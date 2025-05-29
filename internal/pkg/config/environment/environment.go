@@ -6,11 +6,11 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
-
 	"emperror.dev/errors"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 )
 
 type Environment string

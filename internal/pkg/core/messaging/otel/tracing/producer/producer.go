@@ -5,18 +5,19 @@ import (
 	"fmt"
 	"time"
 
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/baggage"
+	"go.opentelemetry.io/otel/trace"
+
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
 	messageHeader "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/messageheader"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/baggage"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // https://devandchill.com/posts/2021/12/go-step-by-step-guide-for-implementing-tracing-on-a-microservices-architecture-2/2/
@@ -73,7 +74,7 @@ func FinishProducerSpan(span trace.Span, err error) error {
 	if err != nil {
 		span.AddEvent(
 			fmt.Sprintf(
-				"failed to publsih message '%s' to the broker",
+				"failed to publish message '%s' to the broker",
 				messageName,
 			),
 		)
@@ -88,7 +89,7 @@ func FinishProducerSpan(span trace.Span, err error) error {
 
 	span.AddEvent(
 		fmt.Sprintf(
-			"message '%s' published to the broker succesfully",
+			"message '%s' published to the broker successfully",
 			messageName,
 		),
 	)
@@ -132,6 +133,7 @@ func getTraceOptions(
 		trace.WithAttributes(attrs...),
 		trace.WithSpanKind(trace.SpanKindProducer),
 	}
+
 	return opts
 }
 

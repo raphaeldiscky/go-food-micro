@@ -1,11 +1,12 @@
 package handlers
 
 import (
+	"emperror.dev/errors"
+
+	echo "github.com/labstack/echo/v4"
+
 	problemDetails "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	"emperror.dev/errors"
-	echo "github.com/labstack/echo/v4"
 )
 
 func ProblemDetailErrorHandlerFunc(

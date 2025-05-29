@@ -3,11 +3,12 @@ package json
 import (
 	"log"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
-
 	"github.com/TylerBrock/colorjson"
-	json "github.com/goccy/go-json"
 	"github.com/mitchellh/mapstructure"
+
+	json "github.com/goccy/go-json"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 )
 
 type jsonSerializer struct{}
@@ -25,7 +26,7 @@ func (s *jsonSerializer) Marshal(v interface{}) ([]byte, error) {
 }
 
 // Unmarshal is a wrapper around json.Unmarshal.
-// To unmarshal JSON into an interface value, Unmarshal stores in a map[string]interface{}
+// To unmarshal JSON into an interface value, Unmarshal stores in a map[string]interface{}.
 func (s *jsonSerializer) Unmarshal(data []byte, v interface{}) error {
 	return Unmarshal(data, v)
 }
@@ -59,12 +60,12 @@ func (s *jsonSerializer) UnmarshalToMapFromJson(
 	return UnmarshalToMapFromJson(data, v)
 }
 
-// PrettyPrint print input object as a formatted json string
+// PrettyPrint print input object as a formatted json string.
 func (s *jsonSerializer) PrettyPrint(data interface{}) string {
 	return PrettyPrint(data)
 }
 
-// ColoredPrettyPrint print input object as a formatted json string with color
+// ColoredPrettyPrint print input object as a formatted json string with color.
 func (s *jsonSerializer) ColoredPrettyPrint(data interface{}) string {
 	return ColoredPrettyPrint(data)
 }
@@ -102,7 +103,7 @@ func Marshal(v interface{}) ([]byte, error) {
 }
 
 // Unmarshal is a wrapper around json.Unmarshal.
-// To unmarshal JSON into an interface value, Unmarshal stores in a map[string]interface{}
+// To unmarshal JSON into an interface value, Unmarshal stores in a map[string]interface{}.
 func Unmarshal(data []byte, v interface{}) error {
 	// https://pkg.go.dev/encoding/json#Unmarshal
 	err := json.Unmarshal(data, v)

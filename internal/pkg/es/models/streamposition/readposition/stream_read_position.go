@@ -6,7 +6,7 @@ import expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pk
 // https://github.com/EventStore/EventStore-Client-Dotnet/blob/b8beee7b97ef359316822cb2d00f120bf67bd14d/src/EventStore.Client/StreamPosition.cs
 // https://github.com/EventStore/EventStore-Client-Go/blob/1591d047c0c448cacc0468f9af3605572aba7970/esdb/position.go
 
-// StreamReadPosition an int64 for accepts negative and positive value
+// StreamReadPosition an int64 for accepts negative and positive value.
 type StreamReadPosition int64
 
 func (e StreamReadPosition) Value() int64 {
@@ -33,6 +33,8 @@ func FromInt64(position int64) StreamReadPosition {
 	return StreamReadPosition(position)
 }
 
-func FromStreamRevision(streamVersion expectedStreamVersion.ExpectedStreamVersion) StreamReadPosition {
+func FromStreamRevision(
+	streamVersion expectedStreamVersion.ExpectedStreamVersion,
+) StreamReadPosition {
 	return StreamReadPosition(streamVersion.Value())
 }

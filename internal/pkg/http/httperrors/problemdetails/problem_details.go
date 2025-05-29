@@ -8,11 +8,11 @@ import (
 	"reflect"
 	"time"
 
+	"emperror.dev/errors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
 )
 
 const (
@@ -23,7 +23,7 @@ type ProblemDetailFunc[E error] func(err E) ProblemDetailErr
 
 var internalErrorMaps = map[reflect.Type]func(err error) ProblemDetailErr{}
 
-// ProblemDetailErr ProblemDetail error interface
+// ProblemDetailErr ProblemDetail error interface.
 type ProblemDetailErr interface {
 	GetStatus() int
 	SetStatus(status int) ProblemDetailErr
@@ -39,7 +39,7 @@ type ProblemDetailErr interface {
 	ErrBody() error
 }
 
-// ProblemDetail error struct
+// ProblemDetail error struct.
 type problemDetail struct {
 	Status     int       `json:"status,omitempty"`
 	Title      string    `json:"title,omitempty"`
@@ -49,12 +49,12 @@ type problemDetail struct {
 	StackTrace string    `json:"stackTrace,omitempty"`
 }
 
-// ErrBody Error body
+// ErrBody Error body.
 func (p *problemDetail) ErrBody() error {
 	return p
 }
 
-// Error  Error() interface method
+// Error  Error() interface method.
 func (p *problemDetail) Error() string {
 	return fmt.Sprintf(
 		"Error Title: %s - Error Status: %d - Error Detail: %s",
@@ -114,7 +114,7 @@ func (p *problemDetail) SetStackTrace(stackTrace string) ProblemDetailErr {
 	return p
 }
 
-// NewProblemDetail New ProblemDetail Error
+// NewProblemDetail New ProblemDetail Error.
 func NewProblemDetail(
 	status int,
 	title string,
@@ -133,7 +133,7 @@ func NewProblemDetail(
 	return problemDetail
 }
 
-// NewProblemDetailFromCode New ProblemDetail Error With Message
+// NewProblemDetailFromCode New ProblemDetail Error With Message.
 func NewProblemDetailFromCode(status int, stackTrace string) ProblemDetailErr {
 	return &problemDetail{
 		Status:     status,
@@ -144,7 +144,7 @@ func NewProblemDetailFromCode(status int, stackTrace string) ProblemDetailErr {
 	}
 }
 
-// NewProblemDetailFromCodeAndDetail New ProblemDetail Error With Message
+// NewProblemDetailFromCodeAndDetail New ProblemDetail Error With Message.
 func NewProblemDetailFromCodeAndDetail(
 	status int,
 	detail string,
@@ -166,12 +166,22 @@ func Map[E error](problem ProblemDetailFunc[E]) {
 		types := typeMapper.TypesImplementedInterface[E]()
 		for _, t := range types {
 			internalErrorMaps[t] = func(err error) ProblemDetailErr {
-				return problem(err.(E))
+				return problem(func() E {
+					var target E
+					_ = errors.As(err, &target)
+
+					return target
+				}())
 			}
 		}
 	} else {
 		internalErrorMaps[errorType] = func(err error) ProblemDetailErr {
-			return problem(err.(E))
+			return problem(func() E {
+				var target E
+				_ = errors.As(err, &target)
+
+				return target
+			}())
 		}
 	}
 }
@@ -195,7 +205,7 @@ func ResolveProblemDetail(err error) ProblemDetailErr {
 	return nil
 }
 
-// WriteTo writes the JSON Problem to an HTTP Response Writer
+// WriteTo writes the JSON Problem to an HTTP Response Writer.
 func WriteTo(p ProblemDetailErr, w http.ResponseWriter) (int, error) {
 	defaultLogger.GetLogger().Error(p.Error())
 	stackTrace := p.GetStackTrace()
@@ -206,6 +216,7 @@ func WriteTo(p ProblemDetailErr, w http.ResponseWriter) (int, error) {
 	if err != nil {
 		return 0, err
 	}
+
 	return w.Write(marshal)
 }
 

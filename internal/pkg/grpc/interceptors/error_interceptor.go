@@ -3,13 +3,13 @@ package interceptors
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcerrors"
-
 	"emperror.dev/errors"
 	"google.golang.org/grpc"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/grpcerrors"
 )
 
-// UnaryServerInterceptor returns a problem-detail error to client
+// UnaryServerInterceptor returns a problem-detail error to client.
 func UnaryServerInterceptor() grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,

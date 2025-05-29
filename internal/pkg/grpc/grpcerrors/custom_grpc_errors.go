@@ -4,9 +4,9 @@ package grpcerrors
 import (
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
-
 	"google.golang.org/grpc/codes"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/constants"
 )
 
 func NewValidationGrpcError(detail string, stackTrace string) GrpcErr {

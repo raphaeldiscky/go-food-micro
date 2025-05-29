@@ -12,9 +12,10 @@ import (
 	"net/http"
 	"time"
 
-	echo "github.com/labstack/echo/v4"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/metric"
+
+	echo "github.com/labstack/echo/v4"
 )
 
 // HTTPLabels will contain HTTP label values for each added metric. Not all labels apply to all metrics, read the

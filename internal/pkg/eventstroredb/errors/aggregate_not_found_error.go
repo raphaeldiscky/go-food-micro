@@ -3,10 +3,11 @@ package errors
 import (
 	"fmt"
 
-	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
-
 	"emperror.dev/errors"
+
 	uuid "github.com/satori/go.uuid"
+
+	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 )
 
 // https://klotzandrew.com/blog/error-handling-in-golang/
@@ -22,7 +23,10 @@ type AggregateNotFoundError interface {
 }
 
 func NewAggregateNotFoundError(err error, id uuid.UUID) error {
-	notFound := customErrors.NewNotFoundErrorWrap(err, fmt.Sprintf("aggregtae with id %s not found", id.String()))
+	notFound := customErrors.NewNotFoundErrorWrap(
+		err,
+		fmt.Sprintf("aggregtae with id %s not found", id.String()),
+	)
 	customErr := customErrors.GetCustomError(notFound)
 	br := &aggregateNotFoundError{
 		NotFoundError: customErr.(customErrors.NotFoundError),

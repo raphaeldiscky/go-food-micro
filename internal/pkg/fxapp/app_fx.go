@@ -3,14 +3,14 @@ package fxapp
 import (
 	"time"
 
+	"go.uber.org/fx"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	logConfig "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/logrous"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
-
-	"go.uber.org/fx"
 )
 
 func CreateFxApp(

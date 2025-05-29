@@ -5,8 +5,9 @@ import (
 	"context"
 
 	"github.com/jackc/pgconn"
-	pgx "github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/pgxpool"
+
+	pgx "github.com/jackc/pgx/v4"
 )
 
 // PGX limited interface with high-level API for pgx methods safe to be used in high-level business logic packages.

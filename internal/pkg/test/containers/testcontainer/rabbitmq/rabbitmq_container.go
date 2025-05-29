@@ -6,17 +6,18 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
 	"emperror.dev/errors"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/go-connections/nat"
+	"github.com/testcontainers/testcontainers-go/wait"
+
 	rabbithole "github.com/michaelklishin/rabbit-hole"
 	amqp091 "github.com/rabbitmq/amqp091-go"
 	testcontainers "github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
 // https://github.com/testcontainers/testcontainers-go/issues/1359
@@ -115,6 +116,7 @@ func (g *rabbitmqTestContainers) PopulateContainerOptions(
 				Port:        g.defaultOptions.HostPort,
 				HttpPort:    g.defaultOptions.HttpPort,
 			}
+
 			return option, nil
 		}
 
@@ -208,6 +210,7 @@ func IsConnectableWithContext(
 				options.HostPort,
 			)
 			connChan <- false
+
 			return
 		}
 		defer conn.Close()
@@ -221,6 +224,7 @@ func IsConnectableWithContext(
 				options.HostPort,
 			)
 			connChan <- false
+
 			return
 		}
 
@@ -236,6 +240,7 @@ func IsConnectableWithContext(
 				err,
 			)
 			connChan <- false
+
 			return
 		}
 
@@ -246,6 +251,7 @@ func IsConnectableWithContext(
 				options.HttpEndPoint(),
 			)
 			connChan <- false
+
 			return
 		}
 
@@ -264,6 +270,7 @@ func IsConnectableWithContext(
 		return result
 	case <-ctx.Done():
 		logger.Errorf("Connection attempt timed out after %v", 10*time.Second)
+
 		return false
 	}
 }

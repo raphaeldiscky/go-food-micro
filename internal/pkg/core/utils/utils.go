@@ -3,11 +3,11 @@ package utils
 import (
 	"reflect"
 
+	linq "github.com/ahmetb/go-linq/v3"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	linq "github.com/ahmetb/go-linq/v3"
 )
 
 func GetAllDomainEventTypes() []reflect.Type {

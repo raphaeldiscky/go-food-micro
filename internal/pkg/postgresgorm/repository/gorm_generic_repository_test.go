@@ -5,6 +5,15 @@ import (
 	"log"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
+	"gorm.io/gorm"
+
+	_ "github.com/lib/pq" // postgres driver
+
+	gofakeit "github.com/brianvoe/gofakeit/v6"
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
@@ -12,17 +21,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
 	gorm2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/gorm"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	uuid "github.com/satori/go.uuid"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/suite"
-	"gorm.io/gorm"
-
-	_ "github.com/lib/pq" // postgres driver
 )
 
-// Product is a domain_events entity
+// Product is a domain_events entity.
 type Product struct {
 	ID          uuid.UUID
 	Name        string
@@ -30,7 +31,7 @@ type Product struct {
 	IsAvailable bool
 }
 
-// ProductGorm is DTO used to map Product entity to database
+// ProductGorm is DTO used to map Product entity to database.
 type ProductGorm struct {
 	ID          uuid.UUID `gorm:"primaryKey;column:id"`
 	Name        string    `gorm:"column:name"`
@@ -348,7 +349,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 	c.Assert().Equal("product2_updated", single.Name)
 }
 
-//func Test_Delete(t *testing.T) {
+// func Test_Delete(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepository(ctx, t)
 //
@@ -367,7 +368,7 @@ func (c *gormGenericRepositoryTest) Test_Update_With_Data_Model() {
 //	assert.Nil(t, single)
 //}
 //
-//func Test_Delete_With_Data_Model(t *testing.T) {
+// func Test_Delete_With_Data_Model(t *testing.T) {
 //	ctx := context.Background()
 //	repository, err := setupGenericGormRepositoryWithDataModel(ctx, t)
 //

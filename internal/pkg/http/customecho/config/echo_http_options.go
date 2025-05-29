@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/url"
 
+	"github.com/iancoleman/strcase"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"github.com/iancoleman/strcase"
 )
 
 var optionName = strcase.ToLowerCamel(typeMapper.GetGenericTypeNameByT[EchoHTTPOptions]())
@@ -33,6 +33,7 @@ func (c *EchoHTTPOptions) BasePathAddress() string {
 	if err != nil {
 		return ""
 	}
+
 	return path
 }
 

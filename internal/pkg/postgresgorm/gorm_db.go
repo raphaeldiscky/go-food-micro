@@ -4,14 +4,15 @@ import (
 	"database/sql"
 	"fmt"
 
-	defaultlogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/gromlog"
-
 	"emperror.dev/errors"
 	"github.com/glebarez/sqlite"
-	gormPostgres "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/plugin/opentelemetry/tracing"
+
+	gormPostgres "gorm.io/driver/postgres"
+
+	defaultlogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/gromlog"
 )
 
 func NewGorm(cfg *GormOptions) (*gorm.DB, error) {

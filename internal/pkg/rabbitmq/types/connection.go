@@ -3,12 +3,13 @@ package types
 import (
 	"fmt"
 
+	"emperror.dev/errors"
+
+	amqp091 "github.com/rabbitmq/amqp091-go"
+
 	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	errorUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/utils/errorutils"
-
-	"emperror.dev/errors"
-	amqp091 "github.com/rabbitmq/amqp091-go"
 )
 
 type internalConnection struct {
@@ -74,7 +75,7 @@ func (c *internalConnection) ReconnectedChannel() chan struct{} {
 }
 
 func (c *internalConnection) ReConnect() error {
-	if !c.Connection.IsClosed() {
+	if !c.IsClosed() {
 		return nil
 	}
 
@@ -87,8 +88,8 @@ func (c *internalConnection) Raw() *amqp091.Connection {
 
 func (c *internalConnection) Channel() (*amqp091.Channel, error) {
 	ch, err := c.Connection.Channel()
-	//notifyChannelClose := ch.NotifyClose(make(chan *amqp091.Error))
-	//go func() {
+	// notifyChannelClose := ch.NotifyClose(make(chan *amqp091.Error))
+	// go func() {
 	//	<-notifyChannelClose //Listen to notifyChannelClose
 	//	c.errChannelChan <- errors.New("Channel Closed")
 	//}()
@@ -112,7 +113,7 @@ func (c *internalConnection) connect() error {
 	c.isConnected = true
 
 	// https://stackoverflow.com/questions/41991926/how-to-detect-dead-rabbitmq-connection
-	notifyClose := c.Connection.NotifyClose(make(chan *amqp091.Error))
+	notifyClose := c.NotifyClose(make(chan *amqp091.Error))
 
 	go func() {
 		defer errorUtils.HandlePanic()
@@ -134,6 +135,7 @@ func (c *internalConnection) handleReconnecting() {
 			if err != nil {
 				defaultLogger.GetLogger().
 					Error(fmt.Sprintf("Error in reconnecting, %s", err))
+
 				continue
 			}
 

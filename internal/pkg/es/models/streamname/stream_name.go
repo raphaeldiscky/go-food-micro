@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
-
 	reflect "github.com/goccy/go-reflect"
 	uuid "github.com/satori/go.uuid"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
 )
 
 type StreamName string
@@ -25,7 +25,7 @@ func (n StreamName) String() string {
 	return string(n)
 }
 
-// For gets stream name for Aggregate
+// For gets stream name for Aggregate.
 func For[T models.IHaveEventSourcedAggregate](aggregate T) StreamName {
 	var aggregateName string
 	if t := reflect.TypeOf(aggregate); t.Kind() == reflect.Ptr {
@@ -37,7 +37,7 @@ func For[T models.IHaveEventSourcedAggregate](aggregate T) StreamName {
 	return StreamName(fmt.Sprintf("%s-%s", strings.ToLower(aggregateName), aggregate.ID().String()))
 }
 
-// ForID gets stream name for AggregateID
+// ForID gets stream name for AggregateID.
 func ForID[T models.IHaveEventSourcedAggregate](aggregateID uuid.UUID) StreamName {
 	var aggregate T
 	var aggregateName string

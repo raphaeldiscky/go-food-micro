@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"go.uber.org/fx"
+
 	bus2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/producer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
@@ -14,8 +16,6 @@ import (
 	rabbitmqconsumer "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer"
 	rabbitmqproducer "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/types"
-
-	"go.uber.org/fx"
 )
 
 var (
@@ -32,7 +32,7 @@ var (
 
 	// - order is not important in provide
 	// - provide can have parameter and will resolve if registered
-	// - execute its func only if it requested
+	// - execute its func only if it requested.
 	rabbitmqProviders = fx.Options(
 		fx.Provide(config.ProvideConfig),
 		fx.Provide(types.NewRabbitMQConnection),
@@ -54,13 +54,13 @@ var (
 	// - execute after registering all of our provided
 	// - they execute by their orders
 	// - invokes always execute its func compare to provides that only run when we request for them.
-	// - return value will be discarded and can not be provided
+	// - return value will be discarded and can not be provided.
 	rabbitmqInvokes = fx.Options(
 		fx.Invoke(registerHooks),
-	) //nolint:gochecknoglobals
+	)
 )
 
-// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`
+// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,
 	bus bus.RabbitmqBus,
@@ -86,6 +86,7 @@ func registerHooks(
 						"(bus.Start) error in running rabbitmq server: {%v}",
 						err,
 					)
+
 					return
 				}
 			}()

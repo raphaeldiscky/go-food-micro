@@ -1,10 +1,10 @@
 package domain
 
 import (
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 type IDomainEvent interface {

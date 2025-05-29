@@ -1,9 +1,9 @@
 package config
 
 import (
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
-
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 )
 
 // Module provided to fxlog

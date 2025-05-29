@@ -3,10 +3,10 @@ package tracing
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 )
 
 type AppTracer interface {
@@ -33,5 +33,6 @@ func (c *appTracer) Start(
 func NewAppTracer(name string, options ...trace.TracerOption) AppTracer {
 	// without registering `NewOtelTracing` it uses global empty (NoopTracer) TraceProvider but after using `NewOtelTracing`, global TraceProvider will be replaced
 	tracer := otel.Tracer(name, options...)
+
 	return &appTracer{Tracer: tracer}
 }

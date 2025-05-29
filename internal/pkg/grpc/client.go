@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/config"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/handlers/otel"
-
 	"emperror.dev/errors"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/connectivity"
 	"google.golang.org/grpc/credentials/insecure"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/handlers/otel"
 )
 
 type grpcClient struct {
@@ -60,6 +60,7 @@ func (g *grpcClient) WaitForAvailableConnection() error {
 
 	state := g.conn.GetState()
 	fmt.Printf("grpc state is:%s\n", state)
+
 	return err
 }
 

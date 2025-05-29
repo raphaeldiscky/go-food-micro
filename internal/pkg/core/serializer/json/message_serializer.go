@@ -3,11 +3,11 @@ package json
 import (
 	"reflect"
 
+	"emperror.dev/errors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
 )
 
 type DefaultMessageJsonSerializer struct {
@@ -18,7 +18,9 @@ func NewDefaultMessageJsonSerializer(s serializer.Serializer) serializer.Message
 	return &DefaultMessageJsonSerializer{serializer: s}
 }
 
-func (m *DefaultMessageJsonSerializer) Serialize(message types.IMessage) (*serializer.EventSerializationResult, error) {
+func (m *DefaultMessageJsonSerializer) Serialize(
+	message types.IMessage,
+) (*serializer.EventSerializationResult, error) {
 	return m.SerializeObject(message)
 }
 
@@ -63,7 +65,10 @@ func (m *DefaultMessageJsonSerializer) Deserialize(
 	)
 
 	if targetMessagePointer == nil {
-		return nil, errors.Errorf("message type `%s` is not impelemted IMessage or can't be instansiated", messageType)
+		return nil, errors.Errorf(
+			"message type `%s` is not impelemted IMessage or can't be instansiated",
+			messageType,
+		)
 	}
 
 	if contentType != m.ContentType() {

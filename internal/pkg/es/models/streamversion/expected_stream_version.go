@@ -4,7 +4,7 @@ package streamversion
 // https://github.com/EventStore/EventStore-Client-Go/blob/1591d047c0c448cacc0468f9af3605572aba7970/esdb/revision.go
 // https://github.com/EventStore/EventStore-Client-Dotnet/blob/b8beee7b97ef359316822cb2d00f120bf67bd14d/src/EventStore.Client/StreamRevision.cs
 
-// ExpectedStreamVersion an int64 for accepts negative and positive value
+// ExpectedStreamVersion an int64 for accepts negative and positive value.
 type ExpectedStreamVersion int64
 
 const (

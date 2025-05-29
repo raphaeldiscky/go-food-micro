@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"emperror.dev/errors"
+
 	linq "github.com/ahmetb/go-linq/v3"
 	json "github.com/goccy/go-json"
 	uuid "github.com/satori/go.uuid"
@@ -13,7 +14,7 @@ const (
 	newAggregateVersion = 0
 )
 
-// AggregateRoot base aggregate contains all main necessary fields
+// AggregateRoot base aggregate contains all main necessary fields.
 type AggregateRoot struct {
 	*Entity
 	originalVersion   int64
@@ -88,22 +89,23 @@ func (a *AggregateRoot) AddDomainEvents(event IDomainEvent) {
 	a.uncommittedEvents = append(a.uncommittedEvents, event)
 }
 
-// MarkUncommittedEventAsCommitted clear AggregateRoot uncommitted domain_events events
+// MarkUncommittedEventAsCommitted clear AggregateRoot uncommitted domain_events events.
 func (a *AggregateRoot) MarkUncommittedEventAsCommitted() {
 	a.uncommittedEvents = nil
 }
 
-// HasUncommittedEvents returns true if AggregateRoot has uncommitted domain_events events
+// HasUncommittedEvents returns true if AggregateRoot has uncommitted domain_events events.
 func (a *AggregateRoot) HasUncommittedEvents() bool {
 	return len(a.uncommittedEvents) > 0
 }
 
-// GetUncommittedEvents get AggregateRoot uncommitted domain_events events
+// GetUncommittedEvents get AggregateRoot uncommitted domain_events events.
 func (a *AggregateRoot) GetUncommittedEvents() []IDomainEvent {
 	return a.uncommittedEvents
 }
 
 func (a *AggregateRoot) String() string {
 	j, _ := json.Marshal(a)
+
 	return fmt.Sprintf("Aggregate json: %s", string(j))
 }

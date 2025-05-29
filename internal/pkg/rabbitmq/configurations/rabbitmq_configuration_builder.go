@@ -1,11 +1,11 @@
 package configurations
 
 import (
+	"github.com/samber/lo"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
 	producerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer/configurations"
-
-	"github.com/samber/lo"
 )
 
 type RabbitMQConfigurationBuilder interface {

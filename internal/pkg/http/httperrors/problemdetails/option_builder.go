@@ -11,7 +11,10 @@ func NewOptionBuilder() *OptionBuilder {
 	return &OptionBuilder{}
 }
 
-func (p *OptionBuilder) Map(srcErrorType reflect.Type, problem ProblemDetailFunc[error]) *OptionBuilder {
+func (p *OptionBuilder) Map(
+	srcErrorType reflect.Type,
+	problem ProblemDetailFunc[error],
+) *OptionBuilder {
 	internalErrorMaps[srcErrorType] = problem
 
 	return p

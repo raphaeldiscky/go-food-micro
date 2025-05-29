@@ -6,6 +6,9 @@ import (
 	"reflect"
 	"sync"
 
+	"emperror.dev/errors"
+	"github.com/samber/lo"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	consumer2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/producer"
@@ -20,9 +23,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/producer/producercontracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/rabbitmqerrors"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
-	"github.com/samber/lo"
 )
 
 type RabbitmqBus interface {
@@ -133,7 +133,7 @@ func (r *rabbitmqBus) IsProduced(h func(message types.IMessage)) {
 	r.isProducedNotifications = append(r.isProducedNotifications, h)
 }
 
-// ConnectConsumer Add a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type
+// ConnectConsumer Add a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type.
 func (r *rabbitmqBus) ConnectConsumer(
 	messageType types.IMessage,
 	consumer consumer2.Consumer,
@@ -148,7 +148,7 @@ func (r *rabbitmqBus) ConnectConsumer(
 	return nil
 }
 
-// ConnectRabbitMQConsumer Add a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type
+// ConnectRabbitMQConsumer Add a new consumer to existing message type consumers. if there is no consumer, will create a new consumer for the message type.
 func (r *rabbitmqBus) ConnectRabbitMQConsumer(
 	messageType types.IMessage,
 	consumerBuilderFunc consumerConfigurations.RabbitMQConsumerConfigurationBuilderFuc,
@@ -187,7 +187,7 @@ func (r *rabbitmqBus) ConnectRabbitMQConsumer(
 	return nil
 }
 
-// ConnectConsumerHandler Add handler to existing consumer. creates new consumer if not exist
+// ConnectConsumerHandler Add handler to existing consumer. creates new consumer if not exist.
 func (r *rabbitmqBus) ConnectConsumerHandler(
 	messageType types.IMessage,
 	consumerHandler consumer2.ConsumerHandler,
@@ -226,6 +226,7 @@ func (r *rabbitmqBus) ConnectConsumerHandler(
 
 		r.messageTypeConsumers[typeName] = append(r.messageTypeConsumers[typeName], mqConsumer)
 	}
+
 	return nil
 }
 
@@ -265,6 +266,7 @@ func (r *rabbitmqBus) Start(ctx context.Context) error {
 				if err2 != nil {
 					return errors.WrapIf(err, err2.Error())
 				}
+
 				return err
 			}
 		}
@@ -292,8 +294,8 @@ func (r *rabbitmqBus) Stop() error {
 	}
 	waitGroup.Wait()
 
-	//err := r.rabbitmqConnection.Close()
-	//if err == amqp091.ErrClosed {
+	// err := r.rabbitmqConnection.Close()
+	// if err == amqp091.ErrClosed {
 	//	return nil
 	//}
 
@@ -308,6 +310,7 @@ func (r *rabbitmqBus) PublishMessage(
 	if r.producer == nil {
 		r.logger.Fatal("can't find a producer for publishing messages")
 	}
+
 	return r.producer.PublishMessage(ctx, message, meta)
 }
 

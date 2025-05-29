@@ -5,18 +5,19 @@ import (
 	"fmt"
 	"time"
 
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/baggage"
+	"go.opentelemetry.io/otel/trace"
+
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
 	messageHeader "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/messageheader"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/constants"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/tracingheaders"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/baggage"
-	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // https://devandchill.com/posts/2021/12/go-step-by-step-guide-for-implementing-tracing-on-a-microservices-architecture-2/2/
@@ -48,7 +49,12 @@ func StartConsumerSpan(
 		fmt.Sprintf("%s %s", consumerTracingOptions.Destination, "receive"),
 		opts...)
 
-	span.AddEvent(fmt.Sprintf("start consuming message '%s' from the broker", messageHeader.GetMessageName(*meta)))
+	span.AddEvent(
+		fmt.Sprintf(
+			"start consuming message '%s' from the broker",
+			messageHeader.GetMessageName(*meta),
+		),
+	)
 
 	// Emulate Work loads
 	time.Sleep(1 * time.Second)
@@ -66,10 +72,11 @@ func FinishConsumerSpan(span trace.Span, err error) error {
 	}
 
 	span.SetAttributes(
-		attribute.Key(constants.SpanId).String(span.SpanContext().SpanID().String()), // current span id
+		attribute.Key(constants.SpanId).
+			String(span.SpanContext().SpanID().String()), // current span id
 	)
 
-	span.AddEvent(fmt.Sprintf("message '%s' consumed from the broker succesfully", messageName))
+	span.AddEvent(fmt.Sprintf("message '%s' consumed from the broker successfully", messageName))
 	span.End()
 
 	return err
@@ -108,14 +115,21 @@ func getTraceOptions(
 		trace.WithAttributes(attrs...),
 		trace.WithSpanKind(trace.SpanKindConsumer),
 	}
+
 	return opts
 }
 
 func addAfterBaggage(ctx context.Context, meta *metadata.Metadata) context.Context {
 	correlationId := messageHeader.GetCorrelationId(*meta)
 
-	correlationIdBag, _ := baggage.NewMember(string(semconv.MessagingMessageConversationIDKey), correlationId)
-	messageIdBag, _ := baggage.NewMember(string(semconv.MessageIDKey), messageHeader.GetMessageId(*meta))
+	correlationIdBag, _ := baggage.NewMember(
+		string(semconv.MessagingMessageConversationIDKey),
+		correlationId,
+	)
+	messageIdBag, _ := baggage.NewMember(
+		string(semconv.MessageIDKey),
+		messageHeader.GetMessageId(*meta),
+	)
 	b, _ := baggage.New(correlationIdBag, messageIdBag)
 	ctx = baggage.ContextWithBaggage(ctx, b)
 

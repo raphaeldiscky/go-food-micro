@@ -3,10 +3,10 @@ package es
 import (
 	"context"
 
+	"emperror.dev/errors"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/projection"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
-
-	"emperror.dev/errors"
 )
 
 type projectionPublisher struct {

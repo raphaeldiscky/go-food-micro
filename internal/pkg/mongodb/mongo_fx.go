@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/health/contracts"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 var (

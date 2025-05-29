@@ -48,11 +48,10 @@ func (a *apiError) isAPIError() {
 }
 
 func IsApiError(err error, code int) bool {
-	var apiError ApiError
-
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested api error, and we should use errors.As for traversing errors in all levels
-	if _, ok := err.(ApiError); ok {
+	var apiError ApiError
+	if errors.As(err, &apiError) {
 		return true
 	}
 

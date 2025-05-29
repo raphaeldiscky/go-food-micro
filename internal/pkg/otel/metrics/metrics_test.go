@@ -6,17 +6,17 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
-	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
-
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
+	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
 )
 
 func TestHealth(t *testing.T) {

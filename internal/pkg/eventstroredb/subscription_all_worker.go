@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"time"
 
+	"emperror.dev/errors"
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+
+	mediatr "github.com/mehdihadeli/go-mediatr"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/projection"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstroredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	mediatr "github.com/mehdihadeli/go-mediatr"
 )
 
 type esdbSubscriptionAllWorker struct {
@@ -118,6 +119,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 		stream, err := s.db.SubscribeToAll(ctx, options)
 		if err != nil {
 			time.Sleep(1 * time.Second)
+
 			continue
 		}
 
@@ -135,6 +137,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 					event.SubscriptionDropped.Error,
 				)
 				stream.Close()
+
 				break
 			}
 
@@ -160,12 +163,10 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 			}
 		}
 
-		select {
-		case <-ctx.Done():
-			time.Sleep(1 * time.Second)
-			// context canceled or deadlined
-			return ctx.Err()
-		}
+		<-ctx.Done()
+		time.Sleep(1 * time.Second)
+		// context canceled or deadlined
+		return ctx.Err()
 	}
 }
 
@@ -215,6 +216,7 @@ func (s *esdbSubscriptionAllWorker) isEventWithEmptyData(resolvedEvent *esdb.Res
 	}
 
 	s.log.Info("event with empty data received")
+
 	return true
 }
 
@@ -225,11 +227,12 @@ func (s *esdbSubscriptionAllWorker) isCheckpointEvent(resolvedEvent *esdb.Resolv
 	}
 
 	s.log.Info("checkpoint event received - skipping")
+
 	return true
 }
 
 //https://developers.eventstore.com/clients/grpc/subscriptions.html#handling-subscription-drops
-//func (s *esdbSubscriptionAllWorker) resubscribe(ctx context.Context) {
+// func (s *esdbSubscriptionAllWorker) resubscribe(ctx context.Context) {
 //	for true {
 //		err := s.SubscribeAll(ctx, s.subscriptionOption)
 //		if err != nil {

@@ -3,13 +3,13 @@ package store
 import (
 	"context"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
 	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/appendresult"
 	readPosition "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamposition/readposition"
 	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 // AggregateStore is responsible for loading and saving Aggregate.
@@ -22,7 +22,11 @@ type AggregateStore[T models.IHaveEventSourcedAggregate] interface {
 		ctx context.Context) (*appendResult.AppendEventsResult, error)
 
 	// Store the new or update aggregate state
-	Store(aggregate T, metadata metadata.Metadata, ctx context.Context) (*appendResult.AppendEventsResult, error)
+	Store(
+		aggregate T,
+		metadata metadata.Metadata,
+		ctx context.Context,
+	) (*appendResult.AppendEventsResult, error)
 
 	// Load loads the most recent version of an aggregate to provided  into params aggregate with an id and start read position.
 	Load(ctx context.Context, aggregateId uuid.UUID) (T, error)

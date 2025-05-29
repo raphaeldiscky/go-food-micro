@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/persistmessage"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 type postgresMessagePersistenceService struct {

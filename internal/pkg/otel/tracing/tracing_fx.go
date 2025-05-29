@@ -3,10 +3,10 @@ package tracing
 import (
 	"context"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"go.opentelemetry.io/otel/trace"
 	"go.uber.org/fx"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 var (
@@ -31,7 +31,7 @@ var (
 
 	tracingInvokes = fx.Options(
 		fx.Invoke(registerHooks),
-	) //nolint:gochecknoglobals
+	)
 )
 
 func provideTracer(
@@ -40,7 +40,7 @@ func provideTracer(
 	return tracingOtel.appTracer
 }
 
-// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`
+// we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,
 	logger logger.Logger,

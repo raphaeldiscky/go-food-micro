@@ -8,12 +8,14 @@ import (
 	"time"
 
 	"emperror.dev/errors"
+
 	echo "github.com/labstack/echo/v4"
 )
 
 func SkipCI(t *testing.T) {
 	if os.Getenv("CI") != "" {
 		t.Skip("Skipping testing in CI environment")
+
 		return
 	}
 }
@@ -39,7 +41,12 @@ func WaitUntilConditionMet(conditionToMet func() bool, timeout ...time.Duration)
 	return nil
 }
 
-func HttpRecorder(t *testing.T, e *echo.Echo, req *http.Request, f func(w *httptest.ResponseRecorder) bool) {
+func HttpRecorder(
+	t *testing.T,
+	e *echo.Echo,
+	req *http.Request,
+	f func(w *httptest.ResponseRecorder) bool,
+) {
 	w := httptest.NewRecorder()
 	e.ServeHTTP(w, req)
 

@@ -3,10 +3,10 @@ package data
 import (
 	"context"
 
+	uuid "github.com/satori/go.uuid"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data/specification"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
-
-	uuid "github.com/satori/go.uuid"
 )
 
 type GenericRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}] interface {
@@ -17,7 +17,11 @@ type GenericRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}]
 	GetByFuncFilter(ctx context.Context, filterFunc func(TEntity) bool) ([]TEntity, error)
 	GetAll(ctx context.Context, listQuery *utils.ListQuery) (*utils.ListResult[TEntity], error)
 	FirstOrDefault(ctx context.Context, filters map[string]interface{}) (TEntity, error)
-	Search(ctx context.Context, searchTerm string, listQuery *utils.ListQuery) (*utils.ListResult[TEntity], error)
+	Search(
+		ctx context.Context,
+		searchTerm string,
+		listQuery *utils.ListQuery,
+	) (*utils.ListResult[TEntity], error)
 	Update(ctx context.Context, entity TEntity) error
 	UpdateAll(ctx context.Context, entities []TEntity) error
 	Delete(ctx context.Context, id uuid.UUID) error

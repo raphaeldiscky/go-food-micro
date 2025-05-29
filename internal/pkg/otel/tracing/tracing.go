@@ -16,8 +16,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
-
 	"emperror.dev/errors"
 	"github.com/samber/lo"
 	"go.opentelemetry.io/contrib/propagators/ot"
@@ -28,8 +26,11 @@ import (
 	"go.opentelemetry.io/otel/exporters/zipkin"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
+
 	tracesdk "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 )
 
 type TracingOpenTelemetry struct {
@@ -156,7 +157,6 @@ func (o *TracingOpenTelemetry) configExporters() ([]tracesdk.SpanExporter, error
 	var exporters []tracesdk.SpanExporter
 
 	if !o.config.UseOTLP { //nolint:nestif
-
 		// jaeger exporter removed from otel spec (it used jaeger agent and jaeger agent port), now we should use OTLP which supports by jaeger now by its built-in `collector`
 		// https://medium.com/jaegertracing/introducing-native-support-for-opentelemetry-in-jaeger-eb661be8183c
 		// https://www.jaegertracing.io/docs/1.38/apis/#opentelemetry-protocol-stable

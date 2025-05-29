@@ -1,8 +1,9 @@
 package attribute
 
 import (
-	json "github.com/goccy/go-json"
 	"go.opentelemetry.io/otel/attribute"
+
+	json "github.com/goccy/go-json"
 )
 
 // Object creates a KeyValue with a interface{} Value type.
@@ -11,5 +12,6 @@ func Object(k string, v interface{}) attribute.KeyValue {
 	if err != nil {
 		return attribute.KeyValue{}
 	}
+
 	return attribute.KeyValue{Key: attribute.Key(k), Value: attribute.StringValue(string(marshal))}
 }

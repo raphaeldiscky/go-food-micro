@@ -3,10 +3,10 @@ package fxlog
 import (
 	"strings"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 var FxLogger = fx.WithLogger(func(logger logger.Logger) fxevent.Logger {
@@ -24,7 +24,7 @@ func NewCustomFxLogger(logger logger.Logger) fxevent.Logger {
 	return &FxCustomLogger{Logger: logger}
 }
 
-// Printf prits go-fxlog logs
+// Printf prits go-fxlog logs.
 func (l FxCustomLogger) Printf(str string, args ...interface{}) {
 	if len(args) > 0 {
 		l.Debugf(str, args)

@@ -6,12 +6,13 @@ import (
 	"strconv"
 	"testing"
 
-	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
-
-	dockertest "github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
 	"github.com/phayes/freeport"
+
+	dockertest "github.com/ory/dockertest/v3"
+
+	gormPostgres "github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
 type gormDockerTest struct {
@@ -89,6 +90,7 @@ func (g *gormDockerTest) PopulateContainerOptions(
 		return nil
 	}); err != nil {
 		log.Fatalf("Could not connect to docker: %s", err)
+
 		return nil, err
 	}
 

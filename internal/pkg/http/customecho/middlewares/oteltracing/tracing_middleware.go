@@ -8,13 +8,14 @@ package oteltracing
 import (
 	"fmt"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-
-	echo "github.com/labstack/echo/v4"
 	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
+
+	echo "github.com/labstack/echo/v4"
 	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 	oteltrace "go.opentelemetry.io/otel/trace"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
 )
 
 // HttpTrace returns echo middleware which will trace incoming requests.

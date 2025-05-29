@@ -22,13 +22,11 @@ func initLogger() {
 			&config.LogOptions{LogType: models.Zap, CallerEnabled: false},
 			constants.Dev,
 		)
-		break
 	case "Logrus":
 		l = logrous.NewLogrusLogger(
 			&config.LogOptions{LogType: models.Logrus, CallerEnabled: false},
 			constants.Dev,
 		)
-		break
 	default:
 	}
 }

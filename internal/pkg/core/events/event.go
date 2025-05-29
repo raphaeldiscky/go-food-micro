@@ -3,9 +3,9 @@ package events
 import (
 	"time"
 
-	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
-
 	uuid "github.com/satori/go.uuid"
+
+	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
 type IEvent interface {

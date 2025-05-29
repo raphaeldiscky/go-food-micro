@@ -5,6 +5,13 @@ import (
 	"fmt"
 	"math"
 
+	"emperror.dev/errors"
+	"github.com/EventStore/EventStore-Client-Go/esdb"
+	"go.opentelemetry.io/otel/trace"
+
+	linq "github.com/ahmetb/go-linq/v3"
+	attribute2 "go.opentelemetry.io/otel/attribute"
+
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models"
 	appendResult "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/appendresult"
@@ -16,12 +23,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/utils"
-
-	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	linq "github.com/ahmetb/go-linq/v3"
-	attribute2 "go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 )
 
 // https://developers.eventstore.com/clients/grpc/reading-events.html#reading-from-a-stream
@@ -94,6 +95,7 @@ func (e *eventStoreDbEventStore) AppendEvents(
 		if err != nil {
 			return *new(esdb.EventData)
 		}
+
 		return data
 	}).ToSlice(&eventsData)
 
