@@ -18,9 +18,12 @@ import (
 type Environment string
 
 var (
+	// Development is the development environment.
 	Development = Environment(constants.Dev)
-	Test        = Environment(constants.Test)
-	Production  = Environment(constants.Production)
+	// Test is the test environment.
+	Test = Environment(constants.Test)
+	// Production is the production environment.
+	Production = Environment(constants.Production)
 )
 
 // ConfigAppEnv configures the application environment.

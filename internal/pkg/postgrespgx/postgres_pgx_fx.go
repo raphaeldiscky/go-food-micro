@@ -16,9 +16,10 @@ var Module = fx.Module("postgrespxgfx",
 	fx.Invoke(registerHooks),
 )
 
+// registerHooks registers the hooks.
 func registerHooks(lc fx.Lifecycle, pgxClient *Pgx, logger logger.Logger) {
 	lc.Append(fx.Hook{
-		OnStop: func(ctx context.Context) error {
+		OnStop: func(_ context.Context) error {
 			pgxClient.Close()
 			logger.Info("Pgx postgres connection closed gracefully")
 

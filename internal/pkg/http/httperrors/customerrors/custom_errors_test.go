@@ -118,7 +118,7 @@ func TestApplicationErr(t *testing.T) {
 // TestApiErr tests the api error.
 func TestApiErr(t *testing.T) {
 	t.Parallel()
-	rootErr2 := NewApiErrorWrap(
+	rootErr2 := NewAPIErrorWrap(
 		nil,
 		http.StatusBadRequest,
 		"domain_events event already exists in event registry",
@@ -126,7 +126,7 @@ func TestApiErr(t *testing.T) {
 
 	// `NewPlain` doesn't add stack-trace but `New` will add stack-trace
 	rootErr := errors.NewPlain("handling api_exceptions errorUtils")
-	appErr := NewApiErrorWrap(
+	appErr := NewAPIErrorWrap(
 		rootErr,
 		400,
 		"this is a api_exceptions errorUtils",
@@ -138,7 +138,7 @@ func TestApiErr(t *testing.T) {
 	assert.True(t, IsCustomError(err))
 	assert.True(t, IsCustomError(rootErr2))
 
-	var apiError ApiError
+	var apiError APIError
 	errors.As(err, &apiError)
 
 	_, isConflict := appErr.(ConflictError)

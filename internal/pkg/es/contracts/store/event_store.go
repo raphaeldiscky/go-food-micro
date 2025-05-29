@@ -1,3 +1,4 @@
+// Package store provides the event store.
 package store
 
 import (
@@ -11,6 +12,7 @@ import (
 	expectedStreamVersion "github.com/raphaeldiscky/go-food-micro/internal/pkg/es/models/streamversion"
 )
 
+// EventStore is a interface that represents the event store.
 type EventStore interface {
 	// StreamExists Check if specific stream exists in the store
 	StreamExists(streamName streamName.StreamName, ctx context.Context) (bool, error)

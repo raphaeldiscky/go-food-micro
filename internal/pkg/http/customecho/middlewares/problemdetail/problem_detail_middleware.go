@@ -1,3 +1,4 @@
+// Package problemdetail provides a problem detail middleware.
 package problemdetail
 
 import (
@@ -8,6 +9,7 @@ import (
 	problemDetails "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/problemdetails"
 )
 
+// ProblemDetail is the problem detail middleware.
 func ProblemDetail(opts ...Option) echo.MiddlewareFunc {
 	cfg := config{}
 	for _, opt := range opts {

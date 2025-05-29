@@ -96,6 +96,7 @@ func RootStackTrace(err error) string {
 	return stackStr
 }
 
+// HandlePanic handles the panic.
 func HandlePanic() {
 	if r := recover(); r != nil {
 		defaultLogger.GetLogger().

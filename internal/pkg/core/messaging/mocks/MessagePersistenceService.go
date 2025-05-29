@@ -377,12 +377,12 @@ func (_c *MessagePersistenceService_GetByFilter_Call) RunAndReturn(run func(cont
 	return _c
 }
 
-// GetById provides a mock function with given fields: ctx, id
-func (_m *MessagePersistenceService) GetById(ctx context.Context, id uuid.UUID) (*persistmessage.StoreMessage, error) {
+// GetByID provides a mock function with given fields: ctx, id
+func (_m *MessagePersistenceService) GetByID(ctx context.Context, id uuid.UUID) (*persistmessage.StoreMessage, error) {
 	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
-		panic("no return value specified for GetById")
+		panic("no return value specified for GetByID")
 	}
 
 	var r0 *persistmessage.StoreMessage
@@ -407,16 +407,16 @@ func (_m *MessagePersistenceService) GetById(ctx context.Context, id uuid.UUID) 
 	return r0, r1
 }
 
-// MessagePersistenceService_GetById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetById'
+// MessagePersistenceService_GetById_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetByID'
 type MessagePersistenceService_GetById_Call struct {
 	*mock.Call
 }
 
-// GetById is a helper method to define mock.On call
+// GetByID is a helper method to define mock.On call
 //   - ctx context.Context
 //   - id uuid.UUID
-func (_e *MessagePersistenceService_Expecter) GetById(ctx interface{}, id interface{}) *MessagePersistenceService_GetById_Call {
-	return &MessagePersistenceService_GetById_Call{Call: _e.mock.On("GetById", ctx, id)}
+func (_e *MessagePersistenceService_Expecter) GetByID(ctx interface{}, id interface{}) *MessagePersistenceService_GetById_Call {
+	return &MessagePersistenceService_GetById_Call{Call: _e.mock.On("GetByID", ctx, id)}
 }
 
 func (_c *MessagePersistenceService_GetById_Call) Run(run func(ctx context.Context, id uuid.UUID)) *MessagePersistenceService_GetById_Call {

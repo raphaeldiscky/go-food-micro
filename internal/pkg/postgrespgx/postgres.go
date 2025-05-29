@@ -49,7 +49,7 @@ type Pgx struct {
 // NewPgx func for connection to PostgreSQL database.
 func NewPgx(cfg *PostgresPgxOptions) (*Pgx, error) {
 	if cfg.DBName == "" {
-		return nil, errors.New("DBName is required in the config.")
+		return nil, errors.New("dbName is required in the config.")
 	}
 
 	err := createDB(cfg)
@@ -122,11 +122,13 @@ func NewPgx(cfg *PostgresPgxOptions) (*Pgx, error) {
 	return p, nil
 }
 
+// Close closes the database connection.
 func (db *Pgx) Close() {
 	db.ConnPool.Close()
 	_ = db.DB.Close()
 }
 
+// createDB creates the database.
 func createDB(cfg *PostgresPgxOptions) error {
 	// we should choose a default database in the connection, but because we don't have a database yet we specify postgres default database 'postgres'
 	datasource := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",

@@ -28,8 +28,8 @@ type traceContextKeyType int
 
 const parentSpanKey traceContextKeyType = iota + 1
 
-// HttpTraceStatusFromSpan creates an error span if we have an error and a successful span when error is nil.
-func HttpTraceStatusFromSpan(span trace.Span, err error) error {
+// HTTPTraceStatusFromSpan creates an error span if we have an error and a successful span when error is nil.
+func HTTPTraceStatusFromSpan(span trace.Span, err error) error {
 	isError := err != nil
 
 	if customerrors.IsCustomError(err) {
@@ -160,14 +160,14 @@ func HttpTraceStatusFromSpanWithCode(
 	return err
 }
 
-// HttpTraceStatusFromContext creates an error span if we have an error and a successful span when error is nil.
-func HttpTraceStatusFromContext(ctx context.Context, err error) error {
+// HTTPTraceStatusFromContext creates an error span if we have an error and a successful span when error is nil.
+func HTTPTraceStatusFromContext(ctx context.Context, err error) error {
 	// https://opentelemetry.io/docs/instrumentation/go/manual/#record-errors
 	span := trace.SpanFromContext(ctx)
 
 	defer span.End()
 
-	return HttpTraceStatusFromSpan(span, err)
+	return HTTPTraceStatusFromSpan(span, err)
 }
 
 // TraceStatusFromContext creates a trace status from a context.

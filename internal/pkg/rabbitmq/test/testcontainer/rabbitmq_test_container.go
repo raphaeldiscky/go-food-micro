@@ -72,7 +72,7 @@ func CreatingContainerOptions(
 
 	// https://github.com/michaelklishin/rabbit-hole/issues/74
 	// get a free random host port for rabbitmq UI `Http Port`
-	uiHttpPort, err := dbContainer.MappedPort(
+	uiHTTPPort, err := dbContainer.MappedPort(
 		ctx,
 		nat.Port("15672/tcp"),
 	)
@@ -91,7 +91,7 @@ func CreatingContainerOptions(
 		HostName:    host,
 		VirtualHost: "/",
 		Port:        hostPort.Int(),
-		HttpPort:    uiHttpPort.Int(),
+		HttpPort:    uiHTTPPort.Int(),
 	}
 
 	return option, nil

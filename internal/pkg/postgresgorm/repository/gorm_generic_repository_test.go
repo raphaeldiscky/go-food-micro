@@ -118,7 +118,7 @@ func (c *gormGenericRepositoryTest) TestAdd() {
 	err := c.productRepository.Add(ctx, product)
 	c.Require().NoError(err)
 
-	p, err := c.productRepository.GetById(ctx, product.ID)
+	p, err := c.productRepository.GetByID(ctx, product.ID)
 	if err != nil {
 		return
 	}
@@ -141,7 +141,7 @@ func (c *gormGenericRepositoryTest) TestAddWithDataModel() {
 	err := c.productRepositoryWithDataModel.Add(ctx, product)
 	c.Require().NoError(err)
 
-	p, err := c.productRepositoryWithDataModel.GetById(ctx, product.ID)
+	p, err := c.productRepositoryWithDataModel.GetByID(ctx, product.ID)
 	if err != nil {
 		return
 	}
@@ -179,7 +179,7 @@ func (c *gormGenericRepositoryTest) TestGetById() {
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
 			t.Parallel()
-			res, err := c.productRepository.GetById(ctx, s.ProductID)
+			res, err := c.productRepository.GetByID(ctx, s.ProductID)
 			if s.ExpectResult == nil {
 				assert.Error(t, err)
 				assert.True(t, customErrors.IsNotFoundError(err))
@@ -226,7 +226,7 @@ func (c *gormGenericRepositoryTest) TestGetByIdWithDataModel() {
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
 			t.Parallel()
-			res, err := c.productRepositoryWithDataModel.GetById(
+			res, err := c.productRepositoryWithDataModel.GetByID(
 				ctx,
 				s.ProductID,
 			)
@@ -338,7 +338,7 @@ func (c *gormGenericRepositoryTest) TestUpdate() {
 	err = c.productRepository.Update(ctx, product)
 	c.Require().NoError(err)
 
-	single, err := c.productRepository.GetById(ctx, product.ID)
+	single, err := c.productRepository.GetByID(ctx, product.ID)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
@@ -361,7 +361,7 @@ func (c *gormGenericRepositoryTest) TestUpdateWithDataModel() {
 	err = c.productRepositoryWithDataModel.Update(ctx, product)
 	c.Require().NoError(err)
 
-	single, err := c.productRepositoryWithDataModel.GetById(ctx, product.ID)
+	single, err := c.productRepositoryWithDataModel.GetByID(ctx, product.ID)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
@@ -383,7 +383,7 @@ func (c *gormGenericRepositoryTest) TestUpdateWithDataModel() {
 //		return
 //	}
 //
-//	single, err := repository.GetById(ctx, product.ID)
+//	single, err := repository.GetByID(ctx, product.ID)
 //	assert.Nil(t, single)
 //}
 //
@@ -402,7 +402,7 @@ func (c *gormGenericRepositoryTest) TestUpdateWithDataModel() {
 //		return
 //	}
 //
-//	single, err := repository.GetById(ctx, product.ID)
+//	single, err := repository.GetByID(ctx, product.ID)
 //	assert.Nil(t, single)
 //}
 //

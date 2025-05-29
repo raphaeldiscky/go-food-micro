@@ -157,7 +157,7 @@ func (c *postgresMessageServiceTest) TestAdd() {
 
 	c.Require().NoError(err)
 
-	m, err := c.messagingRepository.GetById(c.ctx, message.ID)
+	m, err := c.messagingRepository.GetByID(c.ctx, message.ID)
 	if err != nil {
 		return
 	}

@@ -89,15 +89,15 @@ func (g *rabbitmqTestContainers) PopulateContainerOptions(
 		g.logger.Infof("rabbitmq host port is: %d", hostPort.Int())
 
 		// get a free random host port for rabbitmq UI `Http Port`
-		uiHttpPort, err := dbContainer.MappedPort(
+		uiHTTPPort, err := dbContainer.MappedPort(
 			ctx,
 			nat.Port(g.defaultOptions.Ports[1]),
 		)
 		if err != nil {
 			return nil, err
 		}
-		g.defaultOptions.HttpPort = uiHttpPort.Int()
-		g.logger.Infof("rabbitmq ui port is: %d", uiHttpPort.Int())
+		g.defaultOptions.HttpPort = uiHTTPPort.Int()
+		g.logger.Infof("rabbitmq ui port is: %d", uiHTTPPort.Int())
 
 		host, err := dbContainer.Host(ctx)
 		if err != nil {

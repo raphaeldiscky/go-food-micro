@@ -1,5 +1,5 @@
 // Package defaultlogger provides a default logger for the application.
-package defaultLogger
+package defaultlogger
 
 import (
 	"os"

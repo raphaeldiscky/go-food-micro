@@ -55,7 +55,7 @@ func registerHooks(
 		OnStart: func(ctx context.Context) error {
 			return client.Ping(ctx).Err()
 		},
-		OnStop: func(ctx context.Context) error {
+		OnStop: func(_ context.Context) error {
 			if err := client.Close(); err != nil {
 				logger.Errorf("error in closing redis: %v", err)
 			} else {

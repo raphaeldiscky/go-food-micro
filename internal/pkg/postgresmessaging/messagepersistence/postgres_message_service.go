@@ -162,7 +162,7 @@ func (m *postgresMessagePersistenceService) ChangeState(
 	messageID uuid.UUID,
 	status persistmessage.MessageStatus,
 ) error {
-	storeMessage, err := m.GetById(ctx, messageID)
+	storeMessage, err := m.GetByID(ctx, messageID)
 	if err != nil {
 		return customErrors.NewNotFoundErrorWrap(
 			err,
@@ -213,8 +213,9 @@ func (m *postgresMessagePersistenceService) GetByFilter(
 	return storeMessages, nil
 }
 
-func (m *postgresMessagePersistenceService) GetById(
-	ctx context.Context,
+// GetByID gets a message by id.
+func (m *postgresMessagePersistenceService) GetByID(
+	_ context.Context,
 	id uuid.UUID,
 ) (*persistmessage.StoreMessage, error) {
 	var storeMessage *persistmessage.StoreMessage
@@ -239,13 +240,14 @@ func (m *postgresMessagePersistenceService) GetById(
 	return storeMessage, nil
 }
 
+// Remove removes a message.
 func (m *postgresMessagePersistenceService) Remove(
 	ctx context.Context,
 	storeMessage *persistmessage.StoreMessage,
 ) (bool, error) {
 	id := storeMessage.ID
 
-	storeMessage, err := m.GetById(ctx, id)
+	storeMessage, err := m.GetByID(ctx, id)
 	if err != nil {
 		return false, customErrors.NewNotFoundErrorWrap(
 			err,
@@ -274,6 +276,7 @@ func (m *postgresMessagePersistenceService) Remove(
 	return true, nil
 }
 
+// CleanupMessages cleans up the messages.
 func (m *postgresMessagePersistenceService) CleanupMessages(
 	ctx context.Context,
 ) error {

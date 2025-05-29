@@ -13,7 +13,7 @@ type IDomainEvent interface {
 	events.IEvent
 	GetAggregateId() uuid.UUID
 	GetAggregateSequenceNumber() int64
-	WithAggregate(aggregateId uuid.UUID, aggregateSequenceNumber int64) *DomainEvent
+	WithAggregate(aggregateID uuid.UUID, aggregateSequenceNumber int64) *DomainEvent
 }
 
 // DomainEvent is a domain event.
@@ -46,10 +46,10 @@ func (d *DomainEvent) GetAggregateSequenceNumber() int64 {
 
 // WithAggregate sets the aggregate id and sequence number.
 func (d *DomainEvent) WithAggregate(
-	aggregateId uuid.UUID,
+	aggregateID uuid.UUID,
 	aggregateSequenceNumber int64,
 ) *DomainEvent {
-	d.AggregateId = aggregateId
+	d.AggregateId = aggregateID
 	d.AggregateSequenceNumber = aggregateSequenceNumber
 
 	return d

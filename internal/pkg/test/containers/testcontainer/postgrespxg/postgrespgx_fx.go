@@ -11,7 +11,7 @@ import (
 
 // PostgresPgxContainerOptionsDecorator is a decorator for the postgrespgx container options.
 var PostgresPgxContainerOptionsDecorator = func(t *testing.T, ctx context.Context) interface{} {
-	return func(c *postgres.PostgresPgxOptions, logger logger.Logger) (*postgres.PostgresPgxOptions, error) {
+	return func(_ *postgres.PostgresPgxOptions, logger logger.Logger) (*postgres.PostgresPgxOptions, error) {
 		return NewPostgresPgxContainers(logger).PopulateContainerOptions(ctx, t)
 	}
 }

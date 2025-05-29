@@ -6,7 +6,7 @@ import (
 )
 
 // NewApiError creates a new api error.
-func NewApiError(message string, code int) ApiError {
+func NewApiError(message string, code int) APIError {
 	// `NewPlain` doesn't add stack-trace at all
 	apiErrMessage := errors.NewPlain("api error")
 	// `WrapIf` add stack-trace if not added before
@@ -19,8 +19,8 @@ func NewApiError(message string, code int) ApiError {
 	return apiError
 }
 
-// NewApiErrorWrap creates a new api error wrap.
-func NewApiErrorWrap(err error, code int, message string) ApiError {
+// NewAPIErrorWrap creates a new api error wrap.
+func NewAPIErrorWrap(err error, code int, message string) APIError {
 	if err == nil {
 		return NewApiError(message, code)
 	}
@@ -42,8 +42,8 @@ type apiError struct {
 	CustomError
 }
 
-// ApiError is a contract that represents a api error.
-type ApiError interface {
+// APIError is a contract that represents a api error.
+type APIError interface {
 	CustomError
 	isAPIError()
 }
@@ -55,12 +55,12 @@ func (a *apiError) isAPIError() {
 func IsApiError(err error, code int) bool {
 	// https://github.com/golang/go/blob/master/src/net/error_windows.go#L10C2-L12C3
 	// this doesn't work for a nested api error, and we should use errors.As for traversing errors in all levels
-	var apiError ApiError
+	var apiError APIError
 	if errors.As(err, &apiError) {
 		return true
 	}
 
-	// us, ok := errors.Cause(err).(ApiError)
+	// us, ok := errors.Cause(err).(APIError)
 	if errors.As(err, &apiError) {
 		return apiError.Status() == code
 	}

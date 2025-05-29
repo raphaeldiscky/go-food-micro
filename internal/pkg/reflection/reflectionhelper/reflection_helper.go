@@ -250,14 +250,13 @@ func GetFieldValueFromMethodAndReflectValue(val reflect.Value, name string) refl
 			res := method.Call(nil)
 
 			return res[0]
-		} else {
-			// https://www.geeksforgeeks.org/reflect-addr-function-in-golang-with-examples/
-			pointerType := val.Addr()
-			method := pointerType.MethodByName(name)
-			res := method.Call(nil)
-
-			return res[0]
 		}
+		// https://www.geeksforgeeks.org/reflect-addr-function-in-golang-with-examples/
+		pointerType := val.Addr()
+		method = pointerType.MethodByName(name)
+		res := method.Call(nil)
+
+		return res[0]
 	}
 
 	return *new(reflect.Value)

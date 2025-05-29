@@ -80,7 +80,7 @@ func TestAddRabbitMQ(t *testing.T) {
 		func(builder configurations.RabbitMQConfigurationBuilder) {
 			builder.AddProducer(
 				ProducerConsumerMessage{},
-				func(builder producerConfigurations.RabbitMQProducerConfigurationBuilder) {
+				func(_ producerConfigurations.RabbitMQProducerConfigurationBuilder) {
 				},
 			)
 			builder.AddConsumer(

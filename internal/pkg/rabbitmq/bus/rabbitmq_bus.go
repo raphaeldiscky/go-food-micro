@@ -26,6 +26,7 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+// RabbitmqBus is the interface for the rabbitmq bus.
 type RabbitmqBus interface {
 	bus.Bus
 	consumerConfigurations.RabbitMQConsumerConnector
@@ -71,7 +72,7 @@ func NewRabbitmqBus(
 	)
 	lo.ForEach(
 		rabbitBus.rabbitmqConfiguration.ProducersConfigurations,
-		func(config *producerConfigurations.RabbitMQProducerConfiguration, index int) {
+		func(config *producerConfigurations.RabbitMQProducerConfiguration, _ int) {
 			key := config.ProducerMessageType.String()
 			producersConfigurationMap[key] = config
 		},
@@ -82,7 +83,7 @@ func NewRabbitmqBus(
 	)
 	lo.ForEach(
 		rabbitBus.rabbitmqConfiguration.ConsumersConfigurations,
-		func(config *consumerConfigurations.RabbitMQConsumerConfiguration, index int) {
+		func(config *consumerConfigurations.RabbitMQConsumerConfiguration, _ int) {
 			key := config.ConsumerMessageType.String()
 			consumersConfigurationMap[key] = config
 		},

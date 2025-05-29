@@ -70,14 +70,14 @@ func (r *rabbitMQConfigurationBuilder) AddConsumer(
 func (r *rabbitMQConfigurationBuilder) Build() *RabbitMQConfiguration {
 	consumersConfigs := lo.Map(
 		r.consumerBuilders,
-		func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder, index int) *consumerConfigurations.RabbitMQConsumerConfiguration {
+		func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder, _ int) *consumerConfigurations.RabbitMQConsumerConfiguration {
 			return builder.Build()
 		},
 	)
 
 	producersConfigs := lo.Map(
 		r.producerBuilders,
-		func(builder producerConfigurations.RabbitMQProducerConfigurationBuilder, index int) *producerConfigurations.RabbitMQProducerConfiguration {
+		func(builder producerConfigurations.RabbitMQProducerConfigurationBuilder, _ int) *producerConfigurations.RabbitMQProducerConfiguration {
 			return builder.Build()
 		},
 	)

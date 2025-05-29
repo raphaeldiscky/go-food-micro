@@ -13,9 +13,9 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// Module provided to fxlog
+// https://uber-go.github.io/fx/modules.html
 var (
-	// Module provided to fxlog
-	// https://uber-go.github.io/fx/modules.html
 	Module = fx.Module( //nolint:gochecknoglobals
 		"customechofx",
 
@@ -43,6 +43,7 @@ var (
 	echoInvokes = fx.Options(fx.Invoke(registerHooks)) //nolint:gochecknoglobals
 )
 
+// registerHooks registers the hooks.
 // we don't want to register any dependencies here, its func body should execute always even we don't request for that, so we should use `invoke`.
 func registerHooks(
 	lc fx.Lifecycle,

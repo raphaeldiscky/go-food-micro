@@ -60,21 +60,20 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Add(
 		}
 
 		return nil
-	} else {
-		dataModel, err := mapper.Map[TDataModel](entity)
-		if err != nil {
-			return err
-		}
-		err = r.db.WithContext(ctx).Create(dataModel).Error
-		if err != nil {
-			return err
-		}
-		e, err := mapper.Map[TEntity](dataModel)
-		if err != nil {
-			return err
-		}
-		reflectionHelper.SetValue[TEntity](entity, e)
 	}
+	dataModel, err := mapper.Map[TDataModel](entity)
+	if err != nil {
+		return err
+	}
+	err = r.db.WithContext(ctx).Create(dataModel).Error
+	if err != nil {
+		return err
+	}
+	e, err := mapper.Map[TEntity](dataModel)
+	if err != nil {
+		return err
+	}
+	reflectionHelper.SetValue[TEntity](entity, e)
 
 	return nil
 }
@@ -94,8 +93,8 @@ func (r *gormGenericRepository[TDataModel, TEntity]) AddAll(
 	return nil
 }
 
-// GetById gets a new entity by id.
-func (r *gormGenericRepository[TDataModel, TEntity]) GetById(
+// GetByID gets a new entity by id.
+func (r *gormGenericRepository[TDataModel, TEntity]) GetByID(
 	ctx context.Context,
 	id uuid.UUID,
 ) (TEntity, error) {
@@ -125,22 +124,27 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetById(
 		}
 
 		return model, nil
-	} else {
-		var dataModel TDataModel
-		if err := r.db.WithContext(ctx).First(&dataModel, id).Error; err != nil {
-			if errors.Is(err, gorm.ErrRecordNotFound) {
-				return *new(TEntity), customErrors.NewNotFoundErrorWrap(err, fmt.Sprintf("can't find the entity with id %s into the database.", id.String()))
-			}
-
-			return *new(TEntity), errors.WrapIf(err, fmt.Sprintf("can't find the entity with id %s into the database.", id.String()))
-		}
-		entity, err := mapper.Map[TEntity](dataModel)
-		if err != nil {
-			return *new(TEntity), err
-		}
-
-		return entity, nil
 	}
+	var dataModel TDataModel
+	if err := r.db.WithContext(ctx).First(&dataModel, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return *new(TEntity), customErrors.NewNotFoundErrorWrap(
+				err,
+				fmt.Sprintf("can't find the entity with id %s into the database.", id.String()),
+			)
+		}
+
+		return *new(TEntity), errors.WrapIf(
+			err,
+			fmt.Sprintf("can't find the entity with id %s into the database.", id.String()),
+		)
+	}
+	entity, err := mapper.Map[TEntity](dataModel)
+	if err != nil {
+		return *new(TEntity), err
+	}
+
+	return entity, nil
 }
 
 // GetAll gets all the entities from the database.
@@ -209,33 +213,32 @@ func (r *gormGenericRepository[TDataModel, TEntity]) GetByFilter(
 		}
 
 		return models, nil
-	} else {
-		var dataModels []TDataModel
-		err := r.db.WithContext(ctx).Where(filters).Find(&dataModels).Error
-		if err != nil {
-			return nil, err
-		}
-		models, err := mapper.Map[[]TEntity](dataModels)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	var dataModels []TDataModel
+	err := r.db.WithContext(ctx).Where(filters).Find(&dataModels).Error
+	if err != nil {
+		return nil, err
+	}
+	models, err := mapper.Map[[]TEntity](dataModels)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }
 
 // GetByFuncFilter gets entities by func filter.
 func (r *gormGenericRepository[TDataModel, TEntity]) GetByFuncFilter(
-	ctx context.Context,
-	filterFunc func(TEntity) bool,
+	_ context.Context,
+	_ func(TEntity) bool,
 ) ([]TEntity, error) {
 	return *new([]TEntity), nil
 }
 
 // FirstOrDefault gets the first entity by filter.
 func (r *gormGenericRepository[TDataModel, TEntity]) FirstOrDefault(
-	ctx context.Context,
-	filters map[string]interface{},
+	_ context.Context,
+	_ map[string]interface{},
 ) (TEntity, error) {
 	return *new(TEntity), nil
 }
@@ -291,7 +294,7 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Delete(
 	ctx context.Context,
 	id uuid.UUID,
 ) error {
-	entity, err := r.GetById(ctx, id)
+	entity, err := r.GetByID(ctx, id)
 	if err != nil {
 		return err
 	}
@@ -323,19 +326,18 @@ func (r *gormGenericRepository[TDataModel, TEntity]) SkipTake(
 		}
 
 		return models, nil
-	} else {
-		var dataModels []TDataModel
-		err := r.db.WithContext(ctx).Offset(skip).Limit(take).Find(&dataModels).Error
-		if err != nil {
-			return nil, err
-		}
-		models, err := mapper.Map[[]TEntity](dataModels)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	var dataModels []TDataModel
+	err := r.db.WithContext(ctx).Offset(skip).Limit(take).Find(&dataModels).Error
+	if err != nil {
+		return nil, err
+	}
+	models, err := mapper.Map[[]TEntity](dataModels)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }
 
 func (r *gormGenericRepository[TDataModel, TEntity]) Count(
@@ -365,17 +367,19 @@ func (r *gormGenericRepository[TDataModel, TEntity]) Find(
 		}
 
 		return models, nil
-	} else {
-		var dataModels []TDataModel
-		err := r.db.WithContext(ctx).Where(specification.GetQuery(), specification.GetValues()...).Find(&dataModels).Error
-		if err != nil {
-			return nil, err
-		}
-		models, err := mapper.Map[[]TEntity](dataModels)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	var dataModels []TDataModel
+	err := r.db.WithContext(ctx).
+		Where(specification.GetQuery(), specification.GetValues()...).
+		Find(&dataModels).
+		Error
+	if err != nil {
+		return nil, err
+	}
+	models, err := mapper.Map[[]TEntity](dataModels)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }

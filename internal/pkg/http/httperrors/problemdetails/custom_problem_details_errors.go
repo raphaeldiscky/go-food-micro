@@ -118,8 +118,8 @@ func NewApplicationProblemDetail(status int, detail string, stackTrace string) P
 	}
 }
 
-// NewApiProblemDetail creates a new api problem detail.
-func NewApiProblemDetail(status int, detail string, stackTrace string) ProblemDetailErr {
+// NewAPIProblemDetail creates a new api problem detail.
+func NewAPIProblemDetail(status int, detail string, stackTrace string) ProblemDetailErr {
 	return &problemDetail{
 		Title:      constants.ErrAPITitle,
 		Detail:     detail,

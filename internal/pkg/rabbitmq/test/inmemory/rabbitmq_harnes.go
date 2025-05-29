@@ -34,7 +34,7 @@ func (r *RabbitmqInMemoryHarnesses) PublishMessage(
 
 // PublishMessageWithTopicName publishes a message with a topic name.
 func (r *RabbitmqInMemoryHarnesses) PublishMessageWithTopicName(
-	ctx context.Context,
+	_ context.Context,
 	message types.IMessage,
 	_ metadata.Metadata,
 	_ string,
@@ -53,12 +53,12 @@ func (r *RabbitmqInMemoryHarnesses) AddMessageConsumedHandler(_ func(message typ
 }
 
 // Start starts the rabbitmq in memory harnesss.
-func (r *RabbitmqInMemoryHarnesses) Start(ctx context.Context) error {
+func (r *RabbitmqInMemoryHarnesses) Start(_ context.Context) error {
 	return nil
 }
 
 // Stop stops the rabbitmq in memory harnesss.
-func (r *RabbitmqInMemoryHarnesses) Stop(ctx context.Context) error {
+func (r *RabbitmqInMemoryHarnesses) Stop(_ context.Context) error {
 	return nil
 }
 

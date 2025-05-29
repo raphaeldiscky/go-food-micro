@@ -116,8 +116,8 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) AddAll(
 	return nil
 }
 
-// GetById gets an entity by id.
-func (m *mongoGenericRepository[TDataModel, TEntity]) GetById(
+// GetByID gets an entity by id.
+func (m *mongoGenericRepository[TDataModel, TEntity]) GetByID(
 	ctx context.Context,
 	id uuid.UUID,
 ) (TEntity, error) {
@@ -193,18 +193,17 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetAll(
 		}
 
 		return result, nil
-	} else {
-		result, err := mongodb.Paginate[TDataModel](ctx, listQuery, collection, nil)
-		if err != nil {
-			return nil, err
-		}
-		models, err := utils.ListResultToListResultDto[TEntity](result)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	result, err := mongodb.Paginate[TDataModel](ctx, listQuery, collection, nil)
+	if err != nil {
+		return nil, err
+	}
+	models, err := utils.ListResultToListResultDto[TEntity](result)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }
 
 // Search searches for entities.
@@ -248,30 +247,29 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Search(
 		}
 
 		return result, nil
-	} else {
-		fields := reflectionHelper.GetAllFields(typeMapper.GetGenericTypeByT[TDataModel]())
-		var a bson.A
-		for _, field := range fields {
-			if field.Type.Kind() != reflect.String {
-				continue
-			}
-			name := strcase.ToLowerCamel(field.Name)
-			a = append(a, bson.D{{Key: name, Value: primitive.Regex{Pattern: searchTerm}}})
-		}
-		filter := bson.D{
-			{Key: "$or", Value: a},
-		}
-		result, err := mongodb.Paginate[TDataModel](ctx, listQuery, collection, filter)
-		if err != nil {
-			return nil, err
-		}
-		models, err := utils.ListResultToListResultDto[TEntity](result)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	fields := reflectionHelper.GetAllFields(typeMapper.GetGenericTypeByT[TDataModel]())
+	var a bson.A
+	for _, field := range fields {
+		if field.Type.Kind() != reflect.String {
+			continue
+		}
+		name := strcase.ToLowerCamel(field.Name)
+		a = append(a, bson.D{{Key: name, Value: primitive.Regex{Pattern: searchTerm}}})
+	}
+	filter := bson.D{
+		{Key: "$or", Value: a},
+	}
+	result, err := mongodb.Paginate[TDataModel](ctx, listQuery, collection, filter)
+	if err != nil {
+		return nil, err
+	}
+	models, err := utils.ListResultToListResultDto[TEntity](result)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }
 
 // GetByFilter gets entities by filter.
@@ -303,29 +301,28 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFilter(
 		}
 
 		return models, nil
-	} else {
-		var dataModels []TDataModel
-
-		for cursorResult.Next(ctx) {
-			var d TDataModel
-			if err := cursorResult.Decode(&d); err != nil {
-				return nil, errors.WrapIf(err, "Find")
-			}
-			dataModels = append(dataModels, d)
-		}
-
-		models, err := mapper.Map[[]TEntity](dataModels)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	var dataModels []TDataModel
+
+	for cursorResult.Next(ctx) {
+		var d TDataModel
+		if err := cursorResult.Decode(&d); err != nil {
+			return nil, errors.WrapIf(err, "Find")
+		}
+		dataModels = append(dataModels, d)
+	}
+
+	models, err := mapper.Map[[]TEntity](dataModels)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }
 
 // GetByFuncFilter gets entities by filter function.
 func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFuncFilter(
-	ctx context.Context,
+	_ context.Context,
 	filterFunc func(TEntity) bool,
 ) ([]TEntity, error) {
 	return nil, nil
@@ -353,24 +350,23 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) FirstOrDefault(
 		}
 
 		return model, nil
-	} else {
-		var dataModel TDataModel
-		if err := collection.FindOne(ctx, filters).Decode(&dataModel); err != nil {
-			// ErrNoDocuments means that the filter did not match any documents in the collection
-			if errors.Is(err, mongo.ErrNoDocuments) {
-				return *new(TEntity), nil
-			}
-
-			return *new(TEntity), err
-		}
-
-		model, err := mapper.Map[TEntity](dataModel)
-		if err != nil {
-			return *new(TEntity), err
-		}
-
-		return model, nil
 	}
+	var dataModel TDataModel
+	if err := collection.FindOne(ctx, filters).Decode(&dataModel); err != nil {
+		// ErrNoDocuments means that the filter did not match any documents in the collection
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return *new(TEntity), nil
+		}
+
+		return *new(TEntity), err
+	}
+
+	model, err := mapper.Map[TEntity](dataModel)
+	if err != nil {
+		return *new(TEntity), err
+	}
+
+	return model, nil
 }
 
 // Update updates an entity.
@@ -400,35 +396,35 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Update(
 		if err := collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": entity}, ops).Decode(&updated); err != nil {
 			return err
 		}
-	} else {
-		dataModel, err := mapper.Map[TDataModel](entity)
-		if err != nil {
-			return err
-		}
+	}
+	dataModel, err := mapper.Map[TDataModel](entity)
+	if err != nil {
+		return err
+	}
 
-		var id interface{}
+	var id interface{}
+	id = reflectionHelper.GetFieldValueByName(dataModel, "ID")
+	if id == nil {
 		id = reflectionHelper.GetFieldValueByName(dataModel, "ID")
 		if id == nil {
-			id = reflectionHelper.GetFieldValueByName(dataModel, "ID")
-			if id == nil {
-				return errors.New("id field not found")
-			}
+			return errors.New("id field not found")
 		}
-		// https://www.mongodb.com/docs/manual/reference/method/db.collection.findOneAndUpdate/
-		if err := collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": dataModel}, ops).Decode(&dataModel); err != nil {
-			return err
-		}
-
-		e, err := mapper.Map[TEntity](dataModel)
-		if err != nil {
-			return err
-		}
-		reflectionHelper.SetValue[TEntity](entity, e)
 	}
+	// https://www.mongodb.com/docs/manual/reference/method/db.collection.findOneAndUpdate/
+	if err := collection.FindOneAndUpdate(ctx, bson.M{"_id": id}, bson.M{"$set": dataModel}, ops).Decode(&dataModel); err != nil {
+		return err
+	}
+
+	e, err := mapper.Map[TEntity](dataModel)
+	if err != nil {
+		return err
+	}
+	reflectionHelper.SetValue[TEntity](entity, e)
 
 	return nil
 }
 
+// UpdateAll updates all entities.
 func (m *mongoGenericRepository[TDataModel, TEntity]) UpdateAll(
 	ctx context.Context,
 	entities []TEntity,
@@ -443,6 +439,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) UpdateAll(
 	return nil
 }
 
+// Delete deletes an entity.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Delete(
 	ctx context.Context,
 	id uuid.UUID,
@@ -456,6 +453,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Delete(
 	return nil
 }
 
+// SkipTake skips and takes entities.
 func (m *mongoGenericRepository[TDataModel, TEntity]) SkipTake(
 	ctx context.Context,
 	skip int,
@@ -487,24 +485,24 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) SkipTake(
 		}
 
 		return models, nil
-	} else {
-		var dataModels []TDataModel
-		for cursorResult.Next(ctx) {
-			var d TDataModel
-			if err := cursorResult.Decode(&d); err != nil {
-				return nil, errors.WrapIf(err, "Find")
-			}
-			dataModels = append(dataModels, d)
-		}
-		models, err := mapper.Map[[]TEntity](dataModels)
-		if err != nil {
-			return nil, err
-		}
-
-		return models, nil
 	}
+	var dataModels []TDataModel
+	for cursorResult.Next(ctx) {
+		var d TDataModel
+		if err := cursorResult.Decode(&d); err != nil {
+			return nil, errors.WrapIf(err, "Find")
+		}
+		dataModels = append(dataModels, d)
+	}
+	models, err := mapper.Map[[]TEntity](dataModels)
+	if err != nil {
+		return nil, err
+	}
+
+	return models, nil
 }
 
+// Count counts the number of entities.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Count(
 	ctx context.Context,
 ) int64 {
@@ -517,6 +515,7 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Count(
 	return count
 }
 
+// Find finds entities by specification.
 func (m *mongoGenericRepository[TDataModel, TEntity]) Find(
 	ctx context.Context,
 	specification specification.Specification,

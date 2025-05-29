@@ -41,7 +41,7 @@ func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 	var dataSourceName string
 
 	if cfg.DBName == "" {
-		return nil, errors.New("DBName is required in the config.")
+		return nil, errors.New("dbName is required in the config.")
 	}
 
 	err := createDB(cfg)
@@ -137,6 +137,7 @@ func createDB(cfg *PostgresSqlxOptions) error {
 	return nil
 }
 
+// Close closes the database connection.
 func (db *Sqlx) Close() {
 	_ = db.DB.Close()
 	_ = db.SqlxDB.Close()

@@ -119,7 +119,7 @@ func (c *mongoGenericRepositoryTest) TestAdd() {
 	id, err := uuid.FromString(product.ID)
 	c.Require().NoError(err)
 
-	p, err := c.productRepository.GetById(ctx, id)
+	p, err := c.productRepository.GetByID(ctx, id)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(p)
@@ -144,7 +144,7 @@ func (c *mongoGenericRepositoryTest) TestAddWithDataModel() {
 	id, err := uuid.FromString(product.ID)
 	c.Require().NoError(err)
 
-	p, err := c.productRepository.GetById(ctx, id)
+	p, err := c.productRepository.GetByID(ctx, id)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(p)
@@ -183,7 +183,7 @@ func (c *mongoGenericRepositoryTest) TestGetById() {
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
 			t.Parallel()
-			res, err := c.productRepository.GetById(ctx, s.ProductID)
+			res, err := c.productRepository.GetByID(ctx, s.ProductID)
 			if s.ExpectResult == nil {
 				assert.Error(t, err)
 				assert.True(t, customErrors.IsNotFoundError(err))
@@ -232,7 +232,7 @@ func (c *mongoGenericRepositoryTest) TestGetByIdWithDataModel() {
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
 			t.Parallel()
-			res, err := c.productRepositoryWithDataModel.GetById(
+			res, err := c.productRepositoryWithDataModel.GetByID(
 				ctx,
 				s.ProductID,
 			)
@@ -384,7 +384,7 @@ func (c *mongoGenericRepositoryTest) TestUpdate() {
 	id, err := uuid.FromString(product.ID)
 	c.Require().NoError(err)
 
-	single, err := c.productRepository.GetById(ctx, id)
+	single, err := c.productRepository.GetByID(ctx, id)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
@@ -410,7 +410,7 @@ func (c *mongoGenericRepositoryTest) TestUpdateWithDataModel() {
 	id, err := uuid.FromString(product.ID)
 	c.Require().NoError(err)
 
-	single, err := c.productRepositoryWithDataModel.GetById(ctx, id)
+	single, err := c.productRepositoryWithDataModel.GetByID(ctx, id)
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
@@ -432,7 +432,7 @@ func (c *mongoGenericRepositoryTest) TestDelete() {
 	err = c.productRepository.Delete(ctx, id)
 	c.Require().NoError(err)
 
-	single, err := c.productRepository.GetById(ctx, id)
+	single, err := c.productRepository.GetByID(ctx, id)
 	c.Require().NoError(err)
 	c.Assert().Nil(single)
 }
@@ -457,7 +457,7 @@ func (c *mongoGenericRepositoryTest) TestDelete() {
 //		return
 //	}
 //
-//	single, err := repository.GetById(ctx, id)
+//	single, err := repository.GetByID(ctx, id)
 //	assert.Nil(t, single)
 //}
 //

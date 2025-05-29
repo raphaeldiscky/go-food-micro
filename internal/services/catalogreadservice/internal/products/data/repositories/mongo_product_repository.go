@@ -139,7 +139,7 @@ func (p *mongoProductRepository) GetProductByID(
 		return nil, err
 	}
 
-	product, err := p.mongoGenericRepository.GetById(ctx, id)
+	product, err := p.mongoGenericRepository.GetByID(ctx, id)
 	if err != nil {
 		return nil, utils2.TraceStatusFromSpan(
 			span,

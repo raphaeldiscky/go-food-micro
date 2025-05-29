@@ -33,9 +33,9 @@ func (_m *AggregateStore[T]) EXPECT() *AggregateStore_Expecter[T] {
 	return &AggregateStore_Expecter[T]{mock: &_m.Mock}
 }
 
-// Exists provides a mock function with given fields: ctx, aggregateId
-func (_m *AggregateStore[T]) Exists(ctx context.Context, aggregateId uuid.UUID) (bool, error) {
-	ret := _m.Called(ctx, aggregateId)
+// Exists provides a mock function with given fields: ctx, aggregateID
+func (_m *AggregateStore[T]) Exists(ctx context.Context, aggregateID uuid.UUID) (bool, error) {
+	ret := _m.Called(ctx, aggregateID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Exists")
@@ -44,16 +44,16 @@ func (_m *AggregateStore[T]) Exists(ctx context.Context, aggregateId uuid.UUID) 
 	var r0 bool
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (bool, error)); ok {
-		return rf(ctx, aggregateId)
+		return rf(ctx, aggregateID)
 	}
 	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) bool); ok {
-		r0 = rf(ctx, aggregateId)
+		r0 = rf(ctx, aggregateID)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID) error); ok {
-		r1 = rf(ctx, aggregateId)
+		r1 = rf(ctx, aggregateID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -68,12 +68,12 @@ type AggregateStore_Exists_Call[T models.IHaveEventSourcedAggregate] struct {
 
 // Exists is a helper method to define mock.On call
 //   - ctx context.Context
-//   - aggregateId uuid.UUID
-func (_e *AggregateStore_Expecter[T]) Exists(ctx interface{}, aggregateId interface{}) *AggregateStore_Exists_Call[T] {
-	return &AggregateStore_Exists_Call[T]{Call: _e.mock.On("Exists", ctx, aggregateId)}
+//   - aggregateID uuid.UUID
+func (_e *AggregateStore_Expecter[T]) Exists(ctx interface{}, aggregateID interface{}) *AggregateStore_Exists_Call[T] {
+	return &AggregateStore_Exists_Call[T]{Call: _e.mock.On("Exists", ctx, aggregateID)}
 }
 
-func (_c *AggregateStore_Exists_Call[T]) Run(run func(ctx context.Context, aggregateId uuid.UUID)) *AggregateStore_Exists_Call[T] {
+func (_c *AggregateStore_Exists_Call[T]) Run(run func(ctx context.Context, aggregateID uuid.UUID)) *AggregateStore_Exists_Call[T] {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(uuid.UUID))
 	})
@@ -90,9 +90,9 @@ func (_c *AggregateStore_Exists_Call[T]) RunAndReturn(run func(context.Context, 
 	return _c
 }
 
-// Load provides a mock function with given fields: ctx, aggregateId
-func (_m *AggregateStore[T]) Load(ctx context.Context, aggregateId uuid.UUID) (T, error) {
-	ret := _m.Called(ctx, aggregateId)
+// Load provides a mock function with given fields: ctx, aggregateID
+func (_m *AggregateStore[T]) Load(ctx context.Context, aggregateID uuid.UUID) (T, error) {
+	ret := _m.Called(ctx, aggregateID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Load")
@@ -101,16 +101,16 @@ func (_m *AggregateStore[T]) Load(ctx context.Context, aggregateId uuid.UUID) (T
 	var r0 T
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) (T, error)); ok {
-		return rf(ctx, aggregateId)
+		return rf(ctx, aggregateID)
 	}
 	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID) T); ok {
-		r0 = rf(ctx, aggregateId)
+		r0 = rf(ctx, aggregateID)
 	} else {
 		r0 = ret.Get(0).(T)
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID) error); ok {
-		r1 = rf(ctx, aggregateId)
+		r1 = rf(ctx, aggregateID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -125,12 +125,12 @@ type AggregateStore_Load_Call[T models.IHaveEventSourcedAggregate] struct {
 
 // Load is a helper method to define mock.On call
 //   - ctx context.Context
-//   - aggregateId uuid.UUID
-func (_e *AggregateStore_Expecter[T]) Load(ctx interface{}, aggregateId interface{}) *AggregateStore_Load_Call[T] {
-	return &AggregateStore_Load_Call[T]{Call: _e.mock.On("Load", ctx, aggregateId)}
+//   - aggregateID uuid.UUID
+func (_e *AggregateStore_Expecter[T]) Load(ctx interface{}, aggregateID interface{}) *AggregateStore_Load_Call[T] {
+	return &AggregateStore_Load_Call[T]{Call: _e.mock.On("Load", ctx, aggregateID)}
 }
 
-func (_c *AggregateStore_Load_Call[T]) Run(run func(ctx context.Context, aggregateId uuid.UUID)) *AggregateStore_Load_Call[T] {
+func (_c *AggregateStore_Load_Call[T]) Run(run func(ctx context.Context, aggregateID uuid.UUID)) *AggregateStore_Load_Call[T] {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(uuid.UUID))
 	})
@@ -147,9 +147,9 @@ func (_c *AggregateStore_Load_Call[T]) RunAndReturn(run func(context.Context, uu
 	return _c
 }
 
-// LoadWithReadPosition provides a mock function with given fields: ctx, aggregateId, position
-func (_m *AggregateStore[T]) LoadWithReadPosition(ctx context.Context, aggregateId uuid.UUID, position readPosition.StreamReadPosition) (T, error) {
-	ret := _m.Called(ctx, aggregateId, position)
+// LoadWithReadPosition provides a mock function with given fields: ctx, aggregateID, position
+func (_m *AggregateStore[T]) LoadWithReadPosition(ctx context.Context, aggregateID uuid.UUID, position readPosition.StreamReadPosition) (T, error) {
+	ret := _m.Called(ctx, aggregateID, position)
 
 	if len(ret) == 0 {
 		panic("no return value specified for LoadWithReadPosition")
@@ -158,16 +158,16 @@ func (_m *AggregateStore[T]) LoadWithReadPosition(ctx context.Context, aggregate
 	var r0 T
 	var r1 error
 	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, readPosition.StreamReadPosition) (T, error)); ok {
-		return rf(ctx, aggregateId, position)
+		return rf(ctx, aggregateID, position)
 	}
 	if rf, ok := ret.Get(0).(func(context.Context, uuid.UUID, readPosition.StreamReadPosition) T); ok {
-		r0 = rf(ctx, aggregateId, position)
+		r0 = rf(ctx, aggregateID, position)
 	} else {
 		r0 = ret.Get(0).(T)
 	}
 
 	if rf, ok := ret.Get(1).(func(context.Context, uuid.UUID, readPosition.StreamReadPosition) error); ok {
-		r1 = rf(ctx, aggregateId, position)
+		r1 = rf(ctx, aggregateID, position)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -182,13 +182,13 @@ type AggregateStore_LoadWithReadPosition_Call[T models.IHaveEventSourcedAggregat
 
 // LoadWithReadPosition is a helper method to define mock.On call
 //   - ctx context.Context
-//   - aggregateId uuid.UUID
+//   - aggregateID uuid.UUID
 //   - position readPosition.StreamReadPosition
-func (_e *AggregateStore_Expecter[T]) LoadWithReadPosition(ctx interface{}, aggregateId interface{}, position interface{}) *AggregateStore_LoadWithReadPosition_Call[T] {
-	return &AggregateStore_LoadWithReadPosition_Call[T]{Call: _e.mock.On("LoadWithReadPosition", ctx, aggregateId, position)}
+func (_e *AggregateStore_Expecter[T]) LoadWithReadPosition(ctx interface{}, aggregateID interface{}, position interface{}) *AggregateStore_LoadWithReadPosition_Call[T] {
+	return &AggregateStore_LoadWithReadPosition_Call[T]{Call: _e.mock.On("LoadWithReadPosition", ctx, aggregateID, position)}
 }
 
-func (_c *AggregateStore_LoadWithReadPosition_Call[T]) Run(run func(ctx context.Context, aggregateId uuid.UUID, position readPosition.StreamReadPosition)) *AggregateStore_LoadWithReadPosition_Call[T] {
+func (_c *AggregateStore_LoadWithReadPosition_Call[T]) Run(run func(ctx context.Context, aggregateID uuid.UUID, position readPosition.StreamReadPosition)) *AggregateStore_LoadWithReadPosition_Call[T] {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(uuid.UUID), args[2].(readPosition.StreamReadPosition))
 	})

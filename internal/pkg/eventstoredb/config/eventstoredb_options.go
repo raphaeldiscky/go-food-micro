@@ -36,8 +36,8 @@ func (e *EventStoreDbOptions) GrpcEndPoint() string {
 // https://developers.eventstore.com/clients/dotnet/21.2/#connect-to-eventstoredb
 // https://developers.eventstore.com/server/v20.10/networking.html#external
 
-// TcpEndPoint returns the tcp end point.
-func (e *EventStoreDbOptions) TcpEndPoint() string {
+// TCPEndPoint returns the tcp end point.
+func (e *EventStoreDbOptions) TCPEndPoint() string {
 	return fmt.Sprintf("tcp://%s:%d?tls=false", e.Host, e.TcpPort)
 }
 

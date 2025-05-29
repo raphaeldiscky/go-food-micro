@@ -7,10 +7,12 @@ import (
 	"emperror.dev/errors"
 )
 
+// NewDomainError creates a new domain error.
 func NewDomainError(message string) DomainError {
 	return NewDomainErrorWithCode(message, http.StatusBadRequest)
 }
 
+// NewDomainErrorWithCode creates a new domain error with code.
 func NewDomainErrorWithCode(message string, code int) DomainError {
 	// `NewPlain` doesn't add stack-trace at all
 	domainErrMessage := errors.NewPlain("domain error")
@@ -24,10 +26,12 @@ func NewDomainErrorWithCode(message string, code int) DomainError {
 	return domainError
 }
 
+// NewDomainErrorWrap creates a new domain error wrap.
 func NewDomainErrorWrap(err error, message string) DomainError {
 	return NewDomainErrorWithCodeWrap(err, http.StatusBadRequest, message)
 }
 
+// NewDomainErrorWithCodeWrap creates a new domain error with code wrap.
 func NewDomainErrorWithCodeWrap(err error, code int, message string) DomainError {
 	if err == nil {
 		return NewDomainErrorWithCode(message, code)
@@ -45,18 +49,22 @@ func NewDomainErrorWithCodeWrap(err error, code int, message string) DomainError
 	return domainError
 }
 
+// domainError is a domain error.
 type domainError struct {
 	CustomError
 }
 
+// DomainError is a domain error.
 type DomainError interface {
 	CustomError
 	isDomainError()
 }
 
+// isDomainError checks if the error is a domain error.
 func (d *domainError) isDomainError() {
 }
 
+// IsDomainError checks if the error is a domain error.
 func IsDomainError(err error, code int) bool {
 	var domainErr DomainError
 

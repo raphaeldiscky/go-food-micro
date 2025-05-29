@@ -14,7 +14,7 @@ import (
 type GenericRepositoryWithDataModel[TDataModel interface{}, TEntity interface{}] interface {
 	Add(ctx context.Context, entity TEntity) error
 	AddAll(ctx context.Context, entities []TEntity) error
-	GetById(ctx context.Context, id uuid.UUID) (TEntity, error)
+	GetByID(ctx context.Context, id uuid.UUID) (TEntity, error)
 	GetByFilter(ctx context.Context, filters map[string]interface{}) ([]TEntity, error)
 	GetByFuncFilter(ctx context.Context, filterFunc func(TEntity) bool) ([]TEntity, error)
 	GetAll(ctx context.Context, listQuery *utils.ListQuery) (*utils.ListResult[TEntity], error)

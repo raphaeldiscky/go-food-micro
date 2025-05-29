@@ -29,15 +29,15 @@ type AggregateStore[T models.IHaveEventSourcedAggregate] interface {
 	) (*appendResult.AppendEventsResult, error)
 
 	// Load loads the most recent version of an aggregate to provided  into params aggregate with an id and start read position.
-	Load(ctx context.Context, aggregateId uuid.UUID) (T, error)
+	Load(ctx context.Context, aggregateID uuid.UUID) (T, error)
 
 	// LoadWithReadPosition loads the most recent version of an aggregate to provided  into params aggregate with an id and read position.
 	LoadWithReadPosition(
 		ctx context.Context,
-		aggregateId uuid.UUID,
+		aggregateID uuid.UUID,
 		position readPosition.StreamReadPosition,
 	) (T, error)
 
 	// Exists check aggregate exists by AggregateId.
-	Exists(ctx context.Context, aggregateId uuid.UUID) (bool, error)
+	Exists(ctx context.Context, aggregateID uuid.UUID) (bool, error)
 }

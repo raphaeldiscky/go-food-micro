@@ -68,7 +68,7 @@ func (a *esdbAggregateStore[T]) StoreWithVersion(
 	if len(aggregate.UncommittedEvents()) == 0 {
 		a.log.Infow(
 			fmt.Sprintf(
-				"[esdbAggregateStore.StoreWithVersion] No events to store for aggregateId %s",
+				"[esdbAggregateStore.StoreWithVersion] No events to store for aggregateID %s",
 				aggregate.ID(),
 			),
 			logger.Fields{"AggregateID": aggregate.ID()},
@@ -167,24 +167,24 @@ func (a *esdbAggregateStore[T]) Store(
 // Load loads an aggregate.
 func (a *esdbAggregateStore[T]) Load(
 	ctx context.Context,
-	aggregateId uuid.UUID,
+	aggregateID uuid.UUID,
 ) (T, error) {
 	ctx, span := a.tracer.Start(ctx, "esdbAggregateStore.Load")
 	defer span.End()
 
 	position := readPosition.Start
 
-	return a.LoadWithReadPosition(ctx, aggregateId, position)
+	return a.LoadWithReadPosition(ctx, aggregateID, position)
 }
 
 // LoadWithReadPosition loads an aggregate with a read position.
 func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 	ctx context.Context,
-	aggregateId uuid.UUID,
+	aggregateID uuid.UUID,
 	position readPosition.StreamReadPosition,
 ) (T, error) {
 	ctx, span := a.tracer.Start(ctx, "esdbAggregateStore.LoadWithReadPosition")
-	span.SetAttributes(attribute2.String("AggregateID", aggregateId.String()))
+	span.SetAttributes(attribute2.String("AggregateID", aggregateID.String()))
 	defer span.End()
 
 	var typeNameType T
@@ -213,7 +213,7 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 
 	method.Call([]reflect.Value{})
 
-	streamId := streamName.ForID[T](aggregateId)
+	streamId := streamName.ForID[T](aggregateID)
 	span.SetAttributes(attribute2.String("StreamId", streamId.String()))
 
 	streamEvents, err := a.getStreamEvents(streamId, position, ctx)
@@ -221,7 +221,7 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 		return *new(T), utils.TraceErrStatusFromSpan(
 			span,
 			errors.WithMessage(
-				esErrors.NewAggregateNotFoundError(err, aggregateId),
+				esErrors.NewAggregateNotFoundError(err, aggregateID),
 				"[esdbAggregateStore.LoadWithReadPosition] error in loading aggregate",
 			),
 		)
@@ -233,7 +233,7 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 			errors.WrapIff(
 				err,
 				"[esdbAggregateStore.LoadWithReadPosition:MethodByName] error in loading aggregate {%s}",
-				aggregateId.String(),
+				aggregateID.String(),
 			),
 		)
 	}
@@ -256,9 +256,9 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 	}
 
 	a.log.Infow(
-		fmt.Sprintf("Loaded aggregate with streamId {%s} and aggregateId {%s}",
+		fmt.Sprintf("Loaded aggregate with streamId {%s} and aggregateID {%s}",
 			streamId.String(),
-			aggregateId.String()),
+			aggregateID.String()),
 		logger.Fields{"Aggregate": aggregate, "StreamId": streamId.String()},
 	)
 
@@ -270,13 +270,13 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 // Exists checks if an aggregate exists.
 func (a *esdbAggregateStore[T]) Exists(
 	ctx context.Context,
-	aggregateId uuid.UUID,
+	aggregateID uuid.UUID,
 ) (bool, error) {
 	ctx, span := a.tracer.Start(ctx, "esdbAggregateStore.Exists")
-	span.SetAttributes(attribute2.String("AggregateID", aggregateId.String()))
+	span.SetAttributes(attribute2.String("AggregateID", aggregateID.String()))
 	defer span.End()
 
-	streamId := streamName.ForID[T](aggregateId)
+	streamId := streamName.ForID[T](aggregateID)
 	span.SetAttributes(attribute2.String("StreamId", streamId.String()))
 
 	return a.eventStore.StreamExists(streamId, ctx)

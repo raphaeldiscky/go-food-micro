@@ -23,7 +23,7 @@ type MessagePersistenceService interface {
 		ctx context.Context,
 		predicate func(*StoreMessage) bool,
 	) ([]*StoreMessage, error)
-	GetById(ctx context.Context, id uuid.UUID) (*StoreMessage, error)
+	GetByID(ctx context.Context, id uuid.UUID) (*StoreMessage, error)
 	Remove(ctx context.Context, storeMessage *StoreMessage) (bool, error)
 	CleanupMessages(ctx context.Context) error
 	Process(messageID string, ctx context.Context) error

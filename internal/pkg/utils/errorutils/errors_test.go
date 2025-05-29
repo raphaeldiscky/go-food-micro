@@ -10,7 +10,7 @@ import (
 )
 
 // TestStackTraceWithErrors tests the stack trace with errors.
-func TestStackTraceWithErrors(t *testing.T) {
+func TestStackTraceWithErrors(_ *testing.T) {
 	err := errors.WithMessage(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -19,7 +19,7 @@ func TestStackTraceWithErrors(t *testing.T) {
 }
 
 // TestStackTrace tests the stack trace.
-func TestStackTrace(t *testing.T) {
+func TestStackTrace(_ *testing.T) {
 	err := errors.WithMessage(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -28,7 +28,7 @@ func TestStackTrace(t *testing.T) {
 }
 
 // TestRootStackTrace tests the root stack trace.
-func TestRootStackTrace(t *testing.T) {
+func TestRootStackTrace(_ *testing.T) {
 	err := errors.WithMessage(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 
@@ -37,7 +37,7 @@ func TestRootStackTrace(t *testing.T) {
 }
 
 // TestAllLevelStackTrace tests the all level stack trace.
-func TestAllLevelStackTrace(t *testing.T) {
+func TestAllLevelStackTrace(_ *testing.T) {
 	err := errors.WrapIf(errors.New("handling bad request"), "this is a bad-request")
 	err = errors.WrapIf(err, "outer error message")
 

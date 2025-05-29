@@ -1,3 +1,4 @@
+// Package oteltracing provides a otel tracing middleware.
 package oteltracing
 
 // Ref: https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/instrumentation/github.com/labstack/echo/otelecho/echo.go

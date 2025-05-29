@@ -117,7 +117,7 @@ func (p *postgresProductRepository) GetProductByID(
 	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()
 
-	product, err := p.gormGenericRepository.GetById(ctx, uuid)
+	product, err := p.gormGenericRepository.GetByID(ctx, uuid)
 	err = utils2.TraceStatusFromSpan(
 		span,
 		errors.WrapIf(

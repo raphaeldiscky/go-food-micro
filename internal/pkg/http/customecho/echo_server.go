@@ -23,6 +23,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
+// echoHttpServer is a echo http server.
 type echoHttpServer struct {
 	echo         *echo.Echo
 	config       *config.EchoHTTPOptions
@@ -31,6 +32,7 @@ type echoHttpServer struct {
 	routeBuilder *contracts.RouteBuilder
 }
 
+// NewEchoHttpServer creates a new echo http server.
 func NewEchoHttpServer(
 	config *config.EchoHTTPOptions,
 	logger logger.Logger,
@@ -48,6 +50,7 @@ func NewEchoHttpServer(
 	}
 }
 
+// RunHttpServer runs the http server.
 func (s *echoHttpServer) RunHttpServer(
 	configEcho ...func(echo *echo.Echo),
 ) error {
@@ -66,18 +69,22 @@ func (s *echoHttpServer) RunHttpServer(
 	return s.echo.Start(s.config.Port)
 }
 
+// Logger returns the logger.
 func (s *echoHttpServer) Logger() logger.Logger {
 	return s.log
 }
 
+// Cfg returns the config.
 func (s *echoHttpServer) Cfg() *config.EchoHTTPOptions {
 	return s.config
 }
 
+// RouteBuilder returns the route builder.
 func (s *echoHttpServer) RouteBuilder() *contracts.RouteBuilder {
 	return s.routeBuilder
 }
 
+// ConfigGroup configures the group.
 func (s *echoHttpServer) ConfigGroup(
 	groupName string,
 	groupFunc func(group *echo.Group),
@@ -85,12 +92,14 @@ func (s *echoHttpServer) ConfigGroup(
 	groupFunc(s.echo.Group(groupName))
 }
 
+// AddMiddlewares adds the middlewares.
 func (s *echoHttpServer) AddMiddlewares(middlewares ...echo.MiddlewareFunc) {
 	if len(middlewares) > 0 {
 		s.echo.Use(middlewares...)
 	}
 }
 
+// GracefulShutdown shuts down the http server.
 func (s *echoHttpServer) GracefulShutdown(ctx context.Context) error {
 	err := s.echo.Shutdown(ctx)
 	if err != nil {
@@ -100,6 +109,7 @@ func (s *echoHttpServer) GracefulShutdown(ctx context.Context) error {
 	return nil
 }
 
+// SetupDefaultMiddlewares sets up the default middlewares.
 func (s *echoHttpServer) SetupDefaultMiddlewares() {
 	skipper := func(c echo.Context) bool {
 		return strings.Contains(c.Request().URL.Path, "swagger") ||
@@ -147,15 +157,17 @@ func (s *echoHttpServer) SetupDefaultMiddlewares() {
 	s.echo.Use(problemdetail.ProblemDetail(problemdetail.WithSkipper(skipper)))
 }
 
+// ApplyVersioningFromHeader applies the versioning from the header.
 func (s *echoHttpServer) ApplyVersioningFromHeader() {
 	s.echo.Pre(apiVersion)
 }
 
+// GetEchoInstance returns the echo instance.
 func (s *echoHttpServer) GetEchoInstance() *echo.Echo {
 	return s.echo
 }
 
-// APIVersion Header Based Versioning.
+// apiVersion is the api version.
 func apiVersion(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		req := c.Request()

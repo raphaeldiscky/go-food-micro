@@ -1,3 +1,4 @@
+// Package elasticsearch provides the elasticsearch client.
 package elasticsearch
 
 import (
@@ -6,6 +7,7 @@ import (
 	elasticsearch "github.com/elastic/go-elasticsearch/v8"
 )
 
+// NewElasticClient creates a new elasticsearch client.
 func NewElasticClient(cfg *ElasticOptions) (*elasticsearch.Client, error) {
 	es, err := elasticsearch.NewClient(elasticsearch.Config{
 		Addresses: []string{cfg.URL},

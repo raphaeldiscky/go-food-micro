@@ -7,6 +7,7 @@ import (
 	"emperror.dev/errors"
 )
 
+// NewMarshalingError creates a new marshaling error.
 func NewMarshalingError(message string) MarshalingError {
 	// `NewPlain` doesn't add stack-trace at all
 	marshalingErrMessage := errors.NewPlain("marshaling error")
@@ -20,6 +21,7 @@ func NewMarshalingError(message string) MarshalingError {
 	return marshalingError
 }
 
+// NewMarshalingErrorWrap creates a new marshaling error.
 func NewMarshalingErrorWrap(err error, message string) MarshalingError {
 	if err == nil {
 		return NewMarshalingError(message)
@@ -37,21 +39,26 @@ func NewMarshalingErrorWrap(err error, message string) MarshalingError {
 	return marshalingError
 }
 
+// marshalingError is a marshaling error.
 type marshalingError struct {
 	CustomError
 }
 
+// MarshalingError is a marshaling error.
 type MarshalingError interface {
 	InternalServerError
 	isMarshalingError()
 }
 
+// isMarshalingError checks if the error is a marshaling error.
 func (m *marshalingError) isMarshalingError() {
 }
 
+// isInternalServerError checks if the error is a internal server error.
 func (m *marshalingError) isInternalServerError() {
 }
 
+// IsMarshalingError checks if the error is a marshaling error.
 func IsMarshalingError(err error) bool {
 	var marshalingErr MarshalingError
 

@@ -16,7 +16,7 @@ type RabbitMQProducerConfigurationBuilder interface {
 	WithExchangeArgs(args map[string]any) RabbitMQProducerConfigurationBuilder
 	WithDeliveryMode(deliveryMode uint8) RabbitMQProducerConfigurationBuilder
 	WithPriority(priority uint8) RabbitMQProducerConfigurationBuilder
-	WithAppId(appId string) RabbitMQProducerConfigurationBuilder
+	WithAppId(appID string) RabbitMQProducerConfigurationBuilder
 	WithExpiration(expiration string) RabbitMQProducerConfigurationBuilder
 	WithReplyTo(replyTo string) RabbitMQProducerConfigurationBuilder
 	WithContentEncoding(contentEncoding string) RabbitMQProducerConfigurationBuilder
@@ -111,9 +111,9 @@ func (b *rabbitMQProducerConfigurationBuilder) WithPriority(
 
 // WithAppId sets the app id option.
 func (b *rabbitMQProducerConfigurationBuilder) WithAppId(
-	appId string,
+	appID string,
 ) RabbitMQProducerConfigurationBuilder {
-	b.rabbitmqProducerOptions.AppId = appId
+	b.rabbitmqProducerOptions.AppId = appID
 
 	return b
 }

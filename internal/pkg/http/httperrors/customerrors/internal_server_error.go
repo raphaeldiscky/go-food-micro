@@ -7,6 +7,7 @@ import (
 	"emperror.dev/errors"
 )
 
+// NewInternalServerError creates a new internal server error.
 func NewInternalServerError(message string) InternalServerError {
 	// `NewPlain` doesn't add stack-trace at all
 	internalErrMessage := errors.NewPlain("internal server error")
@@ -20,6 +21,7 @@ func NewInternalServerError(message string) InternalServerError {
 	return internalServerError
 }
 
+// NewInternalServerErrorWrap creates a new internal server error.
 func NewInternalServerErrorWrap(err error, message string) InternalServerError {
 	if err == nil {
 		return NewInternalServerError(message)
@@ -37,18 +39,22 @@ func NewInternalServerErrorWrap(err error, message string) InternalServerError {
 	return internalServerError
 }
 
+// internalServerError is a internal server error.
 type internalServerError struct {
 	CustomError
 }
 
+// InternalServerError is a internal server error.
 type InternalServerError interface {
 	CustomError
 	isInternalServerError()
 }
 
+// isInternalServerError checks if the error is a internal server error.
 func (i *internalServerError) isInternalServerError() {
 }
 
+// IsInternalServerError checks if the error is a internal server error.
 func IsInternalServerError(err error) bool {
 	var internalServerErr InternalServerError
 

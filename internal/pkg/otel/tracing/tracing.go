@@ -69,10 +69,12 @@ func NewOtelTracing(
 	return otelTracing, nil
 }
 
+// Shutdown shuts down the tracing.
 func (o *TracingOpenTelemetry) Shutdown(ctx context.Context) error {
 	return o.provider.Shutdown(ctx)
 }
 
+// newResource creates a new resource.
 func (o *TracingOpenTelemetry) newResource() (*resource.Resource, error) {
 	// https://github.com/uptrace/uptrace-go/blob/master/example/otlp-traces/main.go#L49C1-L56C5
 	resource, err := resource.New(context.Background(),
@@ -93,6 +95,7 @@ func (o *TracingOpenTelemetry) newResource() (*resource.Resource, error) {
 	return resource, err
 }
 
+// initTracer initializes the tracer.
 func (o *TracingOpenTelemetry) initTracer(
 	resource *resource.Resource,
 ) (AppTracer, error) {
@@ -110,7 +113,7 @@ func (o *TracingOpenTelemetry) initTracer(
 
 	batchExporters := lo.Map(
 		exporters,
-		func(item tracesdk.SpanExporter, index int) tracesdk.TracerProviderOption {
+		func(item tracesdk.SpanExporter, _ int) tracesdk.TracerProviderOption {
 			return tracesdk.WithBatcher(item)
 		},
 	)
@@ -149,6 +152,7 @@ func (o *TracingOpenTelemetry) initTracer(
 	return appTracer, nil
 }
 
+// configExporters configures the exporters.
 func (o *TracingOpenTelemetry) configExporters() ([]tracesdk.SpanExporter, error) {
 	ctx := context.Background()
 	traceOpts := []otlptracegrpc.Option{

@@ -1,3 +1,4 @@
+// Package route provides a helpers for the route.
 package route
 
 import (
