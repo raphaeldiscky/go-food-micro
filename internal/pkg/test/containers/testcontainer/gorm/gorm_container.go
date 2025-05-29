@@ -218,7 +218,11 @@ func isConnectable(
 		return false
 	}
 
-	defer db.Close()
+	defer func() {
+		if err := db.Close(); err != nil {
+			logger.Errorf("Error closing postgres connection: %v", err)
+		}
+	}()
 
 	err = db.PingContext(ctx)
 	if err != nil {

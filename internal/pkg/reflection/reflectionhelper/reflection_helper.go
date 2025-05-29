@@ -116,6 +116,9 @@ func SetFieldValueByIndex[T any](object T, index int, value interface{}) {
 		// for all exported fields (public)
 		if field.CanInterface() && field.CanAddr() && field.CanSet() {
 			field.Set(reflect.ValueOf(value))
+			if val, ok := val.Interface().(T); ok {
+				object = val
+			}
 		} else {
 			// for all unexported fields (private)
 			reflect.NewAt(field.Type(), unsafe.Pointer(field.UnsafeAddr())).Elem().Set(reflect.ValueOf(value))

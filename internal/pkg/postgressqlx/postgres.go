@@ -17,6 +17,8 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib" // load pgx driver for PostgreSQL
 
 	goqu "github.com/doug-martin/goqu/v9"
+
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 )
 
 // Sqlx is a struct that contains the sqlx.
@@ -26,6 +28,7 @@ type Sqlx struct {
 	SquirrelBuilder squirrel.StatementBuilderType
 	GoquBuilder     *goqu.SelectDataset
 	config          *PostgresSqlxOptions
+	logger          logger.Logger
 }
 
 // NewSqlxConn creates a database connection with appropriate pool configuration.
@@ -139,8 +142,18 @@ func createDB(cfg *PostgresSqlxOptions) error {
 
 // Close closes the database connection.
 func (db *Sqlx) Close() {
-	_ = db.DB.Close()
-	_ = db.SqlxDB.Close()
+	if err := db.DB.Close(); err != nil {
+		db.logger.Error(
+			"error in closing database: %v",
+			err,
+		)
+	}
+	if err := db.SqlxDB.Close(); err != nil {
+		db.logger.Error(
+			"error in closing sqlx database: %v",
+			err,
+		)
+	}
 }
 
 // Ref:https://dev.to/techschoolguru/a-clean-way-to-implement-database-transaction-in-golang-2ba

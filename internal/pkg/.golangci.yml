@@ -8,8 +8,8 @@ linters:
     # - dogsled
     # - dupl
     # - durationcheck
-    # - errcheck
-    # - errorlint
+    - errcheck
+    - errorlint
     # - exhaustive
     # - forbidigo
     # - funlen
@@ -33,7 +33,7 @@ linters:
     # - noctx
     # - nolintlint
     # - predeclared
-    - revive
+    # - revive
     # - rowserrcheck
     # - sqlclosecheck
     # - staticcheck

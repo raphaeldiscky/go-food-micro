@@ -156,7 +156,11 @@ func (r *rabbitMQProducer) PublishMessageWithTopicName(
 	if err != nil {
 		return producer3.FinishProducerSpan(beforeProduceSpan, err)
 	}
-	defer channel.Close()
+	defer func() {
+		if err := channel.Close(); err != nil {
+			r.logger.Errorf("Error closing channel: %v", err)
+		}
+	}()
 
 	err = r.ensureExchange(producerConfiguration, channel, exchange)
 	if err != nil {

@@ -56,7 +56,11 @@ func (g *gnoMockGormContainer) PopulateContainerOptions(
 	g.container = container
 	g.defaultOptions.HostPort = container.DefaultPort()
 
-	t.Cleanup(func() { _ = gnomock.Stop(container) })
+	t.Cleanup(func() {
+		if err := gnomock.Stop(container); err != nil {
+			log.Fatalf("Error stopping postgres container: %v", err)
+		}
+	})
 
 	gormContainerOptions := &gormPostgres.GormOptions{
 		Port:     g.defaultOptions.HostPort,

@@ -3,6 +3,7 @@ package redis
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	redisotel "github.com/redis/go-redis/extra/redisotel/v9"
@@ -39,7 +40,9 @@ func NewRedisClient(cfg *RedisOptions) *redis.Client {
 	})
 
 	if cfg.EnableTracing {
-		_ = redisotel.InstrumentTracing(universalClient)
+		if err := redisotel.InstrumentTracing(universalClient); err != nil {
+			log.Fatalf("Error instrumenting tracing: %v", err)
+		}
 	}
 
 	return universalClient

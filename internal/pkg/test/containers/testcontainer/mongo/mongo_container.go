@@ -198,7 +198,14 @@ func isConnectable(
 
 	mongoClient, err := mongo.Connect(ctx, opt)
 
-	defer mongoClient.Disconnect(ctx)
+	defer func() {
+		if err := mongoClient.Disconnect(ctx); err != nil {
+			logger.Error(
+				"error in disconnecting mongodb client: %v",
+				err,
+			)
+		}
+	}()
 
 	if err != nil {
 		logError(logger, mongoOptions.Host, mongoOptions.HostPort)

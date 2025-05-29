@@ -43,7 +43,11 @@ func TestPublishMessage(t *testing.T) {
 	if err != nil {
 		return
 	}
-	defer tp.Shutdown(ctx)
+	defer func() {
+		if err := tp.Shutdown(ctx); err != nil {
+			t.Fatalf("Error shutting down tracing: %v", err)
+		}
+	}()
 
 	// options := &config.RabbitmqOptions{
 	//	RabbitmqHostOptions: &config.RabbitmqHostOptions{

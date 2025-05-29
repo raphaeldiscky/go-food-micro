@@ -88,9 +88,19 @@ func TestConsumerWithFakeMessage(t *testing.T) {
 			)
 		},
 	)
+	if err != nil {
+		t.Fatalf("Error creating rabbitmq bus: %v", err)
+	}
 
-	rabbitmqBus.Start(ctx)
-	defer rabbitmqBus.Stop()
+	err = rabbitmqBus.Start(ctx)
+	if err != nil {
+		t.Fatalf("Error starting rabbitmq bus: %v", err)
+	}
+	defer func() {
+		if err := rabbitmqBus.Stop(); err != nil {
+			t.Fatalf("Error stopping rabbitmq bus: %v", err)
+		}
+	}()
 
 	time.Sleep(time.Second * 1)
 

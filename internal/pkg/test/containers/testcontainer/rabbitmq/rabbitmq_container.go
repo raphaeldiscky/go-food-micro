@@ -219,7 +219,11 @@ func IsConnectableWithContext(
 
 			return
 		}
-		defer conn.Close()
+		defer func() {
+			if err := conn.Close(); err != nil {
+				logger.Errorf("Error closing rabbitmq connection: %v", err)
+			}
+		}()
 
 		if conn.IsClosed() {
 			logError(

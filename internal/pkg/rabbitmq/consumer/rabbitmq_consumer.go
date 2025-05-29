@@ -240,7 +240,12 @@ func (r *rabbitMQConsumer) Stop() error {
 	defer func() {
 		if r.channel != nil && !r.channel.IsClosed() {
 			r.channel.Cancel(r.rabbitmqConsumerOptions.ConsumerId, false)
-			r.channel.Close()
+			if err := r.channel.Close(); err != nil {
+				r.logger.Error(
+					"error in closing channel: %v",
+					err,
+				)
+			}
 		}
 	}()
 
@@ -352,7 +357,13 @@ func (r *rabbitMQConsumer) handleReceived(
 
 				return
 			}
-			_ = consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
+			err := consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
+			if err != nil {
+				r.logger.Error(
+					"error in finishing consumer span: %v",
+					err,
+				)
+			}
 			if len(r.isConsumedNotifications) > 0 {
 				for _, notification := range r.isConsumedNotifications {
 					if notification != nil {
@@ -371,7 +382,13 @@ func (r *rabbitMQConsumer) handleReceived(
 
 				return
 			}
-			_ = consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
+			err := consumertracing.FinishConsumerSpan(beforeConsumeSpan, nil)
+			if err != nil {
+				r.logger.Error(
+					"error in finishing consumer span: %v",
+					err,
+				)
+			}
 		}
 	}
 

@@ -20,6 +20,7 @@ import (
 type mongoDockerTest struct {
 	resource       *dockertest.Resource
 	defaultOptions *contracts.MongoContainerOptions
+	logger         *log.Logger
 }
 
 // NewMongoDockerTest creates a new mongo docker test.
@@ -35,6 +36,7 @@ func NewMongoDockerTest() contracts.MongoContainer {
 			ImageName: "mongo",
 			Name:      "mongo-dockertest",
 		},
+		logger: log.Default(),
 	}
 }
 
@@ -66,9 +68,10 @@ func (g *mongoDockerTest) PopulateContainerOptions(
 		log.Fatalf("Could not start resource (Mongo Container): %s", err)
 	}
 
-	resource.Expire(
-		120,
-	) // Tell docker to hard kill the container in 120 seconds exponential backoff-retry, because the application_exceptions in the container might not be ready to accept connections yet
+	if err := resource.Expire(120); err != nil {
+		// Log the error but don't fail the test, as this is just a cleanup timeout
+		g.logger.Printf("Error setting container expiration: %v", err)
+	} // Tell docker to hard kill the container in 120 seconds exponential backoff-retry, because the application_exceptions in the container might not be ready to accept connections yet
 
 	g.resource = resource
 	port, _ := strconv.Atoi(
@@ -76,13 +79,17 @@ func (g *mongoDockerTest) PopulateContainerOptions(
 	)
 	g.defaultOptions.HostPort = port
 
-	t.Cleanup(func() { _ = resource.Close() })
+	t.Cleanup(func() {
+		if err := resource.Close(); err != nil {
+			log.Fatalf("Error closing mongo container: %v", err)
+		}
+	})
 
 	go func() {
 		for range ctx.Done() {
-			_ = resource.Close()
-
-			return
+			if err := resource.Close(); err != nil {
+				log.Fatalf("Error closing mongo container: %v", err)
+			}
 		}
 	}()
 

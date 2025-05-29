@@ -69,9 +69,10 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 		log.Fatalf("Could not start resource (RabbitMQ Container): %s", err)
 	}
 
-	resource.Expire(
-		120,
-	) // Tell docker to hard kill the container in 120 seconds exponential backoff-retry, because the application_exceptions in the container might not be ready to accept connections yet
+	if err := resource.Expire(120); err != nil {
+		// Log the error but don't fail the test, as this is just a cleanup timeout
+		g.logger.Errorf("Error setting container expiration: %v", err)
+	} // Tell docker to hard kill the container in 120 seconds exponential backoff-retry, because the application_exceptions in the container might not be ready to accept connections yet
 
 	g.resource = resource
 	hostPort, err := strconv.Atoi(
@@ -90,12 +91,11 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	g.defaultOptions.HostPort = hostPort
 	g.defaultOptions.HttpPort = httpPort
 
-	t.Cleanup(func() { _ = resource.Close() })
-
-	// isConnectable := isConnectable(g.logger, g.defaultOptions)
-	// if !isConnectable {
-	//	return g.PopulateContainerOptions(context.Background(), t, options...)
-	//}
+	t.Cleanup(func() {
+		if err := resource.Close(); err != nil {
+			log.Fatalf("Error closing rabbitmq container: %v", err)
+		}
+	})
 
 	var rabbitmqoptions *config.RabbitmqHostOptions
 	if err = pool.Retry(func() error {

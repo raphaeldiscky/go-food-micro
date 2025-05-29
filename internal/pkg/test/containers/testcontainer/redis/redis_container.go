@@ -156,7 +156,11 @@ func isConnectable(
 		Addr: fmt.Sprintf("%s:%d", options.Host, options.HostPort),
 	})
 
-	defer redisClient.Close()
+	defer func() {
+		if err := redisClient.Close(); err != nil {
+			logger.Errorf("Error closing redis connection: %v", err)
+		}
+	}()
 
 	err := redisClient.Ping(ctx).Err()
 	if err != nil {

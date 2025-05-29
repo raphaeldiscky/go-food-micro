@@ -70,8 +70,14 @@ func TestBuiltinPostgresContainer(t *testing.T) {
 		}
 	})
 
-	host, _ := ct.Host(ctx)
-	port, _ := ct.MappedPort(ctx, nat.Port("5432/tcp"))
+	host, err := ct.Host(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	port, err := ct.MappedPort(ctx, nat.Port("5432/tcp"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	gormOptions := &gormPostgres.GormOptions{
 		Port:     port.Int(),
 		Host:     host,
