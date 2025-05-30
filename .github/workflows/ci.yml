@@ -21,7 +21,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.x" # Latest stable version as of March 2024
+          go-version: "1.23.6" # Latest stable version as of March 2024
           check-latest: true
           cache: true # Enable Go's built-in caching
 
