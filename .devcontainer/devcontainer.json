@@ -1,0 +1,141 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+// https://audacioustux.notion.site/Getting-Started-with-Devcontainer-c727dbf9d56f4d6b9b0ef87b3111693f
+{
+  "name": "go-food-micro",
+  // use existing dev container templates. More info: https://containers.dev/guide/dockerfile, https://containers.dev/templates
+  //"image": "mcr.microsoft.com/devcontainers/go:latest",
+  // use a Dockerfile file. More info: https://containers.dev/guide/dockerfile#dockerfile
+  // "build": {
+  //   // Path is relative to the devcontainer.json file.
+  //   "dockerfile": "Dockerfile"
+  // },
+  // using a Dockerfile with Docker Compose, https://containers.dev/guide/dockerfile#docker-compose-image
+  "dockerComposeFile": "docker-compose.yaml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    // https://github.com/devcontainers/features/tree/main/src/go
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.23"
+    },
+    // https://github.com/devcontainers/features/tree/main/src/github-cli
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "2"
+    },
+    // https://github.com/devcontainers/features/tree/main/src/powershell
+    "ghcr.io/devcontainers/features/powershell:1": {
+      "version": "latest"
+    },
+    // https://github.com/devcontainers/features/tree/main/src/node
+    "ghcr.io/devcontainers/features/node:1": {},
+    // // https://github.com/devcontainers/features/tree/main/src/kubectl-helm-minikube
+    // "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {},
+    // // https://github.com/devcontainers/features/tree/main/src/terraform
+    // "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    // https://github.com/devcontainers/features/tree/main/src/common-utils
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    },
+    // https://github.com/devcontainers/features/tree/main/src/docker-in-docker
+    // https://devopscube.com/run-docker-in-docker/
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      "settings": {
+        "git.autofetch": true,
+        "files.autoSave": "onFocusChange",
+        "editor.formatOnSave": true,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "explorer.autoReveal": true,
+        "resmon.show.cpufreq": false,
+        "omnisharp.projectLoadTimeout": 60,
+        "workbench.colorTheme": "Visual Studio Light",
+        "workbench.iconTheme": "material-icon-theme",
+        "editor.minimap.enabled": false,
+        "editor.fontFamily": "'MesloLGM Nerd Font', 'Droid Sans Mono', 'monospace', 'Droid Sans Fallback', 'Consolas'",
+        "editor.fontSize": 14,
+        "explorer.confirmDelete": false,
+        "terminal.integrated.defaultProfile.windows": "PowerShell",
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "powershell.cwd": "~",
+        "terminal.external.windowsExec": "%LOCALAPPDATA%\\Microsoft\\WindowsApps\\pwsh.exe",
+        "go.buildTags": "",
+        "go.toolsEnvVars": {
+          "CGO_ENABLED": "0"
+        },
+        "go.testEnvVars": {
+          "CGO_ENABLED": "1"
+        },
+        "go.testTimeout": "10s",
+        "go.coverOnSingleTest": true,
+        "go.coverOnSingleTestFile": true,
+        "go.coverOnTestPackage": true,
+        "[go]": {
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+          }
+        },
+        "gopls": {
+          "usePlaceholders": false,
+          "staticcheck": true
+        },
+        "go.lintTool": "golangci-lint",
+        "go.lintFlags": ["--fast"],
+        "go.lintOnSave": "package",
+        "go.testFlags": ["-failfast", "-v"],
+        "go.toolsManagement.autoUpdate": true,
+        "go.useLanguageServer": true,
+        "go.formatTool": "gofumpt",
+        "[jsonc]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        }
+      },
+      "extensions": [
+        "golang.Go",
+        "esbenp.prettier-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "vscode-icons-team.vscode-icons",
+        "redhat.vscode-yaml", // Kubernetes,
+        "mutantdino.resourcemonitor",
+        "humao.rest-client",
+        "dzhavat.bracket-pair-toggler",
+        "ms-azuretools.vscode-docker",
+        "vivaxy.vscode-conventional-commits",
+        "IBM.output-colorizer", // Colorize your output/test logs
+        "emmanuelbeziat.vscode-great-icons",
+        "ms-vscode.vs-keybindings",
+        "GitHub.vscode-github-actions",
+        "PKief.material-icon-theme",
+        "EditorConfig.EditorConfig",
+        "DavidAnson.vscode-markdownlint",
+        "redhat.vscode-yaml",
+        "kennylong.kubernetes-yaml-formatter",
+        "sonarsource.sonarlint-vscode",
+        "ms-vscode.makefile-tools"
+      ]
+    }
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb",
+    "storage": "32gb"
+  },
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [5000, 5001],
+  // "portsAttributes": {
+  //		"5001": {
+  //			"protocol": "https"
+  //		}
+  // }
+  // https://containers.dev/implementors/json_reference/#lifecycle-scripts
+  "updateContentCommand": "chmod +x .devcontainer/scripts/update.sh",
+  "postCreateCommand": "chmod +x .devcontainer/scripts/post-create.sh"
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+}

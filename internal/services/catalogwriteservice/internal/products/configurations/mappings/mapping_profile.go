@@ -1,0 +1,73 @@
+// Package mappings contains the products mappings.
+package mappings
+
+import (
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
+	"google.golang.org/protobuf/types/known/timestamppb"
+
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
+	dtoV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
+	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
+)
+
+// ConfigureProductsMappings is a function that configures the products mappings.
+func ConfigureProductsMappings() error {
+	err := mapper.CreateMap[*models.Product, *dtoV1.ProductDto]()
+	if err != nil {
+		return err
+	}
+
+	err = mapper.CreateMap[*dtoV1.ProductDto, *models.Product]()
+	if err != nil {
+		return err
+	}
+
+	err = mapper.CreateMap[*datamodel.ProductDataModel, *models.Product]()
+	if err != nil {
+		return err
+	}
+
+	err = mapper.CreateMap[*models.Product, *datamodel.ProductDataModel]()
+	if err != nil {
+		return err
+	}
+
+	err = mapper.CreateCustomMap[*dtoV1.ProductDto, *productsService.Product](
+		func(product *dtoV1.ProductDto) *productsService.Product {
+			if product == nil {
+				return nil
+			}
+
+			return &productsService.Product{
+				ProductID:   product.ID.String(),
+				Name:        product.Name,
+				Description: product.Description,
+				Price:       product.Price,
+				CreatedAt:   timestamppb.New(product.CreatedAt),
+				UpdatedAt:   timestamppb.New(product.UpdatedAt),
+			}
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	err = mapper.CreateCustomMap(
+		func(product *models.Product) *productsService.Product {
+			return &productsService.Product{
+				ProductID:   product.ID.String(),
+				Name:        product.Name,
+				Description: product.Description,
+				Price:       product.Price,
+				CreatedAt:   timestamppb.New(product.CreatedAt),
+				UpdatedAt:   timestamppb.New(product.UpdatedAt),
+			}
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

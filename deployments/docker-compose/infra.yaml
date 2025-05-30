@@ -1,0 +1,97 @@
+name: go-food-micro
+
+services:
+  rabbitmq:
+    env_file: "infra.env"
+    image: rabbitmq:4.1.0-management
+    container_name: rabbitmq
+    pull_policy: if_not_present
+    restart: unless-stopped
+    ports:
+      - ${RABBITMQ_HOST_PORT:-5672}:${RABBITMQ_PORT:-5672}
+      - ${RABBITMQ_HOST_API_PORT:-15672}:${RABBITMQ_API_PORT:-15672}
+      # volumes:
+      #   - rabbitmq:/var/lib/rabbitmq
+    networks:
+      - go-food-micro
+
+  catalog-write-db:
+    env_file: "infra.env"
+    image: postgres:17-alpine
+    pull_policy: if_not_present
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - ${POSTGRES_HOST_PORT:-15432}:${POSTGRES_PORT:-5432}
+    #https://docs.docker.com/compose/environment-variables/env-file/#parameter-expansion
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    networks:
+      - go-food-micro
+
+  # https://developer.redis.com/howtos/quick-start
+  # redis-stack is a image with redis modules enabled like JSON module
+  redis:
+    env_file: "infra.env"
+    image: redis/redis-stack:7.4.0-v3
+    pull_policy: if_not_present
+    restart: unless-stopped
+    container_name: redis
+    ports:
+      - ${REDIS_HOST_PORT:-6379}:${REDIS_PORT:-6379}
+    networks:
+      - go-food-micro
+
+  mongo:
+    env_file: "infra.env"
+    image: mongo:8.0.9-noble
+    pull_policy: if_not_present
+    container_name: mongo
+    restart: unless-stopped
+    # https://docs.docker.com/compose/environment-variables/env-file/#parameter-expansion
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER:-admin}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASS:-admin}
+    ports:
+      - ${MONGO_HOST_PORT:-37017}:${MONGO_PORT:-27017}
+    networks:
+      - go-food-micro
+
+  # https://docs.kurrent.io/server/v25.0/quick-start/#insecure-single-node
+  # https://hub.docker.com/r/kurrentplatform/kurrentdb
+  # https://stackoverflow.com/questions/65272764/ports-are-not-available-listen-tcp-0-0-0-0-50070-bind-an-attempt-was-made-to
+  # KURRENTDB_MEM_DB=true, it tells the KurrentDB container to use an in-memory database, which means that any data stored in KurrentDB will not be persisted between container restarts. Once the container is stopped or restarted, all data will be lost.
+  kurrentdb:
+    env_file: "infra.env"
+    image: kurrentplatform/kurrentdb:25.0
+    pull_policy: if_not_present
+    container_name: kurrentdb
+    restart: unless-stopped
+    environment:
+      - KURRENTDB_CLUSTER_SIZE=1
+      - KURRENTDB_RUN_PROJECTIONS=All
+      - KURRENTDB_START_STANDARD_PROJECTIONS=true
+      - KURRENTDB_NODE_PORT=2113
+      - KURRENTDB_INSECURE=true
+      - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - KURRENTDB_MEM_DB=true
+    ports:
+      - ${KURRENTDB_HOST_PORT:-2113}:${KURRENTDB_PORT:-2113}
+    volumes:
+      - type: volume
+        source: kurrentdb-volume-data
+        target: /var/lib/kurrentdb
+      - type: volume
+        source: kurrentdb-volume-logs
+        target: /var/log/kurrentdb
+    networks:
+      - go-food-micro
+
+volumes:
+  kurrentdb-volume-data:
+  kurrentdb-volume-logs:
+
+networks:
+  go-food-micro:
+    name: go-food-micro
