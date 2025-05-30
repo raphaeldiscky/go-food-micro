@@ -13,7 +13,10 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc/handlers/otel"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 )
+
+var Logger = defaultlogger.GetLogger()
 
 // grpcClient is a struct that represents a grpc client.
 type grpcClient struct {
@@ -66,7 +69,7 @@ func (g *grpcClient) WaitForAvailableConnection() error {
 	}, timeout)
 
 	state := g.conn.GetState()
-	fmt.Printf("grpc state is:%s\n", state)
+	Logger.Infof("grpc state is:%s\n", state)
 
 	return err
 }

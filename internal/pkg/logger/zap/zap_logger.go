@@ -16,6 +16,15 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/models"
 )
 
+const (
+	serviceKey = "[SERVICE]"
+	timeKey    = "[TIME]"
+	levelKey   = "[LEVEL]"
+	callerKey  = "[CALLER]"
+	lineKey    = "[LINE]"
+	messageKey = "[MESSAGE]"
+)
+
 // zapLogger is a zap logger.
 type zapLogger struct {
 	level       string
@@ -80,12 +89,12 @@ func (l *zapLogger) initLogger(env environment.Environment) {
 
 	if env.IsProduction() {
 		encoderCfg = zap.NewProductionEncoderConfig()
-		encoderCfg.NameKey = "[SERVICE]"
-		encoderCfg.TimeKey = "[TIME]"
-		encoderCfg.LevelKey = "[LEVEL]"
-		encoderCfg.FunctionKey = "[CALLER]"
-		encoderCfg.CallerKey = "[LINE]"
-		encoderCfg.MessageKey = "[MESSAGE]"
+		encoderCfg.NameKey = serviceKey
+		encoderCfg.TimeKey = timeKey
+		encoderCfg.LevelKey = levelKey
+		encoderCfg.FunctionKey = callerKey
+		encoderCfg.CallerKey = lineKey
+		encoderCfg.MessageKey = messageKey
 		encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
 		encoderCfg.EncodeLevel = zapcore.CapitalLevelEncoder
 		encoderCfg.EncodeCaller = zapcore.ShortCallerEncoder
@@ -94,12 +103,12 @@ func (l *zapLogger) initLogger(env environment.Environment) {
 		encoder = zapcore.NewJSONEncoder(encoderCfg)
 	} else {
 		encoderCfg = zap.NewDevelopmentEncoderConfig()
-		encoderCfg.NameKey = "[SERVICE]"
-		encoderCfg.TimeKey = "[TIME]"
-		encoderCfg.LevelKey = "[LEVEL]"
-		encoderCfg.FunctionKey = "[CALLER]"
-		encoderCfg.CallerKey = "[LINE]"
-		encoderCfg.MessageKey = "[MESSAGE]"
+		encoderCfg.NameKey = serviceKey
+		encoderCfg.TimeKey = timeKey
+		encoderCfg.LevelKey = levelKey
+		encoderCfg.FunctionKey = callerKey
+		encoderCfg.CallerKey = lineKey
+		encoderCfg.MessageKey = messageKey
 		encoderCfg.EncodeTime = zapcore.ISO8601TimeEncoder
 		encoderCfg.EncodeName = zapcore.FullNameEncoder
 		encoderCfg.EncodeDuration = zapcore.StringDurationEncoder

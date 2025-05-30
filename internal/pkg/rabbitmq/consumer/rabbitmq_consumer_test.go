@@ -15,7 +15,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/pipeline"
 	types3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer/json"
-	defaultLogger2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	rabbitmqConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
@@ -26,6 +26,8 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging/consumer"
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
+
+var Logger = defaultlogger.GetLogger()
 
 // TestConsumerWithFakeMessage tests the consumer with fake message.
 func TestConsumerWithFakeMessage(t *testing.T) {
@@ -42,7 +44,7 @@ func TestConsumerWithFakeMessage(t *testing.T) {
 	//	},
 	//}
 
-	rabbitmqHostOption, err := rabbitmq.NewRabbitMQTestContainers(defaultLogger2.GetLogger()).
+	rabbitmqHostOption, err := rabbitmq.NewRabbitMQTestContainers(Logger).
 		PopulateContainerOptions(ctx, t)
 	require.NoError(t, err)
 
@@ -60,19 +62,19 @@ func TestConsumerWithFakeMessage(t *testing.T) {
 		options,
 		conn,
 		eventSerializer,
-		defaultLogger2.GetLogger(),
+		Logger,
 	)
 	producerFactory := producer.NewProducerFactory(
 		options,
 		conn,
 		eventSerializer,
-		defaultLogger2.GetLogger(),
+		Logger,
 	)
 
 	fakeHandler := consumer.NewRabbitMQFakeTestConsumerHandler[ProducerConsumerMessage]()
 
 	rabbitmqBus, err := bus.NewRabbitmqBus(
-		defaultLogger2.GetLogger(),
+		Logger,
 		consumerFactory,
 		producerFactory,
 		func(builder rabbitmqConfigurations.RabbitMQConfigurationBuilder) {
@@ -195,9 +197,8 @@ func (p Pipeline1) Handle(
 	consumerContext types3.MessageConsumeContext,
 	next pipeline.ConsumerHandlerFunc,
 ) error {
-	fmt.Println("PipelineBehaviourTest.Handled")
-
-	fmt.Printf("pipeline got a message with id '%s'\n", consumerContext.Message().GeMessageId())
+	Logger.Info("PipelineBehaviourTest.Handled")
+	Logger.Infof("pipeline got a message with id '%s'\n", consumerContext.Message().GeMessageId())
 
 	err := next(ctx)
 	if err != nil {

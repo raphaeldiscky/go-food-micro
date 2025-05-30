@@ -79,6 +79,16 @@ func createDB(cfg *bun2.BunConfig) error {
 		return err
 	}
 
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Fatalf("Error closing database: %v", err)
+		}
+	}()
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("error checking database existence: %w", err)
+	}
+
 	if rows.Next() {
 		err = rows.Scan(&exists)
 		if err != nil {

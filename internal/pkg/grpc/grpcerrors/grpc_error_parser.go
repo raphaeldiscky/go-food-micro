@@ -27,18 +27,21 @@ func ParseError(err error) GrpcErr {
 		switch {
 		case customErrors.IsDomainError(err, customErr.Status()):
 			return NewDomainGrpcError(
+				//nolint:gosec // G115: integer overflow conversion int -> uint32
 				codes.Code(customErr.Status()),
 				customErr.Error(),
 				stackTrace,
 			)
 		case customErrors.IsApplicationError(err, customErr.Status()):
 			return NewApplicationGrpcError(
+				//nolint:gosec // G115: integer overflow conversion int -> uint32
 				codes.Code(customErr.Status()),
 				customErr.Error(),
 				stackTrace,
 			)
 		case customErrors.IsAPIError(err, customErr.Status()):
 			return NewAPIGrpcError(
+				//nolint:gosec // G115: integer overflow conversion int -> uint32
 				codes.Code(customErr.Status()),
 				customErr.Error(),
 				stackTrace,
@@ -59,7 +62,9 @@ func ParseError(err error) GrpcErr {
 			return NewInternalServerGrpcError(customErr.Error(), stackTrace)
 		case customErrors.IsCustomError(err):
 			return NewGrpcError(
+				//nolint:gosec // G115: integer overflow conversion int -> uint32
 				codes.Code(customErr.Status()),
+				//nolint:gosec // G115: integer overflow conversion int -> uint32
 				codes.Code(customErr.Status()).String(),
 				customErr.Error(),
 				stackTrace,

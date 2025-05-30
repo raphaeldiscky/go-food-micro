@@ -295,6 +295,7 @@ func (a *esdbAggregateStore[T]) getStreamEvents(
 		events, err := a.eventStore.ReadEvents(
 			streamId,
 			position,
+			//nolint:gosec // G115: integer overflow conversion int -> uint64
 			uint64(pageSize),
 			ctx,
 		)

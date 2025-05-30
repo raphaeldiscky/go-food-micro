@@ -53,6 +53,7 @@ var _ = ginkgo.Describe("/", ginkgo.Ordered, func() {
 	})
 
 	ginkgo.BeforeEach(func() {
+		//nolint:gosec // G107: Potential HTTP request made with variable url
 		res, err = http.Get(url)
 	})
 	ginkgo.It("returns status OK", func() {

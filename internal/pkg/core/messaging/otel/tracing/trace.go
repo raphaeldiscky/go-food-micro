@@ -11,6 +11,8 @@ import (
 var MessagingTracer trace.Tracer
 
 // init is a function that initializes the tracing.
+//
+//nolint:gochecknoinits // This is a standard pattern for initializing the tracing
 func init() {
 	MessagingTracer = tracing.NewAppTracer(
 		"github.com/raphaeldiscky/go-food-micro/internal/pkg/messaging",

@@ -142,6 +142,16 @@ func createPostgresDB(cfg *GormOptions) error {
 		return err
 	}
 
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Fatalf("Error closing database: %v", err)
+		}
+	}()
+
+	if err := rows.Err(); err != nil {
+		return fmt.Errorf("error checking database existence: %w", err)
+	}
+
 	var exists int
 	if rows.Next() {
 		err = rows.Scan(&exists)

@@ -11,6 +11,10 @@ import (
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
 
+const (
+	ContentType = "application/json"
+)
+
 // DefaultMessageJSONSerializer is a struct that represents a default message json serializer.
 type DefaultMessageJSONSerializer struct {
 	serializer serializer.Serializer
@@ -163,7 +167,7 @@ func (m *DefaultMessageJSONSerializer) DeserializeType(
 
 // ContentType is a function that returns the content type.
 func (m *DefaultMessageJSONSerializer) ContentType() string {
-	return "application/json"
+	return ContentType
 }
 
 // Serializer is a function that returns the serializer.

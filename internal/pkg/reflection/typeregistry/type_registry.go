@@ -16,6 +16,8 @@ func registerType(typedNil interface{}) {
 type MyString string
 
 // init initializes the type registry.
+//
+//nolint:gochecknoinits // This is a standard pattern for initializing the type registry
 func init() {
 	registerType((*MyString)(nil))
 }

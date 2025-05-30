@@ -124,13 +124,17 @@ func (r *rabbitMQProducer) setupChannel(
 	}
 
 	if err := r.ensureExchange(producerConfiguration, channel, exchange); err != nil {
-		channel.Close()
+		if closeErr := channel.Close(); closeErr != nil {
+			r.logger.Errorf("Error closing channel after ensure exchange error: %v", closeErr)
+		}
 
 		return nil, nil, err
 	}
 
 	if err := channel.Confirm(false); err != nil {
-		channel.Close()
+		if closeErr := channel.Close(); closeErr != nil {
+			r.logger.Errorf("Error closing channel after confirm error: %v", closeErr)
+		}
 
 		return nil, nil, err
 	}

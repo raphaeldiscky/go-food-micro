@@ -15,7 +15,7 @@ import (
 	pipeline2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/pipeline"
 	types3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/serializer/json"
-	defaultlogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
 	rabbitmqconsumer "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer"
@@ -28,7 +28,7 @@ import (
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 )
 
-var defaultLogger = defaultlogger.GetLogger()
+var Logger = defaultlogger.GetLogger()
 
 // TestAddRabbitMQ tests the add rabbitmq.
 func TestAddRabbitMQ(t *testing.T) {
@@ -51,7 +51,7 @@ func TestAddRabbitMQ(t *testing.T) {
 	//	},
 	//}
 
-	rabbitmqHostOption, err := rabbitmq.NewRabbitMQTestContainers(defaultlogger.GetLogger()).
+	rabbitmqHostOption, err := rabbitmq.NewRabbitMQTestContainers(Logger).
 		PopulateContainerOptions(ctx, t)
 	require.NoError(t, err)
 
@@ -66,17 +66,17 @@ func TestAddRabbitMQ(t *testing.T) {
 		options,
 		conn,
 		serializer,
-		defaultlogger.GetLogger(),
+		Logger,
 	)
 	producerFactory := rabbitmqproducer.NewProducerFactory(
 		options,
 		conn,
 		serializer,
-		defaultlogger.GetLogger(),
+		Logger,
 	)
 
 	b, err := NewRabbitmqBus(
-		defaultlogger.GetLogger(),
+		Logger,
 		consumerFactory,
 		producerFactory,
 		func(builder configurations.RabbitMQConfigurationBuilder) {
@@ -172,9 +172,9 @@ func (t *TestMessageHandler) Handle(
 	if !ok {
 		return fmt.Errorf("failed to type assert message to *ProducerConsumerMessage")
 	}
-	defaultLogger.Infof(
+	Logger.Infof(
 		"Message received: %s",
-		string(message.Data),
+		message.Data,
 	)
 
 	return nil
@@ -189,7 +189,7 @@ func (t *TestMessageHandler2) Handle(
 	consumeContext types3.MessageConsumeContext,
 ) error {
 	message := consumeContext.Message()
-	defaultLogger.Infof("Message received: %s", message)
+	Logger.Infof("Message received: %s", message)
 
 	return nil
 }
@@ -213,9 +213,9 @@ func (p *Pipeline1) Handle(
 	consumerContext types3.MessageConsumeContext,
 	next pipeline2.ConsumerHandlerFunc,
 ) error {
-	fmt.Println("PipelineBehaviourTest.Handled")
+	Logger.Info("PipelineBehaviourTest.Handled")
 
-	fmt.Printf(
+	Logger.Infof(
 		"pipeline got a message with id '%s'",
 		consumerContext.Message().GeMessageId(),
 	)

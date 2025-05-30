@@ -19,6 +19,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data/specification"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mapper"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	reflectionHelper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/reflectionhelper"
@@ -32,6 +33,8 @@ import (
 // https://www.mongodb.com/docs/drivers/go/current/quick-reference/
 // https://www.mongodb.com/docs/drivers/go/current/fundamentals/bson/
 // https://www.mongodb.com/docs
+
+var Logger = defaultlogger.GetLogger()
 
 // mongoGenericRepository is a generic repository for the mongodb.
 type mongoGenericRepository[TDataModel interface{}, TEntity interface{}] struct {
@@ -314,7 +317,11 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) GetByFilter(
 		return nil, err
 	}
 
-	defer cursorResult.Close(ctx)
+	defer func() {
+		if err := cursorResult.Close(ctx); err != nil {
+			Logger.Errorf("failed to close cursor: %v", err)
+		}
+	}()
 
 	if modelType == dataModelType {
 		var models []TEntity
@@ -509,7 +516,11 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) SkipTake(
 	if err != nil {
 		return nil, err
 	}
-	defer cursorResult.Close(ctx)
+	defer func() {
+		if err := cursorResult.Close(ctx); err != nil {
+			Logger.Errorf("failed to close cursor: %v", err)
+		}
+	}()
 
 	if modelType == dataModelType {
 		var models []TEntity
@@ -568,7 +579,11 @@ func (m *mongoGenericRepository[TDataModel, TEntity]) Find(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to find entities by specification")
 	}
-	defer cursorResult.Close(ctx)
+	defer func() {
+		if err := cursorResult.Close(ctx); err != nil {
+			Logger.Errorf("failed to close cursor: %v", err)
+		}
+	}()
 
 	if modelType == dataModelType {
 		var models []TEntity

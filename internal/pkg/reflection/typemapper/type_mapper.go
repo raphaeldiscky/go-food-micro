@@ -7,6 +7,7 @@ package typemapper
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 	"unsafe"
@@ -19,7 +20,9 @@ var (
 	packages map[string]map[string][]reflect.Type
 )
 
-// init initializes types and packages.
+// init is a function that initializes types and packages.
+//
+//nolint:gochecknoinits // This is a standard pattern for initializing the type mapper
 func init() {
 	types = make(map[string][]reflect.Type)
 	packages = make(map[string]map[string][]reflect.Type)
@@ -62,8 +65,8 @@ func discoverTypes() {
 				if strings.Contains(loadedType.String(), "Test") {
 					n := GetFullTypeNameByType(loadedType)
 					n2 := GetTypeNameByType(loadedType)
-					fmt.Println(n)
-					fmt.Println(n2)
+					log.Println(n)
+					log.Println(n2)
 				}
 
 				types[GetFullTypeNameByType(loadedType)] = append(

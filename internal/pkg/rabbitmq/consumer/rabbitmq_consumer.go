@@ -32,6 +32,10 @@ import (
 )
 
 const (
+	ContentType = "application/json"
+)
+
+const (
 	retryAttempts = 3
 	retryDelay    = 300 * time.Millisecond
 )
@@ -529,7 +533,7 @@ func (r *rabbitMQConsumer) deserializeData(
 	body []byte,
 ) messagingTypes.IMessage {
 	if contentType == "" {
-		contentType = "application/json"
+		contentType = ContentType
 	}
 
 	if len(body) == 0 {
@@ -538,7 +542,7 @@ func (r *rabbitMQConsumer) deserializeData(
 		return nil
 	}
 
-	if contentType == "application/json" {
+	if contentType == ContentType {
 		// r.rabbitmqConsumerOptions.ConsumerMessageType --> actual type
 		// deserialize, err := r.messageSerializer.DeserializeType(body, r.rabbitmqConsumerOptions.ConsumerMessageType, contentType)
 		deserialize, err := r.messageSerializer.Deserialize(

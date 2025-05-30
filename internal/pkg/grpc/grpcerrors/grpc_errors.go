@@ -9,8 +9,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 )
+
+var Logger = defaultlogger.GetLogger()
 
 // grpcErr is a struct that represents a grpc error.
 type grpcErr struct {
@@ -124,9 +126,9 @@ func (p *grpcErr) ToGrpcResponseErr() error {
 }
 
 func (p *grpcErr) ToJSON() string {
-	defaultLogger.GetLogger().Error(p.Error())
+	Logger.Error(p.Error())
 	stackTrace := p.GetStackTrace()
-	fmt.Println(stackTrace)
+	Logger.Error(stackTrace)
 
 	return string(p.json())
 }

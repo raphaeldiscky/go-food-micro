@@ -9,6 +9,11 @@ import (
 	reflect "github.com/goccy/go-reflect"
 )
 
+const (
+	TestName = "John"
+	TestAge  = 30
+)
+
 // person is a struct that represents a person.
 type person struct {
 	Name string
@@ -29,7 +34,7 @@ func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
 	// To unmarshal JSON into an interface value, Unmarshal stores map[string]interface{}
 	var jsonMap interface{}
 
-	marshal, err := currentSerializer.Marshal(person{"John", 30})
+	marshal, err := currentSerializer.Marshal(person{TestName, TestAge})
 	if err != nil {
 		return
 	}
@@ -54,8 +59,8 @@ func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
 
 	assert.True(t, reflect.TypeOf(jsonMapTyped).Kind() == reflect.Map)
 	assert.True(t, reflect.TypeOf(jsonMapTyped) == reflect.TypeOf(map[string]interface{}(nil)))
-	assert.True(t, jsonMapTyped["ShortTypeName"] == "John")
-	assert.True(t, jsonMapTyped["Age"] == float64(30))
+	assert.True(t, jsonMapTyped["ShortTypeName"] == TestName)
+	assert.True(t, jsonMapTyped["Age"] == float64(TestAge))
 }
 
 // TestDeserializeUnstructuredDataIntoMap tests the deserialize unstructured data into map.
@@ -70,7 +75,7 @@ func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 	// To unmarshal a JSON object into a map, Unmarshal first establishes a map to use. If the map is nil, Unmarshal allocates a new map. Otherwise Unmarshal reuses the existing map, keeping existing entries. Unmarshal then stores key-value pairs from the JSON object into the map.
 	var jsonMap map[string]interface{}
 
-	marshal, err := currentSerializer.Marshal(person{"John", 30})
+	marshal, err := currentSerializer.Marshal(person{TestName, TestAge})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -88,8 +93,8 @@ func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 
 	assert.True(t, reflect.TypeOf(jsonMap).Kind() == reflect.Map)
 	assert.True(t, reflect.TypeOf(jsonMap) == reflect.TypeOf(map[string]interface{}(nil)))
-	assert.True(t, jsonMap["ShortTypeName"] == "John")
-	assert.True(t, jsonMap["Age"] == float64(30))
+	assert.True(t, jsonMap["ShortTypeName"] == TestName)
+	assert.True(t, jsonMap["Age"] == float64(TestAge))
 }
 
 // TestDeserializeStructuredDataStruct tests the deserialize structured data into struct.
@@ -108,7 +113,7 @@ func TestDeserializeStructuredDataStruct(t *testing.T) {
 		t.Log("deserialize to struct")
 	}
 
-	serializedObj := person{Name: "John", Age: 30}
+	serializedObj := person{Name: TestName, Age: TestAge}
 	marshal, err := currentSerializer.Marshal(serializedObj)
 	if err != nil {
 		return
@@ -119,8 +124,8 @@ func TestDeserializeStructuredDataStruct(t *testing.T) {
 		panic(err)
 	}
 
-	assert.True(t, jsonMap.Name == "John")
-	assert.True(t, jsonMap.Age == 30)
+	assert.True(t, jsonMap.Name == TestName)
+	assert.True(t, jsonMap.Age == TestAge)
 	assert.True(t, reflect.TypeOf(jsonMap) == reflect.TypeOf(person{}))
 	assert.Equal(t, serializedObj, jsonMap)
 }
@@ -135,7 +140,7 @@ func TestDeserializeStructuredDataStruct2(t *testing.T) {
 	// To unmarshal JSON into a struct, Unmarshal matches incoming object keys to the keys used by Marshal (either the struct field name or its tag), preferring an exact match but also accepting a case-insensitive match.
 	var jsonMap interface{} = &person{}
 
-	serializedObj := person{Name: "John", Age: 30}
+	serializedObj := person{Name: TestName, Age: TestAge}
 	marshal, err := currentSerializer.Marshal(serializedObj)
 	if err != nil {
 		return
@@ -151,8 +156,8 @@ func TestDeserializeStructuredDataStruct2(t *testing.T) {
 		t.Fatal("Failed to convert to *person")
 	}
 
-	assert.True(t, personMap.Name == "John")
-	assert.True(t, personMap.Age == 30)
+	assert.True(t, personMap.Name == TestName)
+	assert.True(t, personMap.Age == TestAge)
 	assert.True(t, reflect.TypeOf(jsonMap).Elem() == reflect.TypeOf(person{}))
 }
 
@@ -167,7 +172,7 @@ func TestDeserializeStructuredDataPointer(t *testing.T) {
 	jsonMap := &person{}
 	// var jsonMap *person = nil
 
-	serializedObj := person{Name: "John", Age: 30}
+	serializedObj := person{Name: TestName, Age: TestAge}
 	marshal, err := currentSerializer.Marshal(serializedObj)
 	if err != nil {
 		return
@@ -178,8 +183,8 @@ func TestDeserializeStructuredDataPointer(t *testing.T) {
 		panic(err)
 	}
 
-	assert.True(t, jsonMap.Name == "John")
-	assert.True(t, jsonMap.Age == 30)
+	assert.True(t, jsonMap.Name == TestName)
+	assert.True(t, jsonMap.Age == TestAge)
 	assert.True(t, reflect.TypeOf(jsonMap).Elem() == reflect.TypeOf(person{}))
 }
 
@@ -189,7 +194,7 @@ func TestDecodeToMap(t *testing.T) {
 
 	var jsonMap map[string]interface{}
 
-	serializedObj := person{Name: "John", Age: 30}
+	serializedObj := person{Name: TestName, Age: TestAge}
 	marshal, err := currentSerializer.Marshal(serializedObj)
 	if err != nil {
 		t.Fatal(err)
@@ -202,6 +207,6 @@ func TestDecodeToMap(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.True(t, jsonMap["ShortTypeName"] == "John")
-	assert.True(t, jsonMap["Age"] == float64(30))
+	assert.True(t, jsonMap["ShortTypeName"] == TestName)
+	assert.True(t, jsonMap["Age"] == float64(TestAge))
 }

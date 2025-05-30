@@ -3,6 +3,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -90,7 +91,7 @@ func BindConfigKey[T any](
 
 	// https://github.com/caarlos0/env
 	if err := env.Parse(cfg); err != nil {
-		fmt.Printf("%+v\n", err)
+		log.Printf("%+v\n", err)
 	}
 
 	return cfg, nil

@@ -9,6 +9,9 @@ import (
 
 var validate *validator.Validate
 
+// init is a function that initializes the validator.
+//
+//nolint:gochecknoinits // This is a standard pattern for initializing the validator
 func init() {
 	validate = validator.New()
 }

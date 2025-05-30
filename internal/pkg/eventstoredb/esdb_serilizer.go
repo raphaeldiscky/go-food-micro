@@ -92,6 +92,7 @@ func (e *EsdbSerializer) ExpectedStreamVersionToEsdbExpectedRevision(
 		return esdb.StreamExists{}
 	}
 
+	//nolint:gosec // G115: integer overflow conversion int -> uint64
 	return esdb.StreamRevision{Value: uint64(expectedVersion.Value())}
 }
 
@@ -113,6 +114,7 @@ func (e *EsdbSerializer) StreamReadPositionToStreamPosition(
 func (e *EsdbSerializer) StreamTruncatePositionToInt64(
 	truncatePosition truncatePosition.StreamTruncatePosition,
 ) uint64 {
+	//nolint:gosec // G115: integer overflow conversion int -> uint64
 	return uint64(truncatePosition.Value())
 }
 
@@ -144,6 +146,7 @@ func (e *EsdbSerializer) EsdbReadStreamToResolvedEvents(
 func (e *EsdbSerializer) EsdbPositionToStreamReadPosition(
 	position esdb.Position,
 ) readPosition.StreamReadPosition {
+	//nolint:gosec // G115: integer overflow conversion int -> int64
 	return readPosition.FromInt64(int64(position.Commit))
 }
 
@@ -174,6 +177,7 @@ func (e *EsdbSerializer) ResolvedEventToStreamEvent(
 		EventID:  id,
 		Event:    deserializedEvent,
 		Metadata: deserializedMeta,
+		//nolint:gosec // G115: integer overflow conversion int -> int64
 		Version:  int64(resolveEvent.Event.EventNumber),
 		Position: e.EsdbPositionToStreamReadPosition(resolveEvent.OriginalEvent().Position).Value(),
 	}, nil

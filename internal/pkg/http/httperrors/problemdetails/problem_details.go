@@ -11,9 +11,11 @@ import (
 	"emperror.dev/errors"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/contracts"
-	defaultLogger "github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 )
+
+var Logger = defaultlogger.GetLogger()
 
 // ContentTypeJSON is the content type for the JSON.
 const (
@@ -222,9 +224,9 @@ func ResolveProblemDetail(err error) ProblemDetailErr {
 
 // WriteTo writes the JSON Problem to an HTTP Response Writer.
 func WriteTo(p ProblemDetailErr, w http.ResponseWriter) (int, error) {
-	defaultLogger.GetLogger().Error(p.Error())
+	Logger.Error(p.Error())
 	stackTrace := p.GetStackTrace()
-	fmt.Println(stackTrace)
+	Logger.Infof("stackTrace: %s", stackTrace)
 
 	writeHeaderTo(p, w)
 	marshal, err := json.Marshal(&p)

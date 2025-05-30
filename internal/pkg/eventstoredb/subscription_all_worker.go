@@ -177,8 +177,6 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 				return err
 			}
 		}
-
-		return ctx.Err()
 	}
 }
 

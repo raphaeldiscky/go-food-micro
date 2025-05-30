@@ -24,6 +24,10 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/utils"
 )
 
+const (
+	TestUpdatedProductName = "product2_updated"
+)
+
 // Product is a domain_events entity.
 type Product struct {
 	ID          uuid.UUID
@@ -334,7 +338,7 @@ func (c *gormGenericRepositoryTest) TestUpdate() {
 
 	product := products.Items[0]
 
-	product.Name = "product2_updated"
+	product.Name = TestUpdatedProductName
 	err = c.productRepository.Update(ctx, product)
 	c.Require().NoError(err)
 
@@ -342,7 +346,7 @@ func (c *gormGenericRepositoryTest) TestUpdate() {
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
-	c.Assert().Equal("product2_updated", single.Name)
+	c.Assert().Equal(TestUpdatedProductName, single.Name)
 }
 
 // TestUpdateWithDataModel tests the update with data model.
@@ -357,7 +361,7 @@ func (c *gormGenericRepositoryTest) TestUpdateWithDataModel() {
 
 	product := products.Items[0]
 
-	product.Name = "product2_updated"
+	product.Name = TestUpdatedProductName
 	err = c.productRepositoryWithDataModel.Update(ctx, product)
 	c.Require().NoError(err)
 
@@ -365,7 +369,7 @@ func (c *gormGenericRepositoryTest) TestUpdateWithDataModel() {
 	c.Require().NoError(err)
 
 	c.Assert().NotNil(single)
-	c.Assert().Equal("product2_updated", single.Name)
+	c.Assert().Equal(TestUpdatedProductName, single.Name)
 }
 
 // func TestDelete(t *testing.T) {
