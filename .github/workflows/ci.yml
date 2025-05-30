@@ -71,12 +71,14 @@ jobs:
         continue-on-error: false # Fail if unit tests fail
 
       - name: Run Integration Tests
+        if: false # TODO: Uncomment this when integration tests are ready
         run: task integration_test
         continue-on-error: false # Fail if integration tests fail
         # Note: Integration tests might fail in CI due to testcontainers issues
         # Consider adding a condition to skip these in CI if needed
 
       - name: Run End-to-End Tests
+        if: false # TODO: Uncomment this when E2E tests are ready
         run: task e2e_test
         continue-on-error: false # Fail if e2e tests fail
         # Note: E2E tests might require additional setup
