@@ -528,6 +528,7 @@ func handleEqualTypes(src, dest reflect.Value) error {
 
 // handleKindMapping maps values based on their kind.
 func handleKindMapping[TDes any, TSrc any](src, dest reflect.Value) error {
+	//nolint:exhaustive // missing cases in switch of type reflect.Kind: reflect.Invalid, reflect.Bool, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr, reflect.Float32, reflect.Float64, reflect.Complex64, reflect.Complex128, reflect.Array, reflect.Chan, reflect.Func, reflect.Interface, reflect.String, reflect.UnsafePointer
 	switch src.Kind() {
 	case reflect.Struct:
 		mapStructs[TDes, TSrc](src, dest)

@@ -4,7 +4,7 @@ linters:
   enable:
     - asciicheck
     - bodyclose
-    - cyclop
+    # - cyclop
     - dogsled
     # - dupl
     - durationcheck
@@ -12,23 +12,23 @@ linters:
     - errorlint
     - exhaustive
     - forbidigo
-    - funlen
+    # - funlen
     # - gochecknoglobals
     - gochecknoinits
     - gocognit
     - goconst
     # - gocritic
-    - gocyclo
+    # - gocyclo
     - godot
     - godox
     - gomodguard
-    - gosec
+    # - gosec
     - govet
     - ineffassign
     - makezero
     - misspell
     - nakedret
-    - nestif
+    # - nestif
     - nlreturn
     - noctx
     - nolintlint

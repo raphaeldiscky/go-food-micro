@@ -154,7 +154,7 @@ func (t *TestMessageHandler) Handle(
 	if !ok {
 		return fmt.Errorf("failed to type assert message to *ProducerConsumerMessage")
 	}
-	fmt.Println(msg)
+	Logger.Info(msg)
 
 	return nil
 }
@@ -173,7 +173,7 @@ func (t *TestMessageHandler2) Handle(
 	consumeContext types3.MessageConsumeContext,
 ) error {
 	message := consumeContext.Message()
-	fmt.Println(message)
+	Logger.Info(message)
 
 	return nil
 }
