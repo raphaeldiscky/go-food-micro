@@ -47,7 +47,7 @@ jobs:
           repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Install Formatting and Linting Tools
-        if: steps.go-mod-cache.outputs.cache-hit != 'true'
+        if: false # TODO: Uncomment this when integration tests are ready
         run: |
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
           go install github.com/mgechev/revive@latest

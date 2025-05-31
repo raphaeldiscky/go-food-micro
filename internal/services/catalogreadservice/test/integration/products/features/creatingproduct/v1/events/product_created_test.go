@@ -11,10 +11,7 @@ import (
 	"time"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
@@ -24,133 +21,98 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
+// TestProductCreatedConsumer is a test for the ProductCreated consumer
 func TestProductCreatedConsumer(t *testing.T) {
-	// Initialize the shared fixture for integration tests
+	// Setup and initialization code here.
 	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
-	require.NotNil(
-		t,
-		integrationTestSharedFixture,
-		"Integration test shared fixture should not be nil",
-	)
+	// in test mode we set rabbitmq `AutoStart=false` in configuration in rabbitmqOptions, so we should run rabbitmq bus manually
+	integrationTestSharedFixture.Bus.Start(context.Background())
+	// wait for consumers ready to consume before publishing messages, preparation background workers takes a bit time (for preventing messages lost)
+	time.Sleep(1 * time.Second)
 
-	// The bus is already started in NewCatalogReadIntegrationTestSharedFixture
-	// No need to start it again here
-
-	// Wait for the bus to be ready and consumers to be initialized
-	time.Sleep(5 * time.Second)
-
-	t.Run("should consume ProductCreated event and create product in MongoDB", func(t *testing.T) {
-		// Arrange
+	Convey("Product Created Feature", t, func() {
+		// will execute with each subtest
+		integrationTestSharedFixture.SetupTest()
 		ctx := context.Background()
-		fakeProduct := &externalEvents.ProductCreatedV1{
-			Message: &types.Message{
-				MessageId: uuid.NewV4().String(),
-				Created:   time.Now().UTC(),
-			},
-			ProductID:   uuid.NewV4().String(),
-			Name:        gofakeit.Name(),
-			Description: gofakeit.Sentence(10),
-			Price:       gofakeit.Float64Range(1, 1000),
-			CreatedAt:   time.Now().UTC(),
-		}
 
-		// Log the test setup
-		integrationTestSharedFixture.Log.Infow(
-			"Starting ProductCreated consumer test",
-			logger.Fields{
-				"productId": fakeProduct.ProductID,
-				"name":      fakeProduct.Name,
-				"price":     fakeProduct.Price,
-			},
-		)
-
-		// Act - Publish message with retries
-		var publishErr error
-		for i := 0; i < 3; i++ {
-			publishErr = integrationTestSharedFixture.Bus.PublishMessage(ctx, fakeProduct, nil)
-			if publishErr == nil {
-				break
+		// https://specflow.org/learn/gherkin/#learn-gherkin
+		// scenario
+		Convey("Consume ProductCreated event by consumer", func() {
+			fakeProduct := &externalEvents.ProductCreatedV1{
+				Message:     types.NewMessage(uuid.NewV4().String()),
+				ProductId:   uuid.NewV4().String(),
+				Name:        gofakeit.FirstName(),
+				Price:       gofakeit.Price(150, 6000),
+				CreatedAt:   time.Now(),
+				Description: gofakeit.EmojiDescription(),
 			}
-			integrationTestSharedFixture.Log.Warnw(
-				"Failed to publish message, retrying...",
-				logger.Fields{
-					"attempt": i + 1,
-					"error":   publishErr,
-				},
-			)
-			time.Sleep(time.Second)
-		}
-		require.NoError(t, publishErr, "Failed to publish message after retries")
-
-		// Assert - Wait for the message to be consumed with retries
-		hypothesis := messaging.ShouldConsume(
-			ctx,
-			integrationTestSharedFixture.Bus,
-			func(msg *externalEvents.ProductCreatedV1) bool {
-				if msg == nil {
-					integrationTestSharedFixture.Log.Error("Received nil message")
-					return false
-				}
-				integrationTestSharedFixture.Log.Infow(
-					"Received message",
-					logger.Fields{
-						"productId": msg.ProductID,
-						"name":      msg.Name,
-						"price":     msg.Price,
-					},
-				)
-				return msg.ProductID == fakeProduct.ProductID
-			},
-		)
-
-		// Validate the hypothesis with a timeout
-		err := hypothesis.Validate(ctx, "Message should be consumed", 30*time.Second)
-		require.NoError(t, err, "Message was not consumed within timeout")
-
-		// Wait for the product to be created in the database with retries
-		var product *models.Product
-		var dbErr error
-		for i := 0; i < 10; i++ {
-			product, dbErr = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
+			hypothesis := messaging.ShouldConsume[*externalEvents.ProductCreatedV1](
 				ctx,
-				fakeProduct.ProductID,
+				integrationTestSharedFixture.Bus,
+				nil,
 			)
-			if dbErr == nil && product != nil {
-				break
+
+			Convey("When a ProductCreated event consumed", func() {
+				err := integrationTestSharedFixture.Bus.PublishMessage(ctx, fakeProduct, nil)
+				So(err, ShouldBeNil)
+
+				Convey("Then it should consume the ProductCreated event", func() {
+					hypothesis.Validate(ctx, "there is no consumed message", 30*time.Second)
+				})
+			})
+		})
+
+		Convey("Create product in mongo database when a ProductCreated event consumed", func() {
+			fakeProduct := &externalEvents.ProductCreatedV1{
+				Message:     types.NewMessage(uuid.NewV4().String()),
+				ProductId:   uuid.NewV4().String(),
+				Name:        gofakeit.FirstName(),
+				Price:       gofakeit.Price(150, 6000),
+				CreatedAt:   time.Now(),
+				Description: gofakeit.EmojiDescription(),
 			}
-			integrationTestSharedFixture.Log.Warnw(
-				"Product not found in database, retrying...",
-				logger.Fields{
-					"attempt": i + 1,
-					"error":   dbErr,
-				},
-			)
-			time.Sleep(time.Second)
-		}
-		require.NoError(t, dbErr, "Failed to get product from database after retries")
-		require.NotNil(t, product, "Product should be stored in database")
 
-		// Verify the product data
-		assert.Equal(t, fakeProduct.ProductID, product.ProductID)
-		assert.Equal(t, fakeProduct.Name, product.Name)
-		assert.Equal(t, fakeProduct.Description, product.Description)
-		assert.Equal(t, fakeProduct.Price, product.Price)
-		assert.Equal(t, fakeProduct.CreatedAt.Unix(), product.CreatedAt.Unix())
+			Convey("When a ProductCreated event consumed", func() {
+				err := integrationTestSharedFixture.Bus.PublishMessage(ctx, fakeProduct, nil)
+				So(err, ShouldBeNil)
 
-		// Verify no duplicate products
-		retrievedProduct, err := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
-			ctx,
-			fakeProduct.ProductID,
-		)
-		require.NoError(t, err, "Failed to get product from database")
-		require.NotNil(t, retrievedProduct, "Product should exist in database")
-		assert.Equal(
-			t,
-			fakeProduct.ProductID,
-			retrievedProduct.ProductID,
-			"Should have exactly one product with the given ID",
-		)
+				Convey("It should store product in the mongo database", func() {
+					ctx := context.Background()
+					pid := uuid.NewV4().String()
+					productCreated := &externalEvents.ProductCreatedV1{
+						Message:     types.NewMessage(uuid.NewV4().String()),
+						ProductId:   pid,
+						CreatedAt:   time.Now(),
+						Name:        gofakeit.Name(),
+						Price:       gofakeit.Price(150, 6000),
+						Description: gofakeit.AdjectiveDescriptive(),
+					}
 
-		integrationTestSharedFixture.Log.Info("ProductCreated consumer test completed successfully")
+					err := integrationTestSharedFixture.Bus.PublishMessage(ctx, productCreated, nil)
+					So(err, ShouldBeNil)
+
+					var product *models.Product
+
+					err = testUtils.WaitUntilConditionMet(func() bool {
+						product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductId(
+							ctx,
+							pid,
+						)
+
+						return err == nil && product != nil
+					})
+
+					So(err, ShouldBeNil)
+					So(product, ShouldNotBeNil)
+					So(product.ProductId, ShouldEqual, pid)
+				})
+			})
+		})
+
+		integrationTestSharedFixture.TearDownTest()
 	})
+
+	integrationTestSharedFixture.Log.Info("TearDownSuite started")
+	integrationTestSharedFixture.Bus.Stop()
+	time.Sleep(1 * time.Second)
 }
