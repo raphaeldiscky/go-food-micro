@@ -10,7 +10,7 @@ import (
 // ProductCreatedV1 is a struct that contains the product created event.
 type ProductCreatedV1 struct {
 	*types.Message
-	ProductID   string    `json:"productId,omitempty"`
+	ProductID   string    `json:"productID,omitempty"`
 	Name        string    `json:"name,omitempty"`
 	Description string    `json:"description,omitempty"`
 	Price       float64   `json:"price,omitempty"`

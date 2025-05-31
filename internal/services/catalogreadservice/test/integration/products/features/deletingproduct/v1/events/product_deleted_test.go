@@ -88,7 +88,7 @@ func TestProductDeleted(t *testing.T) {
 								"Error checking product deletion",
 								logger.Fields{
 									"error":     err,
-									"productId": integrationTestSharedFixture.Items[0].ProductID,
+									"productID": integrationTestSharedFixture.Items[0].ProductID,
 								},
 							)
 							return false
@@ -96,7 +96,7 @@ func TestProductDeleted(t *testing.T) {
 						return deletedProduct == nil
 					}, 45*time.Second) // Increased timeout to 45 seconds
 
-					So(err, ShouldBeNil, "Timeout waiting for product deletion")
+					So(err, ShouldBeNil)
 					So(deletedProduct, ShouldBeNil, "Product should be deleted")
 				})
 			})

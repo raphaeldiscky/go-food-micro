@@ -50,7 +50,7 @@ func (c *DeleteProductCommand) Handle(
 		return nil, customErrors.NewApplicationErrorWrap(
 			err,
 			fmt.Sprintf(
-				"error in fetching product with productId %s in the mongo repository",
+				"error in fetching product with productID %s in the mongo repository",
 				command.ProductID,
 			),
 		)
@@ -59,7 +59,7 @@ func (c *DeleteProductCommand) Handle(
 		return nil, customErrors.NewNotFoundErrorWrap(
 			err,
 			fmt.Sprintf(
-				"product with productId %s not found",
+				"product with productID %s not found",
 				command.ProductID,
 			),
 		)
