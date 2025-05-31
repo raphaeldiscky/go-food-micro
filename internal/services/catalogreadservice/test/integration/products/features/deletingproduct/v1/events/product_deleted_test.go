@@ -24,7 +24,7 @@ import (
 
 func TestProductDeleted(t *testing.T) {
 	// Setup and initialization code here.
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 	require.NotNil(
 		t,
 		integrationTestSharedFixture,

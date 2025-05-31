@@ -26,9 +26,7 @@ import (
 
 func TestProductUpdatedConsumer(t *testing.T) {
 	// Setup and initialization code here.
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(
-		t,
-	)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	// Start the bus and wait for it to be fully ready
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

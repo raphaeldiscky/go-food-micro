@@ -20,7 +20,7 @@ import (
 )
 
 func TestCreateProduct(t *testing.T) {
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	Convey("Creating Product Feature", t, func() {
 		ctx := context.Background()

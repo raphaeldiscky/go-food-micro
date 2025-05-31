@@ -31,12 +31,12 @@ import (
 // fixture is a global variable because it needs to be initialized in TestUpdateProduct.
 //
 //nolint:gochecknoglobals // This is an established pattern for integration tests
-var fixture *integration.CatalogWriteIntegrationTestSharedFixture
+var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestUpdateProduct(t *testing.T) {
 	t.Parallel()
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	fixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
+	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
 	ginkgo.RunSpecs(t, "Updated Products Integration Tests")
 }
 
@@ -55,7 +55,7 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 		ctx = context.Background()
 
 		// in test mode we set rabbitmq `AutoStart=false` in configuration in rabbitmqOptions, so we should run rabbitmq bus manually
-		err = fixture.Bus.Start(context.Background())
+		err = integrationFixture.Bus.Start(context.Background())
 		gomega.Expect(err).ShouldNot(gomega.HaveOccurred())
 
 		// wait for consumers ready to consume before publishing messages, preparation background workers takes a bit time (for preventing messages lost)
@@ -64,21 +64,21 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 
 	_ = ginkgo.BeforeEach(func() {
 		ginkgo.By("Seeding the required data")
-		fixture.SetupTest()
+		integrationFixture.SetupTest()
 
-		existingProduct = fixture.Items[0]
+		existingProduct = integrationFixture.Items[0]
 	})
 
 	_ = ginkgo.AfterEach(func() {
 		ginkgo.By("Cleanup test data")
-		fixture.TearDownTest()
+		integrationFixture.TearDownTest()
 	})
 
 	_ = ginkgo.AfterSuite(func() {
-		if fixture != nil {
-			fixture.Log.Info("TearDownSuite started")
-			if err := fixture.Bus.Stop(); err != nil {
-				fixture.Log.Error(err, "Failed to stop bus")
+		if integrationFixture != nil {
+			integrationFixture.Log.Info("TearDownSuite started")
+			if err := integrationFixture.Bus.Stop(); err != nil {
+				integrationFixture.Log.Error(err, "Failed to stop bus")
 			}
 			time.Sleep(1 * time.Second)
 		}
@@ -118,7 +118,7 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 					func() {
 						updatedProduct, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 							ctx,
-							fixture.CatalogsDBContext,
+							integrationFixture.CatalogsDBContext,
 							existingProduct.ID,
 						)
 						gomega.Expect(err).To(gomega.BeNil())
@@ -203,7 +203,7 @@ var _ = ginkgo.Describe("Update Product Feature", func() {
 
 					shouldPublish = messaging.ShouldProduced[*integrationevents.ProductUpdatedV1](
 						ctx,
-						fixture.Bus,
+						integrationFixture.Bus,
 						nil,
 					)
 				})

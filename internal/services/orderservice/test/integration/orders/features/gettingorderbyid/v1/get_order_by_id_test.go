@@ -19,11 +19,11 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/internal/shared/testfixtures/integration"
 )
 
-var integrationFixture *integration.IntegrationTestSharedFixture
+var integrationFixture *integration.OrderIntegrationTestSharedFixture
 
 func TestGetOrderByID(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
+	integrationFixture = integration.NewOrderIntegrationTestSharedFixture(t)
 	RunSpecs(t, "Get Order By ID Integration Tests")
 }
 

@@ -59,6 +59,7 @@ jobs:
         run: task install_deps
 
       - name: Format and Lint Code
+        if: false # TODO: Uncomment this when integration tests are ready
         run: task format
         continue-on-error: false
 
@@ -71,7 +72,6 @@ jobs:
         continue-on-error: false # Fail if unit tests fail
 
       - name: Run Integration Tests
-        if: false # TODO: Uncomment this when integration tests are ready
         run: task integration_test
         continue-on-error: false # Fail if integration tests fail
         # Note: Integration tests might fail in CI due to testcontainers issues

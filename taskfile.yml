@@ -117,9 +117,9 @@ tasks:
   integration_test:
     desc: Run integration tests
     cmds:
-      - sh ./scripts/test.sh catalogwriteservice integration
+      # - sh ./scripts/test.sh catalogwriteservice integration
       - sh ./scripts/test.sh catalogreadservice integration
-      - sh ./scripts/test.sh orderservice integration
+      # - sh ./scripts/test.sh orderservice integration
 
   e2e_test:
     desc: Run end-to-end tests

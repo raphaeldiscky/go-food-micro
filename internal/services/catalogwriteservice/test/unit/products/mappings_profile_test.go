@@ -49,27 +49,27 @@ func (m *mappingProfileUnitTests) TestMappings() {
 		Price:       gofakeit.Price(100, 1000),
 	}
 
-	m.Run("Should_Map_Product_To_ProductDto", func() {
+	m.Run("should map product to product dto", func() {
 		d, err := mapper.Map[*dtoV1.ProductDto](productModel)
 		m.Require().NoError(err)
 		m.Equal(productModel.ID, d.ID)
 		m.Equal(productModel.Name, d.Name)
 	})
 
-	m.Run("Should_Map_Nil_Product_To_ProductDto", func() {
+	m.Run("should map nil product to product dto", func() {
 		d, err := mapper.Map[*dtoV1.ProductDto](*new(models.Product))
 		m.Require().NoError(err)
 		m.Nil(d)
 	})
 
-	m.Run("Should_Map_ProductDto_To_Product", func() {
+	m.Run("should map product dto to product", func() {
 		d, err := mapper.Map[*models.Product](productDto)
 		m.Require().NoError(err)
 		m.Equal(productDto.ID, d.ID)
 		m.Equal(productDto.Name, d.Name)
 	})
 
-	m.Run("Should_Map_Nil_ProductDto_To_Product", func() {
+	m.Run("should map nil product dto to product", func() {
 		d, err := mapper.Map[*models.Product](*new(dtoV1.ProductDto))
 		m.Require().NoError(err)
 		m.Nil(d)

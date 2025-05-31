@@ -17,9 +17,7 @@ import (
 )
 
 func TestDeleteProduct(t *testing.T) {
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(
-		t,
-	)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	Convey("Deleting Product Feature", t, func() {
 		ctx := context.Background()

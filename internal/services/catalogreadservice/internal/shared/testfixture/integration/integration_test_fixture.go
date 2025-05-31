@@ -218,13 +218,16 @@ func seedData(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to find products after seeding")
 	}
+
+	if err := cursor.All(ctx, &allProducts); err != nil {
+		cursor.Close(ctx) // Close cursor if All() fails
+
+		return nil, errors.WrapIf(err, "failed to decode products after seeding")
+	}
+
 	err = cursor.Close(ctx)
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to close cursor")
-	}
-
-	if err := cursor.All(ctx, &allProducts); err != nil {
-		return nil, errors.WrapIf(err, "failed to decode products after seeding")
 	}
 
 	if len(allProducts) == 0 {
