@@ -3,23 +3,33 @@ name: CI
 on:
   push:
     branches: ["main"]
-    paths-ignore: ["*.md", "docs", "deploy", "config", ".github", "scripts"]
+    paths-ignore:
+      - "*.md"
+      - "docs"
+      - "deploy"
+      - "config"
+      - ".github"
+      - "scripts"
   pull_request:
     branches: ["main"]
-    paths-ignore: ["*.md", "docs", "deploy", "config", ".github", "scripts"]
+    paths-ignore:
+      - "*.md"
+      - "docs"
+      - "deploy"
+      - "config"
+      - ".github"
+      - "scripts"
 
 env:
   GO_VERSION: "1.23.6"
 
 jobs:
-  format-lint:
-    name: Format and Lint (${{ matrix.service }})
+  setup:
+    name: Setup Environment
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        service: [pkg, catalogwriteservice, catalogreadservice, orderservice]
-
+    outputs:
+      go-cache-key: ${{ steps.go-cache-paths.outputs.go-cache-key }}
+      go-mod-cache-key: ${{ steps.go-cache-paths.outputs.go-mod-cache-key }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -29,20 +39,41 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-          cache: true
+          cache: false # We'll handle caching manually for better control
 
-      - name: Cache Dependencies
-        id: cache
+      - name: Get Go cache paths
+        id: go-cache-paths
+        run: |
+          echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+          echo "go-cache-key=${{ runner.os }}-go-${{ env.GO_VERSION }}-build-${{ hashFiles('**/go.sum') }}" >> $GITHUB_OUTPUT
+          echo "go-mod-cache-key=${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-${{ hashFiles('**/go.sum') }}" >> $GITHUB_OUTPUT
+
+      - name: Cache Go Build
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ steps.go-cache-paths.outputs.go-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-build-
+
+      - name: Cache Go Modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ steps.go-cache-paths.outputs.go-mod-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-
+
+      - name: Cache Tools
         uses: actions/cache@v4
         with:
           path: |
-            ~/go/pkg/mod
             ~/go/bin
-            .task
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-${{ hashFiles('Taskfile.yml') }}
           restore-keys: |
-            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
-            ${{ runner.os }}-go-
+            ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -50,25 +81,100 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Setup Tools and Dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Dependencies
+        run: task install_deps
+
+      - name: Install Tools
         run: |
-          # Install linting tools in parallel
-          {
-            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6 &
-            go install github.com/mgechev/revive@latest &
-            go install honnef.co/go/tools/cmd/staticcheck@latest &
-            go install github.com/kisielk/errcheck@latest &
-            wait
-          }
-          # Install project dependencies for the specific service
-          task install_deps SERVICE=${{ matrix.service }}
+          # Check if tools are already installed (from cache)
+          if ! command -v golangci-lint &> /dev/null || \
+             ! command -v revive &> /dev/null || \
+             ! command -v staticcheck &> /dev/null || \
+             ! command -v errcheck &> /dev/null; then
+            echo "Installing missing tools..."
+            
+            # Install linting and static analysis tools
+            curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
+            go install github.com/mgechev/revive@latest
+            go install honnef.co/go/tools/cmd/staticcheck@latest
+            go install github.com/kisielk/errcheck@latest
+          else
+            echo "Tools already installed from cache"
+          fi
+
+          # Verify installations
+          echo "Verifying tools installation..."
+          revive --version
+          staticcheck --version
+          errcheck -help | head -n 1
+          golangci-lint --version
+          task --version
+
+  format-lint:
+    name: Format and Lint (${{ matrix.service }})
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [pkg, catalogwriteservice, catalogreadservice, orderservice]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: false
+
+      - name: Get Go cache paths
+        id: go-cache-paths
+        run: |
+          echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+
+      - name: Cache Go Build
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ needs.setup.outputs.go-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-build-
+
+      - name: Cache Go Modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ needs.setup.outputs.go-mod-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-
+
+      - name: Cache Tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/bin
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-${{ hashFiles('Taskfile.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Format and Lint
-        run: task format SERVICE=${{ matrix.service }}
+        run: |
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          task format SERVICE=${{ matrix.service }}
 
   test:
     name: Test (${{ matrix.type }})
+    needs: setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -83,7 +189,6 @@ jobs:
           - type: e2e
             command: task e2e_test
             enabled: false
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -93,19 +198,39 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-          cache: true
+          cache: false
 
-      - name: Restore Cache
+      - name: Get Go cache paths
+        id: go-cache-paths
+        run: |
+          echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+
+      - name: Cache Go Build
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ needs.setup.outputs.go-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-build-
+
+      - name: Cache Go Modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ needs.setup.outputs.go-mod-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-
+
+      - name: Cache Tools
         uses: actions/cache@v4
         with:
           path: |
-            ~/go/pkg/mod
             ~/go/bin
-            .task
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-${{ hashFiles('Taskfile.yml') }}
           restore-keys: |
-            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
-            ${{ runner.os }}-go-
+            ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -123,8 +248,8 @@ jobs:
 
   build:
     name: Build
+    needs: [setup, format-lint, test]
     runs-on: ubuntu-latest
-    needs: format-lint
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -134,19 +259,29 @@ jobs:
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
-          cache: true
+          cache: false
 
-      - name: Cache Dependencies
+      - name: Get Go cache paths
+        id: go-cache-paths
+        run: |
+          echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+
+      - name: Cache Go Build
         uses: actions/cache@v4
         with:
-          path: |
-            ~/go/pkg/mod
-            ~/go/bin
-            .task
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ needs.setup.outputs.go-cache-key }}
           restore-keys: |
-            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
-            ${{ runner.os }}-go-
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-build-
+
+      - name: Cache Go Modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ needs.setup.outputs.go-mod-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-
 
       - name: Install Task
         uses: arduino/setup-task@v2
@@ -162,25 +297,20 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs: [build, test]
-
     steps:
       - name: Check Results
         run: |
           build_result="${{ needs.build.result }}"
           test_result="${{ needs.test.result }}"
-
           echo "## 📊 CI Results"
-          echo "| Job | Status |"
-          echo "|-----|--------|"
-          echo "| Build & Lint | $([ "$build_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
-          echo "| Tests | $([ "$test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
-
+          echo "| Job           | Status          |"
+          echo "|---------------|-----------------|"
+          echo "| Build & Lint  | $([ "$build_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
+          echo "| Tests         | $([ "$test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
           if [[ "$build_result" == "success" && "$test_result" == "success" ]]; then
-            echo ""
-            echo "🎉 **All checks passed!**"
+            echo -e "\n🎉 **All checks passed!**"
             exit 0
           else
-            echo ""
-            echo "💥 **Some checks failed**"
+            echo -e "\n💥 **Some checks failed**"
             exit 1
           fi
