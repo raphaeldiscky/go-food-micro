@@ -167,13 +167,18 @@ tasks:
         if [ -z "{{.SERVICE}}" ]; then
           echo "🔍 Running formatters and linters for all services..."
           for service in catalogwriteservice catalogreadservice orderservice pkg; do
-            echo "🧹 Formatting $service..."
-            sh ./scripts/lint.sh $service
+            echo "🧹 Formatting and linting $service..."
+            sh ./scripts/format-lint.sh $service
           done
         else
-          echo "🧹 Formatting {{.SERVICE}}..."
+          echo "🧹 Formatting and linting {{.SERVICE}}..."
           sh ./scripts/lint.sh {{.SERVICE}}
         fi
+
+  lint:
+    desc: Run formatters and linters
+    cmds:
+      - task: format
 
   pkg_mocks:
     desc: Generate package mocks
