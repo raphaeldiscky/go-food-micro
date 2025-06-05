@@ -15,19 +15,45 @@ elif [ -n "$service"  ]; then
     cd "./internal/services/$service"
 fi
 
-# https://github.com/mgechev/revive
-revive -config revive-config.toml -formatter friendly ./...
+# Function to run a command and capture its exit status
+run_cmd() {
+    local cmd="$1"
+    local name="$2"
+    echo "Starting $name..."
+    $cmd
+    local status=$?
+    if [ $status -ne 0 ]; then
+        echo "$name failed with exit status $status"
+        exit $status
+    fi
+    echo "$name completed successfully"
+}
 
-# https://github.com/dominikh/go-tools
-staticcheck ./...
+# Run linting tools concurrently
+echo "Starting parallel linting..."
 
-# https://golangci-lint.run/usage/linters/
-# https://golangci-lint.run/usage/configuration/
-# https://golangci-lint.run/usage/quick-start/
-golangci-lint run --fix ./...
-golangci-lint fmt ./...
+# Run revive in background
+run_cmd "revive -config revive-config.toml -formatter friendly ./..." "revive" &
+revive_pid=$!
 
-# https://github.com/kisielk/errcheck
+# Run staticcheck in background
+run_cmd "staticcheck ./..." "staticcheck" &
+staticcheck_pid=$!
+
+# Run golangci-lint commands in background
+run_cmd "golangci-lint run --fix ./..." "golangci-lint run" &
+golangci_run_pid=$!
+
+run_cmd "golangci-lint fmt ./..." "golangci-lint fmt" &
+golangci_fmt_pid=$!
+
+# Wait for all background processes to complete
+wait $revive_pid $staticcheck_pid $golangci_run_pid $golangci_fmt_pid
+
+# Run errcheck if available (keeping this sequential since it's optional)
 if command -v errcheck >/dev/null 2>&1; then
+    echo "Running errcheck..."
     errcheck ./...
 fi
+
+echo "All linting and formatting completed!"
