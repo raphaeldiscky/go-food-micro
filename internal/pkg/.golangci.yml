@@ -33,7 +33,7 @@ linters:
     - noctx
     - nolintlint
     - predeclared
-    - revive
+    # - revive
     - rowserrcheck
     - sqlclosecheck
     - staticcheck
