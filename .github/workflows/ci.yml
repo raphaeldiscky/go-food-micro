@@ -20,6 +20,11 @@ on:
       - ".github"
       - "scripts"
 
+# Add concurrency to cancel in-progress runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GO_VERSION: "1.23.6"
 
