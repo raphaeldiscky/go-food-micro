@@ -36,17 +36,10 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/go/bin
-            .task
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-${{ env.GO_VERSION }}-
             ${{ runner.os }}-go-
-
-      - name: Install Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Setup Tools and Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -60,13 +53,15 @@ jobs:
             wait
           }
           # Install project dependencies
-          task install_deps
+          go mod download
 
       - name: Format and Lint
-        run: task format
+        run: |
+          chmod +x ./scripts/format-lint.sh
+          ./scripts/format-lint.sh
 
       - name: Build
-        run: task build
+        run: go build -v ./...
 
   test:
     name: Test (${{ matrix.type }})
@@ -77,13 +72,13 @@ jobs:
       matrix:
         include:
           - type: unit
-            command: task unit_test
+            test_type: unit
             enabled: true
           - type: integration
-            command: task integration_test
+            test_type: integration
             enabled: false
           - type: e2e
-            command: task e2e_test
+            test_type: e2e
             enabled: false
 
     steps:
@@ -103,21 +98,16 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/go/bin
-            .task
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-${{ env.GO_VERSION }}-
             ${{ runner.os }}-go-
 
-      - name: Install Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.REPO_TOKEN }}
-
       - name: Run Tests
         if: matrix.enabled
-        run: ${{ matrix.command }}
+        run: |
+          chmod +x ./scripts/test.sh
+          ./scripts/test.sh "" ${{ matrix.test_type }}
 
       - name: Skip Tests (Not Implemented)
         if: ${{ !matrix.enabled }}
