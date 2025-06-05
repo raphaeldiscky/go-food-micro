@@ -11,6 +11,7 @@ on:
 
 jobs:
   setup:
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
       go-mod-cache-key: ${{ steps.cache.outputs.cache-hit }}
@@ -36,12 +37,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Install Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.REPO_TOKEN }}
-
   build:
     name: Build and Lint
     runs-on: ubuntu-latest
@@ -49,6 +44,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Install Lint Tools
         if: needs.setup.outputs.go-mod-cache-key != 'true'
@@ -78,6 +79,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Run ${{ matrix.type }} Tests
         run: |
