@@ -108,6 +108,12 @@ jobs:
           check-latest: true
           cache: true
 
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
+
       - name: Download Tools Cache
         uses: actions/download-artifact@v4
         with:
@@ -154,6 +160,12 @@ jobs:
           check-latest: true
           cache: true
 
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
+
       - name: Download Tools Cache
         uses: actions/download-artifact@v4
         with:
@@ -188,6 +200,12 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
           cache: true
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Download Tools Cache
         uses: actions/download-artifact@v4
