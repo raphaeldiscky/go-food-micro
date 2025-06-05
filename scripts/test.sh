@@ -34,23 +34,17 @@ run_service_tests() {
         echo "[$service_name] Running load tests..."
         k6 run ./load_tests/script.js --insecure-skip-tls-verify
     elif [ -z "$test_type" ]; then
-        # Run all test types concurrently
-        echo "[$service_name] Running all test types concurrently..."
+        # Run all test types sequentially
+        echo "[$service_name] Running all test types sequentially..."
         
-        # Run unit tests in background
-        run_tests "unit" &
-        unit_pid=$!
+        # Run unit tests
+        run_tests "unit"
         
-        # Run integration tests in background
-        run_tests "integration" &
-        integration_pid=$!
+        # Run integration tests
+        run_tests "integration"
         
-        # Run e2e tests in background
-        run_tests "e2e" &
-        e2e_pid=$!
-        
-        # Wait for all test processes to complete
-        wait $unit_pid $integration_pid $e2e_pid
+        # Run e2e tests
+        run_tests "e2e"
         
         echo "[$service_name] All tests completed successfully!"
     else
@@ -69,27 +63,17 @@ if [ -n "$service" ]; then
         run_service_tests "./internal/services/$service" "$type"
     fi
 else
-    # Run for all services concurrently
-    echo "Running tests for all services concurrently..."
+    # Run for all services sequentially
+    echo "Running tests for all services sequentially..."
     
-    # Store PIDs in a space-separated string instead of an array
-    pids=""
-    
-    # Run for pkg
-    run_service_tests "./internal/pkg" "$type" &
-    pids="$pids $!"
+    # Run for pkg first
+    run_service_tests "./internal/pkg" "$type"
     
     # Run for each service in services directory
     for service_dir in ./internal/services/*/; do
         if [ -d "$service_dir" ]; then
-            run_service_tests "$service_dir" "$type" &
-            pids="$pids $!"
+            run_service_tests "$service_dir" "$type"
         fi
-    done
-    
-    # Wait for all background processes to complete
-    for pid in $pids; do
-        wait $pid
     done
     
     echo "All services tests completed!"

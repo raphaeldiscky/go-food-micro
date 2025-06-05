@@ -30,21 +30,11 @@ run_format_lint() {
         echo "[$service_name] $name completed successfully"
     }
 
-    # Run linting tools concurrently
-    run_cmd "revive -config revive-config.toml -formatter friendly ./..." "revive" &
-    revive_pid=$!
-
-    run_cmd "staticcheck ./..." "staticcheck" &
-    staticcheck_pid=$!
-
-    run_cmd "golangci-lint run --fix ./..." "golangci-lint run" &
-    golangci_run_pid=$!
-
-    run_cmd "golangci-lint fmt ./..." "golangci-lint fmt" &
-    golangci_fmt_pid=$!
-
-    # Wait for all background processes to complete
-    wait $revive_pid $staticcheck_pid $golangci_run_pid $golangci_fmt_pid
+    # Run linting tools sequentially
+    run_cmd "revive -config revive-config.toml -formatter friendly ./..." "revive"
+    run_cmd "staticcheck ./..." "staticcheck"
+    run_cmd "golangci-lint run --fix ./..." "golangci-lint run"
+    run_cmd "golangci-lint fmt ./..." "golangci-lint fmt"
 
     # Run errcheck if available
     if command -v errcheck >/dev/null 2>&1; then
@@ -64,27 +54,17 @@ if [ -n "$service" ]; then
         run_format_lint "./internal/services/$service"
     fi
 else
-    # Run for all services concurrently
-    echo "Running format-lint for all services concurrently..."
+    # Run for all services sequentially
+    echo "Running format-lint for all services sequentially..."
     
-    # Store PIDs in a space-separated string instead of an array
-    pids=""
-    
-    # Run for pkg
-    run_format_lint "./internal/pkg" &
-    pids="$pids $!"
+    # Run for pkg first
+    run_format_lint "./internal/pkg"
     
     # Run for each service in services directory
     for service_dir in ./internal/services/*/; do
         if [ -d "$service_dir" ]; then
-            run_format_lint "$service_dir" &
-            pids="$pids $!"
+            run_format_lint "$service_dir"
         fi
-    done
-    
-    # Wait for all background processes to complete
-    for pid in $pids; do
-        wait $pid
     done
     
     echo "All services format-lint completed!"
