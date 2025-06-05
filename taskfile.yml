@@ -23,11 +23,20 @@ tasks:
 
   install_deps:
     desc: Install project dependencies
+    vars:
+      SERVICE: '{{.SERVICE | default ""}}'
     cmds:
-      - sh ./scripts/install-dependencies.sh pkg
-      - sh ./scripts/install-dependencies.sh catalogwriteservice
-      - sh ./scripts/install-dependencies.sh catalogreadservice
-      - sh ./scripts/install-dependencies.sh orderservice
+      - |
+        if [ -z "{{.SERVICE}}" ]; then
+          echo "Installing dependencies for all services..."
+          sh ./scripts/install-dependencies.sh pkg
+          sh ./scripts/install-dependencies.sh catalogwriteservice
+          sh ./scripts/install-dependencies.sh catalogreadservice
+          sh ./scripts/install-dependencies.sh orderservice
+        else
+          echo "Installing dependencies for {{.SERVICE}}..."
+          sh ./scripts/install-dependencies.sh {{.SERVICE}}
+        fi
 
   run_catalogs_write_service:
     desc: Run catalog write service

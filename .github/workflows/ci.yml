@@ -12,11 +12,13 @@ env:
   GO_VERSION: "1.23.6"
 
 jobs:
-  build:
-    name: Build, Format, and Lint
+  format-lint:
+    name: Format and Lint (${{ matrix.service }})
     runs-on: ubuntu-latest
-    outputs:
-      cache-key: ${{ steps.cache.outputs.cache-hit }}
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [pkg, catalogwriteservice, catalogreadservice, orderservice]
 
     steps:
       - name: Checkout Code
@@ -59,11 +61,44 @@ jobs:
             go install github.com/kisielk/errcheck@latest &
             wait
           }
-          # Install project dependencies
-          task install_deps
+          # Install project dependencies for the specific service
+          task install_deps SERVICE=${{ matrix.service }}
 
       - name: Format and Lint
-        run: task format
+        run: task format SERVICE=${{ matrix.service }}
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: format-lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: true
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
+            .task
+          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
+            ${{ runner.os }}-go-
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Build
         run: task build
