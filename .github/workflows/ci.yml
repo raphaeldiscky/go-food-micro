@@ -179,7 +179,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [catalogwriteservice, catalogreadservice, orderservice] # add microservices
+        service: [catalogwriteservice, catalogreadservice, orderservice]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
