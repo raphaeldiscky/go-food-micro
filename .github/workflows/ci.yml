@@ -76,9 +76,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-deps-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-deps-${{ hashFiles('**/go.sum') }}-${{ hashFiles('**/go.mod') }}
           restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-deps-${{ hashFiles('**/go.sum') }}-
             ${{ runner.os }}-go-${{ env.GO_VERSION }}-deps-
+
+      - name: Clean Go Module Cache
+        if: steps.cache-deps.outputs.cache-hit == 'true'
+        run: |
+          rm -rf ~/go/pkg/mod/*
+          mkdir -p ~/go/pkg/mod
 
       - name: Install Dependencies
         if: steps.cache-deps.outputs.cache-hit != 'true'
@@ -99,6 +106,7 @@ jobs:
           name: go-deps
           path: ~/go/pkg/mod
           retention-days: 1
+          if-no-files-found: error
 
   format-lint:
     name: Format and Lint (${{ matrix.service }})
