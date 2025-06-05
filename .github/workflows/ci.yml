@@ -3,10 +3,22 @@ name: CI
 on:
   push:
     branches: ["main"]
-    paths-ignore: ["*.md", "docs", "deploy", "config", ".github", "scripts"]
+    paths-ignore:
+      - "*.md"
+      - "docs"
+      - "deploy"
+      - "config"
+      - ".github"
+      - "scripts"
   pull_request:
     branches: ["main"]
-    paths-ignore: ["*.md", "docs", "deploy", "config", ".github", "scripts"]
+    paths-ignore:
+      - "*.md"
+      - "docs"
+      - "deploy"
+      - "config"
+      - ".github"
+      - "scripts"
 
 env:
   GO_VERSION: "1.23.6"
@@ -45,13 +57,13 @@ jobs:
 
       - name: Install Tools
         run: |
-          # Install linting tools
+          # Install linting and static analysis tools
           curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
           go install github.com/mgechev/revive@latest
           go install honnef.co/go/tools/cmd/staticcheck@latest
           go install github.com/kisielk/errcheck@latest
 
-          # Verify tools are installed
+          # Verify installations
           echo "Verifying tools installation..."
           revive --version
           staticcheck --version
@@ -96,36 +108,30 @@ jobs:
       fail-fast: false
       matrix:
         service: [pkg, catalogwriteservice, catalogreadservice, orderservice]
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
           cache: true
-
       - name: Install Task
         uses: arduino/setup-task@v2
         with:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
-
       - name: Download Tools Cache
         uses: actions/download-artifact@v4
         with:
           name: go-tools
           path: ~/go
-
       - name: Download Dependencies Cache
         uses: actions/download-artifact@v4
         with:
           name: go-deps
           path: ~/go/pkg/mod
-
       - name: Format and Lint
         run: |
           export PATH="$(go env GOPATH)/bin:$PATH"
@@ -148,40 +154,33 @@ jobs:
           - type: e2e
             command: task e2e_test
             enabled: false
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
           cache: true
-
       - name: Install Task
         uses: arduino/setup-task@v2
         with:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
-
       - name: Download Tools Cache
         uses: actions/download-artifact@v4
         with:
           name: go-tools
           path: ~/go
-
       - name: Download Dependencies Cache
         uses: actions/download-artifact@v4
         with:
           name: go-deps
           path: ~/go/pkg/mod
-
       - name: Run Tests
         if: matrix.enabled
         run: ${{ matrix.command }}
-
       - name: Skip Tests (Not Implemented)
         if: ${{ !matrix.enabled }}
         run: echo "⏭️ ${{ matrix.type }} tests are not yet implemented"
@@ -193,32 +192,27 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
           check-latest: true
           cache: true
-
       - name: Install Task
         uses: arduino/setup-task@v2
         with:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
-
       - name: Download Tools Cache
         uses: actions/download-artifact@v4
         with:
           name: go-tools
           path: ~/go
-
       - name: Download Dependencies Cache
         uses: actions/download-artifact@v4
         with:
           name: go-deps
           path: ~/go/pkg/mod
-
       - name: Build
         run: task build
 
@@ -227,25 +221,20 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     needs: [build, test]
-
     steps:
       - name: Check Results
         run: |
           build_result="${{ needs.build.result }}"
           test_result="${{ needs.test.result }}"
-
           echo "## 📊 CI Results"
-          echo "| Job | Status |"
-          echo "|-----|--------|"
-          echo "| Build & Lint | $([ "$build_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
-          echo "| Tests | $([ "$test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
-
+          echo "| Job           | Status          |"
+          echo "|---------------|-----------------|"
+          echo "| Build & Lint  | $([ "$build_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
+          echo "| Tests         | $([ "$test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
           if [[ "$build_result" == "success" && "$test_result" == "success" ]]; then
-            echo ""
-            echo "🎉 **All checks passed!**"
+            echo -e "\n🎉 **All checks passed!**"
             exit 0
           else
-            echo ""
-            echo "💥 **Some checks failed**"
+            echo -e "\n💥 **Some checks failed**"
             exit 1
           fi
