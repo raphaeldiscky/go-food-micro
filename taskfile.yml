@@ -23,11 +23,20 @@ tasks:
 
   install_deps:
     desc: Install project dependencies
+    vars:
+      SERVICE: '{{.SERVICE | default ""}}'
     cmds:
-      - sh ./scripts/install-dependencies.sh pkg
-      - sh ./scripts/install-dependencies.sh catalogwriteservice
-      - sh ./scripts/install-dependencies.sh catalogreadservice
-      - sh ./scripts/install-dependencies.sh orderservice
+      - |
+        if [ -z "{{.SERVICE}}" ]; then
+          echo "Installing dependencies for all services..."
+          sh ./scripts/install-dependencies.sh pkg
+          sh ./scripts/install-dependencies.sh catalogwriteservice
+          sh ./scripts/install-dependencies.sh catalogreadservice
+          sh ./scripts/install-dependencies.sh orderservice
+        else
+          echo "Installing dependencies for {{.SERVICE}}..."
+          sh ./scripts/install-dependencies.sh {{.SERVICE}}
+        fi
 
   run_catalogs_write_service:
     desc: Run catalog write service
@@ -109,32 +118,71 @@ tasks:
 
   unit_test:
     desc: Run unit tests
+    vars:
+      SERVICE: '{{.SERVICE | default ""}}'
     cmds:
-      - sh ./scripts/test.sh catalogwriteservice unit
-      - sh ./scripts/test.sh catalogreadservice unit
-      - sh ./scripts/test.sh orderservice unit
+      - |
+        if [ -z "{{.SERVICE}}" ]; then
+          echo "🔍 Running unit tests for all services..."
+          for service in catalogwriteservice catalogreadservice orderservice; do
+            echo "▶️ Testing $service..."
+            sh ./scripts/test.sh $service unit
+          done
+        else
+          echo "▶️ Running unit tests for {{.SERVICE}}..."
+          sh ./scripts/test.sh {{.SERVICE}} unit
+        fi
 
   integration_test:
     desc: Run integration tests
+    vars:
+      SERVICE: '{{.SERVICE | default ""}}'
     cmds:
-      - sh ./scripts/test.sh catalogwriteservice integration
-      - sh ./scripts/test.sh catalogreadservice integration
-      - sh ./scripts/test.sh orderservice integration
+      - |
+        if [ -z "{{.SERVICE}}" ]; then
+          echo "🔍 Running integration tests for all services..."
+          for service in catalogwriteservice catalogreadservice orderservice; do
+            echo "🧪 Integration test: $service"
+            sh ./scripts/test.sh $service integration
+          done
+        else
+          echo "🧪 Integration test: {{.SERVICE}}"
+          sh ./scripts/test.sh {{.SERVICE}} integration
+        fi
 
   e2e_test:
     desc: Run end-to-end tests
+    vars:
+      SERVICE: '{{.SERVICE | default ""}}'
     cmds:
-      - sh ./scripts/test.sh catalogwriteservice e2e
-      - sh ./scripts/test.sh catalogreadservice e2e
-      - sh ./scripts/test.sh orderservice e2e
+      - |
+        if [ -z "{{.SERVICE}}" ]; then
+          echo "🔍 Running E2E tests for all services..."
+          for service in catalogwriteservice catalogreadservice orderservice; do
+            echo "🚀 E2E test: $service"
+            sh ./scripts/test.sh $service e2e
+          done
+        else
+          echo "🚀 E2E test: {{.SERVICE}}"
+          sh ./scripts/test.sh {{.SERVICE}} e2e
+        fi
 
   format:
     desc: Run formatters and linters
+    vars:
+      SERVICE: '{{.SERVICE | default ""}}'
     cmds:
-      - sh ./scripts/format-lint.sh catalogwriteservice
-      - sh ./scripts/format-lint.sh catalogreadservice
-      - sh ./scripts/format-lint.sh orderservice
-      - sh ./scripts/format-lint.sh pkg
+      - |
+        if [ -z "{{.SERVICE}}" ]; then
+          echo "🔍 Running formatters and linters for all services..."
+          for service in catalogwriteservice catalogreadservice orderservice pkg; do
+            echo "🧹 Formatting and linting $service..."
+            sh ./scripts/format-lint.sh $service
+          done
+        else
+          echo "🧹 Formatting and linting {{.SERVICE}}..."
+          sh ./scripts/format-lint.sh {{.SERVICE}}
+        fi
 
   lint:
     desc: Run formatters and linters
