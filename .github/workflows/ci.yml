@@ -56,7 +56,7 @@ jobs:
           echo "Verifying tools installation..."
           revive --version
           staticcheck --version
-          errcheck --version
+          errcheck -help | head -n 1  # errcheck doesn't support -version
           golangci-lint --version
 
       - name: Cache Dependencies
