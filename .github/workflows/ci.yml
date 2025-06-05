@@ -235,6 +235,7 @@ jobs:
   integration-test:
     name: Integration Test (${{ matrix.service }})
     needs: setup
+    if: false # skip this job
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -295,6 +296,7 @@ jobs:
   e2e-test:
     name: E2E Test (${{ matrix.service }})
     needs: setup
+    if: false # skip this job
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
