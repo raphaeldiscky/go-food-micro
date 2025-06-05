@@ -47,10 +47,10 @@ jobs:
         if: steps.cache-tools.outputs.cache-hit != 'true'
         run: |
           # Install linting tools
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6Add commentMore actions
           go install github.com/mgechev/revive@latest
           go install honnef.co/go/tools/cmd/staticcheck@latest
           go install github.com/kisielk/errcheck@latest
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.6
 
           # Verify tools are installed
           echo "Verifying tools installation..."
