@@ -172,7 +172,7 @@ tasks:
           done
         else
           echo "🧹 Formatting and linting {{.SERVICE}}..."
-          sh ./scripts/lint.sh {{.SERVICE}}
+          sh ./scripts/format-lint.sh {{.SERVICE}}
         fi
 
   lint:
