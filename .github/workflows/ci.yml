@@ -67,46 +67,9 @@ jobs:
       - name: Format and Lint
         run: task format SERVICE=${{ matrix.service }}
 
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: format-lint
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          check-latest: true
-          cache: true
-
-      - name: Cache Dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/go/bin
-            .task
-          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
-            ${{ runner.os }}-go-
-
-      - name: Install Task
-        uses: arduino/setup-task@v2
-        with:
-          version: 3.x
-          repo-token: ${{ secrets.REPO_TOKEN }}
-
-      - name: Build
-        run: task build
-
   test:
     name: Test (${{ matrix.type }})
     runs-on: ubuntu-latest
-    needs: build
     strategy:
       fail-fast: false
       matrix:
@@ -157,6 +120,42 @@ jobs:
       - name: Skip Tests (Not Implemented)
         if: ${{ !matrix.enabled }}
         run: echo "⏭️ ${{ matrix.type }} tests are not yet implemented"
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: format-lint
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: true
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/pkg/mod
+            ~/go/bin
+            .task
+          key: ${{ runner.os }}-go-${{ env.GO_VERSION }}-${{ hashFiles('**/go.sum', 'Taskfile.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-
+            ${{ runner.os }}-go-
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
+
+      - name: Build
+        run: task build
 
   summary:
     name: CI Summary
