@@ -20,6 +20,11 @@ on:
       - ".github"
       - "scripts"
 
+# Add concurrency to cancel in-progress runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   GO_VERSION: "1.23.6"
 
@@ -172,23 +177,14 @@ jobs:
           export PATH="$(go env GOPATH)/bin:$PATH"
           task format SERVICE=${{ matrix.service }}
 
-  test:
-    name: Test (${{ matrix.type }})
+  unit-test:
+    name: Unit Test (${{ matrix.service }})
     needs: setup
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - type: unit
-            command: task unit_test
-            enabled: true
-          - type: integration
-            command: task integration_test
-            enabled: false
-          - type: e2e
-            command: task e2e_test
-            enabled: false
+        service: [catalogwriteservice, catalogreadservice, orderservice]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -238,17 +234,134 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Run Tests
-        if: matrix.enabled
-        run: ${{ matrix.command }}
+      - name: Run Unit Tests
+        run: task unit_test SERVICE=${{ matrix.service }}
 
-      - name: Skip Tests (Not Implemented)
-        if: ${{ !matrix.enabled }}
-        run: echo "⏭️ ${{ matrix.type }} tests are not yet implemented"
+  integration-test:
+    name: Integration Test (${{ matrix.service }})
+    needs: setup
+    if: false # skip this job
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [catalogwriteservice, catalogreadservice, orderservice]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: false
+
+      - name: Get Go cache paths
+        id: go-cache-paths
+        run: |
+          echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+
+      - name: Cache Go Build
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ needs.setup.outputs.go-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-build-
+
+      - name: Cache Go Modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ needs.setup.outputs.go-mod-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-
+
+      - name: Cache Tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/bin
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-${{ hashFiles('Taskfile.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
+
+      - name: Run Integration Tests
+        run: task integration_test SERVICE=${{ matrix.service }}
+
+  e2e-test:
+    name: E2E Test (${{ matrix.service }})
+    needs: setup
+    if: false # skip this job
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        service: [catalogwriteservice, catalogreadservice, orderservice]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          check-latest: true
+          cache: false
+
+      - name: Get Go cache paths
+        id: go-cache-paths
+        run: |
+          echo "go-build=$(go env GOCACHE)" >> $GITHUB_OUTPUT
+          echo "go-mod=$(go env GOMODCACHE)" >> $GITHUB_OUTPUT
+
+      - name: Cache Go Build
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-build }}
+          key: ${{ needs.setup.outputs.go-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-build-
+
+      - name: Cache Go Modules
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.go-cache-paths.outputs.go-mod }}
+          key: ${{ needs.setup.outputs.go-mod-cache-key }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ env.GO_VERSION }}-mod-
+
+      - name: Cache Tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/go/bin
+            ~/.cache/go-build
+          key: ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-${{ hashFiles('Taskfile.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-go-tools-${{ env.GO_VERSION }}-
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{ secrets.REPO_TOKEN }}
+
+      - name: Run E2E Tests
+        run: task e2e_test SERVICE=${{ matrix.service }}
 
   build:
     name: Build
-    needs: [setup, format-lint, test]
+    needs: [setup, format-lint, unit-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -296,21 +409,27 @@ jobs:
     name: CI Summary
     runs-on: ubuntu-latest
     if: always()
-    needs: [build, test]
+    needs: [build, unit-test, integration-test, e2e-test]
     steps:
       - name: Check Results
         run: |
           build_result="${{ needs.build.result }}"
-          test_result="${{ needs.test.result }}"
+          unit_test_result="${{ needs.unit-test.result }}"
+          integration_test_result="${{ needs.integration-test.result }}"
+          e2e_test_result="${{ needs.e2e-test.result }}"
+
           echo "## 📊 CI Results"
-          echo "| Job           | Status          |"
-          echo "|---------------|-----------------|"
-          echo "| Build & Lint  | $([ "$build_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
-          echo "| Tests         | $([ "$test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
-          if [[ "$build_result" == "success" && "$test_result" == "success" ]]; then
-            echo -e "\n🎉 **All checks passed!**"
+          echo "| Job               | Status          |"
+          echo "|-------------------|-----------------|"
+          echo "| Build & Lint      | $([ "$build_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
+          echo "| Unit Tests        | $([ "$unit_test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
+          echo "| Integration Tests | $([ "$integration_test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
+          echo "| E2E Tests         | $([ "$e2e_test_result" == "success" ] && echo "✅ Passed" || echo "❌ Failed") |"
+
+          if [[ "$build_result" == "success" && "$unit_test_result" == "success" ]]; then
+            echo -e "\n🎉 **All critical checks passed!**"
             exit 0
           else
-            echo -e "\n💥 **Some checks failed**"
+            echo -e "\n💥 **Some critical checks failed**"
             exit 1
           fi
