@@ -14,7 +14,7 @@ import (
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 
-	productsservice "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/service"
+	productsservice "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
