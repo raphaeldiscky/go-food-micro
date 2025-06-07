@@ -305,8 +305,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [catalogwriteservice, catalogreadservice, orderservice]
-    if: false # skip this job
+        service: [catalogwriteservice]
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4

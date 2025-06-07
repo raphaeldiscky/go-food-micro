@@ -8,20 +8,20 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/gavv/httpexpect/v2"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-
-	httpexpect "github.com/gavv/httpexpect/v2"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
-func TestSearchProductsEndpoint(t *testing.T) {
+func TestSearchProductsEndToEnd(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
-	RunSpecs(t, "SearchProducts Endpoint EndToEnd Tests")
+	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
+	RunSpecs(t, "SearchProducts Endpoint")
 }
 
 var _ = Describe("Search Products Feature", func() {

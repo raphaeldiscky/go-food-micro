@@ -8,92 +8,127 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v6"
+	"github.com/gavv/httpexpect/v2"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	gofakeit "github.com/brianvoe/gofakeit/v6"
-	httpexpect "github.com/gavv/httpexpect/v2"
 	uuid "github.com/satori/go.uuid"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/updatingproduct/v1/dtos"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
 var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
-func TestUpdateProductEndpoint(t *testing.T) {
+func TestUpdateProductEndToEnd(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
-	RunSpecs(t, "UpdateProduct Endpoint EndToEnd Tests")
+	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
+	RunSpecs(t, "UpdateProduct Endpoint")
 }
 
-var _ = Describe("UpdateProductE2ETest Suite", func() {
+var _ = Describe("UpdateProduct Endpoint", func() {
 	var (
-		ctx     context.Context
-		id      uuid.UUID
-		request *dtos.UpdateProductRequestDto
+		ctx       context.Context
+		expect    *httpexpect.Expect
+		productID uuid.UUID
 	)
 
-	_ = BeforeEach(func() {
+	BeforeEach(func() {
+		By("Setting up test data")
 		ctx = context.Background()
-
-		By("Seeding the required data")
 		integrationFixture.SetupTest()
-		id = integrationFixture.Items[0].ID
+		expect = httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
+		productID = integrationFixture.Items[0].ID
 	})
 
-	_ = AfterEach(func() {
-		By("Cleanup test data")
+	AfterEach(func() {
+		By("Cleaning up test data")
 		integrationFixture.TearDownTest()
 	})
 
-	// "Scenario" step for testing the update product API with valid input
-	Describe("Update product with valid input returns NoContent status", func() {
-		BeforeEach(func() {
-			request = &dtos.UpdateProductRequestDto{
-				Description: gofakeit.AdjectiveDescriptive(),
-				Price:       gofakeit.Price(100, 1000),
-				Name:        gofakeit.Name(),
-			}
-		})
+	Describe("Update product returns appropriate status codes", func() {
+		When("A valid update request is made", func() {
+			It("Should return a 204 No Content status", func() {
+				By("Making update request")
+				updateRequest := map[string]interface{}{
+					"name":        gofakeit.Name(),
+					"description": gofakeit.AdjectiveDescriptive(),
+					"price":       gofakeit.Price(100, 1000),
+				}
 
-		// "When" step
-		When("A valid request is made to update a product", func() {
-			// "Then" step
-			It("Should return a NoContent status", func() {
-				// Create an HTTPExpect instance and make the request
-				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
-				expect.PUT("products/{id}").
-					WithPath("id", id.String()).
-					WithJSON(request).
+				// First verify the product exists
+				expect.GET("/products/{id}", productID).
 					WithContext(ctx).
 					Expect().
-					Status(http.StatusNoContent)
-			})
-		})
-	})
+					Status(http.StatusOK)
 
-	// "Scenario" step for testing the update product API with invalid input
-	Describe("Update product returns BadRequest with invalid input", func() {
-		BeforeEach(func() {
-			// Get a valid product ID from your test data
-			id = uuid.NewV4()
-			request = &dtos.UpdateProductRequestDto{
-				Description: gofakeit.AdjectiveDescriptive(),
-				Price:       0,
-				Name:        gofakeit.Name(),
-			}
-		})
-		// "When" step
-		When("An invalid request is made to update a product", func() {
-			// "Then" step
-			It("Should return a BadRequest status", func() {
-				// Create an HTTPExpect instance and make the request
-				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
-				expect.PUT("products/{id}").
-					WithPath("id", id.String()).
-					WithJSON(request).
-					WithContext(context.Background()).
+				// Then attempt the update
+				expect.PUT("/products/{id}", productID).
+					WithContext(ctx).
+					WithJSON(updateRequest).
+					Expect().
+					Status(http.StatusNoContent)
+
+				// Verify the update through a get request
+				response := expect.GET("/products/{id}", productID).
+					WithContext(ctx).
+					Expect().
+					Status(http.StatusOK).
+					JSON().
+					Object()
+
+				By("Verifying updated values")
+				product := response.Value("product").Object()
+				product.Value("id").String().Equal(productID.String())
+				product.Value("name").String().Equal(updateRequest["name"].(string))
+				product.Value("description").String().Equal(updateRequest["description"].(string))
+				product.Value("price").Number().Equal(updateRequest["price"].(float64))
+			})
+
+			It("Should return a 400 Bad Request for invalid UUID", func() {
+				By("Making request with invalid UUID")
+				invalidUUID := "not-a-uuid"
+				updateRequest := map[string]interface{}{
+					"name":        gofakeit.Name(),
+					"description": gofakeit.AdjectiveDescriptive(),
+					"price":       gofakeit.Price(100, 1000),
+				}
+
+				expect.PUT("/products/{id}", invalidUUID).
+					WithContext(ctx).
+					WithJSON(updateRequest).
+					Expect().
+					Status(http.StatusBadRequest)
+			})
+
+			It("Should return a 404 Not Found for non-existent product", func() {
+				By("Making request with non-existent UUID")
+				nonExistentID := uuid.NewV4()
+				updateRequest := map[string]interface{}{
+					"name":        gofakeit.Name(),
+					"description": gofakeit.AdjectiveDescriptive(),
+					"price":       gofakeit.Price(100, 1000),
+				}
+
+				expect.PUT("/products/{id}", nonExistentID).
+					WithContext(ctx).
+					WithJSON(updateRequest).
+					Expect().
+					Status(http.StatusNotFound)
+			})
+
+			It("Should return a 400 Bad Request for invalid data", func() {
+				By("Making request with invalid data")
+				invalidRequest := map[string]interface{}{
+					"name":        "", // Empty name should fail validation
+					"description": gofakeit.AdjectiveDescriptive(),
+					"price":       0, // Zero price should fail validation
+				}
+
+				expect.PUT("/products/{id}", productID).
+					WithContext(ctx).
+					WithJSON(invalidRequest).
 					Expect().
 					Status(http.StatusBadRequest)
 			})
