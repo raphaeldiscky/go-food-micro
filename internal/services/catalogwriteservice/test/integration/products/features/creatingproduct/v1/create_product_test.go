@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 
@@ -19,6 +20,7 @@ import (
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
 
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	createProductCommand "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/dtos"
 	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/creatingproduct/v1/events/integrationevents"
@@ -88,7 +90,7 @@ var _ = Describe("Creating Product Feature", func() {
 		func() {
 			Context("Given new product doesn't exists in the system", func() {
 				BeforeEach(func() {
-					command, err = createProductCommand.NewCreateProduct(
+					command, err = createProductCommand.NewCreateProductWithValidation(
 						gofakeit.Name(),
 						gofakeit.AdjectiveDescriptive(),
 						gofakeit.Price(150, 6000),
@@ -124,8 +126,9 @@ var _ = Describe("Creating Product Feature", func() {
 						It(
 							"Should be able to retrieve the product from the database",
 							func() {
-								createdProduct, err = integrationFixture.CatalogsDBContext.FindProductByID(
+								createdProduct, err = gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 									ctx,
+									integrationFixture.CatalogsDBContext,
 									result.ProductID,
 								)
 								Expect(err).NotTo(HaveOccurred())
@@ -149,12 +152,14 @@ var _ = Describe("Creating Product Feature", func() {
 		func() {
 			Context("Given product already exists in the system", func() {
 				BeforeEach(func() {
-					command = &createProductCommand.CreateProduct{
-						Name:        gofakeit.Name(),
-						Description: gofakeit.AdjectiveDescriptive(),
-						Price:       gofakeit.Price(150, 6000),
-						ProductID:   id,
-					}
+					command, err = createProductCommand.NewCreateProductWithValidation(
+						gofakeit.Name(),
+						gofakeit.AdjectiveDescriptive(),
+						gofakeit.Price(150, 6000),
+					)
+					Expect(err).ToNot(HaveOccurred())
+					// Override the ID to use an existing one
+					command.ProductID = id
 				})
 
 				When(
@@ -199,7 +204,7 @@ var _ = Describe("Creating Product Feature", func() {
 						integrationFixture.Bus,
 						nil,
 					)
-					command, err = createProductCommand.NewCreateProduct(
+					command, err = createProductCommand.NewCreateProductWithValidation(
 						gofakeit.Name(),
 						gofakeit.AdjectiveDescriptive(),
 						gofakeit.Price(150, 6000),

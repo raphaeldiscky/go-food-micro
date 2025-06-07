@@ -3,7 +3,6 @@ package v1
 import (
 	"net/http"
 
-	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/web/route"
 
 	echo "github.com/labstack/echo/v4"
@@ -64,10 +63,7 @@ func (ep *deleteProductEndpoint) handler() echo.HandlerFunc {
 			command,
 		)
 		if err != nil {
-			return errors.WithMessage(
-				err,
-				"error in sending DeleteProduct",
-			)
+			return err
 		}
 
 		return c.NoContent(http.StatusNoContent)

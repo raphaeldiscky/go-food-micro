@@ -3,6 +3,7 @@ package integration
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -30,11 +31,7 @@ import (
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
 
-// CatalogContext provides access to repositories in a unit of work
-// Only Products() is implemented for now
-// You can expand this as needed for more repositories
-// Place this near the top of the file
-
+// CatalogContext is an interface for integration tests that provides access to a product repository.
 type CatalogContext interface {
 	Products() contracts.ProductRepository
 }
@@ -47,21 +44,79 @@ func (c *catalogContextImpl) Products() contracts.ProductRepository {
 	return c.productRepo
 }
 
-// CatalogUnitOfWork provides a Do method for transactional work
-// Only a simple implementation is provided for integration tests
-
+// CatalogUnitOfWork is an interface for integration tests that executes a function (using a CatalogContext) within a unit of work.
 type CatalogUnitOfWork interface {
 	Do(ctx context.Context, fn func(CatalogContext) error) error
 }
 
 type catalogUnitOfWorkImpl struct {
 	productRepo contracts.ProductRepository
+	db          *gorm.DB
 }
 
 func (u *catalogUnitOfWorkImpl) Do(ctx context.Context, fn func(CatalogContext) error) error {
-	// In a real implementation, you would start a DB transaction here
-	// For integration tests, just call the function with the context
-	return fn(&catalogContextImpl{productRepo: u.productRepo})
+	// Start a transaction
+	tx := u.db.Begin()
+	if tx.Error != nil {
+		return errors.WrapIf(tx.Error, "failed to begin transaction")
+	}
+
+	// Create a new repository instance that uses the transaction
+	txRepo := repositories.NewPostgresProductRepository(
+		u.productRepo.(*repositories.PostgresProductRepository).Log,
+		tx,
+		u.productRepo.(*repositories.PostgresProductRepository).Tracer,
+	)
+
+	// Create a channel to handle context cancellation
+	done := make(chan error, 1)
+	go func() {
+		// Recover from panics
+		defer func() {
+			if r := recover(); r != nil {
+				// Rollback on panic
+				if rbErr := tx.Rollback().Error; rbErr != nil {
+					done <- errors.WrapIf(errors.Combine(errors.New(fmt.Sprint(r)), rbErr), "failed to rollback transaction after panic")
+					return
+				}
+				done <- errors.New(fmt.Sprint(r))
+			}
+		}()
+
+		// Execute the function with the transaction-scoped repository
+		err := fn(&catalogContextImpl{productRepo: txRepo})
+		done <- err
+	}()
+
+	// Wait for either context cancellation or function completion
+	select {
+	case <-ctx.Done():
+		// Context was cancelled, rollback the transaction
+		if rbErr := tx.Rollback().Error; rbErr != nil {
+			return errors.WrapIf(
+				errors.Combine(ctx.Err(), rbErr),
+				"failed to rollback transaction after context cancellation",
+			)
+		}
+		return ctx.Err()
+	case err := <-done:
+		if err != nil {
+			// Error occurred, rollback the transaction
+			if rbErr := tx.Rollback().Error; rbErr != nil {
+				return errors.WrapIf(
+					errors.Combine(err, rbErr),
+					"failed to rollback transaction after error",
+				)
+			}
+			return err
+		}
+
+		// No error, commit the transaction
+		if err := tx.Commit().Error; err != nil {
+			return errors.WrapIf(err, "failed to commit transaction")
+		}
+		return nil
+	}
 }
 
 // CatalogWriteIntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
@@ -127,6 +182,7 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 				result.Gorm,
 				noopTracer,
 			),
+			db: result.Gorm,
 		},
 	}
 

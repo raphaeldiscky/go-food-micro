@@ -112,7 +112,7 @@ var _ = Describe("Product Repository Suite", func() {
 				)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(retrievedProduct).NotTo(BeNil())
-				Expect(retrievedProduct.ProductID).To(Equal(createdProduct.ID))
+				Expect(retrievedProduct.ID).To(Equal(createdProduct.ID))
 			})
 		})
 	})

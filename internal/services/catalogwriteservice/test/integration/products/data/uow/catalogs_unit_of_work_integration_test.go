@@ -17,7 +17,6 @@ import (
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 
-	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
@@ -56,7 +55,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 			It("Should roll back the changes and not affect the database", func() {
 				err = integrationFixture.CatalogUnitOfWorks.Do(
 					ctx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),
@@ -91,7 +90,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 			It("Should roll back the changes and not affect the database", func() {
 				err = integrationFixture.CatalogUnitOfWorks.Do(
 					ctx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),
@@ -127,7 +126,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 
 				err := integrationFixture.CatalogUnitOfWorks.Do(
 					cancelCtx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),
@@ -173,7 +172,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 			It("Should commit the changes to the database", func() {
 				err := integrationFixture.CatalogUnitOfWorks.Do(
 					ctx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),
