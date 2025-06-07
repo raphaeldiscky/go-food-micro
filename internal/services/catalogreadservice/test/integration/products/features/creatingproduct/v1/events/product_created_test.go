@@ -30,7 +30,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 	// in test mode we set rabbitmq `AutoStart=false` in configuration in rabbitmqOptions, so we should run rabbitmq bus manually
 	integrationTestSharedFixture.Bus.Start(context.Background())
 	// wait for consumers ready to consume before publishing messages, preparation background workers takes a bit time (for preventing messages lost)
-	time.Sleep(60 * time.Second) // Increased wait time to match bus startup
+	time.Sleep(1 * time.Second)
 
 	convey.Convey("Product Created Feature", t, func() {
 		// will execute with each subtest
@@ -108,7 +108,7 @@ func TestProductCreatedConsumer(t *testing.T) {
 							)
 
 							return err == nil && product != nil
-						}, 120*time.Second) // Increased timeout to account for all operations
+						}, 10*time.Second)
 
 						convey.So(err, convey.ShouldBeNil)
 						convey.So(product, convey.ShouldNotBeNil)
@@ -123,5 +123,5 @@ func TestProductCreatedConsumer(t *testing.T) {
 
 	integrationTestSharedFixture.Log.Info("TearDownSuite started")
 	integrationTestSharedFixture.Bus.Stop()
-	time.Sleep(60 * time.Second) // Increased wait time to match bus startup
+	time.Sleep(1 * time.Second)
 }

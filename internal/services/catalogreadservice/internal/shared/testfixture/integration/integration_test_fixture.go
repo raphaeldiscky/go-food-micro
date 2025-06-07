@@ -87,19 +87,13 @@ func NewCatalogReadIntegrationTestSharedFixture(
 	}
 
 	// Start the bus with a context that has a longer timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Try to start the bus with retries and proper wait times
 	var startErr error
 	for i := 0; i < 5; i++ { // Increased retries
 		startErr = shared.Bus.Start(ctx)
-		if startErr == nil {
-			// Wait longer for the bus to be fully ready
-			time.Sleep(10 * time.Second)
-
-			break
-		}
 		result.Logger.Warn(
 			"Failed to start RabbitMQ bus, retrying...",
 			logger.Fields{
@@ -107,16 +101,12 @@ func NewCatalogReadIntegrationTestSharedFixture(
 				"error":   startErr,
 			},
 		)
-		time.Sleep(5 * time.Second) // Increased wait time between retries
 	}
 
 	if startErr != nil {
 		result.Logger.Error(errors.WrapIf(startErr, "error starting RabbitMQ bus"))
 		t.Fatalf("Failed to start RabbitMQ bus after retries: %v", startErr)
 	}
-
-	// Wait for the bus to be ready and connections to be established
-	time.Sleep(15 * time.Second)
 
 	return shared
 }
@@ -162,9 +152,6 @@ func (i *CatalogReadIntegrationTestSharedFixture) TearDownTest() {
 		i.Log.Error(errors.WrapIf(err, "error stopping bus"))
 	}
 
-	// Wait for connections to close - match the bus startup time
-	time.Sleep(60 * time.Second)
-
 	// cleanup test containers with their hooks
 	if err := i.cleanupRabbitmqData(); err != nil {
 		i.Log.Error(errors.WrapIf(err, "error in cleanup rabbitmq data"))
@@ -179,7 +166,7 @@ func seedData(
 	db *mongo.Client,
 	databaseName string,
 ) ([]*models.Product, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Create 2 products for testing

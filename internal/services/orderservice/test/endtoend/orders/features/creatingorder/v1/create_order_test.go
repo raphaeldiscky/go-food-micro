@@ -25,7 +25,7 @@ var integrationFixture *integration.IntegrationTestSharedFixture
 
 func TestCreateOrder(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
+	integrationFixture = integration.NewOrderIntegrationTestSharedFixture(t)
 	RunSpecs(t, "CreateOrder Endpoint EndToEnd Tests")
 }
 
