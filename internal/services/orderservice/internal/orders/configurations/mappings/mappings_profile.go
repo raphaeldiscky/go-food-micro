@@ -32,10 +32,10 @@ func configureOrderToDtoMappings() error {
 func configureDtoToOrderMappings() error {
 	// OrderDto -> Order
 	if err := mapper.CreateCustomMap[*dtosV1.OrderDto, *aggregate.Order](
-		func(orderDto *dtosV1.OrderDto) *aggregate.Order {
+		func(orderDto *dtosV1.OrderDto) (*aggregate.Order, error) {
 			items, err := mapper.Map[[]*valueobject.ShopItem](orderDto.ShopItems)
 			if err != nil {
-				return nil
+				return nil, err
 			}
 
 			order, err := aggregate.NewOrder(
@@ -47,10 +47,10 @@ func configureDtoToOrderMappings() error {
 				orderDto.CreatedAt,
 			)
 			if err != nil {
-				return nil
+				return nil, err
 			}
 
-			return order
+			return order, nil
 		},
 	); err != nil {
 		return err
@@ -63,13 +63,13 @@ func configureDtoToOrderMappings() error {
 func configureGrpcMappings() error {
 	// dtos.OrderReadDto -> grpcOrderService.OrderReadModel
 	if err := mapper.CreateCustomMap[*dtosV1.OrderReadDto, *grpcOrderService.OrderReadModel](
-		func(orderReadDto *dtosV1.OrderReadDto) *grpcOrderService.OrderReadModel {
+		func(orderReadDto *dtosV1.OrderReadDto) (*grpcOrderService.OrderReadModel, error) {
 			if orderReadDto == nil {
-				return nil
+				return nil, nil
 			}
 			items, err := mapper.Map[[]*grpcOrderService.ShopItemReadModel](orderReadDto.ShopItems)
 			if err != nil {
-				return nil
+				return nil, err
 			}
 
 			return &grpcOrderService.OrderReadModel{
@@ -88,7 +88,7 @@ func configureGrpcMappings() error {
 				ShopItems:       items,
 				CreatedAt:       timestamppb.New(orderReadDto.CreatedAt),
 				UpdatedAt:       timestamppb.New(orderReadDto.UpdatedAt),
-			}
+			}, nil
 		},
 	); err != nil {
 		return err
@@ -96,10 +96,10 @@ func configureGrpcMappings() error {
 
 	// aggregate.Order -> grpcOrderService.Order
 	if err := mapper.CreateCustomMap[*aggregate.Order, *grpcOrderService.Order](
-		func(order *aggregate.Order) *grpcOrderService.Order {
+		func(order *aggregate.Order) (*grpcOrderService.Order, error) {
 			items, err := mapper.Map[[]*grpcOrderService.ShopItem](order.ShopItems())
 			if err != nil {
-				return nil
+				return nil, err
 			}
 
 			return &grpcOrderService.Order{
@@ -117,7 +117,7 @@ func configureGrpcMappings() error {
 				UpdatedAt:       timestamppb.New(order.UpdatedAt()),
 				ShopItems:       items,
 				PaymentID:       order.PaymentID().String(),
-			}
+			}, nil
 		},
 	); err != nil {
 		return err
@@ -152,13 +152,13 @@ func configureShopItemMappings() error {
 
 	// ShopItemDto -> ShopItem
 	if err := mapper.CreateCustomMap[*dtosV1.ShopItemDto, *valueobject.ShopItem](
-		func(src *dtosV1.ShopItemDto) *valueobject.ShopItem {
+		func(src *dtosV1.ShopItemDto) (*valueobject.ShopItem, error) {
 			return valueobject.CreateNewShopItem(
 				src.Title,
 				src.Description,
 				src.Quantity,
 				src.Price,
-			)
+			), nil
 		},
 	); err != nil {
 		return err
@@ -181,13 +181,13 @@ func configureShopItemMappings() error {
 
 	// valueobject.ShopItem -> grpcOrderService.ShopItem
 	if err := mapper.CreateCustomMap[*valueobject.ShopItem, *grpcOrderService.ShopItem](
-		func(src *valueobject.ShopItem) *grpcOrderService.ShopItem {
+		func(src *valueobject.ShopItem) (*grpcOrderService.ShopItem, error) {
 			return &grpcOrderService.ShopItem{
 				Title:       src.Title(),
 				Description: src.Description(),
 				Quantity:    src.Quantity(),
 				Price:       src.Price(),
-			}
+			}, nil
 		},
 	); err != nil {
 		return err
@@ -195,13 +195,13 @@ func configureShopItemMappings() error {
 
 	// grpcOrderService.ShopItem -> valueobject.ShopItem
 	if err := mapper.CreateCustomMap[*grpcOrderService.ShopItem, *valueobject.ShopItem](
-		func(src *grpcOrderService.ShopItem) *valueobject.ShopItem {
+		func(src *grpcOrderService.ShopItem) (*valueobject.ShopItem, error) {
 			return valueobject.CreateNewShopItem(
 				src.Title,
 				src.Description,
 				src.Quantity,
 				src.Price,
-			)
+			), nil
 		},
 	); err != nil {
 		return err
@@ -218,11 +218,11 @@ func configureShopItemMappings() error {
 // configureListResultMappings configures the list result-related mappings.
 func configureListResultMappings() error {
 	// ListResult[OrderReadDto] -> GetOrdersRes
-	if err := mapper.CreateCustomMap(
-		func(orders *utils.ListResult[*dtosV1.OrderReadDto]) *grpcOrderService.GetOrdersRes {
+	if err := mapper.CreateCustomMap[*utils.ListResult[*dtosV1.OrderReadDto], *grpcOrderService.GetOrdersRes](
+		func(orders *utils.ListResult[*dtosV1.OrderReadDto]) (*grpcOrderService.GetOrdersRes, error) {
 			o, err := mapper.Map[[]*grpcOrderService.OrderReadModel](orders.Items)
 			if err != nil {
-				return nil
+				return nil, err
 			}
 
 			return &grpcOrderService.GetOrdersRes{
@@ -233,7 +233,7 @@ func configureListResultMappings() error {
 					TotalPages: int32(orders.TotalPage),
 				},
 				Orders: o,
-			}
+			}, nil
 		},
 	); err != nil {
 		return err

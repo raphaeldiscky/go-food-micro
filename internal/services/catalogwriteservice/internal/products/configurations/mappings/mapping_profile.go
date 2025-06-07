@@ -15,53 +15,62 @@ import (
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
 
-// ConfigureProductsMappings is a function that configures the products mappings.
-func ConfigureProductsMappings() error {
-	// Time mappings
-	err := mapper.CreateCustomMap[time.Time, *timestamppb.Timestamp](
+// configureTimeMappings sets up the time-related type mappings.
+func configureTimeMappings() error {
+	// Time to Timestamp
+	if err := mapper.CreateCustomMap[time.Time, *timestamppb.Timestamp](
 		func(t time.Time) (*timestamppb.Timestamp, error) {
 			return timestamppb.New(t), nil
 		},
-	)
-	if err != nil {
+	); err != nil {
 		return err
 	}
 
-	err = mapper.CreateCustomMap[*timestamppb.Timestamp, time.Time](
+	// Timestamp to Time
+	if err := mapper.CreateCustomMap[*timestamppb.Timestamp, time.Time](
 		func(t *timestamppb.Timestamp) (time.Time, error) {
 			if t == nil {
 				return time.Time{}, nil
 			}
+
 			return t.AsTime(), nil
 		},
-	)
-	if err != nil {
+	); err != nil {
 		return err
 	}
 
-	// Model mappings
-	err = mapper.CreateMap[*models.Product, *dtoV1.ProductDto]()
-	if err != nil {
+	return nil
+}
+
+// configureModelMappings sets up the model-related type mappings.
+func configureModelMappings() error {
+	// Product to ProductDto
+	if err := mapper.CreateMap[*models.Product, *dtoV1.ProductDto](); err != nil {
 		return err
 	}
 
-	err = mapper.CreateMap[*dtoV1.ProductDto, *models.Product]()
-	if err != nil {
+	// ProductDto to Product
+	if err := mapper.CreateMap[*dtoV1.ProductDto, *models.Product](); err != nil {
 		return err
 	}
 
-	err = mapper.CreateMap[*datamodel.ProductDataModel, *models.Product]()
-	if err != nil {
+	// ProductDataModel to Product
+	if err := mapper.CreateMap[*datamodel.ProductDataModel, *models.Product](); err != nil {
 		return err
 	}
 
-	err = mapper.CreateMap[*models.Product, *datamodel.ProductDataModel]()
-	if err != nil {
+	// Product to ProductDataModel
+	if err := mapper.CreateMap[*models.Product, *datamodel.ProductDataModel](); err != nil {
 		return err
 	}
 
-	// gRPC service mappings
-	err = mapper.CreateCustomMap[*models.Product, *productsService.Product](
+	return nil
+}
+
+// configureServiceMappings sets up the gRPC service-related type mappings.
+func configureServiceMappings() error {
+	// Product to ServiceProduct
+	if err := mapper.CreateCustomMap[*models.Product, *productsService.Product](
 		func(product *models.Product) (*productsService.Product, error) {
 			if product == nil {
 				return nil, nil
@@ -76,17 +85,16 @@ func ConfigureProductsMappings() error {
 				UpdatedAt:   timestamppb.New(product.UpdatedAt),
 			}, nil
 		},
-	)
-	if err != nil {
+	); err != nil {
 		return err
 	}
 
-	err = mapper.CreateCustomMap[*productsService.Product, *dtoV1.ProductDto](
+	// ServiceProduct to ProductDto
+	if err := mapper.CreateCustomMap[*productsService.Product, *dtoV1.ProductDto](
 		func(product *productsService.Product) (*dtoV1.ProductDto, error) {
 			if product == nil {
 				return nil, nil
 			}
-
 			id, err := uuid.FromString(product.ProductID)
 			if err != nil {
 				return nil, err
@@ -101,13 +109,12 @@ func ConfigureProductsMappings() error {
 				UpdatedAt:   product.UpdatedAt.AsTime(),
 			}, nil
 		},
-	)
-	if err != nil {
+	); err != nil {
 		return err
 	}
 
-	// Add mapping from dtoV1.ProductDto to productsService.Product
-	err = mapper.CreateCustomMap[*dtoV1.ProductDto, *productsService.Product](
+	// ProductDto to ServiceProduct
+	if err := mapper.CreateCustomMap[*dtoV1.ProductDto, *productsService.Product](
 		func(product *dtoV1.ProductDto) (*productsService.Product, error) {
 			if product == nil {
 				return nil, nil
@@ -122,10 +129,21 @@ func ConfigureProductsMappings() error {
 				UpdatedAt:   timestamppb.New(product.UpdatedAt),
 			}, nil
 		},
-	)
-	if err != nil {
+	); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// ConfigureProductsMappings is a function that configures the products mappings.
+func ConfigureProductsMappings() error {
+	if err := configureTimeMappings(); err != nil {
+		return err
+	}
+	if err := configureModelMappings(); err != nil {
+		return err
+	}
+
+	return configureServiceMappings()
 }
