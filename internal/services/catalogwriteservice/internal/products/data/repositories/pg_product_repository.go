@@ -145,6 +145,10 @@ func (p *PostgresProductRepository) GetProductByID(
 	return product, nil
 }
 
+// CreateProduct creates a new product in the database.
+// It first checks if a product with the same ID already exists.
+// If the product exists, it returns a Conflict error.
+// If the product doesn't exist, it creates a new product and returns it.
 func (p *PostgresProductRepository) CreateProduct(
 	ctx context.Context,
 	product *models.Product,
@@ -184,6 +188,9 @@ func (p *PostgresProductRepository) CreateProduct(
 	return product, nil
 }
 
+// UpdateProduct updates an existing product in the database.
+// It updates all fields of the product and returns the updated product.
+// If the product doesn't exist, it returns an error.
 func (p *PostgresProductRepository) UpdateProduct(
 	ctx context.Context,
 	updateProduct *models.Product,
@@ -221,6 +228,10 @@ func (p *PostgresProductRepository) UpdateProduct(
 	return updateProduct, nil
 }
 
+// DeleteProductByID deletes a product from the database by its ID.
+// It first checks if the product exists.
+// If the product doesn't exist, it returns a NotFound error.
+// If the product exists, it deletes it and returns nil.
 func (p *PostgresProductRepository) DeleteProductByID(
 	ctx context.Context,
 	uuid goUuid.UUID,

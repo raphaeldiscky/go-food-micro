@@ -11,6 +11,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 
 	_ "github.com/lib/pq" // postgres driver
@@ -26,7 +27,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/repositories"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
+	apptest "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
@@ -52,70 +53,103 @@ type CatalogUnitOfWork interface {
 type catalogUnitOfWorkImpl struct {
 	productRepo contracts.ProductRepository
 	db          *gorm.DB
+	logger      logger.Logger
 }
 
-func (u *catalogUnitOfWorkImpl) Do(ctx context.Context, fn func(CatalogContext) error) error {
-	// Start a transaction
-	tx := u.db.Begin()
-	if tx.Error != nil {
-		return errors.WrapIf(tx.Error, "failed to begin transaction")
+// handleTransactionRollback handles rolling back a transaction and logging any errors.
+func (u *catalogUnitOfWorkImpl) handleTransactionRollback(tx *gorm.DB) {
+	if err := tx.Rollback().Error; err != nil {
+		u.logger.Error("failed to rollback transaction", zap.Error(err))
+	}
+}
+
+// createTransactionRepository creates a new repository instance that uses the transaction.
+func (u *catalogUnitOfWorkImpl) createTransactionRepository(
+	tx *gorm.DB,
+) (contracts.ProductRepository, error) {
+	repo, ok := u.productRepo.(*repositories.PostgresProductRepository)
+	if !ok {
+		return nil, fmt.Errorf("failed to cast product repository to PostgresProductRepository")
 	}
 
-	// Create a new repository instance that uses the transaction
-	txRepo := repositories.NewPostgresProductRepository(
-		u.productRepo.(*repositories.PostgresProductRepository).Log,
-		tx,
-		u.productRepo.(*repositories.PostgresProductRepository).Tracer,
-	)
+	if repo.Log == nil || repo.Tracer == nil {
+		return nil, fmt.Errorf("logger or tracer is nil")
+	}
 
-	// Create a channel to handle context cancellation
-	done := make(chan error, 1)
-	go func() {
-		// Recover from panics
-		defer func() {
-			if r := recover(); r != nil {
-				// Rollback on panic
-				if rbErr := tx.Rollback().Error; rbErr != nil {
-					done <- errors.WrapIf(errors.Combine(errors.New(fmt.Sprint(r)), rbErr), "failed to rollback transaction after panic")
-					return
-				}
-				done <- errors.New(fmt.Sprint(r))
-			}
-		}()
+	return repositories.NewPostgresProductRepository(repo.Log, tx, repo.Tracer), nil
+}
 
-		// Execute the function with the transaction-scoped repository
-		err := fn(&catalogContextImpl{productRepo: txRepo})
-		done <- err
+// executeWithContext executes the given function with context handling and panic recovery.
+func (u *catalogUnitOfWorkImpl) executeWithContext(
+	ctx context.Context,
+	tx *gorm.DB,
+	fn func(CatalogContext) error,
+	done chan<- error,
+) {
+	defer func() {
+		if r := recover(); r != nil {
+			u.handleTransactionRollback(tx)
+			done <- fmt.Errorf("panic recovered: %v", r)
+		}
 	}()
 
-	// Wait for either context cancellation or function completion
+	txRepo, err := u.createTransactionRepository(tx)
+	if err != nil {
+		done <- err
+
+		return
+	}
+
+	catalogCtx := &catalogContextImpl{
+		productRepo: txRepo,
+	}
+
+	if err := fn(catalogCtx); err != nil {
+		u.handleTransactionRollback(tx)
+
+		done <- err
+
+		return
+	}
+
+	// Check if context is done before committing
 	select {
 	case <-ctx.Done():
-		// Context was cancelled, rollback the transaction
-		if rbErr := tx.Rollback().Error; rbErr != nil {
-			return errors.WrapIf(
-				errors.Combine(ctx.Err(), rbErr),
-				"failed to rollback transaction after context cancellation",
-			)
-		}
-		return ctx.Err()
-	case err := <-done:
-		if err != nil {
-			// Error occurred, rollback the transaction
-			if rbErr := tx.Rollback().Error; rbErr != nil {
-				return errors.WrapIf(
-					errors.Combine(err, rbErr),
-					"failed to rollback transaction after error",
-				)
-			}
-			return err
-		}
+		u.handleTransactionRollback(tx)
+		done <- fmt.Errorf("context canceled: %w", ctx.Err())
 
-		// No error, commit the transaction
+		return
+	default:
+		// Context is not done, proceed with commit
 		if err := tx.Commit().Error; err != nil {
-			return errors.WrapIf(err, "failed to commit transaction")
+			u.handleTransactionRollback(tx)
+			done <- fmt.Errorf("failed to commit transaction: %w", err)
+
+			return
 		}
-		return nil
+		done <- nil
+	}
+}
+
+// Do executes the given function within a transaction, providing a CatalogContext that uses the transaction.
+// It handles transaction management, context cancellation, and panic recovery.
+// Returns an error if the transaction fails, context is canceled, or the function panics.
+func (u *catalogUnitOfWorkImpl) Do(ctx context.Context, fn func(CatalogContext) error) error {
+	tx := u.db.Begin()
+	if tx.Error != nil {
+		return fmt.Errorf("failed to begin transaction: %w", tx.Error)
+	}
+
+	done := make(chan error, 1)
+	go u.executeWithContext(ctx, tx, fn, done)
+
+	select {
+	case err := <-done:
+		return err
+	case <-ctx.Done():
+		u.handleTransactionRollback(tx)
+
+		return fmt.Errorf("context canceled: %w", ctx.Err())
 	}
 }
 
@@ -143,7 +177,7 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 	t *testing.T,
 ) *CatalogWriteIntegrationTestSharedFixture {
 	t.Helper()
-	result := test.NewCatalogWriteTestApp().Run(t)
+	result := apptest.NewCatalogWriteTestApp().Run(t)
 
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
@@ -182,7 +216,8 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 				result.Gorm,
 				noopTracer,
 			),
-			db: result.Gorm,
+			db:     result.Gorm,
+			logger: result.Logger,
 		},
 	}
 
@@ -277,4 +312,20 @@ func seedDataManually(gormDB *gorm.DB) ([]*datamodel.ProductDataModel, error) {
 	}
 
 	return products, nil
+}
+
+// NewCatalogUnitOfWork creates a new instance of CatalogUnitOfWork.
+func NewCatalogUnitOfWork(result *apptest.CatalogWriteTestAppResult) CatalogUnitOfWork {
+	// Create a no-op tracer for tests
+	noopTracer := tracing.NewAppTracer("test")
+
+	return &catalogUnitOfWorkImpl{
+		productRepo: repositories.NewPostgresProductRepository(
+			result.Logger,
+			result.Gorm,
+			noopTracer,
+		),
+		db:     result.Gorm,
+		logger: result.Logger,
+	}
 }

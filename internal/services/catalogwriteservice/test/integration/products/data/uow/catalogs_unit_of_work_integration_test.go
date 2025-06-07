@@ -127,7 +127,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 				err := integrationFixture.CatalogUnitOfWorks.Do(
 					cancelCtx,
 					func(catalogContext integration.CatalogContext) error {
-						_, err := catalogContext.Products().CreateProduct(ctx,
+						_, err := catalogContext.Products().CreateProduct(cancelCtx,
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
@@ -137,7 +137,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							})
 						Expect(err).To(BeNil()) // Successful product creation
 
-						_, err = catalogContext.Products().CreateProduct(ctx,
+						_, err = catalogContext.Products().CreateProduct(cancelCtx,
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
@@ -153,6 +153,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 					},
 				)
 				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("context canceled"))
 
 				// Validate that changes are rolled back in the database
 				products, err := integrationFixture.ProductRepository.GetAllProducts(
