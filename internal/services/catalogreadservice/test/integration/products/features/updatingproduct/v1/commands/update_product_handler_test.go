@@ -18,7 +18,7 @@ import (
 )
 
 func TestUpdateProduct(t *testing.T) {
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	Convey("Updating Product Feature", t, func() {
 		ctx := context.Background()
@@ -28,11 +28,11 @@ func TestUpdateProduct(t *testing.T) {
 		// scenario
 		Convey("Updating an existing product in the database", func() {
 			Convey("Given an existing product in the system", func() {
-				productId, err := uuid.FromString(integrationTestSharedFixture.Items[0].ProductID)
+				productID, err := uuid.FromString(integrationTestSharedFixture.Items[0].ProductID)
 				So(err, ShouldBeNil)
 
 				updateProduct, err := commands.NewUpdateProduct(
-					productId,
+					productID,
 					gofakeit.Name(),
 					gofakeit.AdjectiveDescriptive(),
 					gofakeit.Price(150, 6000),
@@ -56,7 +56,7 @@ func TestUpdateProduct(t *testing.T) {
 								// Fetch the updated product from the database.
 								updatedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 									ctx,
-									productId.String(),
+									productID.String(),
 								)
 
 								Convey(

@@ -8,5 +8,5 @@ import (
 // ProductDeletedV1 is a struct that contains the product deleted event.
 type ProductDeletedV1 struct {
 	*types.Message
-	ProductID string `json:"productId,omitempty"`
+	ProductID string `json:"productID,omitempty"`
 }

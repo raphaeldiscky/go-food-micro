@@ -2,12 +2,16 @@
 package integration
 
 import (
+	"context"
+	"fmt"
 	"testing"
 	"time"
 
 	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 
 	_ "github.com/lib/pq" // postgres driver
@@ -20,11 +24,134 @@ import (
 	dbcleaner "gopkg.in/khaiql/dbcleaner.v2"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/repositories"
+	apptest "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
+
+// CatalogContext is an interface for integration tests that provides access to a product repository.
+type CatalogContext interface {
+	Products() contracts.ProductRepository
+}
+
+type catalogContextImpl struct {
+	productRepo contracts.ProductRepository
+}
+
+func (c *catalogContextImpl) Products() contracts.ProductRepository {
+	return c.productRepo
+}
+
+// CatalogUnitOfWork is an interface for integration tests that executes a function (using a CatalogContext) within a unit of work.
+type CatalogUnitOfWork interface {
+	Do(ctx context.Context, fn func(CatalogContext) error) error
+}
+
+type catalogUnitOfWorkImpl struct {
+	productRepo contracts.ProductRepository
+	db          *gorm.DB
+	logger      logger.Logger
+}
+
+// handleTransactionRollback handles rolling back a transaction and logging any errors.
+func (u *catalogUnitOfWorkImpl) handleTransactionRollback(tx *gorm.DB) {
+	if err := tx.Rollback().Error; err != nil {
+		u.logger.Error("failed to rollback transaction", zap.Error(err))
+	}
+}
+
+// createTransactionRepository creates a new repository instance that uses the transaction.
+func (u *catalogUnitOfWorkImpl) createTransactionRepository(
+	tx *gorm.DB,
+) (contracts.ProductRepository, error) {
+	repo, ok := u.productRepo.(*repositories.PostgresProductRepository)
+	if !ok {
+		return nil, fmt.Errorf("failed to cast product repository to PostgresProductRepository")
+	}
+
+	if repo.Log == nil || repo.Tracer == nil {
+		return nil, fmt.Errorf("logger or tracer is nil")
+	}
+
+	return repositories.NewPostgresProductRepository(repo.Log, tx, repo.Tracer), nil
+}
+
+// executeWithContext executes the given function with context handling and panic recovery.
+func (u *catalogUnitOfWorkImpl) executeWithContext(
+	ctx context.Context,
+	tx *gorm.DB,
+	fn func(CatalogContext) error,
+	done chan<- error,
+) {
+	defer func() {
+		if r := recover(); r != nil {
+			u.handleTransactionRollback(tx)
+			done <- fmt.Errorf("panic recovered: %v", r)
+		}
+	}()
+
+	txRepo, err := u.createTransactionRepository(tx)
+	if err != nil {
+		done <- err
+
+		return
+	}
+
+	catalogCtx := &catalogContextImpl{
+		productRepo: txRepo,
+	}
+
+	if err := fn(catalogCtx); err != nil {
+		u.handleTransactionRollback(tx)
+
+		done <- err
+
+		return
+	}
+
+	// Check if context is done before committing
+	select {
+	case <-ctx.Done():
+		u.handleTransactionRollback(tx)
+		done <- fmt.Errorf("context canceled: %w", ctx.Err())
+
+		return
+	default:
+		// Context is not done, proceed with commit
+		if err := tx.Commit().Error; err != nil {
+			u.handleTransactionRollback(tx)
+			done <- fmt.Errorf("failed to commit transaction: %w", err)
+
+			return
+		}
+		done <- nil
+	}
+}
+
+// Do executes the given function within a transaction, providing a CatalogContext that uses the transaction.
+// It handles transaction management, context cancellation, and panic recovery.
+// Returns an error if the transaction fails, context is canceled, or the function panics.
+func (u *catalogUnitOfWorkImpl) Do(ctx context.Context, fn func(CatalogContext) error) error {
+	tx := u.db.Begin()
+	if tx.Error != nil {
+		return fmt.Errorf("failed to begin transaction: %w", tx.Error)
+	}
+
+	done := make(chan error, 1)
+	go u.executeWithContext(ctx, tx, fn, done)
+
+	select {
+	case err := <-done:
+		return err
+	case <-ctx.Done():
+		u.handleTransactionRollback(tx)
+
+		return fmt.Errorf("context canceled: %w", ctx.Err())
+	}
+}
 
 // CatalogWriteIntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
 type CatalogWriteIntegrationTestSharedFixture struct {
@@ -40,6 +167,9 @@ type CatalogWriteIntegrationTestSharedFixture struct {
 	BaseAddress          string
 	Items                []*datamodel.ProductDataModel
 	ProductServiceClient productsService.ProductsServiceClient
+	ProductRepository    contracts.ProductRepository
+	tracer               tracing.AppTracer
+	CatalogUnitOfWorks   CatalogUnitOfWork
 }
 
 // NewCatalogWriteIntegrationTestSharedFixture is a constructor for the CatalogWriteIntegrationTestSharedFixture.
@@ -47,7 +177,7 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 	t *testing.T,
 ) *CatalogWriteIntegrationTestSharedFixture {
 	t.Helper()
-	result := test.NewCatalogWriteTestApp().Run(t)
+	result := apptest.NewCatalogWriteTestApp().Run(t)
 
 	// https://github.com/michaelklishin/rabbit-hole
 	rmqc, err := rabbithole.NewClient(
@@ -60,6 +190,9 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 		)
 	}
 
+	// Create a no-op tracer for tests
+	noopTracer := tracing.NewAppTracer("test")
+
 	shared := &CatalogWriteIntegrationTestSharedFixture{
 		Log:                  result.Logger,
 		Container:            result.Container,
@@ -71,6 +204,21 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 		Gorm:                 result.Gorm,
 		BaseAddress:          result.EchoHTTPOptions.BasePathAddress(),
 		ProductServiceClient: result.ProductServiceClient,
+		tracer:               noopTracer,
+		ProductRepository: repositories.NewPostgresProductRepository(
+			result.Logger,
+			result.Gorm,
+			noopTracer,
+		),
+		CatalogUnitOfWorks: &catalogUnitOfWorkImpl{
+			productRepo: repositories.NewPostgresProductRepository(
+				result.Logger,
+				result.Gorm,
+				noopTracer,
+			),
+			db:     result.Gorm,
+			logger: result.Logger,
+		},
 	}
 
 	return shared
@@ -164,4 +312,29 @@ func seedDataManually(gormDB *gorm.DB) ([]*datamodel.ProductDataModel, error) {
 	}
 
 	return products, nil
+}
+
+// NewCatalogUnitOfWork creates a new instance of CatalogUnitOfWork.
+func NewCatalogUnitOfWork(result *apptest.CatalogWriteTestAppResult) CatalogUnitOfWork {
+	// Create a no-op tracer for tests
+	noopTracer := tracing.NewAppTracer("test")
+
+	return &catalogUnitOfWorkImpl{
+		productRepo: repositories.NewPostgresProductRepository(
+			result.Logger,
+			result.Gorm,
+			noopTracer,
+		),
+		db:     result.Gorm,
+		logger: result.Logger,
+	}
+}
+
+// WaitForGrpcServerReady waits for the gRPC server to be ready.
+func (i *CatalogWriteIntegrationTestSharedFixture) WaitForGrpcServerReady() error {
+	if client, ok := i.ProductServiceClient.(interface{ WaitForAvailableConnection() error }); ok {
+		return client.WaitForAvailableConnection()
+	}
+
+	return nil
 }

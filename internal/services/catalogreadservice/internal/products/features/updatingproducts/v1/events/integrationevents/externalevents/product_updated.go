@@ -10,7 +10,7 @@ import (
 // ProductUpdatedV1 is a struct that contains the product updated event.
 type ProductUpdatedV1 struct {
 	*types.Message
-	ProductID   string    `json:"productId,omitempty"`
+	ProductID   string    `json:"productID,omitempty"`
 	Name        string    `json:"name,omitempty"`
 	Description string    `json:"description,omitempty"`
 	Price       float64   `json:"price,omitempty"`

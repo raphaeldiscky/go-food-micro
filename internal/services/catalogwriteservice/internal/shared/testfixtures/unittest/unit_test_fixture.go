@@ -3,6 +3,7 @@ package unittest
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -27,7 +28,9 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/configurations/mappings"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/repositories"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 )
 
@@ -36,13 +39,14 @@ type CatalogWriteUnitTestSharedFixture struct {
 	Cfg *config.AppOptions
 	Log logger.Logger
 	suite.Suite
-	Products         []*datamodel.ProductDataModel
-	Bus              *mocks.Bus
-	Tracer           trace.Tracer
-	CatalogDBContext *dbcontext.CatalogsGormDBContext
-	Ctx              context.Context
-	dbFilePath       string
-	dbFileName       string
+	Products          []*datamodel.ProductDataModel
+	Bus               *mocks.Bus
+	Tracer            trace.Tracer
+	CatalogDBContext  *dbcontext.CatalogsGormDBContext
+	ProductRepository contracts.ProductRepository
+	Ctx               context.Context
+	dbFilePath        string
+	dbFileName        string
 }
 
 // NewCatalogWriteUnitTestSharedFixture is a constructor for the CatalogWriteUnitTestSharedFixture.
@@ -102,8 +106,8 @@ func (c *CatalogWriteUnitTestSharedFixture) SetupTest() {
 	c.Ctx = ctx
 
 	c.setupBus()
-
 	c.setupDB()
+	c.setupRepository()
 
 	err := mappings.ConfigureProductsMappings()
 	c.Require().NoError(err)
@@ -135,17 +139,24 @@ func (c *CatalogWriteUnitTestSharedFixture) setupDB() {
 
 // createSQLLiteDBContext is a method that creates the SQLLite database context.
 func (c *CatalogWriteUnitTestSharedFixture) createSQLLiteDBContext() *dbcontext.CatalogsGormDBContext {
+	// Use a unique database file for each test to avoid conflicts
+	testDBPath := filepath.Join(
+		filepath.Dir(c.dbFilePath),
+		fmt.Sprintf("test_%s.db", uuid.NewV4().String()),
+	)
+
 	// https://gorm.io/docs/connecting_to_the_database.html#SQLite
 	// https://github.com/glebarez/sqlite
 	// https://www.connectionstrings.com/sqlite/
 	gormSQLLiteDB, err := gorm.Open(
-		sqlite.Open(c.dbFilePath),
+		sqlite.Open(testDBPath),
 		&gorm.Config{
 			Logger: gromlog.NewGormCustomLogger(defaultLogger.GetLogger()),
 		})
 	c.Require().NoError(err)
 
 	dbContext := dbcontext.NewCatalogsDBContext(gormSQLLiteDB)
+	c.dbFilePath = testDBPath // Update the dbFilePath to the test-specific file
 
 	return dbContext
 }
@@ -221,4 +232,13 @@ func seedDataManually(
 	}
 
 	return products, nil
+}
+
+// setupRepository is a method that sets up the product repository.
+func (c *CatalogWriteUnitTestSharedFixture) setupRepository() {
+	c.ProductRepository = repositories.NewPostgresProductRepository(
+		c.Log,
+		c.CatalogDBContext.DB(),
+		c.Tracer,
+	)
 }

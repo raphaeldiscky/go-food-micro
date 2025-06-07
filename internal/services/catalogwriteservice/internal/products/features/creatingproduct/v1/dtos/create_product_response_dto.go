@@ -10,7 +10,7 @@ import (
 
 // CreateProductResponseDto is a struct that contains the create product response dto.
 type CreateProductResponseDto struct {
-	ProductID uuid.UUID `json:"productId"`
+	ProductID uuid.UUID `json:"productID"`
 }
 
 // String is a method that returns the string representation of the create product response dto.

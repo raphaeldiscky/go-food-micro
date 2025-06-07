@@ -6,12 +6,10 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/cqrs"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 
-	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/dtos/v1/fxparams"
 	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1/events/integrationevents"
 )
@@ -42,11 +40,7 @@ func (c *deleteProductHandler) Handle(
 	ctx context.Context,
 	command *DeleteProduct,
 ) (*mediatr.Unit, error) {
-	err := gormdbcontext.DeleteDataModelByID[*datamodels.ProductDataModel](
-		ctx,
-		c.CatalogsDBContext,
-		command.ProductID,
-	)
+	err := c.ProductRepository.DeleteProductByID(ctx, command.ProductID)
 	if err != nil {
 		return nil, err
 	}

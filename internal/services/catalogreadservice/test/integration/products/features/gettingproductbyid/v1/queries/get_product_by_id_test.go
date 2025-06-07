@@ -18,7 +18,7 @@ import (
 )
 
 func TestGetProductById(t *testing.T) {
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 	ctx := context.Background()
 
 	Convey("Getting Product By ID Feature", t, func() {

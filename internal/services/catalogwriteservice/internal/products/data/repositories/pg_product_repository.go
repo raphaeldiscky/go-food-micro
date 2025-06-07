@@ -7,6 +7,7 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/data"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing/attribute"
@@ -22,14 +23,14 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 )
 
-// postgresProductRepository is a struct that contains the postgres product repository.
-type postgresProductRepository struct {
-	log                   logger.Logger
-	gormGenericRepository data.GenericRepository[*models.Product]
-	tracer                tracing.AppTracer
+// PostgresProductRepository is a struct that contains the postgres product repository.
+type PostgresProductRepository struct {
+	Log                   logger.Logger
+	GormGenericRepository data.GenericRepository[*models.Product]
+	Tracer                tracing.AppTracer
 }
 
-// NewPostgresProductRepository is a constructor for the postgresProductRepository.
+// NewPostgresProductRepository is a constructor for the PostgresProductRepository.
 func NewPostgresProductRepository(
 	log logger.Logger,
 	db *gorm.DB,
@@ -37,22 +38,22 @@ func NewPostgresProductRepository(
 ) data2.ProductRepository {
 	gormRepository := repository.NewGenericGormRepository[*models.Product](db)
 
-	return &postgresProductRepository{
-		log:                   log,
-		gormGenericRepository: gormRepository,
-		tracer:                tracer,
+	return &PostgresProductRepository{
+		Log:                   log,
+		GormGenericRepository: gormRepository,
+		Tracer:                tracer,
 	}
 }
 
 // GetAllProducts is a method that gets all products.
-func (p *postgresProductRepository) GetAllProducts(
+func (p *PostgresProductRepository) GetAllProducts(
 	ctx context.Context,
 	listQuery *utils.ListQuery,
 ) (*utils.ListResult[*models.Product], error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.GetAllProducts")
+	ctx, span := p.Tracer.Start(ctx, "postgresProductRepository.GetAllProducts")
 	defer span.End()
 
-	result, err := p.gormGenericRepository.GetAll(ctx, listQuery)
+	result, err := p.GormGenericRepository.GetAll(ctx, listQuery)
 	err = utils2.TraceStatusFromContext(
 		ctx,
 		errors.WrapIf(
@@ -64,7 +65,7 @@ func (p *postgresProductRepository) GetAllProducts(
 		return nil, err
 	}
 
-	p.log.Infow(
+	p.Log.Infow(
 		"products loaded",
 		logger.Fields{"ProductsResult": result},
 	)
@@ -75,16 +76,16 @@ func (p *postgresProductRepository) GetAllProducts(
 }
 
 // SearchProducts is a method that searches for products.
-func (p *postgresProductRepository) SearchProducts(
+func (p *PostgresProductRepository) SearchProducts(
 	ctx context.Context,
 	searchText string,
 	listQuery *utils.ListQuery,
 ) (*utils.ListResult[*models.Product], error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.SearchProducts")
+	ctx, span := p.Tracer.Start(ctx, "postgresProductRepository.SearchProducts")
 	span.SetAttributes(attribute2.String("SearchText", searchText))
 	defer span.End()
 
-	result, err := p.gormGenericRepository.Search(ctx, searchText, listQuery)
+	result, err := p.GormGenericRepository.Search(ctx, searchText, listQuery)
 	err = utils2.TraceStatusFromContext(
 		ctx,
 		errors.WrapIf(
@@ -96,7 +97,7 @@ func (p *postgresProductRepository) SearchProducts(
 		return nil, err
 	}
 
-	p.log.Infow(
+	p.Log.Infow(
 		fmt.Sprintf(
 			"products loaded for search term '%s'",
 			searchText,
@@ -109,15 +110,15 @@ func (p *postgresProductRepository) SearchProducts(
 }
 
 // GetProductByID is a method that gets a product by id.
-func (p *postgresProductRepository) GetProductByID(
+func (p *PostgresProductRepository) GetProductByID(
 	ctx context.Context,
 	uuid goUuid.UUID,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.GetProductByID")
+	ctx, span := p.Tracer.Start(ctx, "postgresProductRepository.GetProductByID")
 	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()
 
-	product, err := p.gormGenericRepository.GetByID(ctx, uuid)
+	product, err := p.GormGenericRepository.GetByID(ctx, uuid)
 	err = utils2.TraceStatusFromSpan(
 		span,
 		errors.WrapIf(
@@ -133,7 +134,7 @@ func (p *postgresProductRepository) GetProductByID(
 	}
 
 	span.SetAttributes(attribute.Object("Product", product))
-	p.log.Infow(
+	p.Log.Infow(
 		fmt.Sprintf(
 			"product with id %s laoded",
 			uuid.String(),
@@ -144,14 +145,31 @@ func (p *postgresProductRepository) GetProductByID(
 	return product, nil
 }
 
-func (p *postgresProductRepository) CreateProduct(
+// CreateProduct creates a new product in the database.
+// It first checks if a product with the same ID already exists.
+// If the product exists, it returns a Conflict error.
+// If the product doesn't exist, it creates a new product and returns it.
+func (p *PostgresProductRepository) CreateProduct(
 	ctx context.Context,
 	product *models.Product,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.CreateProduct")
+	ctx, span := p.Tracer.Start(ctx, "postgresProductRepository.CreateProduct")
 	defer span.End()
 
-	err := p.gormGenericRepository.Add(ctx, product)
+	// Check if product already exists
+	exists, err := p.GormGenericRepository.GetByID(ctx, product.ID)
+	if err != nil {
+		// If it's a not found error, we can proceed with creation
+		if !customerrors.IsNotFoundError(err) {
+			return nil, err
+		}
+	} else if exists != nil {
+		return nil, customerrors.NewConflictError(
+			fmt.Sprintf("product with id '%s' already exists", product.ID),
+		)
+	}
+
+	err = p.GormGenericRepository.Add(ctx, product)
 	err = utils2.TraceStatusFromSpan(
 		span,
 		errors.WrapIf(
@@ -164,7 +182,7 @@ func (p *postgresProductRepository) CreateProduct(
 	}
 
 	span.SetAttributes(attribute.Object("Product", product))
-	p.log.Infow(
+	p.Log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' created",
 			product.ID,
@@ -175,14 +193,17 @@ func (p *postgresProductRepository) CreateProduct(
 	return product, nil
 }
 
-func (p *postgresProductRepository) UpdateProduct(
+// UpdateProduct updates an existing product in the database.
+// It updates all fields of the product and returns the updated product.
+// If the product doesn't exist, it returns an error.
+func (p *PostgresProductRepository) UpdateProduct(
 	ctx context.Context,
 	updateProduct *models.Product,
 ) (*models.Product, error) {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.UpdateProduct")
+	ctx, span := p.Tracer.Start(ctx, "postgresProductRepository.UpdateProduct")
 	defer span.End()
 
-	err := p.gormGenericRepository.Update(ctx, updateProduct)
+	err := p.GormGenericRepository.Update(ctx, updateProduct)
 	err = utils2.TraceStatusFromSpan(
 		span,
 		errors.WrapIf(
@@ -198,7 +219,7 @@ func (p *postgresProductRepository) UpdateProduct(
 	}
 
 	span.SetAttributes(attribute.Object("Product", updateProduct))
-	p.log.Infow(
+	p.Log.Infow(
 		fmt.Sprintf(
 			"product with id '%s' updated",
 			updateProduct.ID,
@@ -212,26 +233,38 @@ func (p *postgresProductRepository) UpdateProduct(
 	return updateProduct, nil
 }
 
-func (p *postgresProductRepository) DeleteProductByID(
+// DeleteProductByID deletes a product from the database by its ID.
+// It first checks if the product exists.
+// If the product doesn't exist, it returns a NotFound error.
+// If the product exists, it deletes it and returns nil.
+func (p *PostgresProductRepository) DeleteProductByID(
 	ctx context.Context,
 	uuid goUuid.UUID,
 ) error {
-	ctx, span := p.tracer.Start(ctx, "postgresProductRepository.UpdateProduct")
+	ctx, span := p.Tracer.Start(ctx, "postgresProductRepository.DeleteProductByID")
 	span.SetAttributes(attribute2.String("ID", uuid.String()))
 	defer span.End()
 
-	err := p.gormGenericRepository.Delete(ctx, uuid)
+	// Check if product exists before deleting
+	exists, err := p.GormGenericRepository.GetByID(ctx, uuid)
+	if err != nil || exists == nil {
+		return customerrors.NewNotFoundError(
+			fmt.Sprintf("product with id `%s` not found in the database", uuid),
+		)
+	}
+
+	err = p.GormGenericRepository.Delete(ctx, uuid)
 	err = utils2.TraceStatusFromSpan(span, errors.WrapIf(err, fmt.Sprintf(
-		"error in the deleting product with id %s into the database.",
+		"error in deleting product with id `%s` from the database",
 		uuid,
 	)))
 	if err != nil {
 		return err
 	}
 
-	p.log.Infow(
+	p.Log.Infow(
 		fmt.Sprintf(
-			"product with id %s deleted",
+			"product with id `%s` deleted",
 			uuid,
 		),
 		logger.Fields{"Product": uuid},

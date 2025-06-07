@@ -162,8 +162,8 @@ func (i *CatalogReadIntegrationTestSharedFixture) TearDownTest() {
 		i.Log.Error(errors.WrapIf(err, "error stopping bus"))
 	}
 
-	// Wait for connections to close
-	time.Sleep(5 * time.Second)
+	// Wait for connections to close - match the bus startup time
+	time.Sleep(60 * time.Second)
 
 	// cleanup test containers with their hooks
 	if err := i.cleanupRabbitmqData(); err != nil {
@@ -218,13 +218,18 @@ func seedData(
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to find products after seeding")
 	}
+
+	if err := cursor.All(ctx, &allProducts); err != nil {
+		if err := cursor.Close(ctx); err != nil {
+			return nil, errors.WrapIf(err, "failed to close cursor")
+		}
+
+		return nil, errors.WrapIf(err, "failed to decode products after seeding")
+	}
+
 	err = cursor.Close(ctx)
 	if err != nil {
 		return nil, errors.WrapIf(err, "failed to close cursor")
-	}
-
-	if err := cursor.All(ctx, &allProducts); err != nil {
-		return nil, errors.WrapIf(err, "failed to decode products after seeding")
 	}
 
 	if len(allProducts) == 0 {

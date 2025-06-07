@@ -52,8 +52,8 @@ type OrderIntegrationTestSharedFixture struct {
 	OrdersServiceClient  ordersService.OrdersServiceClient
 }
 
-// NewIntegrationTestSharedFixture creates a new integration test fixture.
-func NewIntegrationTestSharedFixture(
+// NewOrderIntegrationTestSharedFixture creates a new integration test fixture.
+func NewOrderIntegrationTestSharedFixture(
 	t *testing.T,
 ) *OrderIntegrationTestSharedFixture {
 	t.Helper()

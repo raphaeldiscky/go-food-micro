@@ -21,7 +21,7 @@ import (
 )
 
 func TestProductPostgresRepository(t *testing.T) {
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(t)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	// scenario
 	Convey("MongoDB Product Repository", t, func() {

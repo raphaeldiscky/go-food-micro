@@ -17,16 +17,15 @@ import (
 	gofakeit "github.com/brianvoe/gofakeit/v6"
 	uuid "github.com/satori/go.uuid"
 
-	data2 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
-var integrationFixture *integration.IntegrationTestSharedFixture
+var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestUnitOfWork(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
+	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
 	RunSpecs(t, "CatalogsUnitOfWork Integration Tests")
 }
 
@@ -56,7 +55,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 			It("Should roll back the changes and not affect the database", func() {
 				err = integrationFixture.CatalogUnitOfWorks.Do(
 					ctx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),
@@ -91,7 +90,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 			It("Should roll back the changes and not affect the database", func() {
 				err = integrationFixture.CatalogUnitOfWorks.Do(
 					ctx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),
@@ -127,8 +126,8 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 
 				err := integrationFixture.CatalogUnitOfWorks.Do(
 					cancelCtx,
-					func(catalogContext data2.CatalogContext) error {
-						_, err := catalogContext.Products().CreateProduct(ctx,
+					func(catalogContext integration.CatalogContext) error {
+						_, err := catalogContext.Products().CreateProduct(cancelCtx,
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
@@ -138,7 +137,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 							})
 						Expect(err).To(BeNil()) // Successful product creation
 
-						_, err = catalogContext.Products().CreateProduct(ctx,
+						_, err = catalogContext.Products().CreateProduct(cancelCtx,
 							&models.Product{
 								Name:        gofakeit.Name(),
 								Description: gofakeit.AdjectiveDescriptive(),
@@ -154,6 +153,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 					},
 				)
 				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(ContainSubstring("context canceled"))
 
 				// Validate that changes are rolled back in the database
 				products, err := integrationFixture.ProductRepository.GetAllProducts(
@@ -173,7 +173,7 @@ var _ = Describe("CatalogsUnitOfWork Feature", func() {
 			It("Should commit the changes to the database", func() {
 				err := integrationFixture.CatalogUnitOfWorks.Do(
 					ctx,
-					func(catalogContext data2.CatalogContext) error {
+					func(catalogContext integration.CatalogContext) error {
 						_, err := catalogContext.Products().CreateProduct(ctx,
 							&models.Product{
 								Name:        gofakeit.Name(),

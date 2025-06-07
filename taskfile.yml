@@ -21,7 +21,7 @@ tasks:
       - chmod +x ./scripts/install-tools.sh
       - ./scripts/install-tools.sh
 
-  install_deps:
+  install_dependencies:
     desc: Install project dependencies
     vars:
       SERVICE: '{{.SERVICE | default ""}}'

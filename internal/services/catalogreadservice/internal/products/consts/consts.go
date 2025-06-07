@@ -3,6 +3,6 @@ package consts
 
 // ProductIDIndex is the index for the product id.
 const (
-	ProductIDIndex = "productId"
-	ProductID      = "productIdIndex"
+	ProductIDIndex = "productID"
+	ProductID      = "productIDIndex"
 )

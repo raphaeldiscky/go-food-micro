@@ -178,7 +178,7 @@ func (p *mongoProductRepository) GetProductByProductID(
 
 	product, err := p.mongoGenericRepository.FirstOrDefault(
 		ctx,
-		map[string]interface{}{"productId": uuid},
+		map[string]interface{}{"productID": uuid},
 	)
 	if err != nil {
 		return nil, utils2.TraceStatusFromSpan(
@@ -186,7 +186,7 @@ func (p *mongoProductRepository) GetProductByProductID(
 			errors.WrapIf(
 				err,
 				fmt.Sprintf(
-					"can't find the product with productId %s into the database.",
+					"can't find the product with productID %s into the database.",
 					uuid,
 				),
 			),
@@ -197,7 +197,7 @@ func (p *mongoProductRepository) GetProductByProductID(
 
 	p.log.Infow(
 		fmt.Sprintf(
-			"product with productId %s laoded",
+			"product with productID %s laoded",
 			productID,
 		),
 		logger.Fields{"Product": product, "ProductID": uuid},

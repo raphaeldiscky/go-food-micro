@@ -4,6 +4,7 @@
 package v1
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -47,6 +48,7 @@ func (c *createProductHandlerUnitTests) SetupTest() {
 			Tracer:            c.Tracer,
 			RabbitmqProducer:  c.Bus,
 			Log:               c.Log,
+			ProductRepository: c.ProductRepository,
 		},
 	)
 }
@@ -110,7 +112,7 @@ func (c *createProductHandlerUnitTests) TestHandleShouldReturnErrorForDuplicateI
 
 	c.Bus.AssertNumberOfCalls(c.T(), "PublishMessage", 1)
 	c.True(customErrors.IsConflictError(err))
-	c.ErrorContains(err, "product already exists")
+	c.ErrorContains(err, fmt.Sprintf("product with id '%s' already exists", id))
 	c.Nil(dto)
 }
 

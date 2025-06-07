@@ -17,9 +17,7 @@ import (
 )
 
 func TestDeleteProduct(t *testing.T) {
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(
-		t,
-	)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	Convey("Deleting Product Feature", t, func() {
 		ctx := context.Background()
@@ -29,12 +27,12 @@ func TestDeleteProduct(t *testing.T) {
 		// scenario
 		Convey("Deleting an existing product from the database", func() {
 			Convey("Given an existing product in the mongo database", func() {
-				productId, err := uuid.FromString(
+				productID, err := uuid.FromString(
 					integrationTestSharedFixture.Items[0].ProductID,
 				)
 				So(err, ShouldBeNil)
 
-				command, err := commands.NewDeleteProduct(productId)
+				command, err := commands.NewDeleteProduct(productID)
 				So(err, ShouldBeNil)
 
 				Convey("When we execute the DeleteProduct command", func() {
@@ -54,7 +52,7 @@ func TestDeleteProduct(t *testing.T) {
 								func() {
 									deletedProduct, _ := integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 										ctx,
-										productId.String(),
+										productID.String(),
 									)
 									So(deletedProduct, ShouldBeNil)
 								},

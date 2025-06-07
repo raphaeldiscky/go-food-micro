@@ -10,7 +10,7 @@ import (
 // ProductDeletedV1 is a struct that contains the product deleted v1.
 type ProductDeletedV1 struct {
 	*types.Message
-	ProductID string `json:"productId,omitempty"`
+	ProductID string `json:"productID,omitempty"`
 }
 
 // NewProductDeletedV1 is a constructor for the ProductDeletedV1.

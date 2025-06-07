@@ -87,7 +87,7 @@ jobs:
           repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Install Dependencies
-        run: task install_deps
+        run: task install_dependencies
 
       - name: Install Tools
         run: |
@@ -172,7 +172,7 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Format and Lint
+      - name: Format and Lint (${{ matrix.service }})
         run: |
           export PATH="$(go env GOPATH)/bin:$PATH"
           task format SERVICE=${{ matrix.service }}
@@ -234,18 +234,18 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests (${{ matrix.service }})
         run: task unit_test SERVICE=${{ matrix.service }}
 
   integration-test:
     name: Integration Test (${{ matrix.service }})
     needs: setup
-    if: false # skip this job
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        service: [catalogwriteservice, catalogreadservice, orderservice]
+        service: [catalogwriteservice]
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -295,18 +295,18 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Run Integration Tests
+      - name: Run Integration Tests (${{ matrix.service }})
         run: task integration_test SERVICE=${{ matrix.service }}
 
   e2e-test:
     name: E2E Test (${{ matrix.service }})
     needs: setup
-    if: false # skip this job
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        service: [catalogwriteservice, catalogreadservice, orderservice]
+        service: [catalogwriteservice]
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -356,7 +356,7 @@ jobs:
           version: 3.x
           repo-token: ${{ secrets.REPO_TOKEN }}
 
-      - name: Run E2E Tests
+      - name: Run E2E Tests (${{ matrix.service }})
         run: task e2e_test SERVICE=${{ matrix.service }}
 
   build:

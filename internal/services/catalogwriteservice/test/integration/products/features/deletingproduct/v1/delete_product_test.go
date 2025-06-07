@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/postgresgorm/gormdbcontext"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 
@@ -19,16 +20,18 @@ import (
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
 
+	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
 	v1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1"
 	integrationEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/features/deletingproduct/v1/events/integrationevents"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
-var integrationFixture *integration.IntegrationTestSharedFixture
+var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestDeleteProduct(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
+	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
 	RunSpecs(t, "Delete Product Integration Tests")
 }
 
@@ -89,7 +92,7 @@ var _ = Describe("Delete Product Feature", func() {
 					integrationFixture.Bus,
 					nil,
 				)
-				command, err = v1.NewDeleteProduct(id)
+				command, err = v1.NewDeleteProductWithValidation(id)
 				Expect(err).ShouldNot(HaveOccurred())
 			})
 
@@ -108,8 +111,9 @@ var _ = Describe("Delete Product Feature", func() {
 					})
 
 					It("Should delete the product from the database", func() {
-						deletedProduct, err := integrationFixture.CatalogsDBContext.FindProductByID(
+						deletedProduct, err := gormdbcontext.FindModelByID[*datamodel.ProductDataModel, *models.Product](
 							ctx,
+							integrationFixture.CatalogsDBContext,
 							id,
 						)
 						Expect(err).To(HaveOccurred())
@@ -128,7 +132,7 @@ var _ = Describe("Delete Product Feature", func() {
 		Context("Given product does not exists in the system", func() {
 			BeforeEach(func() {
 				notExistsId = uuid.NewV4()
-				command, err = v1.NewDeleteProduct(notExistsId)
+				command, err = v1.NewDeleteProductWithValidation(notExistsId)
 				Expect(err).ShouldNot(HaveOccurred())
 			})
 
@@ -174,7 +178,7 @@ var _ = Describe("Delete Product Feature", func() {
 						integrationFixture.Bus,
 						nil,
 					)
-					command, err = v1.NewDeleteProduct(id)
+					command, err = v1.NewDeleteProductWithValidation(id)
 					Expect(err).ShouldNot(HaveOccurred())
 				})
 

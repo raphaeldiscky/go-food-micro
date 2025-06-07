@@ -26,9 +26,7 @@ import (
 
 func TestProductUpdatedConsumer(t *testing.T) {
 	// Setup and initialization code here.
-	integrationTestSharedFixture := integration.NewIntegrationTestSharedFixture(
-		t,
-	)
+	integrationTestSharedFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	// Start the bus and wait for it to be fully ready
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -62,7 +60,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 		integrationTestSharedFixture.Log.Infow(
 			"Test data setup complete",
 			logger.Fields{
-				"productId": testProduct.ProductID,
+				"productID": testProduct.ProductID,
 				"name":      testProduct.Name,
 				"price":     testProduct.Price,
 			},
@@ -84,7 +82,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 			integrationTestSharedFixture.Log.Infow(
 				"Created test product update event",
 				logger.Fields{
-					"productId":   fakeUpdateProduct.ProductID,
+					"productID":   fakeUpdateProduct.ProductID,
 					"name":        fakeUpdateProduct.Name,
 					"price":       fakeUpdateProduct.Price,
 					"description": fakeUpdateProduct.Description,
@@ -114,7 +112,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 					integrationTestSharedFixture.Log.Infow(
 						"Received message",
 						logger.Fields{
-							"productId":   msg.ProductID,
+							"productID":   msg.ProductID,
 							"name":        msg.Name,
 							"price":       msg.Price,
 							"description": msg.Description,

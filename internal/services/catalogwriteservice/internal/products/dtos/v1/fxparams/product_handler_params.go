@@ -7,6 +7,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"go.uber.org/fx"
 
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 )
 
@@ -18,4 +19,5 @@ type ProductHandlerParams struct {
 	CatalogsDBContext *dbcontext.CatalogsGormDBContext
 	RabbitmqProducer  producer.Producer
 	Tracer            tracing.AppTracer
+	ProductRepository contracts.ProductRepository
 }

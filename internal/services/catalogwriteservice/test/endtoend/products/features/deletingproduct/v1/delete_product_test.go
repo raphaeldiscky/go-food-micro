@@ -8,78 +8,84 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/google/uuid"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	httpexpect "github.com/gavv/httpexpect/v2"
-	uuid "github.com/satori/go.uuid"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
-var integrationFixture *integration.IntegrationTestSharedFixture
+var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestDeleteProductEndpoint(t *testing.T) {
 	RegisterFailHandler(Fail)
-	integrationFixture = integration.NewIntegrationTestSharedFixture(t)
+	integrationFixture = integration.NewCatalogWriteIntegrationTestSharedFixture(t)
 	RunSpecs(t, "DeleteProduct Endpoint EndToEnd Tests")
 }
 
-var _ = Describe("Delete Product Feature", func() {
-	var (
-		ctx context.Context
-		id  uuid.UUID
-	)
+var _ = Describe("DeleteProduct Endpoint", func() {
+	var ctx context.Context
 
-	_ = BeforeEach(func() {
+	BeforeEach(func() {
 		ctx = context.Background()
 
 		By("Seeding the required data")
 		integrationFixture.SetupTest()
-
-		id = integrationFixture.Items[0].ID
 	})
 
-	_ = AfterEach(func() {
+	AfterEach(func() {
 		By("Cleanup test data")
 		integrationFixture.TearDownTest()
 	})
 
-	// "Scenario" step for testing the delete product API with valid input
-	Describe("Delete product with valid input returns NoContent status", func() {
-		// "When" step
-		When("A valid request is made to delete a product", func() {
-			// "Then" step
-			It("Should return a NoContent status", func() {
-				// Create an HTTPExpect instance and make the request
+	Describe("Delete product returns appropriate status codes", func() {
+		When("An invalid request is made with malformed UUID", func() {
+			It("Should return a BadRequest status", func() {
 				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
-				expect.DELETE("products/{id}").
+				expect.DELETE("products/invalid-id").
 					WithContext(ctx).
-					WithPath("id", id.String()).
 					Expect().
-					Status(http.StatusNoContent)
+					Status(http.StatusBadRequest)
 			})
 		})
-	})
 
-	// "Scenario" step for testing the delete product API with invalid ID
-	Describe("Delete product with with invalid ID returns NotFound status", func() {
-		BeforeEach(func() {
-			// Generate an invalid UUID
-			id = uuid.NewV4()
-		})
-
-		// "When" step
-		When("An invalid request is made with an invalid ID", func() {
-			// "Then" step
+		When("An invalid request is made with non-existent but valid UUID", func() {
 			It("Should return a NotFound status", func() {
-				// Create an HTTPExpect instance and make the request
+				nonExistentID := uuid.New().String()
 				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
-				expect.DELETE("products/{id}").
+				expect.DELETE("products/" + nonExistentID).
 					WithContext(ctx).
-					WithPath("id", id.String()).
 					Expect().
 					Status(http.StatusNotFound)
+			})
+		})
+
+		When("A valid request is made to delete an existing product", func() {
+			It("Should return a NoContent status", func() {
+				// First create a product to delete
+				expect := httpexpect.New(GinkgoT(), integrationFixture.BaseAddress)
+				createResponse := expect.POST("products").
+					WithContext(ctx).
+					WithJSON(map[string]interface{}{
+						"name":        "Test Product",
+						"description": "Test Description",
+						"price":       100.0,
+					}).
+					Expect().
+					Status(http.StatusCreated).
+					JSON().
+					Object()
+
+				productID := createResponse.Value("productID").String().Raw()
+
+				// Then delete it
+				expect.DELETE("products/" + productID).
+					WithContext(ctx).
+					Expect().
+					Status(http.StatusNoContent)
 			})
 		})
 	})

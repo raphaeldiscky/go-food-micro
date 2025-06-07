@@ -70,7 +70,7 @@ func (c *ProductCreatedConsumer) Handle(
 	}
 
 	span.SetAttributes(
-		attribute.String("productId", product.ProductID),
+		attribute.String("productID", product.ProductID),
 		attribute.String("name", product.Name),
 		attribute.Float64("price", product.Price),
 	)
@@ -101,7 +101,7 @@ func (c *ProductCreatedConsumer) Handle(
 		err = errors.WithMessage(
 			err,
 			fmt.Sprintf(
-				"error in sending CreateProduct with id: {%s}",
+				"error in sending CreateProduct with ID: {%s}",
 				command.ProductID,
 			),
 		)
@@ -109,7 +109,7 @@ func (c *ProductCreatedConsumer) Handle(
 			"Failed to send CreateProduct command",
 			logger.Fields{
 				"error":     err,
-				"productId": command.ProductID,
+				"productID": command.ProductID,
 			},
 		)
 		span.RecordError(err)
@@ -120,7 +120,7 @@ func (c *ProductCreatedConsumer) Handle(
 	c.logger.Infow(
 		"Product consumer handled successfully",
 		logger.Fields{
-			"productId": command.ProductID,
+			"productID": command.ProductID,
 			"traceId":   span.SpanContext().TraceID().String(),
 		},
 	)
