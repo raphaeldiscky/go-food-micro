@@ -87,7 +87,7 @@ jobs:
           repo-token: ${{ secrets.REPO_TOKEN }}
 
       - name: Install Dependencies
-        run: task install_deps
+        run: task install_dependencies
 
       - name: Install Tools
         run: |
