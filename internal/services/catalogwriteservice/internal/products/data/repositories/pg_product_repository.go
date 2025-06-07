@@ -158,7 +158,12 @@ func (p *PostgresProductRepository) CreateProduct(
 
 	// Check if product already exists
 	exists, err := p.GormGenericRepository.GetByID(ctx, product.ID)
-	if err == nil && exists != nil {
+	if err != nil {
+		// If it's a not found error, we can proceed with creation
+		if !customerrors.IsNotFoundError(err) {
+			return nil, err
+		}
+	} else if exists != nil {
 		return nil, customerrors.NewConflictError(
 			fmt.Sprintf("product with id '%s' already exists", product.ID),
 		)

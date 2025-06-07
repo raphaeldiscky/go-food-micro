@@ -162,8 +162,8 @@ func (i *CatalogReadIntegrationTestSharedFixture) TearDownTest() {
 		i.Log.Error(errors.WrapIf(err, "error stopping bus"))
 	}
 
-	// Wait for connections to close
-	time.Sleep(5 * time.Second)
+	// Wait for connections to close - match the bus startup time
+	time.Sleep(60 * time.Second)
 
 	// cleanup test containers with their hooks
 	if err := i.cleanupRabbitmqData(); err != nil {

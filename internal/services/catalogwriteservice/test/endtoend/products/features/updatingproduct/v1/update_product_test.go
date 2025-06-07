@@ -19,7 +19,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/testfixtures/integration"
 )
 
-var integrationFixture *integration.IntegrationTestSharedFixture
+var integrationFixture *integration.CatalogWriteIntegrationTestSharedFixture
 
 func TestUpdateProductEndpoint(t *testing.T) {
 	RegisterFailHandler(Fail)

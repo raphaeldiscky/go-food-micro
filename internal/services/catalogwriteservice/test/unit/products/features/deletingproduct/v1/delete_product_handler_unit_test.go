@@ -46,6 +46,7 @@ func (c *deleteProductHandlerUnitTests) SetupTest() {
 			CatalogsDBContext: c.CatalogDBContext,
 			RabbitmqProducer:  c.Bus,
 			Tracer:            c.Tracer,
+			ProductRepository: c.ProductRepository,
 		},
 	)
 }

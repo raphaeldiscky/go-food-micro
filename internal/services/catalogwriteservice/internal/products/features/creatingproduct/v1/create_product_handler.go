@@ -61,7 +61,7 @@ func (c *createProductHandler) Handle(
 
 	productDto, err := mapper.Map[*dtosv1.ProductDto](result)
 	if err != nil {
-		return nil, customErrors.NewApplicationErrorWrap(
+		return nil, customErrors.NewInternalServerErrorWrap(
 			err,
 			"error in the mapping ProductDto",
 		)
