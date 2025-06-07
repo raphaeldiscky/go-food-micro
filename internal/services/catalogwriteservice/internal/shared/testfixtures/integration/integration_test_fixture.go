@@ -2,12 +2,14 @@
 package integration
 
 import (
+	"context"
 	"testing"
 	"time"
 
 	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 	"gorm.io/gorm"
 
 	_ "github.com/lib/pq" // postgres driver
@@ -20,11 +22,47 @@ import (
 	dbcleaner "gopkg.in/khaiql/dbcleaner.v2"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/contracts"
 	datamodel "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/datamodels"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/products/data/repositories"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/app/test"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/data/dbcontext"
 	productsService "github.com/raphaeldiscky/go-food-micro/internal/services/catalogwriteservice/internal/shared/grpc/genproto"
 )
+
+// CatalogContext provides access to repositories in a unit of work
+// Only Products() is implemented for now
+// You can expand this as needed for more repositories
+// Place this near the top of the file
+
+type CatalogContext interface {
+	Products() contracts.ProductRepository
+}
+
+type catalogContextImpl struct {
+	productRepo contracts.ProductRepository
+}
+
+func (c *catalogContextImpl) Products() contracts.ProductRepository {
+	return c.productRepo
+}
+
+// CatalogUnitOfWork provides a Do method for transactional work
+// Only a simple implementation is provided for integration tests
+
+type CatalogUnitOfWork interface {
+	Do(ctx context.Context, fn func(CatalogContext) error) error
+}
+
+type catalogUnitOfWorkImpl struct {
+	productRepo contracts.ProductRepository
+}
+
+func (u *catalogUnitOfWorkImpl) Do(ctx context.Context, fn func(CatalogContext) error) error {
+	// In a real implementation, you would start a DB transaction here
+	// For integration tests, just call the function with the context
+	return fn(&catalogContextImpl{productRepo: u.productRepo})
+}
 
 // CatalogWriteIntegrationTestSharedFixture is a struct that contains the integration test shared fixture.
 type CatalogWriteIntegrationTestSharedFixture struct {
@@ -40,6 +78,9 @@ type CatalogWriteIntegrationTestSharedFixture struct {
 	BaseAddress          string
 	Items                []*datamodel.ProductDataModel
 	ProductServiceClient productsService.ProductsServiceClient
+	ProductRepository    contracts.ProductRepository
+	tracer               tracing.AppTracer
+	CatalogUnitOfWorks   CatalogUnitOfWork
 }
 
 // NewCatalogWriteIntegrationTestSharedFixture is a constructor for the CatalogWriteIntegrationTestSharedFixture.
@@ -60,6 +101,9 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 		)
 	}
 
+	// Create a no-op tracer for tests
+	noopTracer := tracing.NewAppTracer("test")
+
 	shared := &CatalogWriteIntegrationTestSharedFixture{
 		Log:                  result.Logger,
 		Container:            result.Container,
@@ -71,6 +115,19 @@ func NewCatalogWriteIntegrationTestSharedFixture(
 		Gorm:                 result.Gorm,
 		BaseAddress:          result.EchoHTTPOptions.BasePathAddress(),
 		ProductServiceClient: result.ProductServiceClient,
+		tracer:               noopTracer,
+		ProductRepository: repositories.NewPostgresProductRepository(
+			result.Logger,
+			result.Gorm,
+			noopTracer,
+		),
+		CatalogUnitOfWorks: &catalogUnitOfWorkImpl{
+			productRepo: repositories.NewPostgresProductRepository(
+				result.Logger,
+				result.Gorm,
+				noopTracer,
+			),
+		},
 	}
 
 	return shared
