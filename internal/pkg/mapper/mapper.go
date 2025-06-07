@@ -53,7 +53,7 @@ type typeMeta struct {
 }
 
 // MapFunc is a function that maps a source type to a destination type.
-type MapFunc[TSrc any, TDst any] func(TSrc) TDst
+type MapFunc[TSrc any, TDst any] func(TSrc) (TDst, error)
 
 var (
 	profiles     = map[string][][2]string{}

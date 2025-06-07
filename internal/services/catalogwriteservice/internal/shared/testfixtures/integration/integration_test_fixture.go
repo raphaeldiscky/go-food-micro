@@ -329,3 +329,12 @@ func NewCatalogUnitOfWork(result *apptest.CatalogWriteTestAppResult) CatalogUnit
 		logger: result.Logger,
 	}
 }
+
+// WaitForGrpcServerReady waits for the gRPC server to be ready.
+func (i *CatalogWriteIntegrationTestSharedFixture) WaitForGrpcServerReady() error {
+	if client, ok := i.ProductServiceClient.(interface{ WaitForAvailableConnection() error }); ok {
+		return client.WaitForAvailableConnection()
+	}
+
+	return nil
+}
