@@ -14,6 +14,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
+	testutils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 	uuid "github.com/satori/go.uuid"
 
 	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updatingproducts/v1/events/integrationevents/externalevents"
@@ -119,7 +120,7 @@ func TestProductUpdatedConsumer(t *testing.T) {
 
 							var product *models.Product
 
-							err = testUtils.WaitUntilConditionMet(func() bool {
+							err = testutils.WaitUntilConditionMet(func() bool {
 								product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 									ctx,
 									integrationTestSharedFixture.Items[0].ProductID,

@@ -3,6 +3,7 @@ package integration
 
 import (
 	"context"
+	"fmt"
 	"testing"
 	"time"
 
@@ -147,18 +148,24 @@ func (i *CatalogReadIntegrationTestSharedFixture) SetupTest(t *testing.T) {
 func (i *CatalogReadIntegrationTestSharedFixture) TearDownTest() {
 	i.Log.Info("TearDownTest started")
 
-	// Stop the bus gracefully first
-	if err := i.Bus.Stop(); err != nil {
-		i.Log.Error(errors.WrapIf(err, "error stopping bus"))
-	}
-
-	// cleanup test containers with their hooks
+	// cleanup test containers with their hooks first
 	if err := i.cleanupRabbitmqData(); err != nil {
-		i.Log.Error(errors.WrapIf(err, "error in cleanup rabbitmq data"))
+		i.Log.Errorw(
+			"Error cleaning up RabbitMQ data",
+			logger.Fields{"error": err},
+		)
 	}
 
-	// Don't cleanup MongoDB data here - it will be cleaned up in SetupTest
-	// This ensures we don't have race conditions between cleanup and setup
+	// Stop the bus gracefully after cleanup
+	if err := i.Bus.Stop(); err != nil {
+		i.Log.Errorw(
+			"Error stopping bus",
+			logger.Fields{"error": err},
+		)
+	}
+
+	// Give time for cleanup to complete
+	time.Sleep(1 * time.Second)
 }
 
 // seedData seeds the test data.
@@ -234,7 +241,7 @@ func (i *CatalogReadIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 		i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
 	)
 	if err != nil {
-		return err
+		return errors.WrapIf(err, "failed to list queues")
 	}
 
 	// clear each queue using index-based iteration
@@ -243,8 +250,9 @@ func (i *CatalogReadIntegrationTestSharedFixture) cleanupRabbitmqData() error {
 			i.rabbitmqOptions.RabbitmqHostOptions.VirtualHost,
 			queues[idx].Name,
 		)
-
-		return err
+		if err != nil {
+			return errors.WrapIf(err, fmt.Sprintf("failed to purge queue: %s", queues[idx].Name))
+		}
 	}
 
 	return nil

@@ -14,7 +14,7 @@ import (
 
 	. "github.com/smartystreets/goconvey/convey"
 
-	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
+	testutils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 	uuid "github.com/satori/go.uuid"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deletingproducts/v1/events/integrationevents/externalevents"
@@ -88,7 +88,7 @@ func TestProductDeleted(t *testing.T) {
 				Convey("It should delete product in the mongo database", func() {
 					// Wait for the product to be deleted with a more robust condition
 					var deletedProduct *models.Product
-					err := testUtils.WaitUntilConditionMet(func() bool {
+					err := testutils.WaitUntilConditionMet(func() bool {
 						deletedProduct, err = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
 							ctx,
 							integrationTestSharedFixture.Items[0].ProductID,
