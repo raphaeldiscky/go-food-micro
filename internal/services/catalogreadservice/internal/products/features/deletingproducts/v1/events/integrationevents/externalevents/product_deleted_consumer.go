@@ -49,6 +49,13 @@ func (c *ProductDeletedConsumer) Handle(
 	ctx, span := c.tracer.Start(ctx, "productDeletedConsumer.Handle")
 	defer span.End()
 
+	c.logger.Infow(
+		"Received ProductDeleted event",
+		logger.Fields{
+			"message": consumeContext.Message(),
+		},
+	)
+
 	message, ok := consumeContext.Message().(*ProductDeletedV1)
 	if !ok {
 		err := errors.New("error in casting message to ProductDeletedV1")
@@ -73,6 +80,14 @@ func (c *ProductDeletedConsumer) Handle(
 	span.SetAttributes(
 		attribute.String("productId", message.ProductID),
 		attribute.String("message", fmt.Sprintf("%+v", message)),
+	)
+
+	c.logger.Infow(
+		"Processing ProductDeleted event",
+		logger.Fields{
+			"productID": message.ProductID,
+			"messageID": message.Message.GeMessageId(),
+		},
 	)
 
 	productUUID, err := uuid.FromString(message.ProductID)
@@ -109,6 +124,13 @@ func (c *ProductDeletedConsumer) Handle(
 
 		return validationErr
 	}
+
+	c.logger.Infow(
+		"Sending DeleteProduct command",
+		logger.Fields{
+			"productID": command.ProductID,
+		},
+	)
 
 	_, err = mediatr.Send[*commands.DeleteProduct, *mediatr.Unit](ctx, command)
 	if err != nil {

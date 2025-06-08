@@ -116,6 +116,14 @@ tasks:
       - sh ./scripts/proto.sh catalogwriteservice
       - sh ./scripts/proto.sh orderservice
 
+  test_file:
+    desc: Run individual test file
+    vars:
+      FILE: "{{.FILE}}"
+      TEST_TYPE: '{{default "unit" .TEST_TYPE}}'
+    cmds:
+      - sh ./scripts/test-file.sh {{.FILE}} {{.TEST_TYPE}}
+
   unit_test:
     desc: Run unit tests
     vars:

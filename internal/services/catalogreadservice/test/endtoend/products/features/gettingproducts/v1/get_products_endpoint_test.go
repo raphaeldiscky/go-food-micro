@@ -19,7 +19,7 @@ func TestGetAllProducts(t *testing.T) {
 	e2eFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	Convey("Get All Products Feature", t, func() {
-		e2eFixture.SetupTest()
+		e2eFixture.SetupTest(t)
 		ctx := context.Background()
 
 		Convey("Get all products returns ok status", func() {
