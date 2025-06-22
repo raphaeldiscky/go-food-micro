@@ -169,11 +169,6 @@ var _ = Describe("Create Order Feature", func() {
 		"Publishing an OrderCreated event to the message broker when order saved successfully",
 		func() {
 			BeforeEach(func() {
-				shouldPublish = messaging.ShouldProduced[*integrationEvents.OrderCreatedV1](
-					ctx,
-					integrationFixture.Bus, nil,
-				)
-
 				command, err = createOrderCommandV1.NewCreateOrder(
 					[]*dtosV1.ShopItemDto{
 						{
@@ -195,6 +190,12 @@ var _ = Describe("Create Order Feature", func() {
 			// "When" step for creating and sending an order
 			When("CreateOrder command is executed for non-existing order", func() {
 				BeforeEach(func() {
+					// Ensure shouldPublish is properly initialized before executing the command
+					shouldPublish = messaging.ShouldProduced[*integrationEvents.OrderCreatedV1](
+						ctx,
+						integrationFixture.Bus, nil,
+					)
+
 					// "When" step for executing the createOrderCommand
 					result, err = mediatr.Send[*createOrderCommandV1.CreateOrder, *dtos.CreateOrderResponseDto](
 						context.Background(),

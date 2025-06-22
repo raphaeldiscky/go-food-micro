@@ -94,8 +94,8 @@ func GetRoutingKeyFromType(message reflect.Type) string {
 	return strcase.ToSnake(message.Name())
 }
 
-// RegisterCustomMessageTypesToRegistrty is a function that registers custom message types to registrty.
-func RegisterCustomMessageTypesToRegistrty(typesMap map[string]types.IMessage) {
+// RegisterCustomMessageTypesToRegistry is a function that registers custom message types to registrty.
+func RegisterCustomMessageTypesToRegistry(typesMap map[string]types.IMessage) {
 	if len(typesMap) == 0 {
 		return
 	}

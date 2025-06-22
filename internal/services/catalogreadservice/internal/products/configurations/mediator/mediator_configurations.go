@@ -28,6 +28,8 @@ func ConfigProductsMediator(
 	cacheProductRepository data.ProductCacheRepository,
 	tracer tracing.AppTracer,
 ) error {
+	log.Infow("Starting mediator configuration for products", logger.Fields{})
+	
 	err := mediatr.RegisterRequestHandler[*v1.CreateProduct, *createProductDtosV1.CreateProductResponseDto](
 		v1.NewCreateProductHandler(
 			log,
@@ -37,8 +39,10 @@ func ConfigProductsMediator(
 		),
 	)
 	if err != nil {
+		log.Errorw("Failed to register CreateProduct handler", logger.Fields{"error": err})
 		return errors.WrapIf(err, "error while registering handlers in the mediator")
 	}
+	log.Infow("Successfully registered CreateProduct handler", logger.Fields{})
 
 	err = mediatr.RegisterRequestHandler[*deleteProductCommandV1.DeleteProduct, *mediatr.Unit](
 		deleteProductCommandV1.NewDeleteProductHandler(
@@ -94,5 +98,6 @@ func ConfigProductsMediator(
 		return errors.WrapIf(err, "error while registering handlers in the mediator")
 	}
 
+	log.Infow("Successfully completed mediator configuration for all product handlers", logger.Fields{})
 	return nil
 }

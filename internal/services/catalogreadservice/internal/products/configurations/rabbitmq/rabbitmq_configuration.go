@@ -4,8 +4,6 @@ package rabbitmq
 import (
 	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 
@@ -24,11 +22,6 @@ func ConfigProductsRabbitMQ(
 	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) {
-	// add custom message type mappings
-	utils.RegisterCustomMessageTypesToRegistrty(map[string]types.IMessage{
-		"ProductUpdatedV1": &updateProductExternalEventsV1.ProductUpdatedV1{},
-	})
-
 	builder.
 		AddConsumer(
 			&createProductExternalEventV1.ProductCreatedV1{},

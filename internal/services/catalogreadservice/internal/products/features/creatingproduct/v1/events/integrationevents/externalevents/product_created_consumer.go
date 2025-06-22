@@ -45,13 +45,20 @@ func (c *ProductCreatedConsumer) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
 ) error {
+	c.logger.Infow("🔥 ProductCreated event received!", logger.Fields{
+		"messageType": fmt.Sprintf("%T", consumeContext.Message()),
+	})
+
 	ctx, span := c.tracer.Start(ctx, "productCreatedConsumer.Handle")
 	defer span.End()
 
 	product, ok := consumeContext.Message().(*ProductCreatedV1)
 	if !ok {
 		err := errors.New("error in casting message to ProductCreatedV1")
-		c.logger.Errorw("Failed to cast message", logger.Fields{"error": err})
+		c.logger.Errorw("Failed to cast message", logger.Fields{
+			"error":       err,
+			"messageType": fmt.Sprintf("%T", consumeContext.Message()),
+		})
 		span.RecordError(err)
 
 		return err
@@ -75,6 +82,14 @@ func (c *ProductCreatedConsumer) Handle(
 		attribute.Float64("price", product.Price),
 	)
 
+	c.logger.Infow("Processing ProductCreated event", logger.Fields{
+		"productID":   product.ProductID,
+		"name":        product.Name,
+		"description": product.Description,
+		"price":       product.Price,
+		"createdAt":   product.CreatedAt,
+	})
+
 	command, err := v1.NewCreateProduct(
 		product.ProductID,
 		product.Name,
@@ -93,10 +108,25 @@ func (c *ProductCreatedConsumer) Handle(
 		return validationErr
 	}
 
-	_, err = mediatr.Send[*v1.CreateProduct, *dtos.CreateProductResponseDto](
+	c.logger.Infow("About to send CreateProduct command", logger.Fields{
+		"productID": command.ProductID,
+		"command":   command,
+	})
+
+	// Check if the handler is registered
+	c.logger.Infow("Checking if CreateProduct handler is registered", logger.Fields{})
+
+	result, err := mediatr.Send[*v1.CreateProduct, *dtos.CreateProductResponseDto](
 		ctx,
 		command,
 	)
+
+	c.logger.Infow("CreateProduct command sent", logger.Fields{
+		"productID": command.ProductID,
+		"result":    result,
+		"error":     err,
+	})
+
 	if err != nil {
 		err = errors.WithMessage(
 			err,

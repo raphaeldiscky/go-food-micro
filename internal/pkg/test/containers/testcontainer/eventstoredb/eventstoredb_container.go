@@ -145,7 +145,6 @@ func (g *eventstoredbTestContainers) getRunOptions(
 		Env: map[string]string{
 			"EVENTSTORE_START_STANDARD_PROJECTIONS": "false",
 			"EVENTSTORE_INSECURE":                   "true",
-			"EVENTSTORE_ENABLE_EXTERNAL_TCP":        "true",
 			"EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP":  "true",
 			"EVENTSTORE_MEM_DB":                     "true",
 		},
