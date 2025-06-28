@@ -384,6 +384,14 @@ func (r *rabbitMQConsumer) finishSpanAndNotify(
 
 // handleReceived handles the received message.
 func (r *rabbitMQConsumer) handleReceived(ctx context.Context, delivery amqp091.Delivery) {
+	r.logger.Infof(
+		"[DEBUG] Consumer received message - routingKey: %s, exchange: %s, messageId: %s, type: %s",
+		delivery.RoutingKey,
+		delivery.Exchange,
+		delivery.MessageId,
+		delivery.Type,
+	)
+
 	r.deliveryRoutines <- struct{}{}
 	defer func() { <-r.deliveryRoutines }()
 
@@ -542,6 +550,14 @@ func (r *rabbitMQConsumer) deserializeData(
 		return nil
 	}
 
+	r.logger.Infof(
+		"[DEBUG] Deserializing message - contentType: %s, eventType: %s, body: %s, expected consumer type: %s",
+		contentType,
+		eventType,
+		string(body),
+		r.rabbitmqConsumerOptions.ConsumerMessageType.String(),
+	)
+
 	if contentType == ContentType {
 		// r.rabbitmqConsumerOptions.ConsumerMessageType --> actual type
 		// deserialize, err := r.messageSerializer.DeserializeType(body, r.rabbitmqConsumerOptions.ConsumerMessageType, contentType)
@@ -553,13 +569,16 @@ func (r *rabbitMQConsumer) deserializeData(
 		if err != nil {
 			r.logger.Errorf(
 				fmt.Sprintf(
-					"error in deserilizng of type '%s' in the consumer",
+					"error in deserilizng of type '%s' in the consumer: %v",
 					eventType,
+					err,
 				),
 			)
 
 			return nil
 		}
+
+		r.logger.Infof("[DEBUG] Successfully deserialized message of type: %s", eventType)
 
 		return deserialize
 	}

@@ -5,8 +5,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-
 	reflect "github.com/goccy/go-reflect"
 
 	testUtils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
@@ -22,7 +20,6 @@ type Hypothesis[T any] interface {
 type hypothesis[T any] struct {
 	data      T
 	condition func(item T) bool
-	t         assert.TestingT
 }
 
 // Validate validates the hypothesis.
@@ -31,7 +28,7 @@ func (h *hypothesis[T]) Validate(_ context.Context, message string, time time.Du
 		return !reflect.ValueOf(h.data).IsZero()
 	}, time)
 	if err != nil {
-		assert.FailNowf(h.t, "hypothesis validation failed, %s", message)
+		panic("hypothesis validation failed, " + message + ": " + err.Error())
 	}
 }
 

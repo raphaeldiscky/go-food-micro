@@ -138,7 +138,7 @@ func (r *redisProductRepository) GetProductByID(
 
 	r.log.Infow(
 		fmt.Sprintf(
-			"product with with key '%s', prefix '%s' laoded",
+			"product with with key '%s', prefix '%s' loaded",
 			key,
 			r.getRedisProductPrefixKey(),
 		),

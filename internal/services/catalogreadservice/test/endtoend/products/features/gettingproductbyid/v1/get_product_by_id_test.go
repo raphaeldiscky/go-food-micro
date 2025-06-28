@@ -16,11 +16,10 @@ import (
 )
 
 func TestGetProductById(t *testing.T) {
-	e2eFixture := integration.NewIntegrationTestSharedFixture(t)
+	e2eFixture := integration.NewCatalogReadIntegrationTestSharedFixture(t)
 
 	Convey("Get Product By ID Feature", t, func() {
-		e2eFixture.SetupTest()
-
+		e2eFixture.SetupTest(t)
 		ctx := context.Background()
 		id := e2eFixture.Items[0].ID
 

@@ -24,14 +24,29 @@ func ConfigProductsRabbitMQ(
 	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) {
-	// add custom message type mappings
-	utils.RegisterCustomMessageTypesToRegistrty(map[string]types.IMessage{
-		"ProductUpdatedV1": &updateProductExternalEventsV1.ProductUpdatedV1{},
+	// Create message instances
+	productCreatedMsg := &createProductExternalEventV1.ProductCreatedV1{}
+	productDeletedMsg := &deleteProductExternalEventV1.ProductDeletedV1{}
+	productUpdatedMsg := &updateProductExternalEventsV1.ProductUpdatedV1{}
+
+	// Register message types using the standard utility function
+	messageTypesMap := map[string]types.IMessage{
+		productCreatedMsg.GetMessageTypeName(): productCreatedMsg,
+		productDeletedMsg.GetMessageTypeName(): productDeletedMsg,
+		productUpdatedMsg.GetMessageTypeName(): productUpdatedMsg,
+	}
+
+	utils.RegisterCustomMessageTypesToRegistry(messageTypesMap)
+
+	log.Infow("Registered message types for products using standard utility", logger.Fields{
+		"productCreated": productCreatedMsg.GetMessageTypeName(),
+		"productDeleted": productDeletedMsg.GetMessageTypeName(),
+		"productUpdated": productUpdatedMsg.GetMessageTypeName(),
 	})
 
 	builder.
 		AddConsumer(
-			&createProductExternalEventV1.ProductCreatedV1{},
+			productCreatedMsg,
 			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
@@ -46,7 +61,7 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			&deleteProductExternalEventV1.ProductDeletedV1{},
+			productDeletedMsg,
 			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
@@ -61,7 +76,7 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			&updateProductExternalEventsV1.ProductUpdatedV1{},
+			productUpdatedMsg,
 			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {

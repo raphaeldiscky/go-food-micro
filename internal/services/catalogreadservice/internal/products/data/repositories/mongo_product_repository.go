@@ -156,7 +156,7 @@ func (p *mongoProductRepository) GetProductByID(
 	span.SetAttributes(attribute.Object("Product", product))
 
 	p.log.Infow(
-		fmt.Sprintf("product with id %s laoded", uuid),
+		fmt.Sprintf("product with id %s loaded", uuid),
 		logger.Fields{"Product": product, "ID": uuid},
 	)
 
@@ -197,7 +197,7 @@ func (p *mongoProductRepository) GetProductByProductID(
 
 	p.log.Infow(
 		fmt.Sprintf(
-			"product with productID %s laoded",
+			"product with productID %s loaded",
 			productID,
 		),
 		logger.Fields{"Product": product, "ProductID": uuid},

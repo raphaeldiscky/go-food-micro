@@ -136,7 +136,7 @@ func (p *PostgresProductRepository) GetProductByID(
 	span.SetAttributes(attribute.Object("Product", product))
 	p.Log.Infow(
 		fmt.Sprintf(
-			"product with id %s laoded",
+			"product with id %s loaded",
 			uuid.String(),
 		),
 		logger.Fields{"Product": product, "ID": uuid},
