@@ -4,12 +4,13 @@ package rabbitmq
 import (
 	"github.com/go-playground/validator"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/consumer"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/tracing"
 
 	rabbitmqConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
 	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
-	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
 	createProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1/events/integrationevents/externalevents"
 	deleteProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deletingproducts/v1/events/integrationevents/externalevents"
@@ -23,24 +24,29 @@ func ConfigProductsRabbitMQ(
 	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) {
-	// Register message types with type mapper for proper deserialization
-	// Use the exact keys that GetMessageTypeName() returns
-	typeMapper.RegisterTypeWithKey(
-		"ProductCreatedV1",
-		typeMapper.GetReflectType(&createProductExternalEventV1.ProductCreatedV1{}),
-	)
-	typeMapper.RegisterTypeWithKey(
-		"ProductDeletedV1",
-		typeMapper.GetReflectType(&deleteProductExternalEventV1.ProductDeletedV1{}),
-	)
-	typeMapper.RegisterTypeWithKey(
-		"ProductUpdatedV1",
-		typeMapper.GetReflectType(&updateProductExternalEventsV1.ProductUpdatedV1{}),
-	)
+	// Create message instances
+	productCreatedMsg := &createProductExternalEventV1.ProductCreatedV1{}
+	productDeletedMsg := &deleteProductExternalEventV1.ProductDeletedV1{}
+	productUpdatedMsg := &updateProductExternalEventsV1.ProductUpdatedV1{}
+
+	// Register message types using the standard utility function
+	messageTypesMap := map[string]types.IMessage{
+		productCreatedMsg.GetMessageTypeName(): productCreatedMsg,
+		productDeletedMsg.GetMessageTypeName(): productDeletedMsg,
+		productUpdatedMsg.GetMessageTypeName(): productUpdatedMsg,
+	}
+
+	utils.RegisterCustomMessageTypesToRegistry(messageTypesMap)
+
+	log.Infow("Registered message types for products using standard utility", logger.Fields{
+		"productCreated": productCreatedMsg.GetMessageTypeName(),
+		"productDeleted": productDeletedMsg.GetMessageTypeName(),
+		"productUpdated": productUpdatedMsg.GetMessageTypeName(),
+	})
 
 	builder.
 		AddConsumer(
-			&createProductExternalEventV1.ProductCreatedV1{},
+			productCreatedMsg,
 			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
@@ -55,7 +61,7 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			&deleteProductExternalEventV1.ProductDeletedV1{},
+			productDeletedMsg,
 			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
@@ -70,7 +76,7 @@ func ConfigProductsRabbitMQ(
 				)
 			}).
 		AddConsumer(
-			&updateProductExternalEventsV1.ProductUpdatedV1{},
+			productUpdatedMsg,
 			func(builder consumerConfigurations.RabbitMQConsumerConfigurationBuilder) {
 				builder.WithHandlers(
 					func(handlersBuilder consumer.ConsumerHandlerConfigurationBuilder) {
