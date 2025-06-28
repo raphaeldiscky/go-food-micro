@@ -4,8 +4,6 @@ package consumer
 import (
 	"context"
 
-	"github.com/onsi/ginkgo/v2"
-
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/defaultlogger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
@@ -40,7 +38,6 @@ func (f *RabbitMQFakeTestConsumerHandler[T]) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
 ) error {
-	defer ginkgo.GinkgoRecover()
 	f.isHandled = true
 	if f.hypothesis != nil {
 		m, ok := consumeContext.Message().(T)

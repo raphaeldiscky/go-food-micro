@@ -86,7 +86,7 @@ func (c *ProductDeletedConsumer) Handle(
 		"Processing ProductDeleted event",
 		logger.Fields{
 			"productID": message.ProductID,
-			"messageID": message.Message.GeMessageId(),
+			"messageID": message.GeMessageId(),
 		},
 	)
 

@@ -579,6 +579,7 @@ func (r *rabbitMQConsumer) deserializeData(
 		}
 
 		r.logger.Infof("[DEBUG] Successfully deserialized message of type: %s", eventType)
+
 		return deserialize
 	}
 

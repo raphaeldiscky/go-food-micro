@@ -24,7 +24,7 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
-	// Import the external event types that need to be registered
+	// Import the external event types that need to be registered.
 	createProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1/events/integrationevents/externalevents"
 	deleteProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deletingproducts/v1/events/integrationevents/externalevents"
 	updateProductExternalEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updatingproducts/v1/events/integrationevents/externalevents"
@@ -120,12 +120,14 @@ func NewCatalogReadIntegrationTestSharedFixture(
 
 	// Try to start the bus with retries and proper wait times
 	var startErr error
+retryLoop:
 	for i := 0; i < 5; i++ { // Increased retries
-		// Use background context for the actual bus start so consumers don't get cancelled
+		// Use background context for the actual bus start so consumers don't get canceled
 		startErr = shared.Bus.Start(context.Background())
 		if startErr == nil {
 			// Success! Break out of retry loop
 			result.Logger.Info("RabbitMQ bus started successfully")
+
 			break
 		}
 
@@ -141,7 +143,8 @@ func NewCatalogReadIntegrationTestSharedFixture(
 		select {
 		case <-startCtx.Done():
 			startErr = startCtx.Err()
-			break
+
+			break retryLoop // Fixed: break out of the retry loop, not just the select
 		case <-time.After(time.Second * time.Duration(i+1)):
 			// Continue to next retry
 		}
