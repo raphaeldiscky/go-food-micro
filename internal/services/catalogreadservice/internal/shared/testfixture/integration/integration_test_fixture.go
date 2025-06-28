@@ -9,6 +9,8 @@ import (
 
 	"emperror.dev/errors"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/bus"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/types"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/messaging/utils"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
@@ -22,6 +24,10 @@ import (
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/contracts/data"
+	// Import the external event types that need to be registered
+	createProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1/events/integrationevents/externalevents"
+	deleteProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deletingproducts/v1/events/integrationevents/externalevents"
+	updateProductExternalEventsV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/updatingproducts/v1/events/integrationevents/externalevents"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/app/test"
 )
@@ -49,6 +55,27 @@ func NewCatalogReadIntegrationTestSharedFixture(
 ) *CatalogReadIntegrationTestSharedFixture {
 	t.Helper()
 	result := test.NewCatalogReadTestApp().Run(t)
+
+	// Register message types for tests - this is crucial for message casting to work
+	// Create message instances
+	productCreatedMsg := &createProductExternalEventV1.ProductCreatedV1{}
+	productDeletedMsg := &deleteProductExternalEventV1.ProductDeletedV1{}
+	productUpdatedMsg := &updateProductExternalEventsV1.ProductUpdatedV1{}
+
+	// Register message types using the standard utility function
+	messageTypesMap := map[string]types.IMessage{
+		productCreatedMsg.GetMessageTypeName(): productCreatedMsg,
+		productDeletedMsg.GetMessageTypeName(): productDeletedMsg,
+		productUpdatedMsg.GetMessageTypeName(): productUpdatedMsg,
+	}
+
+	utils.RegisterCustomMessageTypesToRegistry(messageTypesMap)
+
+	result.Logger.Infow("Registered message types for integration tests", logger.Fields{
+		"productCreated": productCreatedMsg.GetMessageTypeName(),
+		"productDeleted": productDeletedMsg.GetMessageTypeName(),
+		"productUpdated": productUpdatedMsg.GetMessageTypeName(),
+	})
 
 	// Log the RabbitMQ connection details for debugging
 	result.Logger.Infow(
@@ -101,7 +128,7 @@ func NewCatalogReadIntegrationTestSharedFixture(
 			result.Logger.Info("RabbitMQ bus started successfully")
 			break
 		}
-		
+
 		result.Logger.Warn(
 			"Failed to start RabbitMQ bus, retrying...",
 			logger.Fields{
@@ -109,7 +136,7 @@ func NewCatalogReadIntegrationTestSharedFixture(
 				"error":   startErr,
 			},
 		)
-		
+
 		// Wait before retrying, but check if we should stop due to timeout
 		select {
 		case <-startCtx.Done():

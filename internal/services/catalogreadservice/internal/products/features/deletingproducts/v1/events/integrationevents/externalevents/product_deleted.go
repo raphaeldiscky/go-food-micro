@@ -10,3 +10,8 @@ type ProductDeletedV1 struct {
 	*types.Message
 	ProductID string `json:"productID,omitempty"`
 }
+
+// GetMessageTypeName returns the message type name.
+func (p *ProductDeletedV1) GetMessageTypeName() string {
+	return "ProductDeletedV1"
+}
