@@ -158,7 +158,7 @@ func (m mongoOrderReadRepository) GetOrderByID(
 	span.SetAttributes(attribute.Object("Order", order))
 
 	m.log.Infow(
-		fmt.Sprintf("[mongoOrderReadRepository.GetOrderByID] order with id %s laoded", id.String()),
+		fmt.Sprintf("[mongoOrderReadRepository.GetOrderByID] order with id %s loaded", id.String()),
 		logger.Fields{"Order": order, "ID": id},
 	)
 
@@ -198,7 +198,7 @@ func (m mongoOrderReadRepository) GetOrderByOrderID(
 
 	m.log.Infow(
 		fmt.Sprintf(
-			"[mongoOrderReadRepository.GetOrderByID] order with orderId %s laoded",
+			"[mongoOrderReadRepository.GetOrderByID] order with orderId %s loaded",
 			orderID.String(),
 		),
 		logger.Fields{"Order": order, "orderId": orderID},

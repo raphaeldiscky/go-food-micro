@@ -16,10 +16,12 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
+	testutils "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/utils"
 	uuid "github.com/satori/go.uuid"
 	convey "github.com/smartystreets/goconvey/convey"
 
 	externalEvents "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1/events/integrationevents/externalevents"
+	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/models"
 	"github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/shared/testfixture/integration"
 )
 
@@ -97,59 +99,117 @@ func TestProductCreatedConsumer(t *testing.T) {
 			})
 		})
 
-		// convey.Convey(
-		// 	"Create product in mongo database when a ProductCreated event consumed",
-		// 	func() {
-		// 		fakeProduct := &externalEvents.ProductCreatedV1{
-		// 			Message:     types.NewMessage(uuid.NewV4().String()),
-		// 			ProductID:   uuid.NewV4().String(),
-		// 			Name:        gofakeit.FirstName(),
-		// 			Price:       gofakeit.Price(150, 6000),
-		// 			CreatedAt:   time.Now(),
-		// 			Description: gofakeit.EmojiDescription(),
-		// 		}
+		convey.Convey(
+			"Create product in mongo database when a ProductCreated event consumed",
+			func() {
+				// Add small delay to ensure consumers are ready after the previous test
+				time.Sleep(2 * time.Second)
 
-		// 		convey.Convey("When a ProductCreated event consumed", func() {
-		// 			err := integrationTestSharedFixture.Bus.PublishMessage(ctx, fakeProduct, nil)
-		// 			convey.So(err, convey.ShouldBeNil)
+				// Restart the bus to ensure consumers are reconnected properly
+				integrationTestSharedFixture.Log.Info(
+					"Second test: Restarting bus to ensure consumers are ready",
+				)
+				integrationTestSharedFixture.Bus.Stop()
+				time.Sleep(1 * time.Second)
 
-		// 			convey.Convey("It should store product in the mongo database", func() {
-		// 				ctx := context.Background()
-		// 				pid := uuid.NewV4().String()
-		// 				productCreated := &externalEvents.ProductCreatedV1{
-		// 					Message:     types.NewMessage(uuid.NewV4().String()),
-		// 					ProductID:   pid,
-		// 					CreatedAt:   time.Now(),
-		// 					Name:        gofakeit.Name(),
-		// 					Price:       gofakeit.Price(150, 6000),
-		// 					Description: gofakeit.AdjectiveDescriptive(),
-		// 				}
+				// Start the bus again
+				err := integrationTestSharedFixture.Bus.Start(context.Background())
+				if err != nil {
+					integrationTestSharedFixture.Log.Errorw(
+						"Failed to restart bus",
+						logger.Fields{"error": err},
+					)
+				} else {
+					integrationTestSharedFixture.Log.Info("Bus restarted successfully")
+				}
 
-		// 				err := integrationTestSharedFixture.Bus.PublishMessage(
-		// 					ctx,
-		// 					productCreated,
-		// 					nil,
-		// 				)
-		// 				convey.So(err, convey.ShouldBeNil)
+				// Wait for consumers to be ready
+				time.Sleep(3 * time.Second)
 
-		// 				var product *models.Product
+				// Create a single ProductCreated event
+				pid := uuid.NewV4().String()
+				productCreated := &externalEvents.ProductCreatedV1{
+					Message:     types.NewMessage(uuid.NewV4().String()),
+					ProductID:   pid,
+					CreatedAt:   time.Now(),
+					Name:        gofakeit.Name(),
+					Price:       gofakeit.Price(150, 6000),
+					Description: gofakeit.AdjectiveDescriptive(),
+				}
 
-		// 				err = testutils.WaitUntilConditionMet(func() bool {
-		// 					product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
-		// 						ctx,
-		// 						pid,
-		// 					)
+				integrationTestSharedFixture.Log.Infow(
+					"Second test: About to publish ProductCreated message",
+					logger.Fields{
+						"messageId":       productCreated.GeMessageId(),
+						"messageType":     fmt.Sprintf("%T", productCreated),
+						"messageTypeName": productCreated.GetMessageTypeName(),
+						"productID":       productCreated.ProductID,
+						"name":            productCreated.Name,
+						"price":           productCreated.Price,
+					},
+				)
 
-		// 					return err == nil && product != nil
-		// 				}, 10*time.Second)
+				convey.Convey("When a ProductCreated event consumed", func() {
+					// Publish the message
+					err := integrationTestSharedFixture.Bus.PublishMessage(
+						ctx,
+						productCreated,
+						nil,
+					)
+					convey.So(err, convey.ShouldBeNil)
 
-		// 				convey.So(err, convey.ShouldBeNil)
-		// 				convey.So(product, convey.ShouldNotBeNil)
-		// 				convey.So(product.ProductID, convey.ShouldEqual, pid)
-		// 			})
-		// 		})
-		// 	},
-		// )
+					integrationTestSharedFixture.Log.Infow(
+						"Second test: Successfully published ProductCreated message",
+						logger.Fields{
+							"messageId": productCreated.GeMessageId(),
+							"productID": productCreated.ProductID,
+							"error":     err,
+						},
+					)
+
+					convey.Convey("It should store product in the mongo database", func() {
+						var product *models.Product
+
+						integrationTestSharedFixture.Log.Infow(
+							"Second test: Starting to wait for product in database",
+							logger.Fields{
+								"productID": pid,
+							},
+						)
+
+						// Wait for the message to be consumed and the product to be created in the database
+						err = testutils.WaitUntilConditionMet(func() bool {
+							product, err = integrationTestSharedFixture.ProductRepository.GetProductByProductID(
+								ctx,
+								pid,
+							)
+
+							integrationTestSharedFixture.Log.Infow(
+								"Second test: Checking for product in database",
+								logger.Fields{
+									"productID": pid,
+									"found":     product != nil,
+									"error":     err,
+								},
+							)
+
+							return err == nil && product != nil
+						}, 15*time.Second)
+
+						convey.So(err, convey.ShouldBeNil)
+						convey.So(product, convey.ShouldNotBeNil)
+						convey.So(product.ProductID, convey.ShouldEqual, pid)
+						convey.So(product.Name, convey.ShouldEqual, productCreated.Name)
+						convey.So(
+							product.Description,
+							convey.ShouldEqual,
+							productCreated.Description,
+						)
+						convey.So(product.Price, convey.ShouldEqual, productCreated.Price)
+					})
+				})
+			},
+		)
 
 		integrationTestSharedFixture.TearDownTest()
 	})
