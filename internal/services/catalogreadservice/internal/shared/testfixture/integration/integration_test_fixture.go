@@ -88,13 +88,20 @@ func NewCatalogReadIntegrationTestSharedFixture(
 	}
 
 	// Start the bus with a context that has a longer timeout
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	startCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	// Try to start the bus with retries and proper wait times
 	var startErr error
 	for i := 0; i < 5; i++ { // Increased retries
-		startErr = shared.Bus.Start(ctx)
+		// Use background context for the actual bus start so consumers don't get cancelled
+		startErr = shared.Bus.Start(context.Background())
+		if startErr == nil {
+			// Success! Break out of retry loop
+			result.Logger.Info("RabbitMQ bus started successfully")
+			break
+		}
+		
 		result.Logger.Warn(
 			"Failed to start RabbitMQ bus, retrying...",
 			logger.Fields{
@@ -102,6 +109,15 @@ func NewCatalogReadIntegrationTestSharedFixture(
 				"error":   startErr,
 			},
 		)
+		
+		// Wait before retrying, but check if we should stop due to timeout
+		select {
+		case <-startCtx.Done():
+			startErr = startCtx.Err()
+			break
+		case <-time.After(time.Second * time.Duration(i+1)):
+			// Continue to next retry
+		}
 	}
 
 	if startErr != nil {

@@ -9,6 +9,7 @@ import (
 
 	rabbitmqConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/configurations"
 	consumerConfigurations "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/consumer/configurations"
+	typeMapper "github.com/raphaeldiscky/go-food-micro/internal/pkg/reflection/typemapper"
 
 	createProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/creatingproduct/v1/events/integrationevents/externalevents"
 	deleteProductExternalEventV1 "github.com/raphaeldiscky/go-food-micro/internal/services/catalogreadservice/internal/products/features/deletingproducts/v1/events/integrationevents/externalevents"
@@ -22,6 +23,21 @@ func ConfigProductsRabbitMQ(
 	val *validator.Validate,
 	tracer tracing.AppTracer,
 ) {
+	// Register message types with type mapper for proper deserialization
+	// Use the exact keys that GetMessageTypeName() returns
+	typeMapper.RegisterTypeWithKey(
+		"ProductCreatedV1",
+		typeMapper.GetReflectType(&createProductExternalEventV1.ProductCreatedV1{}),
+	)
+	typeMapper.RegisterTypeWithKey(
+		"ProductDeletedV1",
+		typeMapper.GetReflectType(&deleteProductExternalEventV1.ProductDeletedV1{}),
+	)
+	typeMapper.RegisterTypeWithKey(
+		"ProductUpdatedV1",
+		typeMapper.GetReflectType(&updateProductExternalEventsV1.ProductUpdatedV1{}),
+	)
+
 	builder.
 		AddConsumer(
 			&createProductExternalEventV1.ProductCreatedV1{},
