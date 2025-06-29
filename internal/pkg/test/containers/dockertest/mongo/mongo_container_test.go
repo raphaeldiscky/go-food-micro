@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package mongo provides the mongo container test.
 package mongo
 

@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package cqrs provides the cqrs implementation.
 package cqrs
 

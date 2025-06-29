@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package repository provides the mongodb generic repository.
 package repository
 

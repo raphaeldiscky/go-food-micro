@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package rabbitmq provides a rabbitmq docker test.
 package rabbitmq
 

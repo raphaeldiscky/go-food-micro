@@ -1,4 +1,6 @@
-// Package json provides the json serializer.
+//go:build unit
+// +build unit
+
 package json
 
 import (
@@ -59,7 +61,7 @@ func TestDeserializeUnstructuredDataIntoEmptyInterface(t *testing.T) {
 
 	assert.True(t, reflect.TypeOf(jsonMapTyped).Kind() == reflect.Map)
 	assert.True(t, reflect.TypeOf(jsonMapTyped) == reflect.TypeOf(map[string]interface{}(nil)))
-	assert.True(t, jsonMapTyped["ShortTypeName"] == TestName)
+	assert.True(t, jsonMapTyped["Name"] == TestName)
 	assert.True(t, jsonMapTyped["Age"] == float64(TestAge))
 }
 
@@ -93,7 +95,7 @@ func TestDeserializeUnstructuredDataIntoMap(t *testing.T) {
 
 	assert.True(t, reflect.TypeOf(jsonMap).Kind() == reflect.Map)
 	assert.True(t, reflect.TypeOf(jsonMap) == reflect.TypeOf(map[string]interface{}(nil)))
-	assert.True(t, jsonMap["ShortTypeName"] == TestName)
+	assert.True(t, jsonMap["Name"] == TestName)
 	assert.True(t, jsonMap["Age"] == float64(TestAge))
 }
 
@@ -207,6 +209,6 @@ func TestDecodeToMap(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert.True(t, jsonMap["ShortTypeName"] == TestName)
+	assert.True(t, jsonMap["Name"] == TestName)
 	assert.True(t, jsonMap["Age"] == float64(TestAge))
 }

@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package typemapper provides a type mapper.
 package typemapper
 

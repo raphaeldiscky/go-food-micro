@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package gorm provides the gorm container test.
 package gorm
 

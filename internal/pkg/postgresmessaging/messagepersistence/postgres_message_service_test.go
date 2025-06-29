@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package messagepersistence provides the postgres message service.
 package messagepersistence
 

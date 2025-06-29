@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package postgresgorm provides the gorm options.
 package postgresgorm
 

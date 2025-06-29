@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package repository provides the gorm generic repository.
 package repository
 
