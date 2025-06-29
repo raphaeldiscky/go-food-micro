@@ -6,19 +6,14 @@ package products_service;
 
 option go_package = "./;products_service";
 
-service ProductsService {
-  rpc CreateProduct(CreateProductReq) returns (CreateProductRes);
-  rpc UpdateProduct(UpdateProductReq) returns (UpdateProductRes);
-  rpc GetProductByID(GetProductByIDReq) returns (GetProductByIDRes);
-}
 
 message Product {
   string ProductID = 1;
   string Name = 2;
   string Description = 3;
   double Price = 4;
-  google.protobuf.Timestamp CreatedAt = 6;
-  google.protobuf.Timestamp UpdatedAt = 7;
+  google.protobuf.Timestamp CreatedAt = 5;
+  google.protobuf.Timestamp UpdatedAt = 6;
 }
 
 message CreateProductReq {
@@ -46,4 +41,10 @@ message GetProductByIDReq {
 
 message GetProductByIDRes {
   Product Product = 1;
+}
+
+service ProductsService {
+  rpc CreateProduct(CreateProductReq) returns (CreateProductRes);
+  rpc UpdateProduct(UpdateProductReq) returns (UpdateProductRes);
+  rpc GetProductByID(GetProductByIDReq) returns (GetProductByIDRes);
 }

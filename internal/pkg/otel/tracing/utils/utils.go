@@ -10,6 +10,7 @@ import (
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/semconv/v1.20.0/httpconv"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 
 	linq "github.com/ahmetb/go-linq/v3"
 	trace2 "go.opentelemetry.io/otel/sdk/trace"
@@ -257,7 +258,7 @@ func ContextWithParentSpan(
 
 // ParentSpanFromContext gets the parent span from a context.
 func ParentSpanFromContext(ctx context.Context) trace.Span {
-	_, nopSpan := trace.NewNoopTracerProvider().Tracer("").Start(ctx, "")
+	_, nopSpan := noop.NewTracerProvider().Tracer("").Start(ctx, "")
 	if ctx == nil {
 		return nopSpan
 	}

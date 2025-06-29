@@ -15,7 +15,7 @@ message ShopItem {
 }
 
 message Order {
-  string OrderId = 1;
+  string OrderID = 1;
   repeated ShopItem ShopItems = 2;
   bool Paid = 3;
   bool Submitted = 4;
@@ -28,12 +28,12 @@ message Order {
   google.protobuf.Timestamp  DeliveredTime = 11;
   google.protobuf.Timestamp  CreatedAt = 12;
   google.protobuf.Timestamp  UpdatedAt = 13;
-  string PaymentId = 14;
+  string PaymentID = 14;
 }
 
 message OrderReadModel {
-  string Id = 1;
-  string OrderId = 2;
+  string ID = 1;
+  string OrderID = 2;
   repeated ShopItemReadModel ShopItems = 3;
   bool Paid = 4;
   bool Submitted = 5;
@@ -46,7 +46,7 @@ message OrderReadModel {
   google.protobuf.Timestamp  DeliveredTime = 12;
   google.protobuf.Timestamp  CreatedAt = 13;
   google.protobuf.Timestamp  UpdatedAt = 14;
-  string PaymentId = 15;
+  string PaymentID = 15;
 }
 
 message ShopItemReadModel {
@@ -64,19 +64,19 @@ message CreateOrderReq {
 }
 
 message CreateOrderRes {
-  string OrderId = 1;
+  string OrderID = 1;
 }
 
 message SubmitOrderReq {
-  string OrderId = 1;
+  string OrderID = 1;
 }
 
 message SubmitOrderRes {
-  string OrderId = 1;
+  string OrderID = 1;
 }
 
 message GetOrderByIDReq {
-  string Id = 1;
+  string ID = 1;
 }
 
 message GetOrderByIDRes {
@@ -84,7 +84,7 @@ message GetOrderByIDRes {
 }
 
 message UpdateShoppingCartReq {
-  string OrderId = 1;
+  string OrderID = 1;
   repeated ShopItem ShopItems = 2;
 }
 
