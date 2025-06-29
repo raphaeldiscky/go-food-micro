@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"github.com/docker/go-connections/nat"
 	"github.com/testcontainers/testcontainers-go/wait"
 
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	testcontainers "github.com/testcontainers/testcontainers-go"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb"
@@ -108,7 +108,7 @@ func (g *eventstoredbTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
-) (*esdb.Client, error) {
+) (*kdb.Client, error) {
 	t.Helper()
 	eventstoredbOptions, err := g.PopulateContainerOptions(ctx, t, options...)
 	if err != nil {

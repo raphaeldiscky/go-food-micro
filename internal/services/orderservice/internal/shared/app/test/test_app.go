@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
@@ -19,6 +18,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
@@ -47,7 +47,7 @@ type OrderTestAppResult struct {
 	OrderAggregateStore  store.AggregateStore[*aggregate.Order]
 	OrdersServiceClient  ordersService.OrdersServiceClient
 	MongoClient          *mongo.Client
-	EsdbClient           *esdb.Client
+	EsdbClient           *kdb.Client
 	MongoDbOptions       *mongodb.MongoDbOptions
 	GrpcClient           grpc.GrpcClient
 }
@@ -90,7 +90,7 @@ func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 			orderMongoRepository repositories.OrderMongoRepository,
 			orderAggregateStore store.AggregateStore[*aggregate.Order],
 			mongoClient *mongo.Client,
-			esdbClient *esdb.Client,
+			esdbClient *kdb.Client,
 			mongoDbOptions *mongodb.MongoDbOptions,
 		) {
 			result = &OrderTestAppResult{

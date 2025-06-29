@@ -20,6 +20,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	"gorm.io/gorm"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"
@@ -56,7 +57,7 @@ func NewCatalogWriteUnitTestSharedFixture(_ *testing.T) *CatalogWriteUnitTestSha
 	cfg := &config.AppOptions{}
 
 	// empty tracer, just for testing
-	nopetracer := trace.NewNoopTracerProvider()
+	nopetracer := noop.NewTracerProvider()
 	testTracer := nopetracer.Tracer("test_tracer")
 
 	unit := &CatalogWriteUnitTestSharedFixture{

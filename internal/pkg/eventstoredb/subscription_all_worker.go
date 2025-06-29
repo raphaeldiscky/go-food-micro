@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	mediatr "github.com/mehdihadeli/go-mediatr"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es"
@@ -21,7 +21,7 @@ import (
 
 // esdbSubscriptionAllWorker is a struct that represents a event store db subscription all worker.
 type esdbSubscriptionAllWorker struct {
-	db                               *esdb.Client
+	db                               *kdb.Client
 	cfg                              *config.EventStoreDbOptions
 	log                              logger.Logger
 	subscriptionOption               *EventStoreDBSubscriptionToAllOptions
@@ -42,8 +42,8 @@ type EsdbSubscriptionAllWorker interface {
 // EventStoreDBSubscriptionToAllOptions is a struct that represents a event store db subscription to all options.
 type EventStoreDBSubscriptionToAllOptions struct {
 	SubscriptionId              string
-	FilterOptions               *esdb.SubscriptionFilter
-	Credentials                 *esdb.Credentials
+	FilterOptions               *kdb.SubscriptionFilter
+	Credentials                 *kdb.Credentials
 	ResolveLinkTos              bool
 	IgnoreDeserializationErrors bool
 	Prefix                      string
@@ -52,7 +52,7 @@ type EventStoreDBSubscriptionToAllOptions struct {
 // NewEsdbSubscriptionAllWorker creates a new event store db subscription all worker.
 func NewEsdbSubscriptionAllWorker(
 	log logger.Logger,
-	db *esdb.Client,
+	db *kdb.Client,
 	cfg *config.EventStoreDbOptions,
 	esdbSerializer *EsdbSerializer,
 	subscriptionRepository contracts.SubscriptionCheckpointRepository,
@@ -78,8 +78,8 @@ func NewEsdbSubscriptionAllWorker(
 // handleSubscriptionEvent processes a single subscription event and updates the position.
 func (s *esdbSubscriptionAllWorker) handleSubscriptionEvent(
 	ctx context.Context,
-	event *esdb.SubscriptionEvent,
-	options *esdb.SubscribeToAllOptions,
+	event *kdb.SubscriptionEvent,
+	options *kdb.SubscribeToAllOptions,
 ) error {
 	if event.SubscriptionDropped != nil {
 		s.log.Errorf(
@@ -121,7 +121,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 	}
 
 	if subscriptionOption.FilterOptions == nil {
-		subscriptionOption.FilterOptions = esdb.ExcludeSystemEventsFilter()
+		subscriptionOption.FilterOptions = kdb.ExcludeSystemEventsFilter()
 	}
 
 	s.subscriptionOption = subscriptionOption
@@ -137,17 +137,17 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 		return err
 	}
 
-	var from esdb.AllPosition
+	var from kdb.AllPosition
 	if checkpoint == 0 {
-		from = esdb.Start{}
+		from = kdb.Start{}
 	} else {
-		from = esdb.Position{
+		from = kdb.Position{
 			Commit:  checkpoint,
 			Prepare: checkpoint,
 		}
 	}
 
-	options := esdb.SubscribeToAllOptions{
+	options := kdb.SubscribeToAllOptions{
 		ResolveLinkTos:     subscriptionOption.ResolveLinkTos,
 		Authenticated:      subscriptionOption.Credentials,
 		Filter:             subscriptionOption.FilterOptions,
@@ -183,7 +183,7 @@ func (s *esdbSubscriptionAllWorker) SubscribeAll(
 // handleEvent handles an event.
 func (s *esdbSubscriptionAllWorker) handleEvent(
 	ctx context.Context,
-	resolvedEvent *esdb.ResolvedEvent,
+	resolvedEvent *kdb.ResolvedEvent,
 ) error {
 	if s.isCheckpointEvent(resolvedEvent) || s.isEventWithEmptyData(resolvedEvent) {
 		return nil
@@ -222,7 +222,7 @@ func (s *esdbSubscriptionAllWorker) handleEvent(
 }
 
 // isEventWithEmptyData checks if an event has empty data.
-func (s *esdbSubscriptionAllWorker) isEventWithEmptyData(resolvedEvent *esdb.ResolvedEvent) bool {
+func (s *esdbSubscriptionAllWorker) isEventWithEmptyData(resolvedEvent *kdb.ResolvedEvent) bool {
 	if len(resolvedEvent.Event.Data) != 0 {
 		return false
 	}
@@ -233,7 +233,7 @@ func (s *esdbSubscriptionAllWorker) isEventWithEmptyData(resolvedEvent *esdb.Res
 }
 
 // isCheckpointEvent checks if an event is a checkpoint event.
-func (s *esdbSubscriptionAllWorker) isCheckpointEvent(resolvedEvent *esdb.ResolvedEvent) bool {
+func (s *esdbSubscriptionAllWorker) isCheckpointEvent(resolvedEvent *kdb.ResolvedEvent) bool {
 	name := typeMapper.GetFullTypeName(CheckpointStored{})
 	if resolvedEvent.Event.EventType != name {
 		return false

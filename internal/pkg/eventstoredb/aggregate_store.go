@@ -7,10 +7,10 @@ import (
 	"reflect"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"go.opentelemetry.io/otel/trace"
 
 	linq "github.com/ahmetb/go-linq/v3"
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	uuid "github.com/satori/go.uuid"
 	attribute2 "go.opentelemetry.io/otel/attribute"
 
@@ -217,7 +217,9 @@ func (a *esdbAggregateStore[T]) LoadWithReadPosition(
 	span.SetAttributes(attribute2.String("StreamId", streamId.String()))
 
 	streamEvents, err := a.getStreamEvents(streamId, position, ctx)
-	if errors.Is(err, esdb.ErrStreamNotFound) || len(streamEvents) == 0 {
+	var kdbErr *kdb.Error
+	if (errors.As(err, &kdbErr) && kdbErr.Code() == kdb.ErrorCodeResourceNotFound) ||
+		len(streamEvents) == 0 {
 		return *new(T), utils.TraceErrStatusFromSpan(
 			span,
 			errors.WithMessage(
