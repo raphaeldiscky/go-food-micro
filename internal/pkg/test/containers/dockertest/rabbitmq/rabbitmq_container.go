@@ -59,9 +59,7 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	g.defaultOptions.Name = uniqueName
 
 	// Clean up any existing containers with the same name
-	if err := g.cleanupExistingContainer(pool, uniqueName); err != nil {
-		g.logger.Errorf("Error cleaning up existing container: %v", err)
-	}
+	g.cleanupExistingContainer(pool, uniqueName)
 
 	runOptions := g.getRunOptions(options...)
 
@@ -179,7 +177,7 @@ func (g *rabbitmqDockerTest) updateOptions(option *contracts.RabbitMQContainerOp
 func (g *rabbitmqDockerTest) cleanupExistingContainer(
 	pool *dockertest.Pool,
 	containerName string,
-) error {
+) {
 	// Try to remove any existing container with the same name
 	// This is a best-effort cleanup, we don't fail if container doesn't exist
 	if err := pool.RemoveContainerByName(containerName); err != nil {
@@ -190,6 +188,4 @@ func (g *rabbitmqDockerTest) cleanupExistingContainer(
 			err,
 		)
 	}
-
-	return nil
 }
