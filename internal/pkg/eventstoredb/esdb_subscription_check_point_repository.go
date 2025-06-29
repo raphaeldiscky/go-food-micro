@@ -69,7 +69,7 @@ func (e *esdbSubscriptionCheckpointRepository) Load(
 
 	event, err := stream.Recv()
 	if errors.As(err, &kdbErr) && kdbErr.Code() == kdb.ErrorCodeResourceNotFound {
-		return 0, errors.WrapIf(err, "stream.Recv")
+		return 0, nil
 	}
 	if errors.Is(err, io.EOF) {
 		return 0, nil

@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package errorutils provides a error utils.
 package errorutils
 

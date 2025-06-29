@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package metrics provides a test for the metrics.
 package metrics_test
 

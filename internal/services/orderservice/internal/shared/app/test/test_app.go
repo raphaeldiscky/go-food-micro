@@ -12,6 +12,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/elasticsearch"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/redis"
 	"github.com/stretchr/testify/require"
@@ -71,6 +72,7 @@ func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 	appBuilder.Decorate(kurrentdb.EventstoreDBContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(mongo2.MongoContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(redis.RedisContainerOptionsDecorator(t, lifetimeCtx))
+	appBuilder.Decorate(elasticsearch.ElasticsearchContainerOptionsDecorator(t, lifetimeCtx))
 
 	testApp := appBuilder.Build()
 
