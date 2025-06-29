@@ -190,7 +190,7 @@ func (c *mongoGenericRepositoryTest) TestGetById() {
 
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
-			t.Parallel()
+			// Remove t.Parallel() to avoid race conditions with shared database
 			res, err := c.productRepository.GetByID(ctx, s.ProductID)
 			if s.ExpectResult == nil {
 				assert.Error(t, err)
@@ -199,7 +199,7 @@ func (c *mongoGenericRepositoryTest) TestGetById() {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, res)
-				assert.Equal(t, p.ID, res.ID)
+				assert.Equal(t, s.ExpectResult.ID, res.ID)
 			}
 		})
 	}
@@ -239,7 +239,7 @@ func (c *mongoGenericRepositoryTest) TestGetByIdWithDataModel() {
 
 	for _, s := range testCases {
 		c.T().Run(s.Name, func(t *testing.T) {
-			t.Parallel()
+			// Remove t.Parallel() to avoid race conditions with shared database
 			res, err := c.productRepositoryWithDataModel.GetByID(
 				ctx,
 				s.ProductID,
@@ -251,7 +251,7 @@ func (c *mongoGenericRepositoryTest) TestGetByIdWithDataModel() {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, res)
-				assert.Equal(t, p.ID, res.ID)
+				assert.Equal(t, s.ExpectResult.ID, res.ID)
 			}
 		})
 	}
@@ -441,147 +441,10 @@ func (c *mongoGenericRepositoryTest) TestDelete() {
 	c.Require().NoError(err)
 
 	single, err := c.productRepository.GetByID(ctx, id)
-	c.Require().NoError(err)
+	c.Require().Error(err)
+	c.Assert().True(customErrors.IsNotFoundError(err))
 	c.Assert().Nil(single)
 }
-
-// func TestDeleteWithDataModel(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
-//
-//	products, err := repository.GetAll(ctx, utils.NewListQuery(10, 1))
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//	product := products.Items[0]
-//
-//	id, err := uuid.FromString(product.ID)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	err = repository.Delete(ctx, id)
-//	if err != nil {
-//		return
-//	}
-//
-//	single, err := repository.GetByID(ctx, id)
-//	assert.Nil(t, single)
-//}
-//
-// func TestCount(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepository(ctx, t)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	count := repository.Count(ctx)
-//	assert.Equal(t, count, int64(2))
-//}
-//
-// func TestCountWithDataModel(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	count := repository.Count(ctx)
-//	assert.Equal(t, count, int64(2))
-//}
-//
-// func TestSkipTake(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepository(ctx, t)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	entities, err := repository.SkipTake(ctx, 1, 1)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	assert.Equal(t, len(entities), 1)
-//}
-//
-// func TestSkipTakeWithDataModel(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	entities, err := repository.SkipTake(ctx, 1, 1)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	assert.Equal(t, len(entities), 1)
-//}
-//
-// func TestFind(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepository(ctx, t)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	entities, err := repository.Find(
-//		ctx,
-//		specification.And(
-//			specification.Equal("is_available", true),
-//			specification.Equal("name", "seed_product1"),
-//		),
-//	)
-//	if err != nil {
-//		return
-//	}
-//	assert.Equal(t, len(entities), 1)
-//}
-//
-// func TestFindWithDataModel(t *testing.T) {
-//	ctx := context.Background()
-//	repository, err := setupGenericMongoRepositoryWithDataModel(ctx, t)
-//	if err != nil {
-//		t.Fatal(err)
-//	}
-//
-//	entities, err := repository.Find(
-//		ctx,
-//		specification.And(
-//			specification.Equal("is_available", true),
-//			specification.Equal("name", "seed_product1"),
-//		),
-//	)
-//	if err != nil {
-//		return
-//	}
-//	assert.Equal(t, len(entities), 1)
-//}
-//
-// func setupGenericMongoRepositoryWithDataModel(
-//	ctx context.Context,
-//	t *testing.T,
-// ) (data.GenericRepositoryWithDataModel[*ProductMongo, *Product], error) {
-//	db, err := mongocontainer.NewMongoTestContainers(defaultLogger.GetLogger()).
-//		Start(ctx, t)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	err = seedData(ctx, db)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	return NewGenericMongoRepositoryWithDataModel[*ProductMongo, *Product](
-//		db,
-//		DatabaseName,
-//		CollectionName,
-//	), nil
-//}
 
 // cleanupMongoData cleans up the mongo data.
 func (c *mongoGenericRepositoryTest) cleanupMongoData() error {

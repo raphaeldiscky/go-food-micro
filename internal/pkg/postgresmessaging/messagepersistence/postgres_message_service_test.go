@@ -99,6 +99,13 @@ func (c *postgresMessageServiceTest) SetupTest() {
 	c.dbContext = gormDBContext
 	c.dbFilePath = gormOptions.DND()
 	c.app = app
+	c.ctx = context.Background() // Initialize context to prevent nil context panic
+
+	// Initialize the messaging repository
+	c.messagingRepository = NewPostgresMessageService(
+		c.dbContext,
+		c.logger,
+	)
 
 	c.initDB()
 }

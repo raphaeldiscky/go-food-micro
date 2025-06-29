@@ -1,5 +1,5 @@
-// Package kurrentdb provides a kurrentdb container.
-package kurrentdb
+// Package eventstoredb provides a eventstoredb container.
+package eventstoredb
 
 import (
 	"context"
@@ -20,16 +20,16 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
-// kurrentdbTestContainers represents a kurrentdb test containers.
-type kurrentdbTestContainers struct {
+// eventstoredbTestContainers represents a eventstoredb test containers.
+type eventstoredbTestContainers struct {
 	container      testcontainers.Container
 	defaultOptions *contracts.EventstoreDBContainerOptions
 	logger         logger.Logger
 }
 
-// NewKurrentDBTestContainers creates a new kurrentdb test containers.
-func NewKurrentDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
-	return &kurrentdbTestContainers{
+// NewEventStoreDBTestContainers creates a new eventstoredb test containers.
+func NewEventStoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
+	return &eventstoredbTestContainers{
 		defaultOptions: &contracts.EventstoreDBContainerOptions{
 			Ports:   []string{"2113/tcp", "1113/tcp"},
 			Host:    "localhost",
@@ -45,7 +45,7 @@ func NewKurrentDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer
 }
 
 // PopulateContainerOptions populates the container options.
-func (g *kurrentdbTestContainers) PopulateContainerOptions(
+func (g *eventstoredbTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
@@ -104,7 +104,7 @@ func (g *kurrentdbTestContainers) PopulateContainerOptions(
 }
 
 // Start starts the container.
-func (g *kurrentdbTestContainers) Start(
+func (g *eventstoredbTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
@@ -119,7 +119,7 @@ func (g *kurrentdbTestContainers) Start(
 }
 
 // Cleanup cleans up the container.
-func (g *kurrentdbTestContainers) Cleanup(ctx context.Context) error {
+func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
 	}
@@ -128,7 +128,7 @@ func (g *kurrentdbTestContainers) Cleanup(ctx context.Context) error {
 }
 
 // getRunOptions gets the run options.
-func (g *kurrentdbTestContainers) getRunOptions(
+func (g *eventstoredbTestContainers) getRunOptions(
 	opts ...*contracts.EventstoreDBContainerOptions,
 ) testcontainers.ContainerRequest {
 	if len(opts) > 0 {
@@ -151,7 +151,7 @@ func (g *kurrentdbTestContainers) getRunOptions(
 	}
 }
 
-func (g *kurrentdbTestContainers) updateOptions(option *contracts.EventstoreDBContainerOptions) {
+func (g *eventstoredbTestContainers) updateOptions(option *contracts.EventstoreDBContainerOptions) {
 	if option.ImageName != "" {
 		g.defaultOptions.ImageName = option.ImageName
 	}

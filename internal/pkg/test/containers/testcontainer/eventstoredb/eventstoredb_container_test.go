@@ -1,8 +1,8 @@
 //go:build integration
 // +build integration
 
-// Package kurrentdb provides a kurrentdb container.
-package kurrentdb
+// Package eventstoredb provides a eventstoredb container.
+package eventstoredb
 
 import (
 	"context"
@@ -31,8 +31,13 @@ func TestCustomEventStoreDBContainer(t *testing.T) {
 		zap.Module,
 		fxlog.FxLogger,
 		core.Module,
-		eventstoredb.ModuleFunc(func() {
-		}),
+		eventstoredb.ModuleFunc(
+			func() eventstoredb.ProjectionBuilderFuc {
+				return func(builder eventstoredb.ProjectionsBuilder) {
+					// No projections needed for container test
+				}
+			},
+		),
 		fx.Decorate(EventstoreDBContainerOptionsDecorator(t, ctx)),
 		fx.Populate(&esdbClient),
 	).RequireStart()
