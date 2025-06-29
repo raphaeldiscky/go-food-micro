@@ -1,5 +1,5 @@
-// Package eventstoredb provides a eventstoredb fx.
-package eventstoredb
+// Package kurrentdb provides a kurrentdb fx.
+package kurrentdb
 
 import (
 	"context"
@@ -14,7 +14,7 @@ var EventstoreDBContainerOptionsDecorator = func(t *testing.T, ctx context.Conte
 	t.Helper()
 
 	return func(c *config.EventStoreDbOptions, logger logger.Logger) (*config.EventStoreDbOptions, error) {
-		newOption, err := NewEventstoreDBTestContainers(logger).PopulateContainerOptions(ctx, t)
+		newOption, err := NewKurrentDBTestContainers(logger).PopulateContainerOptions(ctx, t)
 		if err != nil {
 			return nil, err
 		}
@@ -28,7 +28,7 @@ var EventstoreDBContainerOptionsDecorator = func(t *testing.T, ctx context.Conte
 var ReplaceEventStoreContainerOptions = func(t *testing.T, options *config.EventStoreDbOptions, ctx context.Context, logger logger.Logger) error {
 	t.Helper()
 
-	newOption, err := NewEventstoreDBTestContainers(logger).PopulateContainerOptions(ctx, t)
+	newOption, err := NewKurrentDBTestContainers(logger).PopulateContainerOptions(ctx, t)
 	if err != nil {
 		return err
 	}

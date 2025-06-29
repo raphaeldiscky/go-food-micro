@@ -26,10 +26,9 @@ This application is primarily intended for exploring technical concepts. My goal
   - `Grafana` for visualization
   - `Tempo` for trace storage
 - ✅ Containerized deployments using `Docker` and `docker-compose`
-- 🚧 Add `Kubernetes` for container orchestration and deployment
+- ✅ `Resiliency Patterns` for handling failures [go-resiliency](https://github.com/eapache/go-resiliency) for circuit breaker, retries, and backoff strategies
 - 🚧 Using `Outbox Pattern` for all microservices for [Guaranteed Delivery](https://www.enterpriseintegrationpatterns.com/GuaranteedMessaging.html) or [At-least-once Delivery](https://www.cloudcomputingpatterns.org/at_least_once_delivery/)
-- 🚧 Using `Inbox Pattern` for handling [Idempotency](https://www.cloudcomputingpatterns.org/idempotent_processor/) in reciver side and [Exactly-once Delivery](https://www.cloudcomputingpatterns.org/exactly_once_delivery/)
-- 🚧 `Resiliency Patterns` for handling failures and transient errors using [go-resiliency](https://github.com/eapache/go-resiliency) for circuit breaker, retries, and backoff strategies
+- 🚧 Using `Inbox Pattern` for handling [Idempotency](https://www.cloudcomputingpatterns.org/idempotent_processor/) in receiver side and [Exactly-once Delivery](https://www.cloudcomputingpatterns.org/exactly_once_delivery/)
 
 ## Technologies - Libraries 🛠️
 
@@ -98,6 +97,7 @@ This application is primarily intended for exploring technical concepts. My goal
 <h4>Utilities</h4>
 
 - **[avast/retry-go](https://github.com/avast/retry-go)** - Simple golang library for retry mechanism
+- **[eapache/go-resiliency](https://github.com/eapache/go-resiliency)** - Resiliency patterns for golang
 - **[ahmetb/go-linq](https://github.com/ahmetb/go-linq)** - .NET LINQ capabilities in Go
 
 <h4>Deployment & DevOps</h4>

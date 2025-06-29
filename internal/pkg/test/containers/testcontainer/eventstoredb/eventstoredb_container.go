@@ -1,5 +1,5 @@
-// Package eventstoredb provides a eventstoredb container.
-package eventstoredb
+// Package kurrentdb provides a kurrentdb container.
+package kurrentdb
 
 import (
 	"context"
@@ -20,16 +20,16 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/contracts"
 )
 
-// eventstoredbTestContainers represents a eventstoredb test containers.
-type eventstoredbTestContainers struct {
+// kurrentdbTestContainers represents a kurrentdb test containers.
+type kurrentdbTestContainers struct {
 	container      testcontainers.Container
 	defaultOptions *contracts.EventstoreDBContainerOptions
 	logger         logger.Logger
 }
 
-// NewEventstoreDBTestContainers creates a new eventstoredb test containers.
-func NewEventstoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
-	return &eventstoredbTestContainers{
+// NewKurrentDBTestContainers creates a new kurrentdb test containers.
+func NewKurrentDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
+	return &kurrentdbTestContainers{
 		defaultOptions: &contracts.EventstoreDBContainerOptions{
 			Ports:   []string{"2113/tcp", "1113/tcp"},
 			Host:    "localhost",
@@ -37,15 +37,15 @@ func NewEventstoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContai
 			// HTTP is the primary protocol for EventStoreDB. It is used in gRPC communication and HTTP APIs (management, gossip and diagnostics).
 			HttpPort:  2113,
 			Tag:       "latest",
-			ImageName: "eventstore/eventstore",
-			Name:      "eventstoredb-testcontainers",
+			ImageName: "kurrentplatform/kurrentdb",
+			Name:      "kurrentdb-testcontainers",
 		},
 		logger: l,
 	}
 }
 
 // PopulateContainerOptions populates the container options.
-func (g *eventstoredbTestContainers) PopulateContainerOptions(
+func (g *kurrentdbTestContainers) PopulateContainerOptions(
 	ctx context.Context,
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
@@ -104,7 +104,7 @@ func (g *eventstoredbTestContainers) PopulateContainerOptions(
 }
 
 // Start starts the container.
-func (g *eventstoredbTestContainers) Start(
+func (g *kurrentdbTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
@@ -119,7 +119,7 @@ func (g *eventstoredbTestContainers) Start(
 }
 
 // Cleanup cleans up the container.
-func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
+func (g *kurrentdbTestContainers) Cleanup(ctx context.Context) error {
 	if err := g.container.Terminate(ctx); err != nil {
 		return errors.WrapIf(err, "failed to terminate container: %s")
 	}
@@ -128,7 +128,7 @@ func (g *eventstoredbTestContainers) Cleanup(ctx context.Context) error {
 }
 
 // getRunOptions gets the run options.
-func (g *eventstoredbTestContainers) getRunOptions(
+func (g *kurrentdbTestContainers) getRunOptions(
 	opts ...*contracts.EventstoreDBContainerOptions,
 ) testcontainers.ContainerRequest {
 	if len(opts) > 0 {
@@ -141,17 +141,17 @@ func (g *eventstoredbTestContainers) getRunOptions(
 		WaitingFor: wait.ForListeningPort(nat.Port(g.defaultOptions.Ports[0])).
 			WithPollInterval(2 * time.Second),
 		Hostname: g.defaultOptions.Host,
-		// we use `EVENTSTORE_IN_MEM` for use eventstoredb in-memory mode in tests
+		// we use `KURRENTDB_IN_MEM` for use eventstoredb in-memory mode in tests
 		Env: map[string]string{
-			"EVENTSTORE_START_STANDARD_PROJECTIONS": "false",
-			"EVENTSTORE_INSECURE":                   "true",
-			"EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP":  "true",
-			"EVENTSTORE_MEM_DB":                     "true",
+			"KURRENTDB_START_STANDARD_PROJECTIONS": "false",
+			"KURRENTDB_INSECURE":                   "true",
+			"KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP":  "true",
+			"KURRENTDB_MEM_DB":                     "true",
 		},
 	}
 }
 
-func (g *eventstoredbTestContainers) updateOptions(option *contracts.EventstoreDBContainerOptions) {
+func (g *kurrentdbTestContainers) updateOptions(option *contracts.EventstoreDBContainerOptions) {
 	if option.ImageName != "" {
 		g.defaultOptions.ImageName = option.ImageName
 	}

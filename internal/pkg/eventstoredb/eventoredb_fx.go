@@ -18,7 +18,7 @@ var (
 	// https://uber-go.github.io/fx/modules.html
 	ModuleFunc = func(projectionBuilderConstructor interface{}) fx.Option {
 		return fx.Module(
-			"eventstoredbfx",
+			"kurrentdbfx",
 			fx.Provide(projectionBuilderConstructor),
 			eventstoreProviders,
 			eventstoreInvokes,

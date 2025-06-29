@@ -12,7 +12,6 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/eventstoredb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/redis"
 	"github.com/stretchr/testify/require"
@@ -22,6 +21,7 @@ import (
 	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	kurrentdb "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/eventstoredb"
 	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/config"
@@ -68,7 +68,7 @@ func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 	appBuilder.ProvideModule(orders.OrderServiceModule())
 
 	appBuilder.Decorate(rabbitmq.RabbitmqContainerOptionsDecorator(t, lifetimeCtx))
-	appBuilder.Decorate(eventstoredb.EventstoreDBContainerOptionsDecorator(t, lifetimeCtx))
+	appBuilder.Decorate(kurrentdb.EventstoreDBContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(mongo2.MongoContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(redis.RedisContainerOptionsDecorator(t, lifetimeCtx))
 

@@ -1,5 +1,5 @@
-// Package eventstoredb provides a eventstoredb container.
-package eventstoredb
+// Package kurrentdb provides a kurrentdb container.
+package kurrentdb
 
 import (
 	"context"
