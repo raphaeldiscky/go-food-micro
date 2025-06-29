@@ -145,7 +145,7 @@ func createDB(cfg *PostgresPgxOptions) error {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(datasource)))
 
 	var exists int
-	rows, err := sqldb.Query(
+	rows, err := sqldb.QueryContext(context.Background(),
 		fmt.Sprintf("SELECT 1 FROM  pg_catalog.pg_database WHERE datname='%s'", cfg.DBName),
 	)
 	if err != nil {
@@ -173,7 +173,7 @@ func createDB(cfg *PostgresPgxOptions) error {
 		return nil
 	}
 
-	_, err = sqldb.Exec(fmt.Sprintf("CREATE DATABASE %s", cfg.DBName))
+	_, err = sqldb.ExecContext(context.Background(), fmt.Sprintf("CREATE DATABASE %s", cfg.DBName))
 	if err != nil {
 		return err
 	}

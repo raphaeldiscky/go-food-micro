@@ -83,7 +83,7 @@ func NewSqlxConn(cfg *PostgresSqlxOptions) (*Sqlx, error) {
 	db.SetConnMaxLifetime(time.Duration(maxLifetimeConn)) // 0, connections are reused forever
 
 	// Try to ping database.
-	if err := db.Ping(); err != nil {
+	if err := db.PingContext(context.Background()); err != nil {
 		defer func() {
 			if err := db.Close(); err != nil {
 				log.Fatalf("Error closing database: %v", err)
@@ -126,7 +126,7 @@ func createDB(cfg *PostgresSqlxOptions) error {
 	sqldb := sql.OpenDB(pgdriver.NewConnector(pgdriver.WithDSN(datasource)))
 
 	var exists int
-	rows, err := sqldb.Query(
+	rows, err := sqldb.QueryContext(context.Background(),
 		fmt.Sprintf("SELECT 1 FROM  pg_catalog.pg_database WHERE datname='%s'", cfg.DBName),
 	)
 	if err != nil {
@@ -154,7 +154,7 @@ func createDB(cfg *PostgresSqlxOptions) error {
 		return nil
 	}
 
-	_, err = sqldb.Exec(fmt.Sprintf("CREATE DATABASE %s", cfg.DBName))
+	_, err = sqldb.ExecContext(context.Background(), fmt.Sprintf("CREATE DATABASE %s", cfg.DBName))
 	if err != nil {
 		return err
 	}

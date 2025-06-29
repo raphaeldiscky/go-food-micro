@@ -9,7 +9,7 @@ import (
 	"github.com/gavv/httpexpect/v2"
 	"github.com/google/uuid"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	gofakeit "github.com/brianvoe/gofakeit/v6"

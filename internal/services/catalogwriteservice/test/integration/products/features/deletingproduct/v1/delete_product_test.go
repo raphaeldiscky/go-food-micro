@@ -13,7 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/hypothesis"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"

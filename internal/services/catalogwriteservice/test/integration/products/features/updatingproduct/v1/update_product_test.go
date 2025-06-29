@@ -13,7 +13,7 @@ import (
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/messaging"
 
 	mediatr "github.com/mehdihadeli/go-mediatr"
-	ginkgo "github.com/onsi/ginkgo"
+	ginkgo "github.com/onsi/ginkgo/v2"
 	gomega "github.com/onsi/gomega"
 	customErrors "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/httperrors/customerrors"
 	uuid "github.com/satori/go.uuid"
