@@ -64,8 +64,13 @@ func (g *grpcClient) Close() error {
 func (g *grpcClient) WaitForAvailableConnection() error {
 	timeout := time.Second * 20
 
+	// Force the connection to connect (gRPC connections are lazy by default)
+	g.conn.Connect()
+
 	err := waitUntilConditionMet(func() bool {
-		return g.conn.GetState() == connectivity.Ready
+		state := g.conn.GetState()
+		// Accept both IDLE and READY as valid states
+		return state == connectivity.Ready || state == connectivity.Idle
 	}, timeout)
 
 	state := g.conn.GetState()
