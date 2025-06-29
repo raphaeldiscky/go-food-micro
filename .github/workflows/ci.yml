@@ -244,7 +244,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        service: [pkg, catalogwriteservice, catalogreadservice, orderservice]
+        service: [pkg, catalogwriteservice, catalogreadservice]
 
     steps:
       - name: Checkout Code
