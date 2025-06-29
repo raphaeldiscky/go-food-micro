@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package producer provides the rabbitmq producer.
 package producer
 

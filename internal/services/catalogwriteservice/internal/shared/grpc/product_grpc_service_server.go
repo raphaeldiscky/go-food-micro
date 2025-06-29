@@ -116,7 +116,7 @@ func (s *ProductGrpcServiceServer) UpdateProduct(
 	span := trace.SpanFromContext(ctx)
 	span.SetAttributes(attribute.Object("Request", req))
 
-	productUUID, err := uuid.FromString(req.GetProductId())
+	productUUID, err := uuid.FromString(req.GetProductID())
 	if err != nil {
 		badRequestErr := customErrors.NewBadRequestErrorWrap(
 			err,
@@ -186,7 +186,7 @@ func (s *ProductGrpcServiceServer) GetProductByID(
 	// ctx, span, clean := grpcTracing.StartGrpcServerTracerSpan(ctx, "ProductGrpcServiceServer.GetProductByID")
 	// defer clean()
 
-	productUUID, err := uuid.FromString(req.GetProductId())
+	productUUID, err := uuid.FromString(req.GetProductID())
 	if err != nil {
 		badRequestErr := customErrors.NewBadRequestErrorWrap(
 			err,

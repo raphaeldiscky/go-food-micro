@@ -6,22 +6,23 @@ import (
 	"testing"
 	"time"
 
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/fxapp/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/grpc"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/mongodb"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/bus"
-	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/eventstoredb"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/elasticsearch"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/rabbitmq"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/redis"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/mongo"
 
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	config4 "github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	config3 "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/config"
 	config2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/rabbitmq/config"
+	kurrentdb "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/eventstoredb"
 	mongo2 "github.com/raphaeldiscky/go-food-micro/internal/pkg/test/containers/testcontainer/mongo"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/services/orderservice/config"
@@ -47,7 +48,7 @@ type OrderTestAppResult struct {
 	OrderAggregateStore  store.AggregateStore[*aggregate.Order]
 	OrdersServiceClient  ordersService.OrdersServiceClient
 	MongoClient          *mongo.Client
-	EsdbClient           *esdb.Client
+	EsdbClient           *kdb.Client
 	MongoDbOptions       *mongodb.MongoDbOptions
 	GrpcClient           grpc.GrpcClient
 }
@@ -68,9 +69,10 @@ func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 	appBuilder.ProvideModule(orders.OrderServiceModule())
 
 	appBuilder.Decorate(rabbitmq.RabbitmqContainerOptionsDecorator(t, lifetimeCtx))
-	appBuilder.Decorate(eventstoredb.EventstoreDBContainerOptionsDecorator(t, lifetimeCtx))
+	appBuilder.Decorate(kurrentdb.EventstoreDBContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(mongo2.MongoContainerOptionsDecorator(t, lifetimeCtx))
 	appBuilder.Decorate(redis.RedisContainerOptionsDecorator(t, lifetimeCtx))
+	appBuilder.Decorate(elasticsearch.ElasticsearchContainerOptionsDecorator(t, lifetimeCtx))
 
 	testApp := appBuilder.Build()
 
@@ -90,7 +92,7 @@ func (a *OrderTestApp) Run(t *testing.T) (result *OrderTestAppResult) {
 			orderMongoRepository repositories.OrderMongoRepository,
 			orderAggregateStore store.AggregateStore[*aggregate.Order],
 			mongoClient *mongo.Client,
-			esdbClient *esdb.Client,
+			esdbClient *kdb.Client,
 			mongoDbOptions *mongodb.MongoDbOptions,
 		) {
 			result = &OrderTestAppResult{

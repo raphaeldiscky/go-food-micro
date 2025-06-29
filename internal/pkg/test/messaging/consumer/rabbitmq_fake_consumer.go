@@ -38,6 +38,7 @@ func (f *RabbitMQFakeTestConsumerHandler[T]) Handle(
 	ctx context.Context,
 	consumeContext types.MessageConsumeContext,
 ) error {
+	defaultLogger.Info("RabbitMQFakeTestConsumerHandler.Handle called - processing message")
 	f.isHandled = true
 	if f.hypothesis != nil {
 		m, ok := consumeContext.Message().(T)
@@ -46,6 +47,7 @@ func (f *RabbitMQFakeTestConsumerHandler[T]) Handle(
 		}
 		f.hypothesis.Test(ctx, m)
 	}
+	defaultLogger.Info("RabbitMQFakeTestConsumerHandler.Handle completed successfully")
 
 	return nil
 }

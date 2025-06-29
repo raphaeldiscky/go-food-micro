@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package redis provides a redis container.
 package redis
 

@@ -78,17 +78,12 @@ func (o *TracingOpenTelemetry) Shutdown(ctx context.Context) error {
 func (o *TracingOpenTelemetry) newResource() (*resource.Resource, error) {
 	// https://github.com/uptrace/uptrace-go/blob/master/example/otlp-traces/main.go#L49C1-L56C5
 	resource, err := resource.New(context.Background(),
-		resource.WithFromEnv(),
 		resource.WithTelemetrySDK(),
-		resource.WithHost(),
-		resource.WithOS(),
-		resource.WithSchemaURL(semconv.SchemaURL),
 		resource.WithAttributes(
 			semconv.ServiceName(o.config.ServiceName),
 			semconv.ServiceVersion(o.config.Version),
 			attribute.Int64("ID", o.config.ID),
 			attribute.String("environment", o.environment.GetEnvironmentName()),
-			semconv.TelemetrySDKVersionKey.String("v1.21.0"), // semconv version
 			semconv.TelemetrySDKLanguageGo,
 		))
 

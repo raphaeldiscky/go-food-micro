@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"github.com/docker/go-connections/nat"
 	"github.com/testcontainers/testcontainers-go/wait"
 
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	testcontainers "github.com/testcontainers/testcontainers-go"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb"
@@ -27,8 +27,8 @@ type eventstoredbTestContainers struct {
 	logger         logger.Logger
 }
 
-// NewEventstoreDBTestContainers creates a new eventstoredb test containers.
-func NewEventstoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
+// NewEventStoreDBTestContainers creates a new eventstoredb test containers.
+func NewEventStoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContainer {
 	return &eventstoredbTestContainers{
 		defaultOptions: &contracts.EventstoreDBContainerOptions{
 			Ports:   []string{"2113/tcp", "1113/tcp"},
@@ -37,8 +37,8 @@ func NewEventstoreDBTestContainers(l logger.Logger) contracts.EventstoreDBContai
 			// HTTP is the primary protocol for EventStoreDB. It is used in gRPC communication and HTTP APIs (management, gossip and diagnostics).
 			HttpPort:  2113,
 			Tag:       "latest",
-			ImageName: "eventstore/eventstore",
-			Name:      "eventstoredb-testcontainers",
+			ImageName: "kurrentplatform/kurrentdb",
+			Name:      "kurrentdb-testcontainers",
 		},
 		logger: l,
 	}
@@ -108,7 +108,7 @@ func (g *eventstoredbTestContainers) Start(
 	ctx context.Context,
 	t *testing.T,
 	options ...*contracts.EventstoreDBContainerOptions,
-) (*esdb.Client, error) {
+) (*kdb.Client, error) {
 	t.Helper()
 	eventstoredbOptions, err := g.PopulateContainerOptions(ctx, t, options...)
 	if err != nil {
@@ -141,12 +141,12 @@ func (g *eventstoredbTestContainers) getRunOptions(
 		WaitingFor: wait.ForListeningPort(nat.Port(g.defaultOptions.Ports[0])).
 			WithPollInterval(2 * time.Second),
 		Hostname: g.defaultOptions.Host,
-		// we use `EVENTSTORE_IN_MEM` for use eventstoredb in-memory mode in tests
+		// we use `KURRENTDB_IN_MEM` for use eventstoredb in-memory mode in tests
 		Env: map[string]string{
-			"EVENTSTORE_START_STANDARD_PROJECTIONS": "false",
-			"EVENTSTORE_INSECURE":                   "true",
-			"EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP":  "true",
-			"EVENTSTORE_MEM_DB":                     "true",
+			"KURRENTDB_START_STANDARD_PROJECTIONS": "false",
+			"KURRENTDB_INSECURE":                   "true",
+			"KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP":  "true",
+			"KURRENTDB_MEM_DB":                     "true",
 		},
 	}
 }

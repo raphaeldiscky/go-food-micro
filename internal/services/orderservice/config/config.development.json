@@ -20,9 +20,7 @@
     "debugHeaders": true,
     "httpClientDebug": true,
     "debugErrorsResponse": true,
-    "ignoreLogUrls": [
-      "metrics"
-    ]
+    "ignoreLogUrls": ["metrics"]
   },
   "logOptions": {
     "level": "debug",
@@ -89,10 +87,22 @@
   "eventStoreDbOptions": {
     "host": "localhost",
     "httpPort": 2113,
-    "tcpPort": 1113 ,
+    "tcpPort": 1113,
     "subscription": {
       "subscriptionId": "orders-subscription",
       "prefix": ["order-"]
     }
+  },
+  "elasticOptions": {
+    "url": "http://localhost:9200",
+    "sniff": false,
+    "gzip": true,
+    "explain": true,
+    "fetchSource": true,
+    "version": true,
+    "pretty": true
+  },
+  "elasticIndexes": {
+    "orders": "orders"
   }
 }

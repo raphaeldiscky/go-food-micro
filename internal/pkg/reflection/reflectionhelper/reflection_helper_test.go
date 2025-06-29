@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package reflectionhelper provides a reflection helper.
 package reflectionhelper
 
@@ -119,7 +122,7 @@ func TestGetFieldValueForExportedFieldsAndAddressableStruct(t *testing.T) {
 
 	// field by name only work on struct not pointer type so we should get Elem()
 	v := reflect.ValueOf(p).Elem()
-	name := GetFieldValue(v.FieldByName("ShortTypeName")).Interface()
+	name := GetFieldValue(v.FieldByName("Name")).Interface()
 	age := GetFieldValue(v.FieldByName("Age")).Interface()
 
 	assert.Equal(t, "John", name)
@@ -149,7 +152,7 @@ func TestGetFieldValueForExportedFieldsAndUnAddressableStruct(t *testing.T) {
 
 	// field by name only work on struct not pointer type so we should get Elem()
 	v := reflect.ValueOf(&p).Elem()
-	name := GetFieldValue(v.FieldByName("ShortTypeName")).Interface()
+	name := GetFieldValue(v.FieldByName("Name")).Interface()
 	age := GetFieldValue(v.FieldByName("Age")).Interface()
 
 	assert.Equal(t, "John", name)
@@ -176,7 +179,7 @@ func TestGetFieldValueFromMethodAndAddressableStruct(t *testing.T) {
 	t.Parallel()
 
 	p := &PersonPrivate{name: "John", age: 20}
-	name := GetFieldValueFromMethodAndObject(p, "ShortTypeName")
+	name := GetFieldValueFromMethodAndObject(p, "Name")
 
 	assert.Equal(t, "John", name.Interface())
 }
@@ -185,7 +188,7 @@ func TestGetFieldValueFromMethodAndAddressableStruct(t *testing.T) {
 func TestGetFieldValueFromMethodAndUnAddressableStruct(t *testing.T) {
 	t.Parallel()
 	p := PersonPrivate{name: "John", age: 20}
-	name := GetFieldValueFromMethodAndObject(p, "ShortTypeName")
+	name := GetFieldValueFromMethodAndObject(p, "Name")
 
 	assert.Equal(t, "John", name.Interface())
 }
@@ -199,7 +202,7 @@ func TestConvertNoPointerTypeToPointerTypeWithAddr(t *testing.T) {
 	p := PersonPrivate{name: "John", age: 20}
 	v := reflect.ValueOf(&p).Elem()
 	pointerType := v.Addr()
-	name := pointerType.MethodByName("ShortTypeName").Call(nil)[0].Interface()
+	name := pointerType.MethodByName("Name").Call(nil)[0].Interface()
 	age := pointerType.MethodByName("Age").Call(nil)[0].Interface()
 
 	assert.Equal(t, "John", name)

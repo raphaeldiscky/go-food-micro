@@ -5,8 +5,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"go.uber.org/fx"
+
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/eventstoredb/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger"
@@ -17,7 +18,7 @@ var (
 	// https://uber-go.github.io/fx/modules.html
 	ModuleFunc = func(projectionBuilderConstructor interface{}) fx.Option {
 		return fx.Module(
-			"eventstoredbfx",
+			"kurrentdbfx",
 			fx.Provide(projectionBuilderConstructor),
 			eventstoreProviders,
 			eventstoreInvokes,
@@ -60,8 +61,8 @@ func registerHooks(
 			// if we need an app context which is alive until the app context done we should create it manually here
 			go func() {
 				option := &EventStoreDBSubscriptionToAllOptions{
-					FilterOptions: &esdb.SubscriptionFilter{
-						Type:     esdb.StreamFilterType,
+					FilterOptions: &kdb.SubscriptionFilter{
+						Type:     kdb.StreamFilterType,
 						Prefixes: cfg.Subscription.Prefix,
 					},
 					SubscriptionId: cfg.Subscription.SubscriptionId,

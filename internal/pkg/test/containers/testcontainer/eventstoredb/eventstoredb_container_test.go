@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package eventstoredb provides a eventstoredb container.
 package eventstoredb
 
@@ -5,9 +8,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
+
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
@@ -19,7 +23,7 @@ import (
 
 // TestCustomEventStoreDBContainer tests the custom eventstoredb container.
 func TestCustomEventStoreDBContainer(t *testing.T) {
-	var esdbClient *esdb.Client
+	var esdbClient *kdb.Client
 	ctx := context.Background()
 
 	fxtest.New(t,
@@ -27,8 +31,13 @@ func TestCustomEventStoreDBContainer(t *testing.T) {
 		zap.Module,
 		fxlog.FxLogger,
 		core.Module,
-		eventstoredb.ModuleFunc(func() {
-		}),
+		eventstoredb.ModuleFunc(
+			func() eventstoredb.ProjectionBuilderFuc {
+				return func(builder eventstoredb.ProjectionsBuilder) {
+					// No projections needed for container test
+				}
+			},
+		),
 		fx.Decorate(EventstoreDBContainerOptionsDecorator(t, ctx)),
 		fx.Populate(&esdbClient),
 	).RequireStart()

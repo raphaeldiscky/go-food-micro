@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
-	"github.com/gofrs/uuid"
 
 	linq "github.com/ahmetb/go-linq/v3"
-	uuid2 "github.com/satori/go.uuid"
+	googleuuid "github.com/google/uuid"
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/domain"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/metadata"
@@ -44,33 +44,38 @@ func NewEsdbSerializer(
 // StreamEventToEventData converts a stream event to a event data.
 func (e *EsdbSerializer) StreamEventToEventData(
 	streamEvent *models.StreamEvent,
-) (esdb.EventData, error) {
+) (kdb.EventData, error) {
 	eventSerializationResult, err := e.eventSerializer.Serialize(streamEvent.Event)
 	if err != nil {
-		return *new(esdb.EventData), err
+		return *new(kdb.EventData), err
 	}
 
 	metadataSerializationResult, err := e.metadataSerializer.Serialize(streamEvent.Metadata)
 	if err != nil {
-		return *new(esdb.EventData), err
+		return *new(kdb.EventData), err
 	}
 
-	var contentType esdb.ContentType
+	var contentType kdb.ContentType
 
 	switch eventSerializationResult.ContentType {
 	case "application/json":
-		contentType = esdb.JsonContentType
+		contentType = kdb.ContentTypeJson
 	default:
-		contentType = esdb.BinaryContentType
+		contentType = kdb.ContentTypeBinary
 	}
 
 	id, err := uuid.FromString(streamEvent.EventID.String())
 	if err != nil {
-		return *new(esdb.EventData), err
+		return *new(kdb.EventData), err
 	}
 
-	return esdb.EventData{
-		EventID:     id,
+	googleID, err := googleuuid.Parse(id.String())
+	if err != nil {
+		return *new(kdb.EventData), err
+	}
+
+	return kdb.EventData{
+		EventID:     googleID,
 		EventType:   typeMapper.GetTypeName(streamEvent.Event),
 		Data:        eventSerializationResult.Data,
 		Metadata:    metadataSerializationResult,
@@ -81,33 +86,33 @@ func (e *EsdbSerializer) StreamEventToEventData(
 // ExpectedStreamVersionToEsdbExpectedRevision converts a expected stream version to a event store db expected revision.
 func (e *EsdbSerializer) ExpectedStreamVersionToEsdbExpectedRevision(
 	expectedVersion expectedStreamVersion.ExpectedStreamVersion,
-) esdb.ExpectedRevision {
+) kdb.StreamState {
 	if expectedVersion.IsNoStream() {
-		return esdb.NoStream{}
+		return kdb.NoStream{}
 	}
 	if expectedVersion.IsAny() {
-		return esdb.Any{}
+		return kdb.Any{}
 	}
 	if expectedVersion.IsStreamExists() {
-		return esdb.StreamExists{}
+		return kdb.StreamExists{}
 	}
 
 	//nolint:gosec // G115: integer overflow conversion int -> uint64
-	return esdb.StreamRevision{Value: uint64(expectedVersion.Value())}
+	return kdb.StreamRevision{Value: uint64(expectedVersion.Value())}
 }
 
 // StreamReadPositionToStreamPosition converts a stream read position to a stream position.
 func (e *EsdbSerializer) StreamReadPositionToStreamPosition(
 	readPosition readPosition.StreamReadPosition,
-) esdb.StreamPosition {
+) kdb.StreamPosition {
 	if readPosition.IsEnd() {
-		return esdb.End{}
+		return kdb.End{}
 	}
 	if readPosition.IsStart() {
-		return esdb.Start{}
+		return kdb.Start{}
 	}
 
-	return esdb.Revision(1)
+	return kdb.Revision(1)
 }
 
 // StreamTruncatePositionToInt64 converts a stream truncate position to a int64.
@@ -120,13 +125,14 @@ func (e *EsdbSerializer) StreamTruncatePositionToInt64(
 
 // EsdbReadStreamToResolvedEvents converts a event store db read stream to a resolved events.
 func (e *EsdbSerializer) EsdbReadStreamToResolvedEvents(
-	stream *esdb.ReadStream,
-) ([]*esdb.ResolvedEvent, error) {
-	var events []*esdb.ResolvedEvent
+	stream *kdb.ReadStream,
+) ([]*kdb.ResolvedEvent, error) {
+	var events []*kdb.ResolvedEvent
 
 	for {
 		event, err := stream.Recv()
-		if errors.Is(err, esdb.ErrStreamNotFound) {
+		var kdbErr *kdb.Error
+		if errors.As(err, &kdbErr) && kdbErr.Code() == kdb.ErrorCodeResourceNotFound {
 			return nil, esErrors.NewStreamNotFoundError(err, event.Event.StreamID)
 		}
 		if errors.Is(err, io.EOF) {
@@ -144,7 +150,7 @@ func (e *EsdbSerializer) EsdbReadStreamToResolvedEvents(
 
 // EsdbPositionToStreamReadPosition converts a event store db position to a stream read position.
 func (e *EsdbSerializer) EsdbPositionToStreamReadPosition(
-	position esdb.Position,
+	position kdb.Position,
 ) readPosition.StreamReadPosition {
 	//nolint:gosec // G115: integer overflow conversion int -> int64
 	return readPosition.FromInt64(int64(position.Commit))
@@ -152,7 +158,7 @@ func (e *EsdbSerializer) EsdbPositionToStreamReadPosition(
 
 // ResolvedEventToStreamEvent converts a resolved event to a stream event.
 func (e *EsdbSerializer) ResolvedEventToStreamEvent(
-	resolveEvent *esdb.ResolvedEvent,
+	resolveEvent *kdb.ResolvedEvent,
 ) (*models.StreamEvent, error) {
 	deserializedEvent, err := e.eventSerializer.Deserialize(
 		resolveEvent.Event.Data,
@@ -168,7 +174,7 @@ func (e *EsdbSerializer) ResolvedEventToStreamEvent(
 		return nil, err
 	}
 
-	id, err := uuid2.FromString(resolveEvent.Event.EventID.String())
+	id, err := uuid.FromString(resolveEvent.Event.EventID.String())
 	if err != nil {
 		return nil, err
 	}
@@ -185,13 +191,13 @@ func (e *EsdbSerializer) ResolvedEventToStreamEvent(
 
 // ResolvedEventsToStreamEvents converts a resolved events to a stream events.
 func (e *EsdbSerializer) ResolvedEventsToStreamEvents(
-	resolveEvents []*esdb.ResolvedEvent,
+	resolveEvents []*kdb.ResolvedEvent,
 ) ([]*models.StreamEvent, error) {
 	var streamEvents []*models.StreamEvent
 
-	linq.From(resolveEvents).WhereT(func(item *esdb.ResolvedEvent) bool {
+	linq.From(resolveEvents).WhereT(func(item *kdb.ResolvedEvent) bool {
 		return !strings.HasPrefix(item.Event.EventType, "$")
-	}).SelectT(func(item *esdb.ResolvedEvent) *models.StreamEvent {
+	}).SelectT(func(item *kdb.ResolvedEvent) *models.StreamEvent {
 		event, err := e.ResolvedEventToStreamEvent(item)
 		if err != nil {
 			return nil
@@ -205,7 +211,7 @@ func (e *EsdbSerializer) ResolvedEventsToStreamEvents(
 
 // EsdbWriteResultToAppendEventResult converts a event store db write result to a append event result.
 func (e *EsdbSerializer) EsdbWriteResultToAppendEventResult(
-	writeResult *esdb.WriteResult,
+	writeResult *kdb.WriteResult,
 ) *appendResult.AppendEventsResult {
 	return appendResult.From(writeResult.CommitPosition, writeResult.NextExpectedVersion)
 }
@@ -214,7 +220,7 @@ func (e *EsdbSerializer) EsdbWriteResultToAppendEventResult(
 func (e *EsdbSerializer) Serialize(
 	data domain.IDomainEvent,
 	meta metadata.Metadata,
-) (*esdb.EventData, error) {
+) (*kdb.EventData, error) {
 	serializedData, err := e.eventSerializer.Serialize(data)
 	if err != nil {
 		return nil, err
@@ -225,16 +231,18 @@ func (e *EsdbSerializer) Serialize(
 		return nil, err
 	}
 
-	id, err := uuid.NewV4()
+	id := uuid.NewV4()
+
+	googleID, err := googleuuid.Parse(id.String())
 	if err != nil {
 		return nil, err
 	}
 
-	return &esdb.EventData{
-		EventID:     id,
+	return &kdb.EventData{
+		EventID:     googleID,
 		EventType:   typeMapper.GetTypeName(data),
 		Data:        serializedData.Data,
-		ContentType: esdb.JsonContentType,
+		ContentType: kdb.ContentTypeJson,
 		Metadata:    serializedMeta,
 	}, nil
 }
@@ -243,7 +251,7 @@ func (e *EsdbSerializer) Serialize(
 func (e *EsdbSerializer) SerializeObject(
 	data interface{},
 	meta metadata.Metadata,
-) (*esdb.EventData, error) {
+) (*kdb.EventData, error) {
 	serializedData, err := e.eventSerializer.SerializeObject(data)
 	if err != nil {
 		return nil, err
@@ -254,23 +262,25 @@ func (e *EsdbSerializer) SerializeObject(
 		return nil, err
 	}
 
-	id, err := uuid.NewV4()
+	id := uuid.NewV4()
+
+	googleID, err := googleuuid.Parse(id.String())
 	if err != nil {
 		return nil, err
 	}
 
-	return &esdb.EventData{
-		EventID:     id,
+	return &kdb.EventData{
+		EventID:     googleID,
 		EventType:   typeMapper.GetTypeName(data),
 		Data:        serializedData.Data,
-		ContentType: esdb.JsonContentType,
+		ContentType: kdb.ContentTypeJson,
 		Metadata:    serializedMeta,
 	}, nil
 }
 
 // Deserialize deserializes a resolved event.
 func (e *EsdbSerializer) Deserialize(
-	resolveEvent *esdb.ResolvedEvent,
+	resolveEvent *kdb.ResolvedEvent,
 ) (domain.IDomainEvent, metadata.Metadata, error) {
 	eventType := resolveEvent.Event.EventType
 	data := resolveEvent.Event.Data
@@ -295,7 +305,7 @@ func (e *EsdbSerializer) Deserialize(
 
 // DeserializeObject deserializes a resolved event.
 func (e *EsdbSerializer) DeserializeObject(
-	resolveEvent *esdb.ResolvedEvent,
+	resolveEvent *kdb.ResolvedEvent,
 ) (interface{}, metadata.Metadata, error) {
 	eventType := resolveEvent.Event.EventType
 	data := resolveEvent.Event.Data
@@ -325,7 +335,7 @@ func (e *EsdbSerializer) DomainEventToStreamEvent(
 	position int64,
 ) *models.StreamEvent {
 	return &models.StreamEvent{
-		EventID:  uuid2.NewV4(),
+		EventID:  uuid.NewV4(),
 		Event:    domainEvent,
 		Metadata: meta,
 		Version:  position,

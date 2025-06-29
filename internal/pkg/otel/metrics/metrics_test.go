@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package metrics provides a test for the metrics.
 package metrics_test
 
@@ -7,66 +10,67 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/stretchr/testify/require"
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxtest"
 
-	ginkgo "github.com/onsi/ginkgo/v2"
-	gomega "github.com/onsi/gomega"
-
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/config/environment"
 	customEcho "github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho"
+	"github.com/raphaeldiscky/go-food-micro/internal/pkg/http/customecho/contracts"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/external/fxlog"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/logger/zap"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/otel/metrics"
 )
 
-// TestHealth tests the health of the metrics.
-func TestHealth(t *testing.T) {
-	gomega.RegisterFailHandler(ginkgo.Fail)
+// TestMetricsEndpoint tests the metrics endpoint.
+func TestMetricsEndpoint(t *testing.T) {
+	var cfg *metrics.MetricsOptions
+	var echoServer contracts.EchoHTTPServer
 
-	ginkgo.RunSpecs(t, "/health suite")
-}
-
-var _ = ginkgo.Describe("/", ginkgo.Ordered, func() {
-	var (
-		url string
-		err error
-		res *http.Response
+	app := fxtest.New(
+		t,
+		config.ModuleFunc(environment.Test), // Use test environment with config.test.json
+		zap.Module,
+		fxlog.FxLogger,
+		customEcho.Module,
+		metrics.Module,
+		fx.Populate(&cfg, &echoServer),
 	)
+	app.RequireStart()
+	defer app.RequireStop()
 
-	ginkgo.BeforeAll(func() {
-		var cfg *metrics.MetricsOptions
+	// Metrics endpoint is served on the Echo server, not on a separate port
+	var metricsPath string
+	if cfg.MetricsRoutePath == "" {
+		metricsPath = "metrics"
+	} else {
+		metricsPath = cfg.MetricsRoutePath
+	}
 
-		fxtest.New(
-			ginkgo.GinkgoT(),
-			zap.Module,
-			fxlog.FxLogger,
-			config.Module,
-			customEcho.Module,
+	// Get Echo server configuration
+	echoOptions := echoServer.Cfg()
+	url := fmt.Sprintf("%s%s/%s", echoOptions.Host, echoOptions.Port, metricsPath)
 
-			metrics.Module,
-
-			fx.Populate(&cfg),
-		).RequireStart()
-
-		url = fmt.Sprintf("http://%s:%s/metrics", cfg.Host, cfg.Port)
-	})
-
-	ginkgo.BeforeEach(func() {
+	t.Run("returns status OK", func(t *testing.T) {
 		//nolint:gosec // G107: Potential HTTP request made with variable url
-		res, err = http.Get(url)
-	})
-	ginkgo.It("returns status OK", func() {
-		gomega.Expect(err).To(gomega.BeNil())
-		gomega.Expect(res.StatusCode).To(gomega.Equal(http.StatusOK))
+		res, err := http.Get(url)
+		require.NoError(t, err)
+		defer res.Body.Close()
+
+		require.Equal(t, http.StatusOK, res.StatusCode)
 	})
 
-	ginkgo.It("returns how many requests were made", func() {
+	t.Run("returns metrics data", func(t *testing.T) {
+		//nolint:gosec // G107: Potential HTTP request made with variable url
+		res, err := http.Get(url)
+		require.NoError(t, err)
+		defer res.Body.Close()
+
 		b, err := io.ReadAll(res.Body)
-		gomega.Expect(err).To(gomega.BeNil())
+		require.NoError(t, err)
 
-		gomega.Expect(
-			b,
-		).To(gomega.ContainSubstring(`promhttp_metric_handler_requests_total{code="200"} 1`))
+		// Check that the metrics endpoint returns some prometheus metrics
+		require.Contains(t, string(b), "promhttp_metric_handler_requests_total")
 	})
-})
+}

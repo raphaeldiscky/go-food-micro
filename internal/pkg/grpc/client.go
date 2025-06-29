@@ -36,7 +36,7 @@ func NewGrpcClient(config *config.GrpcOptions) (GrpcClient, error) {
 	// Grpc Client to call Grpc Server
 	// https://sahansera.dev/building-grpc-client-go/
 	// https://github.com/open-telemetry/opentelemetry-go-contrib/blob/df16f32df86b40077c9c90d06f33c4cdb6dd5afa/instrumentation/google.golang.org/grpc/otelgrpc/example_interceptor_test.go
-	conn, err := grpc.Dial(fmt.Sprintf("%s%s", config.Host, config.Port),
+	conn, err := grpc.NewClient(fmt.Sprintf("%s%s", config.Host, config.Port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		// https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/instrumentation/google.golang.org/grpc/otelgrpc/example/client/main.go#L47C3-L47C52
 		// https://github.com/open-telemetry/opentelemetry-go-contrib/blob/main/instrumentation/google.golang.org/grpc/otelgrpc/doc.go
@@ -64,8 +64,13 @@ func (g *grpcClient) Close() error {
 func (g *grpcClient) WaitForAvailableConnection() error {
 	timeout := time.Second * 20
 
+	// Force the connection to connect (gRPC connections are lazy by default)
+	g.conn.Connect()
+
 	err := waitUntilConditionMet(func() bool {
-		return g.conn.GetState() == connectivity.Ready
+		state := g.conn.GetState()
+		// Accept both IDLE and READY as valid states
+		return state == connectivity.Ready || state == connectivity.Idle
 	}, timeout)
 
 	state := g.conn.GetState()

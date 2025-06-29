@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package gormdbcontext provides the gorm db context.
 package gormdbcontext
 

@@ -35,7 +35,7 @@ func NewRabbitMQDockerTest(logger logger.Logger) contracts.RabbitMQContainer {
 			Password:    "dockertest",
 			Tag:         "management",
 			ImageName:   "rabbitmq",
-			Name:        "rabbitmq-dockertest",
+			Name:        "", // Will be set dynamically to avoid conflicts
 		},
 		logger: logger,
 	}
@@ -54,9 +54,16 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 		log.Fatalf("Could not connect to docker: %s", err)
 	}
 
+	// Generate unique container name to avoid conflicts
+	uniqueName := fmt.Sprintf("rabbitmq-dockertest-%s", t.Name())
+	g.defaultOptions.Name = uniqueName
+
+	// Clean up any existing containers with the same name
+	g.cleanupExistingContainer(pool, uniqueName)
+
 	runOptions := g.getRunOptions(options...)
 
-	// pull mongodb docker image for version 5.0
+	// pull rabbitmq docker image
 	resource, err := pool.RunWithOptions(
 		runOptions,
 		func(config *docker.HostConfig) {
@@ -74,7 +81,7 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 	if err := resource.Expire(120); err != nil {
 		// Log the error but don't fail the test, as this is just a cleanup timeout
 		g.logger.Errorf("Error setting container expiration: %v", err)
-	} // Tell docker to hard kill the container in 120 seconds exponential backoff-retry, because the application_exceptions in the container might not be ready to accept connections yet
+	}
 
 	g.resource = resource
 	hostPort, err := strconv.Atoi(
@@ -95,7 +102,7 @@ func (g *rabbitmqDockerTest) PopulateContainerOptions(
 
 	t.Cleanup(func() {
 		if err := resource.Close(); err != nil {
-			log.Fatalf("Error closing rabbitmq container: %v", err)
+			g.logger.Errorf("Error closing rabbitmq container: %v", err)
 		}
 	})
 
@@ -136,12 +143,13 @@ func (g *rabbitmqDockerTest) getRunOptions(
 	return &dockertest.RunOptions{
 		Repository: g.defaultOptions.ImageName,
 		Tag:        g.defaultOptions.Tag,
+		Name:       g.defaultOptions.Name,
 		Env: []string{
 			"RABBITMQ_DEFAULT_USER=" + g.defaultOptions.UserName,
 			"RABBITMQ_DEFAULT_PASS=" + g.defaultOptions.Password,
 		},
 		Hostname:     g.defaultOptions.Host,
-		ExposedPorts: g.defaultOptions.Ports,
+		ExposedPorts: []string{"5672", "15672"},
 	}
 }
 
@@ -163,5 +171,21 @@ func (g *rabbitmqDockerTest) updateOptions(option *contracts.RabbitMQContainerOp
 	}
 	if option.Tag != "" {
 		g.defaultOptions.Tag = option.Tag
+	}
+}
+
+func (g *rabbitmqDockerTest) cleanupExistingContainer(
+	pool *dockertest.Pool,
+	containerName string,
+) {
+	// Try to remove any existing container with the same name
+	// This is a best-effort cleanup, we don't fail if container doesn't exist
+	if err := pool.RemoveContainerByName(containerName); err != nil {
+		// Container doesn't exist or already removed, which is fine
+		g.logger.Debugf(
+			"Container %s not found for cleanup (this is normal): %v",
+			containerName,
+			err,
+		)
 	}
 }

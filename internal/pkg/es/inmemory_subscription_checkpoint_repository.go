@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package es provides a in memory subscription checkpoint repository.
 package es
 

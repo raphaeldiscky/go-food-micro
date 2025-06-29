@@ -1,3 +1,6 @@
+//go:build integration
+// +build integration
+
 // Package testcontainer provides a set of functions for the rabbitmq test container.
 package testcontainer
 

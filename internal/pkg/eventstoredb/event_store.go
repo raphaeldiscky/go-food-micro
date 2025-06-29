@@ -7,10 +7,10 @@ import (
 	"math"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
 	"go.opentelemetry.io/otel/trace"
 
 	linq "github.com/ahmetb/go-linq/v3"
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 	attribute2 "go.opentelemetry.io/otel/attribute"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts/store"
@@ -31,7 +31,7 @@ import (
 // https://developers.eventstore.com/clients/grpc/appending-events.html#append-your-first-event
 type eventStoreDbEventStore struct {
 	log        logger.Logger
-	client     *esdb.Client
+	client     *kdb.Client
 	serializer *EsdbSerializer
 	tracer     trace.Tracer
 }
@@ -39,7 +39,7 @@ type eventStoreDbEventStore struct {
 // NewEventStoreDbEventStore creates a new event store db event store.
 func NewEventStoreDbEventStore(
 	log logger.Logger,
-	client *esdb.Client,
+	client *kdb.Client,
 	serializer *EsdbSerializer,
 	tracer trace.Tracer,
 ) store.EventStore {
@@ -63,9 +63,9 @@ func (e *eventStoreDbEventStore) StreamExists(
 	stream, err := e.client.ReadStream(
 		ctx,
 		streamName.String(),
-		esdb.ReadStreamOptions{
-			Direction: esdb.Backwards,
-			From:      esdb.End{},
+		kdb.ReadStreamOptions{
+			Direction: kdb.Backwards,
+			From:      kdb.End{},
 		},
 		1)
 	if err != nil {
@@ -94,11 +94,11 @@ func (e *eventStoreDbEventStore) AppendEvents(
 	span.SetAttributes(attribute2.String("StreamName", streamName.String()))
 	defer span.End()
 
-	var eventsData []esdb.EventData
-	linq.From(events).SelectT(func(s *models.StreamEvent) esdb.EventData {
+	var eventsData []kdb.EventData
+	linq.From(events).SelectT(func(s *models.StreamEvent) kdb.EventData {
 		data, err := e.serializer.StreamEventToEventData(s)
 		if err != nil {
-			return *new(esdb.EventData)
+			return *new(kdb.EventData)
 		}
 
 		return data
@@ -109,8 +109,8 @@ func (e *eventStoreDbEventStore) AppendEvents(
 	res, err := e.client.AppendToStream(
 		ctx,
 		streamName.String(),
-		esdb.AppendToStreamOptions{
-			ExpectedRevision: e.serializer.ExpectedStreamVersionToEsdbExpectedRevision(
+		kdb.AppendToStreamOptions{
+			StreamState: e.serializer.ExpectedStreamVersionToEsdbExpectedRevision(
 				expectedVersion,
 			),
 		},
@@ -195,8 +195,8 @@ func (e *eventStoreDbEventStore) ReadEvents(
 	readStream, err := e.client.ReadStream(
 		ctx,
 		streamName.String(),
-		esdb.ReadStreamOptions{
-			Direction: esdb.Forwards,
+		kdb.ReadStreamOptions{
+			Direction: kdb.Forwards,
 			From: e.serializer.StreamReadPositionToStreamPosition(
 				readPosition,
 			),
@@ -291,8 +291,8 @@ func (e *eventStoreDbEventStore) ReadEventsBackwards(
 	readStream, err := e.client.ReadStream(
 		ctx,
 		streamName.String(),
-		esdb.ReadStreamOptions{
-			Direction: esdb.Backwards,
+		kdb.ReadStreamOptions{
+			Direction: kdb.Backwards,
 			From: e.serializer.StreamReadPositionToStreamPosition(
 				readPosition,
 			),
@@ -385,15 +385,15 @@ func (e *eventStoreDbEventStore) TruncateStream(
 	span.SetAttributes(attribute2.String("StreamName", streamName.String()))
 	defer span.End()
 
-	streamMetadata := esdb.StreamMetadata{}
+	streamMetadata := kdb.StreamMetadata{}
 	streamMetadata.SetTruncateBefore(
 		e.serializer.StreamTruncatePositionToInt64(truncatePosition),
 	)
 	writeResult, err := e.client.SetStreamMetadata(
 		ctx,
 		streamName.String(),
-		esdb.AppendToStreamOptions{
-			ExpectedRevision: e.serializer.ExpectedStreamVersionToEsdbExpectedRevision(
+		kdb.AppendToStreamOptions{
+			StreamState: e.serializer.ExpectedStreamVersionToEsdbExpectedRevision(
 				expectedVersion,
 			),
 		},
@@ -436,8 +436,8 @@ func (e *eventStoreDbEventStore) DeleteStream(
 	deleteResult, err := e.client.DeleteStream(
 		ctx,
 		streamName.String(),
-		esdb.DeleteStreamOptions{
-			ExpectedRevision: e.serializer.ExpectedStreamVersionToEsdbExpectedRevision(
+		kdb.DeleteStreamOptions{
+			StreamState: e.serializer.ExpectedStreamVersionToEsdbExpectedRevision(
 				expectedVersion,
 			),
 		})

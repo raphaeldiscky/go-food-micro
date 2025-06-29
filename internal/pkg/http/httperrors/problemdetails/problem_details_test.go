@@ -1,3 +1,6 @@
+//go:build unit
+// +build unit
+
 // Package problemdetails provides problem details.
 package problemdetails
 
@@ -87,5 +90,5 @@ func TestMap(t *testing.T) {
 	})
 	s := ResolveProblemDetail(customErrors.NewBadRequestError(""))
 	assert.NotNil(t, s)
-	assert.IsType(t, (*ProblemDetailErr)(nil), s)
+	assert.IsType(t, (*problemDetail)(nil), s)
 }

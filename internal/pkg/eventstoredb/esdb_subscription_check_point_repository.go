@@ -8,7 +8,8 @@ import (
 	"time"
 
 	"emperror.dev/errors"
-	"github.com/EventStore/EventStore-Client-Go/esdb"
+
+	kdb "github.com/kurrent-io/KurrentDB-Client-Go/kurrentdb"
 
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/core/events"
 	"github.com/raphaeldiscky/go-food-micro/internal/pkg/es/contracts"
@@ -18,7 +19,7 @@ import (
 
 // esdbSubscriptionCheckpointRepository is a struct that represents a event store db subscription checkpoint repository.
 type esdbSubscriptionCheckpointRepository struct {
-	client        *esdb.Client
+	client        *kdb.Client
 	log           logger.Logger
 	esdbSerilizer *EsdbSerializer
 }
@@ -33,7 +34,7 @@ type CheckpointStored struct {
 
 // NewEsdbSubscriptionCheckpointRepository creates a new event store db subscription checkpoint repository.
 func NewEsdbSubscriptionCheckpointRepository(
-	client *esdb.Client,
+	client *kdb.Client,
 	logger logger.Logger,
 	esdbSerializer *EsdbSerializer,
 ) contracts.SubscriptionCheckpointRepository {
@@ -54,20 +55,21 @@ func (e *esdbSubscriptionCheckpointRepository) Load(
 	stream, err := e.client.ReadStream(
 		ctx,
 		streamName,
-		esdb.ReadStreamOptions{
-			Direction: esdb.Backwards,
-			From:      esdb.End{},
+		kdb.ReadStreamOptions{
+			Direction: kdb.Backwards,
+			From:      kdb.End{},
 		}, 1)
 
-	if errors.Is(err, esdb.ErrStreamNotFound) {
+	var kdbErr *kdb.Error
+	if errors.As(err, &kdbErr) && kdbErr.Code() == kdb.ErrorCodeResourceNotFound {
 		return 0, nil
 	} else if err != nil {
 		return 0, errors.WrapIf(err, "db.ReadStream")
 	}
 
 	event, err := stream.Recv()
-	if errors.Is(err, esdb.ErrStreamNotFound) {
-		return 0, errors.WrapIf(err, "stream.Recv")
+	if errors.As(err, &kdbErr) && kdbErr.Code() == kdb.ErrorCodeResourceNotFound {
+		return 0, nil
 	}
 	if errors.Is(err, io.EOF) {
 		return 0, nil
@@ -112,12 +114,14 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 	_, err = e.client.AppendToStream(
 		ctx,
 		streamName,
-		esdb.AppendToStreamOptions{ExpectedRevision: esdb.StreamExists{}},
+		kdb.AppendToStreamOptions{StreamState: kdb.StreamExists{}},
 		*eventData,
 	)
 
-	if errors.Is(err, esdb.ErrWrongExpectedStreamRevision) {
-		streamMeta := esdb.StreamMetadata{}
+	var wrongVersionErr *kdb.Error
+	if errors.As(err, &wrongVersionErr) &&
+		wrongVersionErr.Code() == kdb.ErrorCodeWrongExpectedVersion {
+		streamMeta := kdb.StreamMetadata{}
 		streamMeta.SetMaxCount(1)
 
 		// WrongExpectedVersionException means that stream did not exist
@@ -126,7 +130,7 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 		_, err := e.client.SetStreamMetadata(
 			ctx,
 			streamName,
-			esdb.AppendToStreamOptions{ExpectedRevision: esdb.NoStream{}},
+			kdb.AppendToStreamOptions{StreamState: kdb.StreamExists{}},
 			streamMeta)
 		if err != nil {
 			return errors.WrapIf(err, "client.SetStreamMetadata")
@@ -136,7 +140,7 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 		_, err = e.client.AppendToStream(
 			ctx,
 			streamName,
-			esdb.AppendToStreamOptions{ExpectedRevision: esdb.NoStream{}},
+			kdb.AppendToStreamOptions{StreamState: kdb.StreamExists{}},
 			*eventData,
 		)
 		if err != nil {
@@ -151,5 +155,5 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 
 // getCheckpointStreamName gets a checkpoint stream name.
 func getCheckpointStreamName(subscriptionId string) string {
-	return fmt.Sprintf("$cehckpoint_stream_%s", subscriptionId)
+	return fmt.Sprintf("$checkpoint_stream_%s", subscriptionId)
 }

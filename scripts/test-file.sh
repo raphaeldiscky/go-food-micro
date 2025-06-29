@@ -29,17 +29,22 @@ find_test_file() {
     test_file="$3"
     search_path=""
 
-    case "$test_type" in
-        "integration")
-            search_path="internal/services/$service/test/integration"
-            ;;
-        "e2e")
-            search_path="internal/services/$service/test/e2e"
-            ;;
-        *)
-            search_path="internal/services/$service/internal"
-            ;;
-    esac
+    # Handle pkg service differently since it's in internal/pkg not internal/services/pkg
+    if [ "$service" = "pkg" ]; then
+        search_path="internal/pkg"
+    else
+        case "$test_type" in
+            "integration")
+                search_path="internal/services/$service/test/integration"
+                ;;
+            "e2e")
+                search_path="internal/services/$service/test/e2e"
+                ;;
+            *)
+                search_path="internal/services/$service/internal"
+                ;;
+        esac
+    fi
 
     # Use find to search recursively
     find "$search_path" -name "$test_file" -type f 2>/dev/null | head -n 1
@@ -70,14 +75,15 @@ echo "📦 Service: $SERVICE"
 TEST_DIR=$(dirname "$FOUND_FILE")
 
 # Run the test with appropriate tags from the test file's directory
+# We run the entire package since Go test files need access to the whole package
 case "$TEST_TYPE" in
     "integration")
-        cd "$TEST_DIR" && go test -v -tags=integration "$(basename "$FOUND_FILE")"
+        cd "$TEST_DIR" && go test -v -tags=integration .
         ;;
     "e2e")
-        cd "$TEST_DIR" && go test -v -tags=e2e "$(basename "$FOUND_FILE")"
+        cd "$TEST_DIR" && go test -v -tags=e2e .
         ;;
     *)
-        cd "$TEST_DIR" && go test -v "$(basename "$FOUND_FILE")"
+        cd "$TEST_DIR" && go test -v -tags=unit .
         ;;
 esac
