@@ -2,6 +2,7 @@
 package postgresgorm
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -132,7 +133,8 @@ func createPostgresDB(cfg *GormOptions) error {
 		return err
 	}
 
-	rows, err := db.Query(
+	rows, err := db.QueryContext(
+		context.Background(),
 		fmt.Sprintf(
 			"SELECT 1 FROM  pg_catalog.pg_database WHERE datname='%s'",
 			cfg.DBName,
@@ -164,7 +166,7 @@ func createPostgresDB(cfg *GormOptions) error {
 		return nil
 	}
 
-	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE %s", cfg.DBName))
+	_, err = db.ExecContext(context.Background(), fmt.Sprintf("CREATE DATABASE %s", cfg.DBName))
 	if err != nil {
 		return err
 	}
