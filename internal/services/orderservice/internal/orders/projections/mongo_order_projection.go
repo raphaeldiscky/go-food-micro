@@ -48,7 +48,7 @@ func NewMongoOrderProjection(
 }
 
 // ProcessEvent processes the event.
-func (m mongoOrderProjection) ProcessEvent(
+func (m *mongoOrderProjection) ProcessEvent(
 	ctx context.Context,
 	streamEvent *models.StreamEvent,
 ) error {

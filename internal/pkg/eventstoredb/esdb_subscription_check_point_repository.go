@@ -111,6 +111,7 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 		return errors.WrapIf(err, "esdbSerilizer.Serialize")
 	}
 
+	// First, try to append to stream assuming it exists
 	_, err = e.client.AppendToStream(
 		ctx,
 		streamName,
@@ -121,33 +122,32 @@ func (e *esdbSubscriptionCheckpointRepository) Store(
 	var wrongVersionErr *kdb.Error
 	if errors.As(err, &wrongVersionErr) &&
 		wrongVersionErr.Code() == kdb.ErrorCodeWrongExpectedVersion {
+		// Stream doesn't exist, so we need to create it
+		// First, set the stream metadata to have at most 1 event
 		streamMeta := kdb.StreamMetadata{}
 		streamMeta.SetMaxCount(1)
 
-		// WrongExpectedVersionException means that stream did not exist
-		// Set the checkpoint stream to have at most 1 event
-		// using stream metadata $maxCount property
 		_, err := e.client.SetStreamMetadata(
 			ctx,
 			streamName,
-			kdb.AppendToStreamOptions{StreamState: kdb.StreamExists{}},
+			kdb.AppendToStreamOptions{StreamState: kdb.NoStream{}},
 			streamMeta)
 		if err != nil {
 			return errors.WrapIf(err, "client.SetStreamMetadata")
 		}
 
-		// append event again expecting stream to not exist
+		// Now append the first event to the new stream
 		_, err = e.client.AppendToStream(
 			ctx,
 			streamName,
-			kdb.AppendToStreamOptions{StreamState: kdb.StreamExists{}},
+			kdb.AppendToStreamOptions{StreamState: kdb.NoStream{}},
 			*eventData,
 		)
 		if err != nil {
-			return err
+			return errors.WrapIf(err, "client.AppendToStream after metadata set")
 		}
-	} else {
-		return err
+	} else if err != nil {
+		return errors.WrapIf(err, "client.AppendToStream")
 	}
 
 	return nil
