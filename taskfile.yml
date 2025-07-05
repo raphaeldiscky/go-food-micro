@@ -197,6 +197,11 @@ tasks:
     cmds:
       - task: format
 
+  format_changed:
+    desc: Format only changed files in git staging area
+    cmds:
+      - ./scripts/format-changed.sh
+
   pkg_mocks:
     desc: Generate package mocks
     cmds:
