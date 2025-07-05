@@ -51,13 +51,13 @@ buf check breaking --against-input image.bin
 ### Format
 
 ```bash
-make proto_format
+task proto_format
 ```
 
 ### Generate
 
 ```bash
-make proto
+task proto
 ```
 
 ## Tools
@@ -77,6 +77,7 @@ ghz --protoset <(buf image build.sh -o -) ...
 ```
 
 ## Reference
+
 1. [xmlking/micro-starter-kit](https://github.com/xmlking/micro-starter-kit)
 1. [Style Guide](https://buf.build/docs/style-guide)
 1. [Buf docs](https://buf.build/docs/introduction)

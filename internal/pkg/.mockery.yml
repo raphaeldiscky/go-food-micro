@@ -1,0 +1,17 @@
+pkgname: mocks
+template: testify
+template-data:
+  unroll-variadic: true
+packages:
+  github.com/go-food-micro/internal/pkg/es:
+    config:
+      all: true
+    interfaces: {}
+  github.com/go-food-micro/internal/pkg/core/serializer:
+    config:
+      all: true
+    interfaces: {}
+  github.com/go-food-micro/internal/pkg/core/messaging:
+    config:
+      all: true
+    interfaces: {}

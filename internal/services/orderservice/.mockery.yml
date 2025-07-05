@@ -1,0 +1,10 @@
+structname: "{{.InterfaceNameCamel}}"
+pkgname: mocks
+template: testify
+template-data:
+  with-expecter: true
+packages:
+  github.com/go-food-micro/internal/services/orderservice:
+    config:
+      all: true
+    interfaces: {}

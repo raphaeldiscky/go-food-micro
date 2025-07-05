@@ -1,6 +1,12 @@
 version: "2"
 
 linters:
+  exclusions:
+    generated: lax
+    warn-unused: true
+    paths:
+      - "docs"
+
   enable:
     - asciicheck
     - bodyclose

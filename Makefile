@@ -28,6 +28,14 @@ update-dependencies:
 	@./scripts/update-dependencies.sh  catalogreadservice
 	@./scripts/update-dependencies.sh  orderservice
 
+.PHONY: safe-update-dependencies
+safe-update-dependencies:
+	@./scripts/safe-update-dependencies.sh update
+
+.PHONY: check-dependencies
+check-dependencies:
+	@./scripts/safe-update-dependencies.sh check
+
 .PHONY: install-dependencies
 install-dependencies:
 	@./scripts/install-dependencies.sh  pkg
@@ -72,11 +80,11 @@ e2e-test:
 	@./scripts/test.sh catalogwriteservice e2e
 	@./scripts/test.sh  orderservice e2e
 
-#.PHONY: load-test
-#load-test:
-#	@./scripts/test.sh catalogs_write load-test
-#	@./scripts/test.sh catalogs_read load-test
-#	@./scripts/test.sh  orders load-test
+.PHONY: load-test
+load-test:
+	@./scripts/test.sh catalogs_write load-test
+	@./scripts/test.sh catalogs_read load-test
+	@./scripts/test.sh  orders load-test
 
 .PHONY: format
 format:
@@ -121,10 +129,6 @@ cycle-check:
 	cd internal/services/catalogwriteservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogwriteservice.png imports.dot
 	cd internal/services/catalogwriteservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogwriteservice.png imports.dot
 	cd internal/services/orderservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/orderservice.png imports.dot
-
-#.PHONY: c4
-#c4:
-#	cd tools/c4 && go mod tidy && sh generate.sh
 
 # https://medium.com/yemeksepeti-teknoloji/mocking-an-interface-using-mockery-in-go-afbcb83cc773
 # https://vektra.github.io/mockery/latest/running/

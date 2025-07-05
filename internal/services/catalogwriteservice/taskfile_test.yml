@@ -6,7 +6,7 @@ tasks:
   mock:
     desc: Generate interfaces mocks
     cmds:
-      - mockery --output mocks --all
+      - mockery --config .mockery.yml
 
   integration:
     desc: Run integration tests

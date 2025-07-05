@@ -1,6 +1,11 @@
 version: "2"
 
 linters:
+  exclusions:
+    generated: lax
+    warn-unused: true
+    paths:
+      - "docs"
   enable:
     - asciicheck
     - bodyclose
@@ -121,3 +126,7 @@ formatters:
       # Drops lexical ordering for custom sections.
       # Default: false
       no-lex-order: true
+
+  exclusions:
+    paths:
+      - "docs/docs.go"
