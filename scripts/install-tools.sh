@@ -55,7 +55,7 @@ go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v2.4.1
 npm install -g @openapitools/openapi-generator-cli@2.14.0
 
 # https://vektra.github.io/mockery/latest/installation/
-go install github.com/vektra/mockery/v2@v2.46.0
+go install github.com/vektra/mockery/v3@v3.5.0
 
 # https://github.com/onsi/ginkgo
 go install github.com/onsi/ginkgo/v2/ginkgo@v2.23.4

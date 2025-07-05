@@ -38,20 +38,30 @@ tasks:
           sh ./scripts/install-dependencies.sh {{.SERVICE}}
         fi
 
-  run_catalogs_write_service:
-    desc: Run catalog write service
+  update_dependencies:
+    desc: Update project dependencies
     cmds:
-      - sh ./scripts/run.sh catalogwriteservice
+      - sh ./scripts/update-dependencies.sh pkg
+      - sh ./scripts/update-dependencies.sh catalogwriteservice
+      - sh ./scripts/update-dependencies.sh catalogreadservice
+      - sh ./scripts/update-dependencies.sh orderservice
 
-  run_catalog_read_service:
-    desc: Run catalog read service
+  safe_update_dependencies:
+    desc: Safe update project dependencies
     cmds:
-      - sh ./scripts/run.sh catalogreadservice
+      - sh ./scripts/safe-update-dependencies.sh update
 
-  run_order_service:
-    desc: Run order service
+  check_dependencies:
+    desc: Check project dependencies
     cmds:
-      - sh ./scripts/run.sh orderservice
+      - sh ./scripts/check-dependencies.sh
+
+  run:
+    desc: Run a specific service
+    vars:
+      SERVICE: '{{.SERVICE | default "catalogwriteservice"}}'
+    cmds:
+      - sh ./scripts/run.sh {{.SERVICE}}
 
   sleep:
     vars:
@@ -102,19 +112,6 @@ tasks:
       - task: stop_monitoring
       - task: sleep
       - task: start_monitoring
-
-  openapi:
-    desc: Generate OpenAPI documentation
-    cmds:
-      - sh ./scripts/openapi.sh catalogwriteservice
-      - sh ./scripts/openapi.sh catalogreadservice
-      - sh ./scripts/openapi.sh orderservice
-
-  proto:
-    desc: Generate protobuf files
-    cmds:
-      - sh ./scripts/proto.sh catalogwriteservice
-      - sh ./scripts/proto.sh orderservice
 
   test_file:
     desc: Run individual test file
@@ -175,6 +172,13 @@ tasks:
           sh ./scripts/test.sh {{.SERVICE}} e2e
         fi
 
+  load_test:
+    desc: Run load tests
+    cmds:
+      - sh ./scripts/test.sh catalogs_write load-test
+      - sh ./scripts/test.sh catalogs_read load-test
+      - sh ./scripts/test.sh orders load-test
+
   format:
     desc: Run formatters and linters
     vars:
@@ -197,21 +201,61 @@ tasks:
     cmds:
       - task: format
 
-  format_changed:
-    desc: Format only changed files in git staging area
+  go_migrate:
+    desc: Run go migrate
     cmds:
-      - ./scripts/format-changed.sh
+      - sh ./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c create -n create_product_table
+      - sh ./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c up -o postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable
+      - sh ./scripts/go-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/go-migrate -c down -o postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable
+
+  goose_migrate:
+    desc: Run goose migrate
+    cmds:
+      - sh ./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c create -n create_product_table
+      - sh ./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c up -o "user=postgres password=postgres dbname=catalogs_write_service sslmode=disable"
+      - sh ./scripts/goose-migrate.sh -p ./internal/services/catalogwriteservice/db/migrations/goose-migrate -c down -o "user=postgres password=postgres dbname=catalogs_write_service sslmode=disable"
+
+  atlas_migrate:
+    desc: Run atlas migrate
+    cmds:
+      - sh ./scripts/atlas-migrate.sh -c gorm-sync -p "./internal/services/catalogwriteservice"
+      - sh ./scripts/atlas-migrate.sh -c apply -p "./internal/services/catalogwriteservice" -o "postgres://postgres:postgres@localhost:5432/catalogs_write_service?sslmode=disable"
+
+  cycle_check:
+    desc: Check for import cycles
+    cmds:
+      - cd internal/pkg && goimportcycle -dot imports.dot dot -Tpng -o cycle/pkg.png imports.dot
+      - cd internal/services/catalogwriteservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogwriteservice.png imports.dot
+      - cd internal/services/catalogreadservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/catalogreadservice.png imports.dot
+      - cd internal/services/orderservice && goimportcycle -dot imports.dot dot -Tpng -o cycle/orderservice.png imports.dot
 
   pkg_mocks:
     desc: Generate package mocks
     cmds:
-      - cd internal/pkg/es && mockery --output mocks --all
-      - cd internal/pkg/core/serializer && mockery --output mocks --all
-      - cd internal/pkg/core/messaging && mockery --output mocks --all
+      - cd internal/pkg && mockery --config .mockery.yml
 
   services_mocks:
     desc: Generate service mocks
     cmds:
-      - cd internal/services/catalogwriteservice && mockery --output mocks --all
-      - cd internal/services/catalogreadservice && mockery --output mocks --all
-      - cd internal/services/orderservice && mockery --output mocks --all
+      - cd internal/services/catalogwriteservice && mockery --config .mockery.yml
+      - cd internal/services/catalogreadservice && mockery --config .mockery.yml
+      - cd internal/services/orderservice && mockery --config .mockery.yml
+
+  generate_mocks:
+    desc: Generate all mocks (packages and services)
+    cmds:
+      - task: pkg_mocks
+      - task: services_mocks
+
+  openapi:
+    desc: Generate OpenAPI documentation
+    cmds:
+      - sh ./scripts/openapi.sh catalogwriteservice
+      - sh ./scripts/openapi.sh catalogreadservice
+      - sh ./scripts/openapi.sh orderservice
+
+  proto:
+    desc: Generate protobuf files
+    cmds:
+      - sh ./scripts/proto.sh catalogwriteservice
+      - sh ./scripts/proto.sh orderservice
