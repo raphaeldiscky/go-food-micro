@@ -11,7 +11,7 @@
   },
   "echoHttpOptions": {
     "name": "orderservice",
-    "port": ":7003",
+    "port": ":7002",
     "development": true,
     "timeout": 30,
     "basePath": "/api/v1",
