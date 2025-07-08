@@ -20,9 +20,7 @@
     "debugHeaders": true,
     "httpClientDebug": true,
     "debugErrorsResponse": true,
-    "ignoreLogUrls": [
-      "metrics"
-    ]
+    "ignoreLogUrls": ["metrics"]
   },
   "logOptions": {
     "level": "debug",
@@ -49,7 +47,7 @@
   },
   "mongoDbOptions": {
     "host": "localhost",
-    "port": 27017,
+    "port": 37017,
     "user": "admin",
     "password": "admin",
     "database": "catalogs_read_service",

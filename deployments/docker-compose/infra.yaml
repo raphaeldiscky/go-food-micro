@@ -15,7 +15,7 @@ services:
     networks:
       - go-food-micro
 
-  catalog-write-db:
+  postgres:
     env_file: "infra.env"
     image: postgres:17-alpine
     pull_policy: if_not_present
@@ -77,7 +77,7 @@ services:
       - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
       - KURRENTDB_MEM_DB=true
     ports:
-      - ${KURRENTDB_HOST_PORT:-2113}:${KURRENTDB_PORT:-2113}
+      - 2113:2113
     volumes:
       - type: volume
         source: kurrentdb-volume-data
