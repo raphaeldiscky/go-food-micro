@@ -15,7 +15,7 @@ services:
     networks:
       - go-food-micro
 
-  catalog-write-db:
+  postgres:
     env_file: "infra.env"
     image: postgres:17-alpine
     pull_policy: if_not_present
@@ -58,6 +58,69 @@ services:
     networks:
       - go-food-micro
 
+  # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+  # https://hub.docker.com/_/elasticsearch
+  elasticsearch:
+    env_file: "infra.env"
+    image: elasticsearch:9.0.2
+    pull_policy: if_not_present
+    container_name: elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD:-elastic}
+    ports:
+      - ${ELASTIC_HOST_PORT:-9200}:${ELASTIC_PORT:-9200}
+      - ${ELASTIC_HOST_TRANSPORT_PORT:-9300}:${ELASTIC_TRANSPORT_PORT:-9300}
+    volumes:
+      - type: volume
+        source: elasticsearch-volume-data
+        target: /usr/share/elasticsearch/data
+    networks:
+      - go-food-micro
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  # https://www.elastic.co/guide/en/kibana/current/docker.html
+  # https://hub.docker.com/_/kibana
+  kibana:
+    env_file: "infra.env"
+    image: kibana:9.0.2
+    pull_policy: if_not_present
+    container_name: kibana
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD:-elastic}
+      - XPACK_SECURITY_ENABLED=false
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=a7a6311933d3503b89bc2dbc36572c33a6c10925682e591bffcab6911c06786d
+    ports:
+      - ${KIBANA_HOST_PORT:-5601}:${KIBANA_PORT:-5601}
+    volumes:
+      - type: volume
+        source: kibana-volume-data
+        target: /usr/share/kibana/data
+    networks:
+      - go-food-micro
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
   # https://docs.kurrent.io/server/v25.0/quick-start/#insecure-single-node
   # https://hub.docker.com/r/kurrentplatform/kurrentdb
   # https://stackoverflow.com/questions/65272764/ports-are-not-available-listen-tcp-0-0-0-0-50070-bind-an-attempt-was-made-to
@@ -77,7 +140,7 @@ services:
       - KURRENTDB_ENABLE_ATOM_PUB_OVER_HTTP=true
       - KURRENTDB_MEM_DB=true
     ports:
-      - ${KURRENTDB_HOST_PORT:-2113}:${KURRENTDB_PORT:-2113}
+      - 2113:2113
     volumes:
       - type: volume
         source: kurrentdb-volume-data
@@ -91,6 +154,8 @@ services:
 volumes:
   kurrentdb-volume-data:
   kurrentdb-volume-logs:
+  elasticsearch-volume-data:
+  kibana-volume-data:
 
 networks:
   go-food-micro:

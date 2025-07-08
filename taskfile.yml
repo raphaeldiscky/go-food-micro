@@ -57,11 +57,11 @@ tasks:
       - sh ./scripts/check-dependencies.sh
 
   run:
-    desc: Run a specific service
+    desc: Run a specific service with air
     vars:
       SERVICE: '{{.SERVICE | default "catalogwriteservice"}}'
     cmds:
-      - sh ./scripts/run.sh {{.SERVICE}}
+      - sh ./scripts/run-with-air.sh {{.SERVICE}}
 
   sleep:
     vars:

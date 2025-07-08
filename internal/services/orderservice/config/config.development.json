@@ -11,7 +11,7 @@
   },
   "echoHttpOptions": {
     "name": "orderservice",
-    "port": ":8000",
+    "port": ":7002",
     "development": true,
     "timeout": 30,
     "basePath": "/api/v1",
@@ -29,7 +29,7 @@
   },
   "mongoDbOptions": {
     "host": "localhost",
-    "port": 27017,
+    "port": 37017,
     "user": "admin",
     "password": "admin",
     "database": "orders_service",

@@ -5,6 +5,6 @@ set -e
 
 readonly service="$1"
 
-cd "./internal/services/$service" && go run "./cmd/app/main.go"
+cd "./internal/services/$service" && air
 
 
