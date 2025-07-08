@@ -86,19 +86,12 @@ services:
     container_name: jaeger
     pull_policy: if_not_present
     restart: unless-stopped
-    command:
-      - "--memory.max-traces"
-      - "10000"
-      - "--query.base-path"
-      - "/jaeger/ui"
-      - "--prometheus.server-url"
-      - "http://${PROMETHEUS_ADDR}"
     environment:
       - COLLECTOR_ZIPKIN_HOST_PORT=:9411
       - COLLECTOR_OTLP_ENABLED=true
       # Store metrics in PROMETHEUS storage instead of in-memory storage
       - METRICS_STORAGE_TYPE=prometheus
-      - PROMETHEUS_SERVER_URL=http:${PROMETHEUS_ADDR}
+      - PROMETHEUS_SERVER_URL=http://prometheus:9090
     #      # Jaeger uses Elasticsearch as span storage instead of in-memory storage
     #      - SPAN_STORAGE_TYPE=elasticsearch
     #      - ES_SERVER_URLS=http://elastic_search:${ELASTIC_PORT:-9200}
@@ -108,7 +101,15 @@ services:
       - "4320:4317" # OTLP gRPC default port - for prevent duplicate expose this port that will expose also by `otel-collector` we not expose it on `4317` - `4320` could use by the app through otlptracegrpc
       - "4321:4318" # OTLP Http default port - for prevent duplicate expose this port that will expose also by `otel-collector` we not expose it on `4318` - `4321` could use by the app through otlptracehttp
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:16686"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:16686",
+        ]
       interval: 10s
       retries: 3
       timeout: 10s
